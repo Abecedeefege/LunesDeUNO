@@ -33,6 +33,24 @@
       overflow-x: hidden;
     }
 
+    /* ---- Language Switcher ---- */
+    .lang-switcher {
+      position: fixed; top: 1rem; right: 1rem; z-index: 200;
+      display: flex; gap: .4rem;
+    }
+    .lang-btn {
+      width: 40px; height: 28px; border-radius: 6px; cursor: pointer;
+      border: 2px solid transparent; overflow: hidden;
+      transition: all .2s; opacity: .55;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; line-height: 1;
+      background: var(--surface-2);
+    }
+    .lang-btn:hover { opacity: .85; }
+    .lang-btn.active { opacity: 1; border-color: var(--uno-yellow); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
+
+    @media print { .lang-switcher { display: none !important; } }
+
     /* ---- Shared Layout ---- */
     .screen {
       display: none;
@@ -386,6 +404,12 @@
 </head>
 <body>
 
+  <!-- ============ LANGUAGE SWITCHER ============ -->
+  <div class="lang-switcher no-print">
+    <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">🇺🇾</button>
+    <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">🇺🇸</button>
+  </div>
+
   <!-- ============ HOME ============ -->
   <div id="home" class="screen active">
     <div>
@@ -396,18 +420,18 @@
         <div class="uno-card-mini" style="background:var(--uno-blue); --rot:8deg;">!</div>
       </div>
       <h1 class="logo-title">Lunes de UNO</h1>
-      <p class="logo-sub">Score Tracker</p>
+      <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
-    <button class="btn btn-primary" onclick="showScreen('setup')">Start New Game</button>
+    <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
   </div>
 
   <!-- ============ SETUP ============ -->
   <div id="setup" class="screen">
-    <h2 style="font-size:1.6rem; margin-bottom:.5rem;">New Game</h2>
+    <h2 style="font-size:1.6rem; margin-bottom:.5rem;" data-i18n="setup_title"></h2>
 
     <div class="card">
       <div class="input-group">
-        <label>Number of Players</label>
+        <label data-i18n="setup_players_label"></label>
         <div class="number-selector">
           <button class="btn btn-icon" onclick="changePlayerCount(-1)">-</button>
           <div class="number-display" id="playerCountDisplay">2</div>
@@ -419,7 +443,7 @@
 
     <div class="card">
       <div class="input-group">
-        <label>Points to Play</label>
+        <label data-i18n="setup_points_label"></label>
         <div class="points-presets" id="pointsPresets">
           <button class="preset-btn" data-val="200" onclick="selectPoints(this, 200)">200</button>
           <button class="preset-btn" data-val="300" onclick="selectPoints(this, 300)">300</button>
@@ -427,23 +451,23 @@
           <button class="preset-btn" data-val="1000" onclick="selectPoints(this, 1000)">1000</button>
         </div>
         <div style="display:flex; align-items:center; gap:.5rem; margin-top:.75rem;">
-          <input type="number" id="customPoints" placeholder="Custom..." min="50" style="flex:1;" oninput="onCustomPoints()">
+          <input type="number" id="customPoints" placeholder="" data-i18n-ph="setup_custom_placeholder" min="50" style="flex:1;" oninput="onCustomPoints()">
         </div>
       </div>
     </div>
 
     <div class="setup-footer">
-      <button class="btn btn-primary" id="startGameBtn" onclick="startGame()">Start Game</button>
+      <button class="btn btn-primary" id="startGameBtn" onclick="startGame()" data-i18n="setup_start_btn"></button>
     </div>
 
-    <button class="btn btn-secondary btn-small no-print" onclick="showScreen('home')" style="margin-top:.5rem;">Back</button>
+    <button class="btn btn-secondary btn-small no-print" onclick="showScreen('home')" style="margin-top:.5rem;" data-i18n="back_btn"></button>
   </div>
 
   <!-- ============ GAME ============ -->
   <div id="game" class="screen">
     <div class="game-header">
-      <h2 id="gameTitle">Game</h2>
-      <span class="round-badge" id="roundBadge">Round 1</span>
+      <h2 id="gameTitle">Lunes de UNO</h2>
+      <span class="round-badge" id="roundBadge"></span>
     </div>
 
     <!-- Progress of leading player -->
@@ -462,20 +486,20 @@
 
     <!-- Round Score Input -->
     <div class="card" id="roundInputCard">
-      <h4 style="margin-bottom:.75rem; font-size:1rem;">Enter Round Scores</h4>
+      <h4 style="margin-bottom:.75rem; font-size:1rem;" data-i18n="game_enter_scores"></h4>
       <div class="round-inputs" id="roundInputs"></div>
       <div class="game-actions" style="margin-top:1rem;">
-        <button class="btn btn-primary" style="font-size:1rem; padding:.75rem 2rem;" onclick="submitRound()">End Round</button>
+        <button class="btn btn-primary" style="font-size:1rem; padding:.75rem 2rem;" onclick="submitRound()" data-i18n="game_end_round"></button>
       </div>
     </div>
 
     <!-- Round History -->
     <div class="round-history" id="roundHistoryContainer" style="display:none;">
-      <h3>Round History</h3>
+      <h3 data-i18n="game_round_history"></h3>
       <table class="round-history-table" id="roundHistoryTable"></table>
     </div>
 
-    <button class="btn btn-secondary btn-small no-print" onclick="confirmQuit()" style="margin-top:.5rem; color:var(--danger);">Quit Game</button>
+    <button class="btn btn-secondary btn-small no-print" onclick="confirmQuit()" style="margin-top:.5rem; color:var(--danger);" data-i18n="game_quit"></button>
   </div>
 
   <!-- ============ RESULTS ============ -->
@@ -484,43 +508,138 @@
     <div class="trophy">&#127942;</div>
     <div>
       <div class="winner-name" id="winnerName">-</div>
-      <p class="winner-subtitle">wins with the lowest score!</p>
+      <p class="winner-subtitle" data-i18n="results_winner_sub"></p>
     </div>
 
     <div class="final-standings" id="finalStandings"></div>
 
     <!-- Full breakdown for print -->
     <div class="round-history" id="resultsHistoryContainer">
-      <h3>Round Breakdown</h3>
+      <h3 data-i18n="results_breakdown"></h3>
       <table class="round-history-table" id="resultsHistoryTable"></table>
     </div>
 
     <div class="results-actions no-print">
-      <button class="btn btn-secondary" onclick="printResults()">&#128424; Print Scores</button>
-      <button class="btn btn-secondary" onclick="showEditableHistory()">&#9998; Edit Scores</button>
-      <button class="btn btn-primary" onclick="newGame()">New Game</button>
+      <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
+      <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
+      <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
     </div>
   </div>
 
   <!-- ============ EDIT MODAL ============ -->
   <div class="modal-overlay" id="editModal">
     <div class="modal">
-      <h3 id="editModalTitle">Edit Round</h3>
+      <h3 id="editModalTitle"></h3>
       <div class="modal-inputs" id="editModalInputs"></div>
       <div class="modal-actions">
-        <button class="btn btn-secondary btn-small" onclick="closeEditModal()">Cancel</button>
-        <button class="btn btn-primary btn-small" onclick="saveEditRound()">Save</button>
+        <button class="btn btn-secondary btn-small" onclick="closeEditModal()" data-i18n="modal_cancel"></button>
+        <button class="btn btn-primary btn-small" onclick="saveEditRound()" data-i18n="modal_save"></button>
       </div>
     </div>
   </div>
 
 <script>
+// ============ I18N ============
+const STRINGS = {
+  es: {
+    home_sub: 'Contador de puntos, bó',
+    home_start: 'Arrancar partida nueva',
+    setup_title: 'Partida nueva',
+    setup_players_label: '¿Cuántos juegan?',
+    setup_points_label: '¿Hasta cuántos puntos?',
+    setup_custom_placeholder: 'Ponele lo que quieras...',
+    setup_start_btn: '¡Dale que va!',
+    back_btn: 'Volver',
+    game_enter_scores: 'Metele los puntos de la ronda',
+    game_end_round: 'Cerrar ronda',
+    game_round_history: 'Lo que fue pasando',
+    game_quit: 'Rajar del juego',
+    game_round: 'Ronda',
+    game_player: 'Jugador',
+    game_total: 'Total',
+    game_no_scores: 'Todavía no arrancó nadie',
+    game_pts: 'pts',
+    game_edit: 'editar',
+    game_alert_no_scores: 'Bo, metele algún puntaje a alguien por lo menos.',
+    game_confirm_quit: '¿Posta te querés ir? Se pierde todo eh.',
+    results_winner_sub: '¡ganó con menos puntos, qué crack!',
+    results_breakdown: 'Ronda por ronda',
+    results_print: 'Imprimir',
+    results_edit: 'Editar puntajes',
+    results_new_game: 'Otra partidita',
+    modal_edit_round: 'Editar Ronda',
+    modal_cancel: 'Na, dejá',
+    modal_save: 'Guardar',
+    player_placeholder: 'Jugador',
+  },
+  en: {
+    home_sub: 'Score Tracker',
+    home_start: 'Start New Game',
+    setup_title: 'New Game',
+    setup_players_label: 'Number of Players',
+    setup_points_label: 'Points to Play',
+    setup_custom_placeholder: 'Custom...',
+    setup_start_btn: 'Start Game',
+    back_btn: 'Back',
+    game_enter_scores: 'Enter Round Scores',
+    game_end_round: 'End Round',
+    game_round_history: 'Round History',
+    game_quit: 'Quit Game',
+    game_round: 'Round',
+    game_player: 'Player',
+    game_total: 'Total',
+    game_no_scores: 'No scores yet',
+    game_pts: 'pts',
+    game_edit: 'edit',
+    game_alert_no_scores: 'Enter at least one score for this round.',
+    game_confirm_quit: 'Are you sure you want to quit this game?',
+    results_winner_sub: 'wins with the lowest score!',
+    results_breakdown: 'Round Breakdown',
+    results_print: 'Print Scores',
+    results_edit: 'Edit Scores',
+    results_new_game: 'New Game',
+    modal_edit_round: 'Edit Round',
+    modal_cancel: 'Cancel',
+    modal_save: 'Save',
+    player_placeholder: 'Player',
+  }
+};
+
+let currentLang = localStorage.getItem('lunesdeuno_lang') || 'es';
+
+function t(key) {
+  return (STRINGS[currentLang] && STRINGS[currentLang][key]) || STRINGS.en[key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lunesdeuno_lang', lang);
+  document.documentElement.lang = lang;
+
+  // Update flag buttons
+  document.getElementById('langEs').classList.toggle('active', lang === 'es');
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+
+  // Apply all data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPh);
+  });
+
+  // Re-render dynamic content if a game screen is active
+  if (document.getElementById('setup').classList.contains('active')) renderPlayerInputs();
+  if (document.getElementById('game').classList.contains('active')) renderGame();
+  if (document.getElementById('results').classList.contains('active')) renderResults();
+}
+
 // ============ STATE ============
 let state = {
   playerCount: 2,
   maxPoints: 500,
-  players: [],       // [{name, color}]
-  rounds: [],        // [[score1, score2, ...], ...]
+  players: [],
+  rounds: [],
   currentRound: 0,
   gameOver: false
 };
@@ -564,7 +683,7 @@ function renderPlayerInputs() {
     html += `
       <div class="player-input-row">
         <div class="player-color" style="background:${color}"></div>
-        <input type="text" placeholder="Player ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup()">
+        <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup()">
       </div>`;
   }
   container.innerHTML = html;
@@ -598,7 +717,7 @@ function validateSetup() {
 function startGame() {
   const inputs = document.querySelectorAll('#playerInputs input');
   state.players = Array.from(inputs).map((inp, i) => ({
-    name: inp.value.trim() || `Player ${i+1}`,
+    name: inp.value.trim() || `${t('player_placeholder')} ${i+1}`,
     color: PLAYER_COLORS[i % PLAYER_COLORS.length]
   }));
   state.rounds = [];
@@ -630,14 +749,14 @@ function renderGame() {
   const roundNum = state.rounds.length + 1;
 
   document.getElementById('gameTitle').textContent = 'Lunes de UNO';
-  document.getElementById('roundBadge').textContent = `Round ${roundNum}`;
+  document.getElementById('roundBadge').textContent = `${t('game_round')} ${roundNum}`;
 
   // Progress
   const maxT = getMaxTotal();
   const leaderIdx = totals.indexOf(Math.max(...totals));
   const pct = Math.min((maxT / state.maxPoints) * 100, 100);
   document.getElementById('progressLeader').textContent =
-    maxT > 0 ? `${state.players[leaderIdx].name}: ${totals[leaderIdx]} pts` : 'No scores yet';
+    maxT > 0 ? `${state.players[leaderIdx].name}: ${totals[leaderIdx]} ${t('game_pts')}` : t('game_no_scores');
   document.getElementById('progressText').textContent = `${maxT} / ${state.maxPoints}`;
   document.getElementById('progressFill').style.width = pct + '%';
 
@@ -653,7 +772,7 @@ function renderGame() {
 
 function renderScoreboard(totals) {
   const table = document.getElementById('scoreboard');
-  let html = `<thead><tr><th>Player</th><th style="text-align:right;">Total</th></tr></thead><tbody>`;
+  let html = `<thead><tr><th>${t('game_player')}</th><th style="text-align:right;">${t('game_total')}</th></tr></thead><tbody>`;
   const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
     .sort((a, b) => a.total - b.total);
 
@@ -699,16 +818,14 @@ function submitRound() {
     return Math.max(0, val);
   });
 
-  // Require at least one non-zero score
   if (scores.every(s => s === 0)) {
-    alert('Enter at least one score for this round.');
+    alert(t('game_alert_no_scores'));
     return;
   }
 
   state.rounds.push(scores);
   state.currentRound = state.rounds.length;
 
-  // Check if game is over (any player reached maxPoints)
   const totals = getTotals();
   if (totals.some(t => t >= state.maxPoints)) {
     state.gameOver = true;
@@ -728,19 +845,18 @@ function renderRoundHistory() {
   container.style.display = '';
 
   const table = document.getElementById('roundHistoryTable');
-  let html = '<thead><tr><th>Round</th>';
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
   state.players.forEach(p => { html += `<th>${p.name}</th>`; });
   html += '<th class="no-print"></th></tr></thead><tbody>';
 
   state.rounds.forEach((round, ri) => {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach(s => { html += `<td>${s}</td>`; });
-    html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">edit</td></tr>`;
+    html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
 
-  // Totals row
   const totals = getTotals();
-  html += '<tr style="font-weight:700; background:var(--surface-2);"><td>Total</td>';
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
   html += '<td class="no-print"></td></tr>';
 
@@ -753,7 +869,7 @@ let editingRound = -1;
 
 function openEditModal(roundIdx) {
   editingRound = roundIdx;
-  document.getElementById('editModalTitle').textContent = `Edit Round ${roundIdx + 1}`;
+  document.getElementById('editModalTitle').textContent = `${t('modal_edit_round')} ${roundIdx + 1}`;
   const container = document.getElementById('editModalInputs');
   let html = '';
   state.players.forEach((p, i) => {
@@ -779,7 +895,6 @@ function saveEditRound() {
   });
   closeEditModal();
 
-  // Re-check game over status
   const totals = getTotals();
   const wasOver = state.gameOver;
   state.gameOver = totals.some(t => t >= state.maxPoints);
@@ -791,7 +906,6 @@ function saveEditRound() {
   } else if (!state.gameOver && wasOver) {
     showScreen('game');
   } else {
-    // Stay on current screen and re-render
     if (document.getElementById('game').classList.contains('active')) renderGame();
     if (document.getElementById('results').classList.contains('active')) renderResults();
   }
@@ -803,10 +917,8 @@ function renderResults() {
   const standings = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
     .sort((a, b) => a.total - b.total);
 
-  // Winner (lowest score in UNO)
   document.getElementById('winnerName').textContent = standings[0].name;
 
-  // Standings
   const container = document.getElementById('finalStandings');
   const medals = ['gold', 'silver', 'bronze'];
   let html = '';
@@ -820,18 +932,17 @@ function renderResults() {
             ${p.name}
           </div>
         </div>
-        <div class="standing-score">${p.total} pts</div>
+        <div class="standing-score">${p.total} ${t('game_pts')}</div>
       </div>`;
   });
   container.innerHTML = html;
 
-  // Round breakdown
   renderResultsHistory();
 }
 
 function renderResultsHistory() {
   const table = document.getElementById('resultsHistoryTable');
-  let html = '<thead><tr><th>Round</th>';
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
   state.players.forEach(p => { html += `<th>${p.name}</th>`; });
   html += '</tr></thead><tbody>';
 
@@ -842,27 +953,26 @@ function renderResultsHistory() {
   });
 
   const totals = getTotals();
-  html += '<tr style="font-weight:700; background:var(--surface-2);"><td>Total</td>';
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
   html += '</tr></tbody>';
   table.innerHTML = html;
 }
 
 function showEditableHistory() {
-  // Re-use the game's edit modal system — render history with edit buttons
   const table = document.getElementById('resultsHistoryTable');
-  let html = '<thead><tr><th>Round</th>';
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
   state.players.forEach(p => { html += `<th>${p.name}</th>`; });
   html += '<th></th></tr></thead><tbody>';
 
   state.rounds.forEach((round, ri) => {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach(s => { html += `<td>${s}</td>`; });
-    html += `<td class="edit-cell" onclick="openEditModal(${ri})">edit</td></tr>`;
+    html += `<td class="edit-cell" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
 
   const totals = getTotals();
-  html += '<tr style="font-weight:700; background:var(--surface-2);"><td>Total</td>';
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
   html += '<td></td></tr></tbody>';
   table.innerHTML = html;
@@ -882,12 +992,13 @@ function newGame() {
 }
 
 function confirmQuit() {
-  if (confirm('Are you sure you want to quit this game?')) {
+  if (confirm(t('game_confirm_quit'))) {
     newGame();
   }
 }
 
 // ============ INIT ============
+setLang(currentLang);
 initSetup();
 </script>
 </body>
