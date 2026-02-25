@@ -173,22 +173,26 @@
       align-items: center;
       justify-content: center;
       height: 33.333vh;
-      min-height: 120px;
-      background: var(--surface);
-      border: 1px dashed var(--border);
+      min-height: 80px;
+      background: transparent;
+      border: none;
       border-radius: 16px;
       text-decoration: none;
       color: var(--text-muted);
-      transition: color .2s, border-color .2s, background .2s;
+      transition: color .2s, opacity .2s;
+      cursor: pointer;
+      min-width: 44px;
     }
     .under-construction:hover {
       color: var(--uno-yellow);
-      border-color: var(--uno-yellow);
-      background: rgba(255,222,0,.06);
+    }
+    .under-construction:hover .under-construction-icon {
+      opacity: 0.9;
     }
     .under-construction-icon {
-      font-size: clamp(3rem, 12vw, 5rem);
+      font-size: 0.75rem;
       line-height: 1;
+      opacity: 0.25;
     }
 
     .uno-cards {
