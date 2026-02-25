@@ -33,9 +33,24 @@
       overflow-x: hidden;
     }
 
-    /* ---- Language Switcher ---- */
+    /* ---- Header (logo + flags) ---- */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--text);
+    }
+    .header-logo svg {
+      width: 36px; height: 36px;
+      display: block;
+    }
     .lang-switcher {
-      position: fixed; top: 1rem; right: 1rem; z-index: 200;
       display: flex; gap: .4rem;
     }
     .lang-btn {
@@ -49,7 +64,7 @@
     .lang-btn:hover { opacity: .85; }
     .lang-btn.active { opacity: 1; border-color: var(--uno-yellow); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
 
-    @media print { .lang-switcher { display: none !important; } .round-roast { display: none !important; } }
+    @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
 
     /* ---- Shared Layout ---- */
     .screen {
@@ -61,6 +76,7 @@
       animation: fadeIn .35s ease;
     }
     .screen.active { display: flex; }
+    .screen { padding-top: calc(52px + 2rem); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
@@ -149,10 +165,23 @@
     .uno-card-mini {
       width: 48px; height: 70px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: #fff;
-      box-shadow: 0 4px 16px rgba(0,0,0,.3);
+      font-family: 'Fredoka One', cursive; font-size: 1.1rem; font-weight: bold; color: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,.35);
       transform: rotate(var(--rot, 0deg));
+      background: #1a1a1a;
+      border: 2px solid #333;
+      position: relative;
+      overflow: hidden;
     }
+    .uno-card-mini::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        var(--uno-red) 0 25%, var(--uno-yellow) 25% 50%,
+        var(--uno-green) 50% 75%, var(--uno-blue) 75% 100%);
+      opacity: .35;
+      border-radius: 6px;
+    }
+    .uno-card-mini span { position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
 
     /* ---- SETUP SCREEN ---- */
     #setup { gap: 1.5rem; padding-top: 3rem; }
@@ -452,20 +481,31 @@
 </head>
 <body>
 
-  <!-- ============ LANGUAGE SWITCHER ============ -->
-  <div class="lang-switcher no-print">
-    <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">🇺🇾</button>
-    <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">🇺🇸</button>
-  </div>
+  <!-- ============ HEADER (logo + flags) ============ -->
+  <header class="app-header no-print">
+    <a href="#" class="header-logo" onclick="showScreen('home'); return false;" aria-label="Lunes de UNO">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Galera negra (top hat): brim + crown -->
+        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#0a0a0a"/>
+        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#0a0a0a"/>
+        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#111"/>
+        <rect x="10" y="12" width="20" height="16" fill="#0a0a0a"/>
+      </svg>
+    </a>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">🇺🇾</button>
+      <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">🇺🇸</button>
+    </div>
+  </header>
 
   <!-- ============ HOME ============ -->
   <div id="home" class="screen active">
     <div>
       <div class="uno-cards">
-        <div class="uno-card-mini" style="background:var(--uno-red); --rot:-8deg;">U</div>
-        <div class="uno-card-mini" style="background:var(--uno-yellow); color:#333; --rot:-3deg;">N</div>
-        <div class="uno-card-mini" style="background:var(--uno-green); --rot:3deg;">O</div>
-        <div class="uno-card-mini" style="background:var(--uno-blue); --rot:8deg;">!</div>
+        <div class="uno-card-mini" style="--rot:-8deg;"><span>+4</span></div>
+        <div class="uno-card-mini" style="--rot:-3deg;"><span>+4</span></div>
+        <div class="uno-card-mini" style="--rot:3deg;"><span>+4</span></div>
+        <div class="uno-card-mini" style="--rot:8deg;"><span>+4</span></div>
       </div>
       <h1 class="logo-title">Lunes de UNO</h1>
       <p class="logo-sub" data-i18n="home_sub"></p>
