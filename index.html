@@ -36,7 +36,8 @@
     /* ---- Header (logo + flags) ---- */
     .app-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      height: 52px;
+      height: 20vh;
+      min-height: 52px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 1rem;
       background: var(--surface);
@@ -45,9 +46,12 @@
     .header-logo {
       display: flex; align-items: center; gap: .5rem;
       text-decoration: none; color: var(--text);
+      height: 100%;
     }
     .header-logo svg {
-      width: 36px; height: 36px;
+      height: 80%;
+      width: auto;
+      max-height: 20vh;
       display: block;
     }
     .lang-switcher {
@@ -76,7 +80,7 @@
       animation: fadeIn .35s ease;
     }
     .screen.active { display: flex; }
-    .screen { padding-top: calc(52px + 2rem); }
+    .screen { padding-top: calc(20vh + 2rem); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
@@ -159,29 +163,51 @@
     }
     .logo-sub { color: var(--text-muted); font-size: 1rem; margin-top: .5rem; }
 
-    .uno-cards {
-      display: flex; gap: .6rem; justify-content: center; margin-bottom: .5rem;
+    .home-beta-link { margin-top: 2rem; }
+    .home-beta-link .under-construction {
+      font-size: .85rem; color: var(--text-muted);
+      text-decoration: none; border-bottom: 1px dashed var(--border);
     }
+    .home-beta-link .under-construction:hover { color: var(--uno-yellow); }
+
+    .uno-cards {
+      display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
+    }
+    /* Real UNO card proportions (~1 : 1.45), proper +4 look */
     .uno-card-mini {
-      width: 48px; height: 70px; border-radius: 8px;
+      width: clamp(52px, 14vw, 72px);
+      aspect-ratio: 1 / 1.45;
+      border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fredoka One', cursive; font-size: 1.1rem; font-weight: bold; color: #fff;
-      box-shadow: 0 4px 16px rgba(0,0,0,.35);
+      font-family: 'Fredoka One', cursive; font-size: clamp(0.95rem, 4vw, 1.35rem); font-weight: bold; color: #fff;
       transform: rotate(var(--rot, 0deg));
-      background: #1a1a1a;
-      border: 2px solid #333;
       position: relative;
       overflow: hidden;
+      background: #0d0d0d;
+      border: 3px solid #e8e6e0;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.08),
+        0 2px 0 rgba(0,0,0,.15),
+        0 4px 12px rgba(0,0,0,.4),
+        0 8px 24px rgba(0,0,0,.25);
     }
+    /* Four quadrants like real Wild +4 (red, yellow, green, blue) */
     .uno-card-mini::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg,
-        var(--uno-red) 0 25%, var(--uno-yellow) 25% 50%,
-        var(--uno-green) 50% 75%, var(--uno-blue) 75% 100%);
-      opacity: .35;
-      border-radius: 6px;
+      content: ''; position: absolute; inset: 4px;
+      background: conic-gradient(
+        at 50% 50%,
+        var(--uno-red) 0deg 90deg,
+        var(--uno-yellow) 90deg 180deg,
+        var(--uno-green) 180deg 270deg,
+        var(--uno-blue) 270deg 360deg
+      );
+      border-radius: 4px;
     }
-    .uno-card-mini span { position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
+    .uno-card-mini span {
+      position: relative; z-index: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,.9), 0 0 1px #000;
+      filter: drop-shadow(0 1px 0 rgba(255,255,255,.15));
+    }
 
     /* ---- SETUP SCREEN ---- */
     #setup { gap: 1.5rem; padding-top: 3rem; }
@@ -511,6 +537,9 @@
       <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
+    <p class="home-beta-link">
+      <a href="index2.html" class="under-construction" data-i18n="home_under_construction">En construcción: compartir resultados</a>
+    </p>
   </div>
 
   <!-- ============ SETUP ============ -->
@@ -638,6 +667,7 @@ const STRINGS = {
   es: {
     home_sub: 'Contador de puntos, bó',
     home_start: 'Arrancar partida nueva',
+    home_under_construction: 'En construcción: compartir resultados',
     setup_title: 'Partida nueva',
     setup_players_label: '¿Cuántos juegan?',
     setup_points_label: '¿Hasta cuántos puntos?',
@@ -669,6 +699,7 @@ const STRINGS = {
   en: {
     home_sub: 'Score Tracker',
     home_start: 'Start New Game',
+    home_under_construction: 'Under construction: share results',
     setup_title: 'New Game',
     setup_players_label: 'Number of Players',
     setup_points_label: 'Points to Play',
