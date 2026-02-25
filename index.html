@@ -286,31 +286,25 @@
     }
     .round-roast.visible { display: flex; }
     .round-roast-slides {
-      position: relative;
-      min-height: 72px;
+      min-height: 80px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
       overflow: hidden;
     }
     .round-roast-slide {
-      position: absolute;
-      inset: 0;
+      display: none;
       padding: 1rem 1.25rem;
-      display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       font-size: .95rem;
       line-height: 1.4;
-      opacity: 0;
-      transition: opacity .35s ease;
-      pointer-events: none;
+      min-height: 80px;
+      box-sizing: border-box;
     }
     .round-roast-slide.active {
-      position: relative;
-      opacity: 1;
-      pointer-events: auto;
+      display: flex;
     }
     .round-roast-slide.roast { color: var(--danger); }
     .round-roast-slide.brag { color: var(--success); }
@@ -669,20 +663,20 @@ const STRINGS = {
 const CAROUSEL_MSGS = {
   es: {
     last: [
-      '¡{name} se mandó una carta de más y se llevó todo! 😂',
-      '{name} juntó más que el repartidor. Qué desastre.',
-      '¿{name} estaba jugando al UNO o al “sumá todo”?',
-      '¡{name} le hizo un monumento a los puntos! 🗿',
-      'Alguien avísele a {name} que el que menos tiene gana.',
+      'Bo {name}, te comiste todos los puntos de la mesa 😂',
+      '{name} juntó más puntos que boleto de STM, ta bravo.',
+      '¿{name} estaba jugando al UNO o al “sumá todo, bo”?',
+      'Pa, {name}, dejale algún punto a los demás, ¿no?',
+      'Alguien avísele a {name} que acá gana el que tiene menos, ta.',
     ],
     secondLast: [
-      '{name} quedó segundx en… acumular. Casi casi.',
-      'Por un pelo {name} no fue el que más sumó. La próxima, ¿eh?',
+      '{name} zafó por poquito de ser el desastre de la ronda.',
+      'Bo {name}, casi quedás último también, ojo ahí.',
     ],
     first: [
-      '¡{name} la rompió esta ronda! 🏆',
-      '{name} se fue con poquitos. ¡Así se juega!',
-      'Esa ronda fue de {name}. Aplausos.',
+      '¡{name} salió hecho un crack esta ronda, bo! 🏆',
+      '{name} se fue livianito de puntos, ta que bien jugado.',
+      'Esta ronda fue toda de {name}, tremendo nivel.',
     ],
   },
   en: {
@@ -884,6 +878,7 @@ function updateRoundRoastCarousel(messages, startAutoAdvance) {
 
   container.classList.add('visible');
   setRoundRoastSlide(0);
+  container.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
   if (startAutoAdvance && messages.length > 1) {
     let idx = 0;
