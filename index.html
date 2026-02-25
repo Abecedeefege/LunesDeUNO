@@ -163,12 +163,33 @@
     }
     .logo-sub { color: var(--text-muted); font-size: 1rem; margin-top: .5rem; }
 
-    .home-beta-link { margin-top: 2rem; }
-    .home-beta-link .under-construction {
-      font-size: .85rem; color: var(--text-muted);
-      text-decoration: none; border-bottom: 1px dashed var(--border);
+    .home-beta-link {
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 480px;
     }
-    .home-beta-link .under-construction:hover { color: var(--uno-yellow); }
+    .under-construction {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 33.333vh;
+      min-height: 120px;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .under-construction:hover {
+      color: var(--uno-yellow);
+      border-color: var(--uno-yellow);
+      background: rgba(255,222,0,.06);
+    }
+    .under-construction-icon {
+      font-size: clamp(3rem, 12vw, 5rem);
+      line-height: 1;
+    }
 
     .uno-cards {
       display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
@@ -515,9 +536,11 @@
       <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
-    <p class="home-beta-link">
-      <a href="index2.html" class="under-construction" data-i18n="home_under_construction">En construcción: compartir resultados</a>
-    </p>
+    <div class="home-beta-link">
+      <a href="index2.html" class="under-construction" data-i18n-title="home_under_construction" title="En construcción: compartir resultados" aria-label="En construcción: compartir resultados">
+        <span class="under-construction-icon" aria-hidden="true">🚧</span>
+      </a>
+    </div>
   </div>
 
   <!-- ============ SETUP ============ -->
@@ -770,6 +793,11 @@ function setLang(lang) {
   });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => {
     el.placeholder = t(el.dataset.i18nPh);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const val = t(el.dataset.i18nTitle);
+    el.title = val;
+    el.setAttribute('aria-label', val);
   });
 
   // Re-render dynamic content if a game screen is active
