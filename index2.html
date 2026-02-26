@@ -1336,51 +1336,75 @@ function downloadPDFRoast() {
     alert('PDF library not loaded. Check your connection.');
     return;
   }
-  const totals = getTotals();
-  const standings = state.players.map((p, i) => ({ ...p, idx: i, total: totals[i] }))
-    .sort((a, b) => a.total - b.total);
-  const lastPlace = standings[standings.length - 1];
-  const lang = currentLang in PDF_ROASTS ? currentLang : 'es';
-  const roast = PDF_ROASTS[lang][Math.floor(Math.random() * PDF_ROASTS[lang].length)].replace(/\{name\}/g, lastPlace.name);
+  var totals = getTotals();
+  var standings = state.players.map(function (p, i) { return { name: p.name, total: totals[i], idx: i }; })
+    .sort(function (a, b) { return a.total - b.total; });
+  var lastPlace = standings[standings.length - 1];
+  var lang = currentLang in PDF_ROASTS ? currentLang : 'es';
+  var roast = PDF_ROASTS[lang][Math.floor(Math.random() * PDF_ROASTS[lang].length)].replace(/\{name\}/g, lastPlace.name);
 
-  const { jsPDF } = jspdf;
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const w = doc.internal.pageSize.getWidth();
-  let y = 22;
+  var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  var w = doc.internal.pageSize.getWidth();
+  var h = doc.internal.pageSize.getHeight();
+  var margin = 18;
+  var y = 0;
 
-  // Title - cartoon style
+  // ---- Header: full-width UNO bar ----
   doc.setFillColor(237, 28, 36);
-  doc.rect(0, 0, w, 18, 'F');
+  doc.rect(0, 0, w, 24, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(24);
+  doc.setFontSize(26);
   doc.setFont('helvetica', 'bold');
-  doc.text('LUNES DE UNO', w / 2, 12, { align: 'center' });
-  doc.setTextColor(0, 0, 0);
-  y = 28;
-
-  doc.setFontSize(14);
-  doc.text(t('game_total') + ' - ' + (currentLang === 'es' ? 'Resultado final' : 'Final scores'), 14, y);
-  y += 10;
-
-  standings.forEach((p, i) => {
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-    doc.setFontSize(11);
-    doc.text(medal + ' ' + p.name + ' — ' + p.total + ' ' + t('game_pts'), 18, y);
-    y += 7;
-  });
-  y += 10;
-
-  // Roast in a "speech bubble" style box
-  doc.setDrawColor(255, 222, 0);
-  doc.setLineWidth(1.5);
-  doc.setFillColor(255, 252, 220);
-  doc.roundedRect(14, y - 2, w - 28, 22, 3, 3, 'FD');
-  doc.roundedRect(14, y - 2, w - 28, 22, 3, 3, 'S');
-  doc.setFontSize(10);
-  doc.setTextColor(180, 50, 50);
+  doc.text('LUNES DE UNO', w / 2, 14, { align: 'center' });
+  doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
-  doc.text(doc.splitTextToSize(roast, w - 36), 20, y + 8);
-  doc.setTextColor(0, 0, 0);
+  doc.text(currentLang === 'es' ? 'Resultado final' : 'Final scores', w / 2, 21, { align: 'center' });
+  y = 32;
+
+  // ---- Standings card ----
+  doc.setDrawColor(58, 58, 92);
+  doc.setFillColor(26, 26, 46);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(margin, y, w - 2 * margin, 8 + standings.length * 10, 4, 4, 'FD');
+  doc.roundedRect(margin, y, w - 2 * margin, 8 + standings.length * 10, 4, 4, 'S');
+  doc.setTextColor(240, 240, 245);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text(currentLang === 'es' ? 'Puntuación' : 'Scores', margin + 6, y + 7);
+  y += 14;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  standings.forEach(function (p, i) {
+    var medal = i === 0 ? '\u{1F947} ' : i === 1 ? '\u{1F948} ' : i === 2 ? '\u{1F949} ' : (i + 1) + '. ';
+    doc.text(medal + p.name + '  —  ' + p.total + ' ' + t('game_pts'), margin + 8, y);
+    y += 10;
+  });
+  y += 16;
+
+  // ---- Roast section: speech bubble ----
+  var roastTitle = (currentLang === 'es' ? 'Mención especial' : 'Special mention') + ' \u{1F602}';
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(255, 222, 0);
+  doc.text(roastTitle, margin, y);
+  y += 8;
+  doc.setFont('helvetica', 'normal');
+  var roastLines = doc.splitTextToSize(roast, w - 2 * margin - 24);
+  var bubbleH = Math.max(28, roastLines.length * 6 + 16);
+  doc.setFillColor(255, 250, 235);
+  doc.setDrawColor(255, 222, 0);
+  doc.setLineWidth(1.2);
+  doc.roundedRect(margin, y - 2, w - 2 * margin, bubbleH, 5, 5, 'FD');
+  doc.roundedRect(margin, y - 2, w - 2 * margin, bubbleH, 5, 5, 'S');
+  doc.setTextColor(140, 40, 50);
+  doc.setFontSize(11);
+  doc.text(roastLines, margin + 10, y + 10);
+  y += bubbleH + 14;
+
+  // ---- Footer ----
+  doc.setTextColor(136, 136, 168);
+  doc.setFontSize(8);
+  doc.text('Lunes de UNO \u2014 ' + (currentLang === 'es' ? 'contador de puntos' : 'score tracker'), w / 2, h - 10, { align: 'center' });
 
   doc.save('LunesDeUNO-' + lastPlace.name.replace(/\s/g, '') + '.pdf');
 }
@@ -1389,18 +1413,25 @@ function downloadPDFRoast() {
 let sharePhotoState = { originalDataUrl: null, cartoonDataUrl: null };
 
 function applyCartoonEffect(imageData, width, height) {
-  const data = imageData.data;
-  const len = data.length;
-  const levels = 6;
-  for (let i = 0; i < len; i += 4) {
+  var data = imageData.data;
+  var len = data.length;
+  var levels = 6;
+  var stride = width * 4;
+  // First pass: posterize (reduce color levels)
+  for (var i = 0; i < len; i += 4) {
     data[i] = Math.floor(data[i] / (256 / levels)) * (256 / levels);
     data[i + 1] = Math.floor(data[i + 1] / (256 / levels)) * (256 / levels);
     data[i + 2] = Math.floor(data[i + 2] / (256 / levels)) * (256 / levels);
-    const edge = (i / 4) % width > 0 && (i / 4) % width < width - 1
-      ? Math.abs(data[i] - data[i - 4]) + Math.abs(data[i + 4] - data[i])
-      : 0;
-    if (edge > 30) {
-      data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
+  }
+  // Second pass: edge darkening using original-like comparison (neighbors)
+  for (var y = 1; y < height - 1; y++) {
+    for (var x = 1; x < width - 1; x++) {
+      var i = (y * width + x) * 4;
+      var gx = Math.abs(data[i] - data[i - 4]) + Math.abs(data[i + 4] - data[i]);
+      var gy = Math.abs(data[i] - data[i - stride]) + Math.abs(data[i + stride] - data[i]);
+      if (gx + gy > 80) {
+        data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
+      }
     }
   }
   return imageData;
@@ -1438,19 +1469,30 @@ function drawScoresOnCanvas(canvas, img, isCartoon) {
 function onSharePhotoChange(ev) {
   const file = ev.target.files && ev.target.files[0];
   if (!file || !file.type.startsWith('image/')) return;
-  const reader = new FileReader();
+  // Clear previous preview so the UI always reflects the new upload
+  sharePhotoState.originalDataUrl = null;
+  sharePhotoState.cartoonDataUrl = null;
+  var elOriginal = document.getElementById('sharePhotoOriginal');
+  var elCartoon = document.getElementById('sharePhotoCartoon');
+  var row = document.getElementById('sharePhotoRow');
+  var input = document.getElementById('sharePhotoInput');
+  row.style.display = 'none';
+  elOriginal.removeAttribute('src');
+  elCartoon.removeAttribute('src');
+  var reader = new FileReader();
   reader.onload = function () {
-    const img = new Image();
+    var img = new Image();
     img.onload = function () {
-      const canvasOrig = document.createElement('canvas');
-      const canvasCartoon = document.createElement('canvas');
+      var canvasOrig = document.createElement('canvas');
+      var canvasCartoon = document.createElement('canvas');
       drawScoresOnCanvas(canvasOrig, img, false);
       drawScoresOnCanvas(canvasCartoon, img, true);
       sharePhotoState.originalDataUrl = canvasOrig.toDataURL('image/png');
       sharePhotoState.cartoonDataUrl = canvasCartoon.toDataURL('image/png');
-      document.getElementById('sharePhotoOriginal').src = sharePhotoState.originalDataUrl;
-      document.getElementById('sharePhotoCartoon').src = sharePhotoState.cartoonDataUrl;
-      document.getElementById('sharePhotoRow').style.display = 'flex';
+      elOriginal.src = sharePhotoState.originalDataUrl;
+      elCartoon.src = sharePhotoState.cartoonDataUrl;
+      row.style.display = 'flex';
+      input.value = '';
     };
     img.src = reader.result;
   };
