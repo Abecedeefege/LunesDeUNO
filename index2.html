@@ -179,7 +179,7 @@
     .photo-upload-wrap { margin: .5rem 0; }
     .photo-upload-wrap input[type="file"] { font-size: .85rem; color: var(--text); }
     /* Stats example */
-    #stats { gap: 1.25rem; padding-top: 2rem; }
+    #stats { gap: 1.25rem; padding-top: calc(52px + 1rem); }
     .stats-card { max-width: 520px; }
     .stats-card h3 { font-size: 1.1rem; margin-bottom: .75rem; color: var(--uno-yellow); }
     .stats-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
@@ -216,7 +216,7 @@
     .uno-card-mini span { position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
 
     /* ---- SETUP SCREEN ---- */
-    #setup { gap: 1.5rem; padding-top: 3rem; }
+    #setup { gap: 1.5rem; padding-top: calc(52px + 1.5rem); }
     #setup .card + .card { margin-top: 0; }
 
     .player-inputs { display: flex; flex-direction: column; gap: .75rem; margin-top: .75rem; }
@@ -253,7 +253,7 @@
     }
 
     /* ---- GAME SCREEN ---- */
-    #game { gap: 1.25rem; padding-top: 2rem; }
+    #game { gap: 1.25rem; padding-top: calc(52px + 1rem); }
 
     .game-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -411,7 +411,7 @@
     .round-history-table .edit-cell:hover { text-decoration: underline; }
 
     /* ---- RESULTS SCREEN ---- */
-    #results { gap: 1.5rem; padding-top: 2.5rem; text-align: center; }
+    #results { gap: 1.5rem; padding-top: calc(52px + 1.5rem); text-align: center; }
 
     .trophy { font-size: 4rem; margin-bottom: .25rem; }
     .winner-name {
@@ -631,6 +631,34 @@
     }
     body.asado .round-roast-slide.roast { color: #ff6b35; }
     body.asado .round-roast-slide.brag { color: #7cb342; }
+
+    /* ---- Flying Meat (Modo Asado) ---- */
+    .flying-meat {
+      position: fixed;
+      z-index: 50;
+      font-size: 2rem;
+      pointer-events: none;
+      user-select: none;
+      animation: meatFly var(--fly-dur, 6s) linear forwards;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+    @keyframes meatFly {
+      0% {
+        transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+        transform: translate(var(--start-x), var(--start-y)) rotate(30deg) scale(1);
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--end-x), var(--end-y)) rotate(var(--spin, 720deg)) scale(0.6);
+        opacity: 0;
+      }
+    }
 
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
@@ -2160,6 +2188,45 @@ const ASADO_CAROUSEL_MSGS = {
 
 let asadoMode = false;
 let originalCarouselMsgs = null;
+let meatInterval = null;
+const MEAT_EMOJIS = ['🥩', '🍖', '🌭', '🍗', '🥓', '🔥', '🌶️', '🧅', '🫑'];
+
+function spawnFlyingMeat() {
+  const el = document.createElement('span');
+  el.className = 'flying-meat';
+  el.textContent = MEAT_EMOJIS[Math.floor(Math.random() * MEAT_EMOJIS.length)];
+  const side = Math.floor(Math.random() * 4);
+  let startX, startY, endX, endY;
+  const W = window.innerWidth, H = window.innerHeight;
+  if (side === 0) { startX = -40; startY = Math.random() * H; endX = W + 60; endY = Math.random() * H; }
+  else if (side === 1) { startX = W + 40; startY = Math.random() * H; endX = -60; endY = Math.random() * H; }
+  else if (side === 2) { startX = Math.random() * W; startY = -40; endX = Math.random() * W; endY = H + 60; }
+  else { startX = Math.random() * W; startY = H + 40; endX = Math.random() * W; endY = -60; }
+  const dur = 4 + Math.random() * 5;
+  const spin = 360 + Math.random() * 720;
+  const size = 1.2 + Math.random() * 1.5;
+  el.style.setProperty('--start-x', startX + 'px');
+  el.style.setProperty('--start-y', startY + 'px');
+  el.style.setProperty('--end-x', endX + 'px');
+  el.style.setProperty('--end-y', endY + 'px');
+  el.style.setProperty('--fly-dur', dur + 's');
+  el.style.setProperty('--spin', spin + 'deg');
+  el.style.fontSize = size + 'rem';
+  el.style.top = '0';
+  el.style.left = '0';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000 + 200);
+}
+
+function startMeatRain() {
+  if (meatInterval) return;
+  meatInterval = setInterval(spawnFlyingMeat, 800);
+}
+
+function stopMeatRain() {
+  if (meatInterval) { clearInterval(meatInterval); meatInterval = null; }
+  document.querySelectorAll('.flying-meat').forEach(el => el.remove());
+}
 
 function getAsadoEmoji(playerIdx) {
   return ASADO_EMOJIS[playerIdx % ASADO_EMOJIS.length];
@@ -2178,6 +2245,7 @@ function applyAsadoMode() {
     Object.keys(ASADO_CAROUSEL_MSGS).forEach(lang => {
       CAROUSEL_MSGS[lang] = ASADO_CAROUSEL_MSGS[lang];
     });
+    startMeatRain();
   } else {
     document.body.classList.remove('asado');
     if (originalCarouselMsgs) {
@@ -2185,6 +2253,7 @@ function applyAsadoMode() {
         CAROUSEL_MSGS[lang] = originalCarouselMsgs[lang];
       });
     }
+    stopMeatRain();
   }
   if (document.getElementById('game').classList.contains('active')) renderGame();
   if (document.getElementById('results').classList.contains('active')) renderResults();
