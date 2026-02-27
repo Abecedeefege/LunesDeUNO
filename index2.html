@@ -179,7 +179,7 @@
     .photo-upload-wrap { margin: .5rem 0; }
     .photo-upload-wrap input[type="file"] { font-size: .85rem; color: var(--text); }
     /* Stats example */
-    #stats { gap: 1.25rem; padding-top: calc(52px + 1rem); }
+    #stats { gap: 1.25rem; padding-top: 2rem; }
     .stats-card { max-width: 520px; }
     .stats-card h3 { font-size: 1.1rem; margin-bottom: .75rem; color: var(--uno-yellow); }
     .stats-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
@@ -216,7 +216,7 @@
     .uno-card-mini span { position: relative; z-index: 1; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
 
     /* ---- SETUP SCREEN ---- */
-    #setup { gap: 1.5rem; padding-top: calc(52px + 1.5rem); }
+    #setup { gap: 1.5rem; padding-top: 3rem; }
     #setup .card + .card { margin-top: 0; }
 
     .player-inputs { display: flex; flex-direction: column; gap: .75rem; margin-top: .75rem; }
@@ -253,7 +253,7 @@
     }
 
     /* ---- GAME SCREEN ---- */
-    #game { gap: 1.25rem; padding-top: calc(52px + 1rem); }
+    #game { gap: 1.25rem; padding-top: 2rem; }
 
     .game-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -411,7 +411,7 @@
     .round-history-table .edit-cell:hover { text-decoration: underline; }
 
     /* ---- RESULTS SCREEN ---- */
-    #results { gap: 1.5rem; padding-top: calc(52px + 1.5rem); text-align: center; }
+    #results { gap: 1.5rem; padding-top: 2.5rem; text-align: center; }
 
     .trophy { font-size: 4rem; margin-bottom: .25rem; }
     .winner-name {
@@ -502,164 +502,6 @@
 
     .print-header { display: none; }
 
-    /* ---- Walk of Shame ---- */
-    .walk-of-shame {
-      width: 100%; max-width: 480px;
-      display: none;
-    }
-    .walk-of-shame.visible { display: block; }
-    .walk-of-shame h3 {
-      font-size: .95rem; color: var(--danger); margin-bottom: .5rem;
-      display: flex; align-items: center; gap: .4rem;
-    }
-    .shame-list {
-      display: flex; flex-direction: column; gap: .4rem;
-    }
-    .shame-row {
-      display: flex; align-items: center; gap: .6rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: .55rem .75rem;
-    }
-    .shame-rank {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1rem; width: 24px; text-align: center;
-      color: var(--danger);
-    }
-    .shame-name {
-      flex: 1; font-weight: 600; font-size: .9rem;
-      display: flex; align-items: center; gap: .4rem;
-    }
-    .shame-badge {
-      background: rgba(255,77,106,.15);
-      color: var(--danger);
-      padding: .2rem .6rem;
-      border-radius: 8px;
-      font-size: .8rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    /* ---- Copy Toast ---- */
-    .copy-toast {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--success); color: #000;
-      padding: .6rem 1.5rem; border-radius: 12px;
-      font-weight: 600; font-size: .9rem;
-      opacity: 0; transition: all .3s ease;
-      z-index: 999; pointer-events: none;
-    }
-    .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ---- Hat Pulse ---- */
-    @keyframes hatPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3) rotate(8deg); }
-      100% { transform: scale(1); }
-    }
-    .hat-pulse { animation: hatPulse .35s ease; }
-
-    /* ---- Suffering Chart ---- */
-    .suffering-section { margin-top: 1.5rem; }
-    .suffering-section h3 { font-size: 1.1rem; margin-bottom: .75rem; color: var(--danger); }
-    #sufferingChart {
-      width: 100%; height: 280px;
-      border-radius: 12px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-    }
-    .chart-legend {
-      display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .5rem;
-      justify-content: center; font-size: .8rem;
-    }
-    .chart-legend-item { display: flex; align-items: center; gap: .3rem; }
-    .chart-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
-
-    /* ---- Modo Asado Toggle ---- */
-    .asado-toggle-row {
-      display: flex; align-items: center; gap: .75rem;
-      margin-top: 1.5rem;
-      font-size: .95rem; font-weight: 600; color: var(--text-muted);
-    }
-    .asado-switch {
-      position: relative; width: 52px; height: 28px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      border-radius: 14px; cursor: pointer;
-      transition: background .3s;
-    }
-    .asado-switch input { display: none; }
-    .asado-switch .slider {
-      position: absolute; top: 2px; left: 2px;
-      width: 22px; height: 22px; border-radius: 50%;
-      background: var(--text-muted);
-      transition: all .3s; display: flex; align-items: center; justify-content: center;
-      font-size: .75rem;
-    }
-    .asado-switch input:checked + .slider {
-      left: 26px; background: #ff6b35;
-    }
-    .asado-switch input:checked ~ .asado-switch { background: rgba(255,107,53,.2); }
-    body.asado .asado-switch { background: rgba(255,107,53,.25); border-color: #ff6b35; }
-
-    /* ---- Modo Asado Theme ---- */
-    body.asado {
-      --bg: #1a0e08;
-      --surface: #2a1a0e;
-      --surface-2: #3d2b1f;
-      --surface-3: #4a3728;
-      --text: #f5e6d0;
-      --text-muted: #a08060;
-      --border: #5a4030;
-      --danger: #ff6b35;
-      --success: #7cb342;
-      --uno-red: #e64a19;
-      --uno-yellow: #ffb300;
-      --uno-green: #7cb342;
-      --uno-blue: #78909c;
-    }
-    body.asado .btn-primary {
-      background: linear-gradient(135deg, #e64a19, #ff6b35);
-      box-shadow: 0 6px 24px rgba(230,74,25,.35);
-    }
-    body.asado .progress-fill {
-      background: linear-gradient(90deg, #c62828, #e64a19, #ff6b35, #ffb300, #4e342e);
-    }
-    body.asado .logo-title {
-      background: linear-gradient(135deg, #e64a19, #ffb300, #7cb342, #78909c);
-      -webkit-background-clip: text; background-clip: text;
-    }
-    body.asado .round-roast-slide.roast { color: #ff6b35; }
-    body.asado .round-roast-slide.brag { color: #7cb342; }
-
-    /* ---- Flying Meat (Modo Asado) ---- */
-    .flying-meat {
-      position: fixed;
-      z-index: 50;
-      font-size: 2rem;
-      pointer-events: none;
-      user-select: none;
-      animation: meatFly var(--fly-dur, 6s) linear forwards;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
-    }
-    @keyframes meatFly {
-      0% {
-        transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-        transform: translate(var(--start-x), var(--start-y)) rotate(30deg) scale(1);
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--end-x), var(--end-y)) rotate(var(--spin, 720deg)) scale(0.6);
-        opacity: 0;
-      }
-    }
-
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
       .logo-title { font-size: 2.4rem; }
@@ -673,7 +515,7 @@
 
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
-    <a href="#" class="header-logo" id="headerLogo" onclick="playNextSound(); showScreen('home'); return false;" aria-label="Lunes de UNO">
+    <a href="#" class="header-logo" onclick="showScreen('home'); return false;" aria-label="Lunes de UNO">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <!-- Galera negra (top hat): brim + crown -->
         <ellipse cx="20" cy="28" rx="14" ry="4" fill="#0a0a0a"/>
@@ -701,13 +543,6 @@
       <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
-    <div class="asado-toggle-row">
-      <label class="asado-switch">
-        <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
-        <span class="slider">🥩</span>
-      </label>
-      <span data-i18n="asado_mode"></span>
-    </div>
     <p class="home-beta-links">
       <a href="index.html" class="under-construction" data-i18n="home_back_stable">Versión estable</a>
       <span class="beta-sep">·</span>
@@ -774,12 +609,6 @@
     <!-- Current Scoreboard -->
     <table class="scoreboard" id="scoreboard"></table>
 
-    <!-- Walk of Shame -->
-    <div class="walk-of-shame no-print" id="walkOfShame">
-      <h3><span>💀</span> <span data-i18n="shame_title"></span></h3>
-      <div class="shame-list" id="shameList"></div>
-    </div>
-
     <!-- Round Score Input -->
     <div class="card" id="roundInputCard">
       <h4 style="margin-bottom:.75rem; font-size:1rem;" data-i18n="game_enter_scores"></h4>
@@ -824,7 +653,6 @@
     <div class="results-actions no-print">
       <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
       <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
-      <button class="btn btn-secondary" onclick="copyToClipboard()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
       <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
     </div>
 
@@ -832,23 +660,18 @@
     <div class="card share-card no-print">
       <h4 data-i18n="share_title">Compartir resultados</h4>
       <div class="share-actions">
-        <button type="button" class="btn btn-secondary btn-small" onclick="downloadCertificado()">
-          <span>📜</span> <span data-i18n="share_cert">Certificado de Desastre</span>
+        <button type="button" class="btn btn-secondary btn-small" onclick="downloadPDFRoast()">
+          <span>&#128196;</span> <span data-i18n="share_pdf_roast">Descargar PDF (roast al último)</span>
         </button>
         <div class="photo-upload-wrap">
-          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo">Subir foto y cartoon con puntajes</label>
+          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo">Subir foto con puntajes</label>
           <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)">
         </div>
         <div class="share-photo-row" id="sharePhotoRow" style="display:none;">
           <div class="share-photo-box">
-            <img id="sharePhotoOriginal" alt="Original" />
-            <div class="share-photo-label" data-i18n="share_original">Original</div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original">Descargar original</button>
-          </div>
-          <div class="share-photo-box">
-            <img id="sharePhotoCartoon" alt="Cartoon" />
-            <div class="share-photo-label" data-i18n="share_cartoon">Cartoon con puntajes</div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('cartoon')" data-i18n="share_download_cartoon">Descargar cartoon</button>
+            <img id="sharePhotoOriginal" alt="Imagen para compartir" />
+            <div class="share-photo-label" data-i18n="share_original">Imagen con puntajes</div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage()" data-i18n="share_download_original">Descargar imagen</button>
           </div>
         </div>
       </div>
@@ -860,16 +683,8 @@
     <h2 data-i18n="stats_title">Estadísticas de ejemplo</h2>
     <p class="stats-example-note" data-i18n="stats_subtitle">Datos inventados para mostrar cómo se verían las estadísticas.</p>
     <div class="card stats-card" id="statsCard"></div>
-    <div class="card stats-card suffering-section">
-      <h3 data-i18n="stats_suffering_title"></h3>
-      <canvas id="sufferingChart"></canvas>
-      <div class="chart-legend" id="chartLegend"></div>
-    </div>
     <button class="btn btn-secondary btn-small" onclick="showScreen('home')" data-i18n="back_btn">Volver</button>
   </div>
-
-  <!-- Copy toast -->
-  <div class="copy-toast" id="copyToast"></div>
 
   <!-- ============ EDIT MODAL ============ -->
   <div class="modal-overlay" id="editModal">
@@ -894,12 +709,9 @@ const STRINGS = {
     home_example_stats: 'Estadísticas de ejemplo',
     share_title: 'Compartir resultados',
     share_pdf_roast: 'Descargar PDF (roast al último)',
-    share_cert: 'Certificado de Desastre',
-    share_upload_photo: 'Subir foto y cartoon con puntajes',
-    share_original: 'Original',
-    share_cartoon: 'Cartoon con puntajes',
-    share_download_original: 'Descargar original',
-    share_download_cartoon: 'Descargar cartoon',
+    share_upload_photo: 'Subir foto con puntajes',
+    share_original: 'Imagen con puntajes',
+    share_download_original: 'Descargar imagen',
     stats_title: 'Estadísticas de ejemplo',
     stats_subtitle: 'Datos inventados para mostrar cómo se verían las estadísticas.',
     stats_wins: 'Victorias',
@@ -923,14 +735,6 @@ const STRINGS = {
     game_edit: 'editar',
     game_alert_no_scores: 'Bo, metele algún puntaje a alguien por lo menos.',
     game_confirm_quit: '¿Posta te querés ir? Se pierde todo eh.',
-    shame_title: 'Paseo de la Vergüenza',
-    shame_round_lost: 'ronda perdida',
-    shame_rounds_lost: 'rondas perdidas',
-    share_whatsapp: 'Mandale al grupo',
-    share_copied: '¡Copiado al portapapeles!',
-    asado_mode: 'Modo Asado 🥩',
-    stats_suffering_title: 'Línea de Sufrimiento',
-    stats_suffering_yaxis: 'Nivel de sufrimiento',
     results_winner_sub: '¡ganó con menos puntos, qué crack!',
     results_breakdown: 'Ronda por ronda',
     results_print: 'Imprimir',
@@ -949,12 +753,9 @@ const STRINGS = {
     home_example_stats: 'Example stats',
     share_title: 'Share results',
     share_pdf_roast: 'Download PDF (roast last place)',
-    share_cert: 'Certificate of Disaster',
-    share_upload_photo: 'Upload photo & cartoon with scores',
-    share_original: 'Original',
-    share_cartoon: 'Cartoon with scores',
-    share_download_original: 'Download original',
-    share_download_cartoon: 'Download cartoon',
+    share_upload_photo: 'Upload photo with scores',
+    share_original: 'Image with scores',
+    share_download_original: 'Download image',
     stats_title: 'Example statistics',
     stats_subtitle: 'Made-up data to show what stats could look like.',
     stats_wins: 'Wins',
@@ -978,14 +779,6 @@ const STRINGS = {
     game_edit: 'edit',
     game_alert_no_scores: 'Enter at least one score for this round.',
     game_confirm_quit: 'Are you sure you want to quit this game?',
-    shame_title: 'Walk of Shame',
-    shame_round_lost: 'round lost',
-    shame_rounds_lost: 'rounds lost',
-    share_whatsapp: 'Share to group',
-    share_copied: 'Copied to clipboard!',
-    asado_mode: 'BBQ Mode 🥩',
-    stats_suffering_title: 'Suffering Line',
-    stats_suffering_yaxis: 'Suffering Level',
     results_winner_sub: 'wins with the lowest score!',
     results_breakdown: 'Round Breakdown',
     results_print: 'Print Scores',
@@ -1116,16 +909,13 @@ function renderPlayerInputs() {
   const existing = container.querySelectorAll('input');
   const oldValues = Array.from(existing).map(i => i.value);
 
-  const isAsado = document.body.classList.contains('asado');
   let html = '';
   for (let i = 0; i < state.playerCount; i++) {
     const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
     const val = oldValues[i] || '';
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
-      `<div class="player-color" style="background:${color}"></div>`;
     html += `
       <div class="player-input-row">
-        ${dot}
+        <div class="player-color" style="background:${color}"></div>
         <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup()">
       </div>`;
   }
@@ -1233,44 +1023,6 @@ function updateRoundRoastCarousel(messages, startAutoAdvance) {
   }
 }
 
-// ============ WALK OF SHAME ============
-function getRoundLossCounts() {
-  const losses = state.players.map(() => 0);
-  state.rounds.forEach(round => {
-    const maxScore = Math.max(...round);
-    if (maxScore > 0) {
-      round.forEach((s, i) => { if (s === maxScore) losses[i]++; });
-    }
-  });
-  return state.players
-    .map((p, i) => ({ idx: i, name: p.name, color: p.color, losses: losses[i] }))
-    .filter(p => p.losses > 0)
-    .sort((a, b) => b.losses - a.losses)
-    .slice(0, 3);
-}
-
-function renderWalkOfShame() {
-  const container = document.getElementById('walkOfShame');
-  const list = document.getElementById('shameList');
-  const shamers = getRoundLossCounts();
-  if (shamers.length === 0) {
-    container.classList.remove('visible');
-    return;
-  }
-  container.classList.add('visible');
-  const rankEmoji = ['🥇', '🥈', '🥉'];
-  const isAsado = document.body.classList.contains('asado');
-  list.innerHTML = shamers.map((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1rem;">${getAsadoEmoji(shamers[i].idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
-    return `<div class="shame-row">
-      <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
-      <div class="shame-name">${dot} ${p.name}</div>
-      <div class="shame-badge">${p.losses} ${p.losses === 1 ? t('shame_round_lost') : t('shame_rounds_lost')}</div>
-    </div>`;
-  }).join('');
-}
-
 // ============ GAME ============
 function getTotals() {
   return state.players.map((_, pi) =>
@@ -1308,9 +1060,6 @@ function renderGame() {
   // Scoreboard
   renderScoreboard(totals);
 
-  // Walk of Shame
-  renderWalkOfShame();
-
   // Round inputs
   renderRoundInputs();
 
@@ -1334,15 +1083,12 @@ function renderScoreboard(totals) {
   const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
     .sort((a, b) => a.total - b.total);
 
-  const isAsado = document.body.classList.contains('asado');
   sorted.forEach(p => {
     const overLimit = p.total >= state.maxPoints;
     const isLowest = p.total === sorted[0].total && state.rounds.length > 0;
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
       <td><div class="player-name-cell">
-        ${dot}
+        <div class="player-color" style="background:${p.color}"></div>
         ${p.name}
       </div></td>
       <td style="text-align:right;" class="total-cell ${overLimit ? 'over-limit' : ''}">${p.total}</td>
@@ -1359,15 +1105,12 @@ function renderRoundInputs() {
   }
   document.getElementById('roundInputCard').style.display = '';
   const container = document.getElementById('roundInputs');
-  const isAsado = document.body.classList.contains('asado');
   let html = '';
   state.players.forEach((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `
       <div class="round-input-row">
         <div class="player-label">
-          ${dot}
+          <div class="player-color" style="background:${p.color}"></div>
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0" min="0">
@@ -1487,17 +1230,14 @@ function renderResults() {
 
   const container = document.getElementById('finalStandings');
   const medals = ['gold', 'silver', 'bronze'];
-  const isAsado = document.body.classList.contains('asado');
   let html = '';
   standings.forEach((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `
       <div class="standing-row">
         <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
         <div class="standing-info">
           <div class="name" style="display:flex;align-items:center;gap:.4rem;">
-            ${dot}
+            <div class="player-color" style="background:${p.color}"></div>
             ${p.name}
           </div>
         </div>
@@ -1660,35 +1400,10 @@ function downloadPDFRoast() {
   doc.save('LunesDeUNO-' + lastPlace.name.replace(/\s/g, '') + '.pdf');
 }
 
-// ============ SHARE (beta): Photo + cartoon with scores ============
-let sharePhotoState = { originalDataUrl: null, cartoonDataUrl: null };
+// ============ SHARE (beta): Photo with scores ============
+let sharePhotoState = { originalDataUrl: null };
 
-function applyCartoonEffect(imageData, width, height) {
-  var data = imageData.data;
-  var len = data.length;
-  var levels = 6;
-  var stride = width * 4;
-  // First pass: posterize (reduce color levels)
-  for (var i = 0; i < len; i += 4) {
-    data[i] = Math.floor(data[i] / (256 / levels)) * (256 / levels);
-    data[i + 1] = Math.floor(data[i + 1] / (256 / levels)) * (256 / levels);
-    data[i + 2] = Math.floor(data[i + 2] / (256 / levels)) * (256 / levels);
-  }
-  // Second pass: edge darkening using original-like comparison (neighbors)
-  for (var y = 1; y < height - 1; y++) {
-    for (var x = 1; x < width - 1; x++) {
-      var i = (y * width + x) * 4;
-      var gx = Math.abs(data[i] - data[i - 4]) + Math.abs(data[i + 4] - data[i]);
-      var gy = Math.abs(data[i] - data[i - stride]) + Math.abs(data[i + stride] - data[i]);
-      if (gx + gy > 80) {
-        data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
-      }
-    }
-  }
-  return imageData;
-}
-
-function drawScoresOnCanvas(canvas, img, isCartoon) {
+function drawScoresOnCanvas(canvas, img) {
   const ctx = canvas.getContext('2d');
   const maxW = 400, maxH = 300;
   let w = img.width, h = img.height;
@@ -1698,10 +1413,6 @@ function drawScoresOnCanvas(canvas, img, isCartoon) {
   }
   canvas.width = w; canvas.height = h;
   ctx.drawImage(img, 0, 0, w, h);
-  if (isCartoon) {
-    const imageData = ctx.getImageData(0, 0, w, h);
-    ctx.putImageData(applyCartoonEffect(imageData, w, h), 0, 0);
-  }
   const totals = getTotals();
   const standings = state.players.map((p, i) => ({ ...p, total: totals[i] })).sort((a, b) => a.total - b.total);
   ctx.font = 'bold 14px Inter, sans-serif';
@@ -1722,26 +1433,19 @@ function onSharePhotoChange(ev) {
   if (!file || !file.type.startsWith('image/')) return;
   // Clear previous preview so the UI always reflects the new upload
   sharePhotoState.originalDataUrl = null;
-  sharePhotoState.cartoonDataUrl = null;
   var elOriginal = document.getElementById('sharePhotoOriginal');
-  var elCartoon = document.getElementById('sharePhotoCartoon');
   var row = document.getElementById('sharePhotoRow');
   var input = document.getElementById('sharePhotoInput');
   row.style.display = 'none';
   elOriginal.removeAttribute('src');
-  elCartoon.removeAttribute('src');
   var reader = new FileReader();
   reader.onload = function () {
     var img = new Image();
     img.onload = function () {
       var canvasOrig = document.createElement('canvas');
-      var canvasCartoon = document.createElement('canvas');
-      drawScoresOnCanvas(canvasOrig, img, false);
-      drawScoresOnCanvas(canvasCartoon, img, true);
+      drawScoresOnCanvas(canvasOrig, img);
       sharePhotoState.originalDataUrl = canvasOrig.toDataURL('image/png');
-      sharePhotoState.cartoonDataUrl = canvasCartoon.toDataURL('image/png');
       elOriginal.src = sharePhotoState.originalDataUrl;
-      elCartoon.src = sharePhotoState.cartoonDataUrl;
       row.style.display = 'flex';
       input.value = '';
     };
@@ -1751,7 +1455,7 @@ function onSharePhotoChange(ev) {
 }
 
 function downloadShareImage(which) {
-  const dataUrl = which === 'original' ? sharePhotoState.originalDataUrl : sharePhotoState.cartoonDataUrl;
+  const dataUrl = sharePhotoState.originalDataUrl;
   if (!dataUrl) return;
   const a = document.createElement('a');
   a.href = dataUrl;
@@ -1804,467 +1508,9 @@ function renderStats() {
   });
   html += '</tbody></table>';
   container.innerHTML = html;
-  setTimeout(renderSufferingChart, 50);
-}
-
-// ============ +4 SOUND BOARD ============
-let soundCtx = null;
-let soundIndex = 0;
-
-function playNextSound() {
-  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (soundCtx.state === 'suspended') soundCtx.resume();
-  const sounds = [playSadTrombone, playAirHorn, playDramaticSting, playFuneralMarch];
-  sounds[soundIndex % sounds.length]();
-  soundIndex++;
-  const logo = document.querySelector('.header-logo svg');
-  if (logo) { logo.classList.remove('hat-pulse'); void logo.offsetWidth; logo.classList.add('hat-pulse'); }
-}
-
-function playTone(freq, type, start, dur, gainVal) {
-  const osc = soundCtx.createOscillator();
-  const gain = soundCtx.createGain();
-  osc.type = type; osc.frequency.value = freq;
-  gain.gain.value = gainVal || 0.3;
-  osc.connect(gain); gain.connect(soundCtx.destination);
-  osc.start(soundCtx.currentTime + start);
-  osc.stop(soundCtx.currentTime + start + dur);
-  gain.gain.setValueAtTime(gainVal || 0.3, soundCtx.currentTime + start);
-  gain.gain.exponentialRampToValueAtTime(0.001, soundCtx.currentTime + start + dur);
-}
-
-function playSadTrombone() {
-  [293.66, 277.18, 261.63, 246.94].forEach((f, i) => playTone(f, 'sawtooth', i * 0.3, 0.3, 0.2));
-}
-
-function playAirHorn() {
-  [200, 250, 200, 250].forEach((f, i) => playTone(f, 'sawtooth', i * 0.08, 0.12, 0.25));
-  playTone(220, 'sawtooth', 0.32, 0.5, 0.3);
-}
-
-function playDramaticSting() {
-  [440, 554, 659, 880].forEach((f, i) => playTone(f, 'square', i * 0.08, 0.15, 0.15));
-  playTone(220, 'sawtooth', 0.4, 0.6, 0.2);
-}
-
-function playFuneralMarch() {
-  const notes = [
-    [261.63, 0, 0.5], [261.63, 0.5, 0.25], [261.63, 0.75, 0.25],
-    [261.63, 1.0, 0.75], [311.13, 1.0, 0.75],
-    [293.66, 1.75, 0.25], [293.66, 2.0, 0.25], [261.63, 2.25, 0.25],
-    [261.63, 2.5, 0.5], [246.94, 2.5, 0.5]
-  ];
-  notes.forEach(([f, s, d]) => playTone(f, 'triangle', s, d, 0.2));
-}
-
-// ============ MANDALE AL GRUPO ============
-function copyToClipboard() {
-  const totals = getTotals();
-  const standings = state.players.map((p, i) => ({ ...p, total: totals[i], idx: i }))
-    .sort((a, b) => a.total - b.total);
-  const isAsado = document.body.classList.contains('asado');
-  const header = isAsado ? '🥩🔥 LUNES DE UNO — EDICIÓN ASADO 🔥🥩' : '🃏 LUNES DE UNO 🃏';
-  const posEmojis = ['🏆', '😐', '😬', '🫠', '💀'];
-  const posQuips = currentLang === 'es'
-    ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
-    : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
-  let lines = [header, ''];
-  standings.forEach((p, i) => {
-    const emoji = i === 0 ? posEmojis[0] : i === standings.length - 1 ? '💀' : (posEmojis[Math.min(i, 4)]);
-    const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
-    lines.push(`${emoji} ${p.name}: ${p.total} pts — ${quip}`);
-  });
-  lines.push('');
-  lines.push(`📊 ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'límite' : 'limit'} ${state.maxPoints}`);
-  const lastPlace = standings[standings.length - 1];
-  const closers = currentLang === 'es'
-    ? [`Bo ${lastPlace.name}, dejá el UNO y jugá al dominó 😂`, `${lastPlace.name} se llevó todos los puntos a casa 🏠`, `Alguien avísele a ${lastPlace.name} que acá gana el que tiene menos 💀`]
-    : [`${lastPlace.name}, maybe try checkers instead 😂`, `${lastPlace.name} took the whole pile home 🏠`, `Someone tell ${lastPlace.name} the lowest score wins 💀`];
-  lines.push(closers[Math.floor(Math.random() * closers.length)]);
-  const text = lines.join('\n');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => showCopyToast());
-  } else {
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta); showCopyToast();
-  }
-}
-
-function showCopyToast() {
-  const toast = document.getElementById('copyToast');
-  toast.textContent = t('share_copied');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-// ============ CERTIFICADO DE DESASTRE ============
-const CERT_ROASTS = {
-  es: [
-    '{name} ha demostrado un nivel excepcional de acumulación de puntos, superando toda expectativa razonable.',
-    'Se certifica que {name} no tiene la más mínima idea de cómo funciona el UNO, pero pone mucha onda.',
-    '{name} batió récords de puntos que nadie quería batir. Un verdadero campeón del desastre.',
-    'Con {total} puntos, {name} se convierte en leyenda. Del tipo que nadie quiere ser.',
-  ],
-  en: [
-    '{name} has demonstrated an exceptional level of point accumulation, surpassing all reasonable expectations.',
-    'It is certified that {name} has absolutely no clue how UNO works, but tries really hard.',
-    '{name} broke records that nobody wanted broken. A true champion of disaster.',
-    'With {total} points, {name} becomes a legend. The kind nobody wants to be.',
-  ],
-};
-
-function downloadCertificado() {
-  if (typeof jspdf === 'undefined') { alert('PDF library not loaded.'); return; }
-  const totals = getTotals();
-  const standings = state.players.map((p, i) => ({ name: p.name, total: totals[i], idx: i }))
-    .sort((a, b) => a.total - b.total);
-  const lastPlace = standings[standings.length - 1];
-  const lang = currentLang in CERT_ROASTS ? currentLang : 'es';
-  const roast = CERT_ROASTS[lang][Math.floor(Math.random() * CERT_ROASTS[lang].length)]
-    .replace(/\{name\}/g, lastPlace.name).replace(/\{total\}/g, lastPlace.total);
-  const serialNum = 'CERT-' + Math.random().toString(16).substr(2, 6).toUpperCase();
-  const dateStr = new Date().toLocaleDateString(lang === 'es' ? 'es-UY' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-  const doc = new jspdf.jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-  const w = doc.internal.pageSize.getWidth();
-  const h = doc.internal.pageSize.getHeight();
-
-  // Background
-  doc.setFillColor(15, 15, 26);
-  doc.rect(0, 0, w, h, 'F');
-
-  // Decorative double border
-  doc.setDrawColor(237, 28, 36); doc.setLineWidth(3);
-  doc.rect(8, 8, w - 16, h - 16);
-  doc.setDrawColor(255, 222, 0); doc.setLineWidth(1.5);
-  doc.rect(13, 13, w - 26, h - 26);
-
-  // Corner decorations
-  const corners = [[18, 18], [w - 23, 18], [18, h - 23], [w - 23, h - 23]];
-  doc.setFillColor(255, 222, 0);
-  corners.forEach(([cx, cy]) => { doc.circle(cx, cy, 3, 'F'); });
-
-  // Header
-  doc.setTextColor(255, 222, 0);
-  doc.setFontSize(10); doc.setFont('helvetica', 'normal');
-  doc.text(lang === 'es' ? 'ASOCIACIÓN URUGUAYA DE PERDEDORES' : 'INTERNATIONAL LOSERS ASSOCIATION', w / 2, 28, { align: 'center' });
-
-  doc.setTextColor(237, 28, 36);
-  doc.setFontSize(36); doc.setFont('helvetica', 'bold');
-  doc.text(lang === 'es' ? 'CERTIFICADO DE DESASTRE' : 'CERTIFICATE OF DISASTER', w / 2, 45, { align: 'center' });
-
-  // Subtitle
-  doc.setTextColor(136, 136, 168);
-  doc.setFontSize(11); doc.setFont('helvetica', 'normal');
-  doc.text(lang === 'es' ? 'Se certifica por la presente que' : 'This is to certify that', w / 2, 58, { align: 'center' });
-
-  // Player name
-  doc.setTextColor(255, 222, 0);
-  doc.setFontSize(32); doc.setFont('helvetica', 'bold');
-  doc.text(lastPlace.name, w / 2, 74, { align: 'center' });
-
-  // Score
-  doc.setTextColor(255, 77, 106);
-  doc.setFontSize(14); doc.setFont('helvetica', 'normal');
-  doc.text(lastPlace.total + ' ' + t('game_pts'), w / 2, 83, { align: 'center' });
-
-  // Roast text in a bubble
-  doc.setFillColor(26, 26, 46);
-  doc.setDrawColor(90, 90, 140);
-  doc.setLineWidth(0.5);
-  const roastLines = doc.splitTextToSize(roast, w - 80);
-  const bubbleH = Math.max(20, roastLines.length * 6 + 12);
-  doc.roundedRect(35, 90, w - 70, bubbleH, 4, 4, 'FD');
-  doc.setTextColor(240, 240, 245);
-  doc.setFontSize(11);
-  doc.text(roastLines, w / 2, 99, { align: 'center' });
-
-  // Standings mini-table
-  let sy = 90 + bubbleH + 12;
-  doc.setTextColor(136, 136, 168);
-  doc.setFontSize(9); doc.setFont('helvetica', 'bold');
-  doc.text(lang === 'es' ? 'CLASIFICACIÓN FINAL' : 'FINAL STANDINGS', w / 2, sy, { align: 'center' });
-  sy += 6;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  standings.forEach((p, i) => {
-    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) + '.';
-    doc.setTextColor(i === standings.length - 1 ? 255 : 200, i === standings.length - 1 ? 77 : 200, i === standings.length - 1 ? 106 : 200);
-    doc.text(`${medal}  ${p.name}  —  ${p.total} pts`, w / 2, sy, { align: 'center' });
-    sy += 6;
-  });
-
-  // Wax seal
-  const sealX = w - 50, sealY = h - 45;
-  doc.setFillColor(200, 30, 30);
-  doc.circle(sealX, sealY, 14, 'F');
-  doc.setFillColor(180, 20, 20);
-  doc.circle(sealX, sealY, 11, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(7); doc.setFont('helvetica', 'bold');
-  doc.text('VERIFICADO', sealX, sealY - 2, { align: 'center' });
-  doc.setFontSize(5);
-  doc.text('LUNES DE UNO', sealX, sealY + 3, { align: 'center' });
-
-  // Signature
-  doc.setDrawColor(136, 136, 168);
-  doc.setLineWidth(0.3);
-  doc.line(40, h - 35, 110, h - 35);
-  doc.setTextColor(136, 136, 168);
-  doc.setFontSize(8); doc.setFont('helvetica', 'normal');
-  doc.text(lang === 'es' ? 'El Presidente del UNO' : 'The President of UNO', 75, h - 31, { align: 'center' });
-
-  // Serial & date
-  doc.setTextColor(90, 90, 140);
-  doc.setFontSize(7);
-  doc.text(serialNum, 20, h - 14);
-  doc.text(dateStr, w - 20, h - 14, { align: 'right' });
-
-  doc.save('CertificadoDeDesastre-' + lastPlace.name.replace(/\s/g, '') + '.pdf');
-}
-
-// ============ LÍNEA DE SUFRIMIENTO ============
-const EXAMPLE_ROUNDS = [
-  [15, 45, 30, 60],
-  [20, 10, 55, 40],
-  [35, 25, 10, 50],
-  [10, 55, 40, 20],
-  [25, 30, 15, 45],
-  [40, 20, 35, 55],
-  [5, 35, 50, 30],
-  [30, 15, 25, 89],
-];
-const EXAMPLE_PLAYERS = [
-  { name: 'Ana', color: '#ED1C24' },
-  { name: 'Bruno', color: '#FFDE00' },
-  { name: 'Cata', color: '#00A651' },
-  { name: 'Dani', color: '#0072BC' },
-];
-
-const SUFFERING_ANNOTATIONS = {
-  es: ['Acá se pudrió todo', 'El +4 legendario', 'Momento de silencio'],
-  en: ['Everything went wrong here', 'The legendary +4', 'Moment of silence'],
-};
-
-function renderSufferingChart() {
-  const canvas = document.getElementById('sufferingChart');
-  if (!canvas) return;
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const W = Math.max(rect.width - 32, 300);
-  const H = 260;
-  canvas.width = W * dpr; canvas.height = H * dpr;
-  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const cumulative = EXAMPLE_PLAYERS.map((_, pi) => {
-    let sum = 0;
-    return [0, ...EXAMPLE_ROUNDS.map(r => (sum += r[pi]))];
-  });
-  const maxVal = Math.max(...cumulative.flat());
-  const padL = 55, padR = 20, padT = 20, padB = 35;
-  const chartW = W - padL - padR, chartH = H - padT - padB;
-  const numRounds = EXAMPLE_ROUNDS.length;
-  const stepX = chartW / numRounds;
-
-  // Grid
-  ctx.strokeStyle = 'rgba(136,136,168,0.15)'; ctx.lineWidth = 1;
-  for (let i = 0; i <= 5; i++) {
-    const y = padT + (chartH / 5) * i;
-    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + chartW, y); ctx.stroke();
-    ctx.fillStyle = '#8888a8'; ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText(Math.round(maxVal - (maxVal / 5) * i), padL - 6, y + 4);
-  }
-
-  // Y-axis label
-  ctx.save(); ctx.translate(12, padT + chartH / 2);
-  ctx.rotate(-Math.PI / 2); ctx.fillStyle = '#ff4d6a'; ctx.font = 'bold 10px Inter, sans-serif';
-  ctx.textAlign = 'center'; ctx.fillText(t('stats_suffering_yaxis'), 0, 0); ctx.restore();
-
-  // X-axis labels
-  ctx.fillStyle = '#8888a8'; ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center';
-  for (let r = 0; r <= numRounds; r++) {
-    const x = padL + stepX * r;
-    ctx.fillText(r === 0 ? '0' : 'R' + r, x, H - padB + 16);
-  }
-
-  // Lines
-  cumulative.forEach((data, pi) => {
-    ctx.strokeStyle = EXAMPLE_PLAYERS[pi].color;
-    ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
-    ctx.beginPath();
-    data.forEach((val, ri) => {
-      const x = padL + stepX * ri;
-      const y = padT + chartH - (val / maxVal) * chartH;
-      if (ri === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-
-    // Points
-    data.forEach((val, ri) => {
-      const x = padL + stepX * ri;
-      const y = padT + chartH - (val / maxVal) * chartH;
-      ctx.fillStyle = EXAMPLE_PLAYERS[pi].color;
-      ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
-    });
-  });
-
-  // Annotations
-  const lang = currentLang in SUFFERING_ANNOTATIONS ? currentLang : 'es';
-  const annots = SUFFERING_ANNOTATIONS[lang];
-  ctx.font = 'bold 9px Inter, sans-serif'; ctx.textAlign = 'left';
-
-  // Biggest single jump for Dani (round 8: 89pts)
-  const annotX1 = padL + stepX * 8;
-  const annotY1 = padT + chartH - (cumulative[3][8] / maxVal) * chartH;
-  ctx.fillStyle = '#ff4d6a';
-  ctx.fillText(annots[0], annotX1 - 60, annotY1 - 10);
-
-  // Biggest single round for Bruno (round 4: 55pts)
-  const annotX2 = padL + stepX * 4;
-  const annotY2 = padT + chartH - (cumulative[1][4] / maxVal) * chartH;
-  ctx.fillStyle = '#ffde00';
-  ctx.fillText(annots[1], annotX2 + 6, annotY2 - 6);
-
-  // Ana's low round (round 7: 5pts)
-  const annotX3 = padL + stepX * 7;
-  const annotY3 = padT + chartH - (cumulative[0][7] / maxVal) * chartH;
-  ctx.fillStyle = '#4dff91';
-  ctx.fillText(annots[2], annotX3 - 80, annotY3 + 14);
-
-  // Legend
-  const legendEl = document.getElementById('chartLegend');
-  if (legendEl) {
-    legendEl.innerHTML = EXAMPLE_PLAYERS.map(p =>
-      `<span class="chart-legend-item"><span class="chart-legend-dot" style="background:${p.color}"></span>${p.name}</span>`
-    ).join('');
-  }
-}
-
-// ============ MODO ASADO ============
-const ASADO_EMOJIS = ['🥩', '🍖', '🌭', '🫒', '🔥', '🧅', '🫑', '🧄', '🍞', '🌶️'];
-
-const ASADO_CAROUSEL_MSGS = {
-  es: {
-    last: [
-      '{name} está más quemado que la tira de asado que nadie quería 🔥',
-      '{name} juntó más puntos que sal tiene el vacío, bo.',
-      'A {name} le faltó vuelta y vuelta, se carbonizó esta ronda.',
-      '{name} se pasó de cocción, ta hecho carbón.',
-      'Pa, {name}, más quemado que chorizo olvidado en la parrilla.',
-    ],
-    secondLast: [
-      '{name} quedó a punto, casi se pasa de cocción.',
-      '{name} está jugoso todavía, pero ojo con la próxima vuelta.',
-    ],
-    first: [
-      '{name} salió al punto justo, término medio perfecto 🥩',
-      '{name} es el asador de esta mesa, tremendo nivel.',
-      'Esta ronda {name} la clavó como un buen vacío a la brasa.',
-    ],
-  },
-  en: {
-    last: [
-      '{name} is more burnt than forgotten ribs on the grill 🔥',
-      '{name} collected more points than salt on a steak.',
-      '{name} forgot to flip and got charred this round.',
-      '{name} is well-done. Way too well-done.',
-      '{name} got roasted harder than the sausages.',
-    ],
-    secondLast: [
-      '{name} is medium-rare, almost overcooked.',
-      '{name} is still juicy, but watch out next round.',
-    ],
-    first: [
-      '{name} came out medium-rare perfection 🥩',
-      '{name} is the grill master of this table.',
-      '{name} nailed it like a perfect cut on the BBQ.',
-    ],
-  },
-};
-
-let asadoMode = false;
-let originalCarouselMsgs = null;
-let meatInterval = null;
-const MEAT_EMOJIS = ['🥩', '🍖', '🌭', '🍗', '🥓', '🔥', '🌶️', '🧅', '🫑'];
-
-function spawnFlyingMeat() {
-  const el = document.createElement('span');
-  el.className = 'flying-meat';
-  el.textContent = MEAT_EMOJIS[Math.floor(Math.random() * MEAT_EMOJIS.length)];
-  const side = Math.floor(Math.random() * 4);
-  let startX, startY, endX, endY;
-  const W = window.innerWidth, H = window.innerHeight;
-  if (side === 0) { startX = -40; startY = Math.random() * H; endX = W + 60; endY = Math.random() * H; }
-  else if (side === 1) { startX = W + 40; startY = Math.random() * H; endX = -60; endY = Math.random() * H; }
-  else if (side === 2) { startX = Math.random() * W; startY = -40; endX = Math.random() * W; endY = H + 60; }
-  else { startX = Math.random() * W; startY = H + 40; endX = Math.random() * W; endY = -60; }
-  const dur = 4 + Math.random() * 5;
-  const spin = 360 + Math.random() * 720;
-  const size = 1.2 + Math.random() * 1.5;
-  el.style.setProperty('--start-x', startX + 'px');
-  el.style.setProperty('--start-y', startY + 'px');
-  el.style.setProperty('--end-x', endX + 'px');
-  el.style.setProperty('--end-y', endY + 'px');
-  el.style.setProperty('--fly-dur', dur + 's');
-  el.style.setProperty('--spin', spin + 'deg');
-  el.style.fontSize = size + 'rem';
-  el.style.top = '0';
-  el.style.left = '0';
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), dur * 1000 + 200);
-}
-
-function startMeatRain() {
-  if (meatInterval) return;
-  meatInterval = setInterval(spawnFlyingMeat, 800);
-}
-
-function stopMeatRain() {
-  if (meatInterval) { clearInterval(meatInterval); meatInterval = null; }
-  document.querySelectorAll('.flying-meat').forEach(el => el.remove());
-}
-
-function getAsadoEmoji(playerIdx) {
-  return ASADO_EMOJIS[playerIdx % ASADO_EMOJIS.length];
-}
-
-function toggleAsado() {
-  asadoMode = document.getElementById('asadoToggle').checked;
-  localStorage.setItem('lunesdeuno_asado', asadoMode ? 'on' : 'off');
-  applyAsadoMode();
-}
-
-function applyAsadoMode() {
-  if (asadoMode) {
-    document.body.classList.add('asado');
-    if (!originalCarouselMsgs) originalCarouselMsgs = JSON.parse(JSON.stringify(CAROUSEL_MSGS));
-    Object.keys(ASADO_CAROUSEL_MSGS).forEach(lang => {
-      CAROUSEL_MSGS[lang] = ASADO_CAROUSEL_MSGS[lang];
-    });
-    startMeatRain();
-  } else {
-    document.body.classList.remove('asado');
-    if (originalCarouselMsgs) {
-      Object.keys(originalCarouselMsgs).forEach(lang => {
-        CAROUSEL_MSGS[lang] = originalCarouselMsgs[lang];
-      });
-    }
-    stopMeatRain();
-  }
-  if (document.getElementById('game').classList.contains('active')) renderGame();
-  if (document.getElementById('results').classList.contains('active')) renderResults();
 }
 
 // ============ INIT ============
-// Restore asado mode from localStorage
-asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
-document.getElementById('asadoToggle').checked = asadoMode;
-if (asadoMode) applyAsadoMode();
-
 setLang(currentLang);
 initSetup();
 </script>
