@@ -499,6 +499,45 @@
 
     .print-header { display: none; }
 
+    /* ---- Walk of Shame ---- */
+    .walk-of-shame {
+      width: 100%; max-width: 480px;
+      display: none;
+    }
+    .walk-of-shame.visible { display: block; }
+    .walk-of-shame h3 {
+      font-size: .95rem; color: var(--danger); margin-bottom: .5rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .shame-list {
+      display: flex; flex-direction: column; gap: .4rem;
+    }
+    .shame-row {
+      display: flex; align-items: center; gap: .6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .55rem .75rem;
+    }
+    .shame-rank {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem; width: 24px; text-align: center;
+      color: var(--danger);
+    }
+    .shame-name {
+      flex: 1; font-weight: 600; font-size: .9rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .shame-badge {
+      background: rgba(255,77,106,.15);
+      color: var(--danger);
+      padding: .2rem .6rem;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
       .logo-title { font-size: 2.4rem; }
@@ -606,6 +645,12 @@
     <!-- Current Scoreboard -->
     <table class="scoreboard" id="scoreboard"></table>
 
+    <!-- Walk of Shame -->
+    <div class="walk-of-shame no-print" id="walkOfShame">
+      <h3><span>💀</span> <span data-i18n="shame_title"></span></h3>
+      <div class="shame-list" id="shameList"></div>
+    </div>
+
     <!-- Round Score Input -->
     <div class="card" id="roundInputCard">
       <h4 style="margin-bottom:.75rem; font-size:1rem;" data-i18n="game_enter_scores"></h4>
@@ -691,6 +736,8 @@ const STRINGS = {
     game_edit: 'editar',
     game_alert_no_scores: 'Bo, metele algún puntaje a alguien por lo menos.',
     game_confirm_quit: '¿Posta te querés ir? Se pierde todo eh.',
+    shame_title: 'Paseo de la Vergüenza',
+    shame_rounds_lost: 'rondas perdidas',
     results_winner_sub: '¡ganó con menos puntos, qué crack!',
     results_breakdown: 'Ronda por ronda',
     results_print: 'Imprimir',
@@ -723,6 +770,8 @@ const STRINGS = {
     game_edit: 'edit',
     game_alert_no_scores: 'Enter at least one score for this round.',
     game_confirm_quit: 'Are you sure you want to quit this game?',
+    shame_title: 'Walk of Shame',
+    shame_rounds_lost: 'rounds lost',
     results_winner_sub: 'wins with the lowest score!',
     results_breakdown: 'Round Breakdown',
     results_print: 'Print Scores',
@@ -970,6 +1019,44 @@ function updateRoundRoastCarousel(messages, startAutoAdvance) {
   }
 }
 
+// ============ WALK OF SHAME ============
+function getRoundLossCounts() {
+  const losses = state.players.map(() => 0);
+  state.rounds.forEach(round => {
+    const maxScore = Math.max(...round);
+    if (maxScore > 0) {
+      round.forEach((s, i) => { if (s === maxScore) losses[i]++; });
+    }
+  });
+  return state.players
+    .map((p, i) => ({ idx: i, name: p.name, color: p.color, losses: losses[i] }))
+    .filter(p => p.losses > 0)
+    .sort((a, b) => b.losses - a.losses)
+    .slice(0, 3);
+}
+
+function renderWalkOfShame() {
+  const container = document.getElementById('walkOfShame');
+  const list = document.getElementById('shameList');
+  const shamers = getRoundLossCounts();
+  if (shamers.length === 0) {
+    container.classList.remove('visible');
+    return;
+  }
+  container.classList.add('visible');
+  const rankEmoji = ['🥇', '🥈', '🥉'];
+  list.innerHTML = shamers.map((p, i) =>
+    `<div class="shame-row">
+      <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
+      <div class="shame-name">
+        <div class="player-color" style="background:${p.color}"></div>
+        ${p.name}
+      </div>
+      <div class="shame-badge">${p.losses} ${t('shame_rounds_lost')}</div>
+    </div>`
+  ).join('');
+}
+
 // ============ GAME ============
 function getTotals() {
   return state.players.map((_, pi) =>
@@ -1006,6 +1093,9 @@ function renderGame() {
 
   // Scoreboard
   renderScoreboard(totals);
+
+  // Walk of Shame
+  renderWalkOfShame();
 
   // Round inputs
   renderRoundInputs();
