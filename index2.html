@@ -62,14 +62,14 @@
     }
     .lang-btn {
       height: 95%;
-      min-width: 40px; border-radius: 6px; cursor: pointer;
+      min-width: 44px; border-radius: 6px; cursor: pointer;
       border: 2px solid transparent; overflow: hidden;
-      transition: all .2s; opacity: .55;
+      transition: all .2s; opacity: 1;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.35rem; line-height: 1;
+      font-size: 1.5rem; line-height: 1;
       background: var(--surface-2);
     }
-    .lang-btn:hover { opacity: .85; }
+    .lang-btn:hover { transform: scale(1.08); box-shadow: 0 2px 10px rgba(0,0,0,.35); }
     .lang-btn.active { opacity: 1; border-color: var(--uno-yellow); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
 
     @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
@@ -684,11 +684,11 @@
   <header class="app-header no-print">
     <a href="#" class="header-logo" id="headerLogo" onclick="playNextSound(); showScreen('home'); return false;" aria-label="Lunes de UNO">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Galera negra (top hat): brim + crown -->
-        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#0a0a0a"/>
-        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#0a0a0a"/>
-        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#111"/>
-        <rect x="10" y="12" width="20" height="16" fill="#0a0a0a"/>
+        <!-- Galera (top hat): white for contrast on dark header -->
+        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#fff"/>
+        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#fff"/>
+        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#f0f0f5"/>
+        <rect x="10" y="12" width="20" height="16" fill="#fff"/>
       </svg>
     </a>
     <div class="lang-switcher">
