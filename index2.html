@@ -896,6 +896,7 @@ const STRINGS = {
     game_alert_no_scores: 'Bo, metele algún puntaje a alguien por lo menos.',
     game_confirm_quit: '¿Posta te querés ir? Se pierde todo eh.',
     shame_title: 'Paseo de la Vergüenza',
+    shame_round_lost: 'ronda perdida',
     shame_rounds_lost: 'rondas perdidas',
     share_whatsapp: 'Mandale al grupo',
     share_copied: '¡Copiado al portapapeles!',
@@ -950,6 +951,7 @@ const STRINGS = {
     game_alert_no_scores: 'Enter at least one score for this round.',
     game_confirm_quit: 'Are you sure you want to quit this game?',
     shame_title: 'Walk of Shame',
+    shame_round_lost: 'round lost',
     shame_rounds_lost: 'rounds lost',
     share_whatsapp: 'Share to group',
     share_copied: 'Copied to clipboard!',
@@ -1236,7 +1238,7 @@ function renderWalkOfShame() {
     return `<div class="shame-row">
       <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
       <div class="shame-name">${dot} ${p.name}</div>
-      <div class="shame-badge">${p.losses} ${t('shame_rounds_lost')}</div>
+      <div class="shame-badge">${p.losses} ${p.losses === 1 ? t('shame_round_lost') : t('shame_rounds_lost')}</div>
     </div>`;
   }).join('');
 }
