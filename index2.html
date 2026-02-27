@@ -643,11 +643,12 @@
     .flying-meat {
       position: fixed;
       z-index: 50;
-      font-size: 2rem;
       pointer-events: none;
       user-select: none;
       animation: meatFly var(--fly-dur, 6s) linear forwards;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+      max-width: 120px;
+      height: auto;
     }
     @keyframes meatFly {
       0% {
@@ -2358,12 +2359,21 @@ const ASADO_CAROUSEL_MSGS = {
 let asadoMode = false;
 let originalCarouselMsgs = null;
 let meatInterval = null;
-const MEAT_EMOJIS = ['🥩', '🍖', '🌭', '🍗', '🥓', '🔥', '🌶️', '🧅', '🫑'];
+const ASADO_IMAGES = [
+  'assets/image-9bf8c041-0dcc-4664-a43d-b08c00b056a6.png',
+  'assets/image-f89188ae-0fab-4b0d-906f-3d074070604c.png',
+  'assets/image-9f0bc4e9-7a6e-4737-8f3d-94efcbed10d2.png',
+  'assets/image-6203ef81-62d7-487c-9967-86da2115146f.png',
+  'assets/image-93c33789-9afd-43c2-b3e3-1c1bc4fc3b59.png',
+  'assets/image-806503c2-fa15-447a-8ca7-6cbcccb02136.png',
+  'assets/image-3683c8ad-4a76-418c-ab0e-1bbbc360b46e.png',
+];
 
 function spawnFlyingMeat() {
-  const el = document.createElement('span');
+  const el = document.createElement('img');
   el.className = 'flying-meat';
-  el.textContent = MEAT_EMOJIS[Math.floor(Math.random() * MEAT_EMOJIS.length)];
+  const src = ASADO_IMAGES[Math.floor(Math.random() * ASADO_IMAGES.length)];
+  el.src = src;
   const side = Math.floor(Math.random() * 4);
   let startX, startY, endX, endY;
   const W = window.innerWidth, H = window.innerHeight;
@@ -2429,10 +2439,10 @@ function applyAsadoMode() {
 }
 
 // ============ INIT ============
-// Restore asado mode from localStorage
-asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
-document.getElementById('asadoToggle').checked = asadoMode;
-if (asadoMode) applyAsadoMode();
+// Asado mode starts OFF by default; we only store the last choice for future use.
+asadoMode = false;
+const asadoToggleEl = document.getElementById('asadoToggle');
+if (asadoToggleEl) asadoToggleEl.checked = false;
 
 setLang(currentLang);
 initSetup();
