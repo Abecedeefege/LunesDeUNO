@@ -37,7 +37,8 @@
     /* ---- Header (logo + flags) ---- */
     .app-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      height: 52px;
+      height: 10vh;
+      min-height: 52px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 1rem;
       background: var(--surface);
@@ -46,16 +47,22 @@
     .header-logo {
       display: flex; align-items: center; gap: .5rem;
       text-decoration: none; color: var(--text);
+      height: 95%;
     }
     .header-logo svg {
-      width: 36px; height: 36px;
+      height: 95%;
+      width: auto;
+      max-height: 10vh;
       display: block;
     }
     .lang-switcher {
       display: flex; gap: .4rem;
+      height: 95%;
+      align-items: center;
     }
     .lang-btn {
-      width: 40px; height: 28px; border-radius: 6px; cursor: pointer;
+      height: 95%;
+      min-width: 40px; border-radius: 6px; cursor: pointer;
       border: 2px solid transparent; overflow: hidden;
       transition: all .2s; opacity: .55;
       display: flex; align-items: center; justify-content: center;
@@ -77,7 +84,7 @@
       animation: fadeIn .35s ease;
     }
     .screen.active { display: flex; }
-    .screen { padding-top: calc(52px + 2rem); }
+    .screen { padding-top: calc(10vh + 2rem); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
@@ -195,7 +202,7 @@
       display: flex; gap: .6rem; justify-content: center; margin-bottom: .5rem;
     }
     .uno-card-mini {
-      width: 48px; height: 70px; border-radius: 8px;
+      width: 72px; height: 105px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Fredoka One', cursive; font-size: 1.1rem; font-weight: bold; color: #fff;
       box-shadow: 0 4px 16px rgba(0,0,0,.35);
@@ -685,6 +692,8 @@
     <div class="lang-switcher">
       <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">🇺🇾</button>
       <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">🇺🇸</button>
+      <button class="lang-btn" id="langPt" onclick="setLang('pt')" title="Português">🇧🇷</button>
+      <button class="lang-btn" id="langDe" onclick="setLang('de')" title="Deutsch">🇩🇪</button>
     </div>
   </header>
 
@@ -815,6 +824,13 @@
 
     <div class="final-standings" id="finalStandings"></div>
 
+    <!-- Paseo de la vergüenza / Walk of shame -->
+    <div class="card" id="walkOfShameCard" style="display:none;">
+      <h3 id="walkTitle"></h3>
+      <p id="walkLine" style="margin-top:.35rem;"></p>
+      <p id="walkRound" style="margin-top:.25rem; font-size:.85rem; color:var(--text-muted);"></p>
+    </div>
+
     <!-- Full breakdown for print -->
     <div class="round-history" id="resultsHistoryContainer">
       <h3 data-i18n="results_breakdown"></h3>
@@ -836,19 +852,14 @@
           <span>📜</span> <span data-i18n="share_cert">Certificado de Desastre</span>
         </button>
         <div class="photo-upload-wrap">
-          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo">Subir foto y cartoon con puntajes</label>
+          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo">Subir foto con puntajes</label>
           <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)">
         </div>
         <div class="share-photo-row" id="sharePhotoRow" style="display:none;">
           <div class="share-photo-box">
-            <img id="sharePhotoOriginal" alt="Original" />
-            <div class="share-photo-label" data-i18n="share_original">Original</div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original">Descargar original</button>
-          </div>
-          <div class="share-photo-box">
-            <img id="sharePhotoCartoon" alt="Cartoon" />
-            <div class="share-photo-label" data-i18n="share_cartoon">Cartoon con puntajes</div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('cartoon')" data-i18n="share_download_cartoon">Descargar cartoon</button>
+            <img id="sharePhotoOriginal" alt="Imagen para compartir" />
+            <div class="share-photo-label" data-i18n="share_original">Imagen con puntajes</div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage()" data-i18n="share_download_original">Descargar imagen</button>
           </div>
         </div>
       </div>
@@ -995,6 +1006,116 @@ const STRINGS = {
     modal_cancel: 'Cancel',
     modal_save: 'Save',
     player_placeholder: 'Player',
+  },
+  pt: {
+    home_sub: 'Marcador de pontos',
+    home_start: 'Começar nova partida',
+    home_under_construction: 'Em construção: compartilhar resultados',
+    home_back_stable: 'Versão estável',
+    home_example_stats: 'Estatísticas de exemplo',
+    share_title: 'Compartilhar resultados',
+    share_pdf_roast: 'Baixar PDF (roast do último)',
+    share_cert: 'Certificado de Desastre',
+    share_upload_photo: 'Enviar foto com pontuações',
+    share_original: 'Imagem com pontuações',
+    share_cartoon: 'Cartoon com pontuações',
+    share_download_original: 'Baixar imagem',
+    share_download_cartoon: 'Baixar cartoon',
+    stats_title: 'Estatísticas de exemplo',
+    stats_subtitle: 'Dados inventados só para mostrar como ficaria.',
+    stats_wins: 'Vitórias',
+    stats_biggest_round: 'Rodada mais pesada',
+    stats_most_roasts: 'Vezes em último na rodada',
+    setup_title: 'Nova partida',
+    setup_players_label: 'Quantos jogam?',
+    setup_points_label: 'Até quantos pontos?',
+    setup_custom_placeholder: 'Coloca o valor que quiser...',
+    setup_start_btn: 'Bora jogar!',
+    back_btn: 'Voltar',
+    game_enter_scores: 'Coloca os pontos da rodada',
+    game_end_round: 'Fechar rodada',
+    game_round_history: 'O que já rolou',
+    game_quit: 'Sair do jogo',
+    game_round: 'Rodada',
+    game_player: 'Jogador',
+    game_total: 'Total',
+    game_no_scores: 'Ninguém marcou ainda',
+    game_pts: 'pts',
+    game_edit: 'editar',
+    game_alert_no_scores: 'Bota pelo menos um pontinho pra alguém.',
+    game_confirm_quit: 'Tem certeza que quer sair? Perde tudo hein.',
+    shame_title: 'Passeio da vergonha',
+    shame_round_lost: 'rodada perdida',
+    shame_rounds_lost: 'rodadas perdidas',
+    share_whatsapp: 'Mandar no grupo',
+    share_copied: 'Copiado para a área de transferência!',
+    asado_mode: 'Modo Churrasco 🥩',
+    stats_suffering_title: 'Linha do sofrimento',
+    stats_suffering_yaxis: 'Nível de sofrimento',
+    results_winner_sub: 'ganhou com menos pontos, mito!',
+    results_breakdown: 'Rodada por rodada',
+    results_print: 'Imprimir pontos',
+    results_edit: 'Editar pontuações',
+    results_new_game: 'Outra partida',
+    modal_edit_round: 'Editar rodada',
+    modal_cancel: 'Deixa pra lá',
+    modal_save: 'Salvar',
+    player_placeholder: 'Jogador',
+  },
+  de: {
+    home_sub: 'Punktestand für UNO',
+    home_start: 'Neues Spiel starten',
+    home_under_construction: 'Im Bau: Ergebnisse teilen',
+    home_back_stable: 'Stabile Version',
+    home_example_stats: 'Beispielstatistiken',
+    share_title: 'Ergebnisse teilen',
+    share_pdf_roast: 'PDF laden (Roast für den Letzten)',
+    share_cert: 'Desaster-Zertifikat',
+    share_upload_photo: 'Foto mit Punkten hochladen',
+    share_original: 'Bild mit Punkten',
+    share_cartoon: 'Cartoon mit Punkten',
+    share_download_original: 'Bild herunterladen',
+    share_download_cartoon: 'Cartoon herunterladen',
+    stats_title: 'Beispielstatistiken',
+    stats_subtitle: 'Ausgedachte Daten zur Demo.',
+    stats_wins: 'Siege',
+    stats_biggest_round: 'Härteste Runde',
+    stats_most_roasts: 'Am häufigsten Letzter',
+    setup_title: 'Neues Spiel',
+    setup_players_label: 'Wie viele spielen?',
+    setup_points_label: 'Bis zu wie vielen Punkten?',
+    setup_custom_placeholder: 'Eigene Punktzahl...',
+    setup_start_btn: 'Los geht’s!',
+    back_btn: 'Zurück',
+    game_enter_scores: 'Rundenpunkte eintragen',
+    game_end_round: 'Runde beenden',
+    game_round_history: 'Bisherige Runden',
+    game_quit: 'Spiel verlassen',
+    game_round: 'Runde',
+    game_player: 'Spieler',
+    game_total: 'Gesamt',
+    game_no_scores: 'Noch keine Punkte',
+    game_pts: 'Pkt',
+    game_edit: 'bearbeiten',
+    game_alert_no_scores: 'Trag wenigstens einen Punkt für jemanden ein.',
+    game_confirm_quit: 'Willst du das Spiel wirklich beenden? Alles geht verloren.',
+    shame_title: 'Gang der Schande',
+    shame_round_lost: 'verlorene Runde',
+    shame_rounds_lost: 'verlorene Runden',
+    share_whatsapp: 'In die Gruppe schicken',
+    share_copied: 'In die Zwischenablage kopiert!',
+    asado_mode: 'Grillmodus 🥩',
+    stats_suffering_title: 'Leidenslinie',
+    stats_suffering_yaxis: 'Leidens-Level',
+    results_winner_sub: 'gewinnt mit der niedrigsten Punktzahl!',
+    results_breakdown: 'Rundenübersicht',
+    results_print: 'Punkte drucken',
+    results_edit: 'Punkte bearbeiten',
+    results_new_game: 'Neues Spiel',
+    modal_edit_round: 'Runde bearbeiten',
+    modal_cancel: 'Abbrechen',
+    modal_save: 'Speichern',
+    player_placeholder: 'Spieler',
   }
 };
 
@@ -1051,8 +1172,14 @@ function setLang(lang) {
   document.documentElement.lang = lang;
 
   // Update flag buttons
-  document.getElementById('langEs').classList.toggle('active', lang === 'es');
-  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  const btnEs = document.getElementById('langEs');
+  const btnEn = document.getElementById('langEn');
+  const btnPt = document.getElementById('langPt');
+  const btnDe = document.getElementById('langDe');
+  if (btnEs) btnEs.classList.toggle('active', lang === 'es');
+  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+  if (btnPt) btnPt.classList.toggle('active', lang === 'pt');
+  if (btnDe) btnDe.classList.toggle('active', lang === 'de');
 
   // Apply all data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1507,6 +1634,61 @@ function renderResults() {
   container.innerHTML = html;
 
   renderResultsHistory();
+  renderWalkOfShame();
+}
+
+function getWalkOfShameData() {
+  if (!state.players.length || !state.rounds.length) return null;
+  const totals = getTotals();
+  let lastIdx = 0;
+  totals.forEach((t, i) => { if (t > totals[lastIdx]) lastIdx = i; });
+  let worstPts = 0;
+  let worstRound = -1;
+  state.rounds.forEach((round, ri) => {
+    const v = round[lastIdx] || 0;
+    if (v > worstPts) {
+      worstPts = v;
+      worstRound = ri + 1;
+    }
+  });
+  return {
+    name: state.players[lastIdx].name,
+    total: totals[lastIdx],
+    worstPts,
+    worstRound
+  };
+}
+
+function renderWalkOfShame() {
+  const card = document.getElementById('walkOfShameCard');
+  if (!card) return;
+  const data = getWalkOfShameData();
+  if (!data) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = '';
+  const titleEl = document.getElementById('walkTitle');
+  const lineEl = document.getElementById('walkLine');
+  const roundEl = document.getElementById('walkRound');
+  titleEl.textContent = t('shame_title');
+  lineEl.textContent = `${data.name} - ${data.total} ${t('game_pts')}`;
+  if (data.worstRound > 0 && data.worstPts > 0) {
+    const labelSing = t('shame_round_lost');
+    const labelPlur = t('shame_rounds_lost');
+    const label = data.worstPts === 1 ? labelSing : labelPlur;
+    if (currentLang === 'es') {
+      roundEl.textContent = `Peor ronda: R${data.worstRound} con ${data.worstPts} puntos (${label}).`;
+    } else if (currentLang === 'pt') {
+      roundEl.textContent = `Pior rodada: R${data.worstRound} com ${data.worstPts} pontos (${label}).`;
+    } else if (currentLang === 'de') {
+      roundEl.textContent = `Schlechteste Runde: R${data.worstRound} mit ${data.worstPts} Punkten (${label}).`;
+    } else {
+      roundEl.textContent = `Worst round: R${data.worstRound} with ${data.worstPts} points (${label}).`;
+    }
+  } else {
+    roundEl.textContent = '';
+  }
 }
 
 function renderResultsHistory() {
@@ -1580,6 +1762,18 @@ const PDF_ROASTS = {
     'Someone tell {name} the lowest score wins.',
     '{name}: royalty of points. (The bad kind.)',
   ],
+  pt: [
+    '{name} levou todos os pontos pra casa! 🏠📦',
+    '{name} estava jogando \"soma tudo\" em vez de UNO. 😂',
+    'Avisem {name} que aqui ganha quem tem menos pontos.',
+    '{name}: rei/rainha dos pontos (do jeito ruim).',
+  ],
+  de: [
+    '{name} hat alle Punkte mit nach Hause genommen! 🏠📦',
+    '{name} hat wohl \"alles addieren\" statt UNO gespielt. 😂',
+    'Sagt {name}, dass hier die niedrigste Punktzahl gewinnt.',
+    '{name}: König/in der Punkte (der schlechten Art).',
+  ],
 };
 
 function downloadPDFRoast() {
@@ -1593,6 +1787,17 @@ function downloadPDFRoast() {
   var lastPlace = standings[standings.length - 1];
   var lang = currentLang in PDF_ROASTS ? currentLang : 'es';
   var roast = PDF_ROASTS[lang][Math.floor(Math.random() * PDF_ROASTS[lang].length)].replace(/\{name\}/g, lastPlace.name);
+  var shameBase;
+  if (lang === 'es') {
+    shameBase = `Paseo de la Vergüenza: ${lastPlace.name} terminó último con ${lastPlace.total} pts.`;
+  } else if (lang === 'pt') {
+    shameBase = `Passeio da vergonha: ${lastPlace.name} ficou em último com ${lastPlace.total} pts.`;
+  } else if (lang === 'de') {
+    shameBase = `Gang der Schande: ${lastPlace.name} ist Letzter mit ${lastPlace.total} Pkt.`;
+  } else {
+    shameBase = `Walk of Shame: ${lastPlace.name} finished last with ${lastPlace.total} pts.`;
+  }
+  var roastBlock = shameBase + '\\n\\n' + roast;
 
   var doc = new jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   var w = doc.internal.pageSize.getWidth();
@@ -1640,7 +1845,7 @@ function downloadPDFRoast() {
   doc.text(roastTitle, margin, y);
   y += 8;
   doc.setFont('helvetica', 'normal');
-  var roastLines = doc.splitTextToSize(roast, w - 2 * margin - 24);
+  var roastLines = doc.splitTextToSize(roastBlock, w - 2 * margin - 24);
   var bubbleH = Math.max(28, roastLines.length * 6 + 16);
   doc.setFillColor(255, 250, 235);
   doc.setDrawColor(255, 222, 0);
@@ -1660,35 +1865,10 @@ function downloadPDFRoast() {
   doc.save('LunesDeUNO-' + lastPlace.name.replace(/\s/g, '') + '.pdf');
 }
 
-// ============ SHARE (beta): Photo + cartoon with scores ============
-let sharePhotoState = { originalDataUrl: null, cartoonDataUrl: null };
+// ============ SHARE (beta): Photo with scores ============
+let sharePhotoState = { originalDataUrl: null };
 
-function applyCartoonEffect(imageData, width, height) {
-  var data = imageData.data;
-  var len = data.length;
-  var levels = 6;
-  var stride = width * 4;
-  // First pass: posterize (reduce color levels)
-  for (var i = 0; i < len; i += 4) {
-    data[i] = Math.floor(data[i] / (256 / levels)) * (256 / levels);
-    data[i + 1] = Math.floor(data[i + 1] / (256 / levels)) * (256 / levels);
-    data[i + 2] = Math.floor(data[i + 2] / (256 / levels)) * (256 / levels);
-  }
-  // Second pass: edge darkening using original-like comparison (neighbors)
-  for (var y = 1; y < height - 1; y++) {
-    for (var x = 1; x < width - 1; x++) {
-      var i = (y * width + x) * 4;
-      var gx = Math.abs(data[i] - data[i - 4]) + Math.abs(data[i + 4] - data[i]);
-      var gy = Math.abs(data[i] - data[i - stride]) + Math.abs(data[i + stride] - data[i]);
-      if (gx + gy > 80) {
-        data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
-      }
-    }
-  }
-  return imageData;
-}
-
-function drawScoresOnCanvas(canvas, img, isCartoon) {
+function drawScoresOnCanvas(canvas, img) {
   const ctx = canvas.getContext('2d');
   const maxW = 400, maxH = 300;
   let w = img.width, h = img.height;
@@ -1698,10 +1878,6 @@ function drawScoresOnCanvas(canvas, img, isCartoon) {
   }
   canvas.width = w; canvas.height = h;
   ctx.drawImage(img, 0, 0, w, h);
-  if (isCartoon) {
-    const imageData = ctx.getImageData(0, 0, w, h);
-    ctx.putImageData(applyCartoonEffect(imageData, w, h), 0, 0);
-  }
   const totals = getTotals();
   const standings = state.players.map((p, i) => ({ ...p, total: totals[i] })).sort((a, b) => a.total - b.total);
   ctx.font = 'bold 14px Inter, sans-serif';
@@ -1722,26 +1898,19 @@ function onSharePhotoChange(ev) {
   if (!file || !file.type.startsWith('image/')) return;
   // Clear previous preview so the UI always reflects the new upload
   sharePhotoState.originalDataUrl = null;
-  sharePhotoState.cartoonDataUrl = null;
   var elOriginal = document.getElementById('sharePhotoOriginal');
-  var elCartoon = document.getElementById('sharePhotoCartoon');
   var row = document.getElementById('sharePhotoRow');
   var input = document.getElementById('sharePhotoInput');
   row.style.display = 'none';
   elOriginal.removeAttribute('src');
-  elCartoon.removeAttribute('src');
   var reader = new FileReader();
   reader.onload = function () {
     var img = new Image();
     img.onload = function () {
       var canvasOrig = document.createElement('canvas');
-      var canvasCartoon = document.createElement('canvas');
-      drawScoresOnCanvas(canvasOrig, img, false);
-      drawScoresOnCanvas(canvasCartoon, img, true);
+      drawScoresOnCanvas(canvasOrig, img);
       sharePhotoState.originalDataUrl = canvasOrig.toDataURL('image/png');
-      sharePhotoState.cartoonDataUrl = canvasCartoon.toDataURL('image/png');
       elOriginal.src = sharePhotoState.originalDataUrl;
-      elCartoon.src = sharePhotoState.cartoonDataUrl;
       row.style.display = 'flex';
       input.value = '';
     };
@@ -1751,7 +1920,7 @@ function onSharePhotoChange(ev) {
 }
 
 function downloadShareImage(which) {
-  const dataUrl = which === 'original' ? sharePhotoState.originalDataUrl : sharePhotoState.cartoonDataUrl;
+  const dataUrl = sharePhotoState.originalDataUrl;
   if (!dataUrl) return;
   const a = document.createElement('a');
   a.href = dataUrl;

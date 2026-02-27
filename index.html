@@ -36,7 +36,7 @@
     /* ---- Header (logo + flags) ---- */
     .app-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      height: 20vh;
+      height: 10vh;
       min-height: 52px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 1rem;
@@ -46,19 +46,23 @@
     .header-logo {
       display: flex; align-items: center; gap: .5rem;
       text-decoration: none; color: var(--text);
-      height: 100%;
+      height: 95%;
     }
     .header-logo svg {
-      height: 80%;
+      height: 95%;
       width: auto;
-      max-height: 20vh;
+      max-height: 10vh;
       display: block;
     }
     .lang-switcher {
       display: flex; gap: .4rem;
+      height: 95%;
+      align-items: center;
     }
     .lang-btn {
-      width: 40px; height: 28px; border-radius: 6px; cursor: pointer;
+      height: 95%;
+      min-width: 40px;
+      border-radius: 6px; cursor: pointer;
       border: 2px solid transparent; overflow: hidden;
       transition: all .2s; opacity: .55;
       display: flex; align-items: center; justify-content: center;
@@ -80,7 +84,7 @@
       animation: fadeIn .35s ease;
     }
     .screen.active { display: flex; }
-    .screen { padding-top: calc(20vh + 2rem); }
+    .screen { padding-top: calc(10vh + 2rem); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
@@ -199,7 +203,7 @@
       display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
     }
     .uno-card-mini {
-      width: clamp(56px, 15vw, 80px);
+      width: clamp(84px, 22.5vw, 120px);
       display: block;
       transform: rotate(var(--rot, 0deg));
       border-radius: 8px;
@@ -563,6 +567,8 @@
     <div class="lang-switcher">
       <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">🇺🇾</button>
       <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">🇺🇸</button>
+      <button class="lang-btn" id="langPt" onclick="setLang('pt')" title="Português">🇧🇷</button>
+      <button class="lang-btn" id="langDe" onclick="setLang('de')" title="Deutsch">🇩🇪</button>
     </div>
   </header>
 
@@ -570,10 +576,10 @@
   <div id="home" class="screen active">
     <div>
       <div class="uno-cards">
-        <div class="uno-card-mini" style="--rot:-8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:-3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+        <div class="uno-card-mini" style="--rot:-8deg;"><img src="assets/image-9bf8c041-0dcc-4664-a43d-b08c00b056a6.png" alt="" width="240" height="348"></div>
+        <div class="uno-card-mini" style="--rot:-3deg;"><img src="assets/image-f89188ae-0fab-4b0d-906f-3d074070604c.png" alt="" width="240" height="348"></div>
+        <div class="uno-card-mini" style="--rot:3deg;"><img src="assets/image-9f0bc4e9-7a6e-4737-8f3d-94efcbed10d2.png" alt="" width="240" height="348"></div>
+        <div class="uno-card-mini" style="--rot:8deg;"><img src="assets/image-6203ef81-62d7-487c-9967-86da2115146f.png" alt="" width="240" height="348"></div>
       </div>
       <h1 class="logo-title">Lunes de UNO</h1>
       <p class="logo-sub" data-i18n="home_sub"></p>
@@ -686,6 +692,13 @@
 
     <div class="final-standings" id="finalStandings"></div>
 
+    <!-- Paseo de la vergüenza / Walk of shame -->
+    <div class="card" id="walkOfShameCard" style="display:none;">
+      <h3 id="walkTitle"></h3>
+      <p id="walkLine" style="margin-top:.35rem;"></p>
+      <p id="walkRound" style="margin-top:.25rem; font-size:.85rem; color:var(--text-muted);"></p>
+    </div>
+
     <!-- Full breakdown for print -->
     <div class="round-history" id="resultsHistoryContainer">
       <h3 data-i18n="results_breakdown"></h3>
@@ -783,6 +796,76 @@ const STRINGS = {
     modal_cancel: 'Cancel',
     modal_save: 'Save',
     player_placeholder: 'Player',
+  },
+  pt: {
+    home_sub: 'Marcador de pontos',
+    home_start: 'Começar nova partida',
+    home_under_construction: 'Em construção: compartilhar resultados',
+    setup_title: 'Nova partida',
+    setup_players_label: 'Quantos jogam?',
+    setup_points_label: 'Até quantos pontos?',
+    setup_custom_placeholder: 'Coloca o valor que quiser...',
+    setup_start_btn: 'Bora jogar!',
+    back_btn: 'Voltar',
+    game_enter_scores: 'Coloca os pontos da rodada',
+    game_end_round: 'Fechar rodada',
+    game_round_history: 'O que já rolou',
+    game_quit: 'Sair do jogo',
+    game_round: 'Rodada',
+    game_player: 'Jogador',
+    game_total: 'Total',
+    game_no_scores: 'Ninguém marcou ainda',
+    game_pts: 'pts',
+    game_edit: 'editar',
+    game_alert_no_scores: 'Bota pelo menos um pontinho pra alguém.',
+    game_confirm_quit: 'Tem certeza que quer sair? Perde tudo hein.',
+    shame_title: 'Passeio da vergonha',
+    shame_round_lost: 'rodada perdida',
+    shame_rounds_lost: 'rodadas perdidas',
+    results_winner_sub: 'ganhou com menos pontos, mito!',
+    results_breakdown: 'Rodada por rodada',
+    results_print: 'Imprimir',
+    results_edit: 'Editar pontuações',
+    results_new_game: 'Outra partida',
+    modal_edit_round: 'Editar rodada',
+    modal_cancel: 'Deixa pra lá',
+    modal_save: 'Salvar',
+    player_placeholder: 'Jogador',
+  },
+  de: {
+    home_sub: 'Punktestand für UNO',
+    home_start: 'Neues Spiel starten',
+    home_under_construction: 'Im Bau: Ergebnisse teilen',
+    setup_title: 'Neues Spiel',
+    setup_players_label: 'Wie viele spielen?',
+    setup_points_label: 'Bis zu wie vielen Punkten?',
+    setup_custom_placeholder: 'Eigene Punktzahl...',
+    setup_start_btn: 'Los geht’s!',
+    back_btn: 'Zurück',
+    game_enter_scores: 'Rundenpunkte eintragen',
+    game_end_round: 'Runde beenden',
+    game_round_history: 'Bisherige Runden',
+    game_quit: 'Spiel verlassen',
+    game_round: 'Runde',
+    game_player: 'Spieler',
+    game_total: 'Gesamt',
+    game_no_scores: 'Noch keine Punkte',
+    game_pts: 'Pkt',
+    game_edit: 'bearbeiten',
+    game_alert_no_scores: 'Trag wenigstens einen Punkt für jemanden ein.',
+    game_confirm_quit: 'Willst du das Spiel wirklich beenden? Alles geht verloren.',
+    shame_title: 'Gang der Schande',
+    shame_round_lost: 'verlorene Runde',
+    shame_rounds_lost: 'verlorene Runden',
+    results_winner_sub: 'gewinnt mit der niedrigsten Punktzahl!',
+    results_breakdown: 'Rundenübersicht',
+    results_print: 'Punkte drucken',
+    results_edit: 'Punkte bearbeiten',
+    results_new_game: 'Neues Spiel',
+    modal_edit_round: 'Runde bearbeiten',
+    modal_cancel: 'Abbrechen',
+    modal_save: 'Speichern',
+    player_placeholder: 'Spieler',
   }
 };
 
@@ -839,8 +922,14 @@ function setLang(lang) {
   document.documentElement.lang = lang;
 
   // Update flag buttons
-  document.getElementById('langEs').classList.toggle('active', lang === 'es');
-  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  const btnEs = document.getElementById('langEs');
+  const btnEn = document.getElementById('langEn');
+  const btnPt = document.getElementById('langPt');
+  const btnDe = document.getElementById('langDe');
+  if (btnEs) btnEs.classList.toggle('active', lang === 'es');
+  if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+  if (btnPt) btnPt.classList.toggle('active', lang === 'pt');
+  if (btnDe) btnDe.classList.toggle('active', lang === 'de');
 
   // Apply all data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1286,6 +1375,61 @@ function renderResults() {
   container.innerHTML = html;
 
   renderResultsHistory();
+  renderWalkOfShame();
+}
+
+function getWalkOfShameData() {
+  if (!state.players.length || !state.rounds.length) return null;
+  const totals = getTotals();
+  let lastIdx = 0;
+  totals.forEach((t, i) => { if (t > totals[lastIdx]) lastIdx = i; });
+  let worstPts = 0;
+  let worstRound = -1;
+  state.rounds.forEach((round, ri) => {
+    const v = round[lastIdx] || 0;
+    if (v > worstPts) {
+      worstPts = v;
+      worstRound = ri + 1;
+    }
+  });
+  return {
+    name: state.players[lastIdx].name,
+    total: totals[lastIdx],
+    worstPts,
+    worstRound
+  };
+}
+
+function renderWalkOfShame() {
+  const card = document.getElementById('walkOfShameCard');
+  if (!card) return;
+  const data = getWalkOfShameData();
+  if (!data) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = '';
+  const titleEl = document.getElementById('walkTitle');
+  const lineEl = document.getElementById('walkLine');
+  const roundEl = document.getElementById('walkRound');
+  titleEl.textContent = t('shame_title');
+  lineEl.textContent = `${data.name} - ${data.total} ${t('game_pts')}`;
+  if (data.worstRound > 0 && data.worstPts > 0) {
+    const labelSing = t('shame_round_lost');
+    const labelPlur = t('shame_rounds_lost');
+    const label = data.worstPts === 1 ? labelSing : labelPlur;
+    if (currentLang === 'es') {
+      roundEl.textContent = `Peor ronda: R${data.worstRound} con ${data.worstPts} puntos (${label}).`;
+    } else if (currentLang === 'pt') {
+      roundEl.textContent = `Pior rodada: R${data.worstRound} com ${data.worstPts} pontos (${label}).`;
+    } else if (currentLang === 'de') {
+      roundEl.textContent = `Schlechteste Runde: R${data.worstRound} mit ${data.worstPts} Punkten (${label}).`;
+    } else {
+      roundEl.textContent = `Worst round: R${data.worstRound} with ${data.worstPts} points (${label}).`;
+    }
+  } else {
+    roundEl.textContent = '';
+  }
 }
 
 function renderResultsHistory() {
