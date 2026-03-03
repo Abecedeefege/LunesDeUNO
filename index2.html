@@ -55,15 +55,15 @@
       display: flex; gap: .4rem;
     }
     .lang-btn {
-      width: 40px; height: 28px; border-radius: 6px; cursor: pointer;
-      border: 2px solid transparent; overflow: hidden;
-      transition: all .2s; opacity: .75;
+      width: 44px; height: 32px; border-radius: 8px; cursor: pointer;
+      border: 2px solid var(--border); overflow: hidden;
+      transition: all .2s; opacity: 1;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.35rem; line-height: 1;
+      font-size: 1.5rem; line-height: 1;
       background: var(--surface-2);
     }
-    .lang-btn:hover { opacity: .9; }
-    .lang-btn.active { opacity: 1; border-color: var(--uno-yellow); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
+    .lang-btn:hover { border-color: var(--text-muted); background: var(--surface-3); }
+    .lang-btn.active { border-color: var(--uno-yellow); background: rgba(255,222,0,.1); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
 
     @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
 
@@ -1173,7 +1173,7 @@ const PRESET_NAMES = ['PT', 'Mac', 'Mata', 'Gael', 'Nachi', 'Carucha', 'Negro', 
 const PLAYER_COLORS = [
   '#ED1C24', '#FFDE00', '#00A651', '#0072BC',
   '#FF6B35', '#A855F7', '#EC4899', '#14B8A6',
-  '#F97316', '#6366F1'
+  '#F97316', '#6366F1', '#84CC16', '#F43F5E', '#06B6D4'
 ];
 
 // ============ NAVIGATION ============
@@ -1198,7 +1198,7 @@ function initSetup() {
 }
 
 function changePlayerCount(delta) {
-  state.playerCount = Math.max(2, Math.min(10, state.playerCount + delta));
+  state.playerCount = Math.max(2, Math.min(13, state.playerCount + delta));
   document.getElementById('playerCountDisplay').textContent = state.playerCount;
   renderPlayerInputs();
 }
