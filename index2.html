@@ -57,12 +57,12 @@
     .lang-btn {
       width: 40px; height: 28px; border-radius: 6px; cursor: pointer;
       border: 2px solid transparent; overflow: hidden;
-      transition: all .2s; opacity: .55;
+      transition: all .2s; opacity: .75;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.35rem; line-height: 1;
       background: var(--surface-2);
     }
-    .lang-btn:hover { opacity: .85; }
+    .lang-btn:hover { opacity: .9; }
     .lang-btn.active { opacity: 1; border-color: var(--uno-yellow); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
 
     @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
@@ -227,6 +227,23 @@
       width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
     }
     .player-input-row input { flex: 1; }
+
+    .preset-names {
+      display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; margin-bottom: .25rem;
+    }
+    .preset-names-label {
+      font-size: .75rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em; width: 100%; margin-bottom: .15rem;
+    }
+    .preset-chip {
+      padding: .35rem .7rem; border-radius: 20px;
+      border: 1px solid var(--border); background: var(--surface-2);
+      color: var(--text); cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 600;
+      transition: all .2s;
+    }
+    .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); color: var(--uno-yellow); }
+    .preset-chip.used { opacity: .3; cursor: not-allowed; pointer-events: none; }
 
     .points-presets {
       display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
@@ -636,7 +653,8 @@
     .flying-meat {
       position: fixed;
       z-index: 50;
-      font-size: 2rem;
+      width: 60px; height: 60px;
+      object-fit: contain;
       pointer-events: none;
       user-select: none;
       animation: meatFly var(--fly-dur, 6s) linear forwards;
@@ -726,11 +744,11 @@
   <header class="app-header no-print">
     <a href="#" class="header-logo" id="headerLogo" onclick="playNextSound(); showScreen('home'); return false;" aria-label="Lunes de UNO">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Galera negra (top hat): brim + crown -->
-        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#0a0a0a"/>
-        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#0a0a0a"/>
-        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#111"/>
-        <rect x="10" y="12" width="20" height="16" fill="#0a0a0a"/>
+        <!-- Galera (top hat): white for contrast on dark header -->
+        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#fff"/>
+        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#fff"/>
+        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#f0f0f5"/>
+        <rect x="10" y="12" width="20" height="16" fill="#fff"/>
       </svg>
     </a>
     <div class="lang-switcher">
@@ -897,11 +915,6 @@
             <div class="share-photo-label" data-i18n="share_original">Original</div>
             <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original">Descargar original</button>
           </div>
-          <div class="share-photo-box">
-            <img id="sharePhotoCartoon" alt="Cartoon" />
-            <div class="share-photo-label" data-i18n="share_cartoon">Cartoon con puntajes</div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('cartoon')" data-i18n="share_download_cartoon">Descargar cartoon</button>
-          </div>
         </div>
       </div>
     </div>
@@ -992,6 +1005,7 @@ const STRINGS = {
     modal_cancel: 'Na, dejá',
     modal_save: 'Guardar',
     player_placeholder: 'Jugador',
+    preset_names_label: 'Nombres rápidos',
     games_title: 'Partidos guardados',
     games_resume: 'Reanudar',
     games_view: 'Ver resultado',
@@ -1057,6 +1071,7 @@ const STRINGS = {
     modal_cancel: 'Cancel',
     modal_save: 'Save',
     player_placeholder: 'Player',
+    preset_names_label: 'Quick names',
     games_title: 'Saved Games',
     games_resume: 'Resume',
     games_view: 'View Result',
@@ -1153,6 +1168,8 @@ let state = {
   gameId: null
 };
 
+const PRESET_NAMES = ['PT', 'Mac', 'Mata', 'Gael', 'Nachi', 'Carucha', 'Negro', 'Naso', 'Tano', 'Gordo', 'Cobra'];
+
 const PLAYER_COLORS = [
   '#ED1C24', '#FFDE00', '#00A651', '#0072BC',
   '#FF6B35', '#A855F7', '#EC4899', '#14B8A6',
@@ -1190,9 +1207,17 @@ function renderPlayerInputs() {
   const container = document.getElementById('playerInputs');
   const existing = container.querySelectorAll('input');
   const oldValues = Array.from(existing).map(i => i.value);
-
   const isAsado = document.body.classList.contains('asado');
-  let html = '';
+  const usedNames = oldValues.map(v => v.trim().toLowerCase()).filter(Boolean);
+
+  let html = '<div class="preset-names">';
+  html += `<div class="preset-names-label" data-i18n="preset_names_label">${t('preset_names_label')}</div>`;
+  PRESET_NAMES.forEach(name => {
+    const used = usedNames.includes(name.toLowerCase());
+    html += `<span class="preset-chip ${used ? 'used' : ''}" onclick="fillPresetName('${name}')">${name}</span>`;
+  });
+  html += '</div>';
+
   for (let i = 0; i < state.playerCount; i++) {
     const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
     const val = oldValues[i] || '';
@@ -1201,11 +1226,32 @@ function renderPlayerInputs() {
     html += `
       <div class="player-input-row">
         ${dot}
-        <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup()">
+        <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup(); updatePresetChips()">
       </div>`;
   }
   container.innerHTML = html;
   validateSetup();
+}
+
+function fillPresetName(name) {
+  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
+  for (const inp of inputs) {
+    if (!inp.value.trim()) {
+      inp.value = name;
+      validateSetup();
+      updatePresetChips();
+      return;
+    }
+  }
+}
+
+function updatePresetChips() {
+  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
+  const usedNames = Array.from(inputs).map(i => i.value.trim().toLowerCase()).filter(Boolean);
+  document.querySelectorAll('.preset-chip').forEach(chip => {
+    const isUsed = usedNames.includes(chip.textContent.toLowerCase());
+    chip.classList.toggle('used', isUsed);
+  });
 }
 
 function selectPoints(btn, val) {
@@ -1819,90 +1865,40 @@ function downloadPDFRoast() {
   doc.save('LunesDeUNO-' + lastPlace.name.replace(/\s/g, '') + '.pdf');
 }
 
-// ============ SHARE (beta): Photo + cartoon with scores ============
-let sharePhotoState = { originalDataUrl: null, cartoonDataUrl: null };
+// ============ SHARE: Photo with scores ============
+let sharePhotoState = { originalDataUrl: null };
 
-function applyCartoonEffect(imageData, width, height) {
-  var data = imageData.data;
-  var len = data.length;
-  var levels = 6;
-  var stride = width * 4;
-  // First pass: posterize (reduce color levels)
-  for (var i = 0; i < len; i += 4) {
-    data[i] = Math.floor(data[i] / (256 / levels)) * (256 / levels);
-    data[i + 1] = Math.floor(data[i + 1] / (256 / levels)) * (256 / levels);
-    data[i + 2] = Math.floor(data[i + 2] / (256 / levels)) * (256 / levels);
-  }
-  // Second pass: edge darkening using original-like comparison (neighbors)
-  for (var y = 1; y < height - 1; y++) {
-    for (var x = 1; x < width - 1; x++) {
-      var i = (y * width + x) * 4;
-      var gx = Math.abs(data[i] - data[i - 4]) + Math.abs(data[i + 4] - data[i]);
-      var gy = Math.abs(data[i] - data[i - stride]) + Math.abs(data[i + stride] - data[i]);
-      if (gx + gy > 80) {
-        data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
-      }
-    }
-  }
-  return imageData;
-}
-
-function drawScoresOnCanvas(canvas, img, isCartoon) {
+function drawScoresOnCanvas(canvas, img) {
   const ctx = canvas.getContext('2d');
   const maxW = 400, maxH = 300;
   let w = img.width, h = img.height;
-  if (w > maxW || h > maxH) {
-    const r = Math.min(maxW / w, maxH / h);
-    w = Math.round(w * r); h = Math.round(h * r);
-  }
+  if (w > maxW || h > maxH) { const r = Math.min(maxW/w, maxH/h); w = Math.round(w*r); h = Math.round(h*r); }
   canvas.width = w; canvas.height = h;
   ctx.drawImage(img, 0, 0, w, h);
-  if (isCartoon) {
-    const imageData = ctx.getImageData(0, 0, w, h);
-    ctx.putImageData(applyCartoonEffect(imageData, w, h), 0, 0);
-  }
   const totals = getTotals();
-  const standings = state.players.map((p, i) => ({ ...p, total: totals[i] })).sort((a, b) => a.total - b.total);
-  ctx.font = 'bold 14px Inter, sans-serif';
-  ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-  ctx.lineWidth = 2;
+  const standings = state.players.map((p,i)=>({...p,total:totals[i]})).sort((a,b)=>a.total-b.total);
+  ctx.font = 'bold 14px Inter, sans-serif'; ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2;
   let ty = 24;
-  standings.forEach((p, i) => {
-    const text = (i + 1) + '. ' + p.name + ' — ' + p.total + ' pts';
-    ctx.strokeText(text, 10, ty);
-    ctx.fillText(text, 10, ty);
-    ty += 22;
-  });
+  standings.forEach((p,i)=>{ const txt = (i+1)+'. '+p.name+' — '+p.total+' pts'; ctx.strokeText(txt,10,ty); ctx.fillText(txt,10,ty); ty+=22; });
 }
 
 function onSharePhotoChange(ev) {
   const file = ev.target.files && ev.target.files[0];
   if (!file || !file.type.startsWith('image/')) return;
-  // Clear previous preview so the UI always reflects the new upload
   sharePhotoState.originalDataUrl = null;
-  sharePhotoState.cartoonDataUrl = null;
-  var elOriginal = document.getElementById('sharePhotoOriginal');
-  var elCartoon = document.getElementById('sharePhotoCartoon');
+  var elO = document.getElementById('sharePhotoOriginal');
   var row = document.getElementById('sharePhotoRow');
-  var input = document.getElementById('sharePhotoInput');
-  row.style.display = 'none';
-  elOriginal.removeAttribute('src');
-  elCartoon.removeAttribute('src');
+  row.style.display = 'none'; elO.removeAttribute('src');
   var reader = new FileReader();
-  reader.onload = function () {
+  reader.onload = function() {
     var img = new Image();
-    img.onload = function () {
-      var canvasOrig = document.createElement('canvas');
-      var canvasCartoon = document.createElement('canvas');
-      drawScoresOnCanvas(canvasOrig, img, false);
-      drawScoresOnCanvas(canvasCartoon, img, true);
-      sharePhotoState.originalDataUrl = canvasOrig.toDataURL('image/png');
-      sharePhotoState.cartoonDataUrl = canvasCartoon.toDataURL('image/png');
-      elOriginal.src = sharePhotoState.originalDataUrl;
-      elCartoon.src = sharePhotoState.cartoonDataUrl;
-      row.style.display = 'flex';
-      input.value = '';
+    img.onload = function() {
+      var c1 = document.createElement('canvas');
+      drawScoresOnCanvas(c1, img);
+      sharePhotoState.originalDataUrl = c1.toDataURL('image/png');
+      elO.src = sharePhotoState.originalDataUrl;
+      row.style.display = 'flex'; ev.target.value = '';
     };
     img.src = reader.result;
   };
@@ -1910,12 +1906,9 @@ function onSharePhotoChange(ev) {
 }
 
 function downloadShareImage(which) {
-  const dataUrl = which === 'original' ? sharePhotoState.originalDataUrl : sharePhotoState.cartoonDataUrl;
-  if (!dataUrl) return;
-  const a = document.createElement('a');
-  a.href = dataUrl;
-  a.download = 'LunesDeUNO-' + which + '.png';
-  a.click();
+  if (!sharePhotoState.originalDataUrl) return;
+  const a = document.createElement('a'); a.href = sharePhotoState.originalDataUrl;
+  a.download = 'LunesDeUNO.png'; a.click();
 }
 
 // ============ STATS (example data) ============
@@ -2350,12 +2343,21 @@ const ASADO_CAROUSEL_MSGS = {
 let asadoMode = false;
 let originalCarouselMsgs = null;
 let meatInterval = null;
-const MEAT_EMOJIS = ['🥩', '🍖', '🌭', '🍗', '🥓', '🔥', '🌶️', '🧅', '🫑'];
+const MEAT_IMAGES = [
+  'assets/image-1cec047c-2204-4f4f-9954-419f7c1774d0.png',
+  'assets/image-64c59a6f-c9d4-47a9-9663-48336dd81f5b.png',
+  'assets/image-50beb5db-594f-4eb3-98f7-ab4301da9365.png',
+  'assets/image-98020a15-ad43-43af-8d31-d3d59b289066.png',
+  'assets/image-b0867c9d-6a8c-4794-b634-724797c38bd0.png',
+  'assets/image-d8b1829c-28cd-4ba4-8701-74d669afedf3.png',
+  'assets/image-bdae4363-a3f7-4ec9-8776-9e7aed39fe3c.png',
+];
 
 function spawnFlyingMeat() {
-  const el = document.createElement('span');
+  const el = document.createElement('img');
   el.className = 'flying-meat';
-  el.textContent = MEAT_EMOJIS[Math.floor(Math.random() * MEAT_EMOJIS.length)];
+  el.src = MEAT_IMAGES[Math.floor(Math.random() * MEAT_IMAGES.length)];
+  el.alt = '';
   const side = Math.floor(Math.random() * 4);
   let startX, startY, endX, endY;
   const W = window.innerWidth, H = window.innerHeight;
@@ -2365,14 +2367,15 @@ function spawnFlyingMeat() {
   else { startX = Math.random() * W; startY = H + 40; endX = Math.random() * W; endY = -60; }
   const dur = 4 + Math.random() * 5;
   const spin = 360 + Math.random() * 720;
-  const size = 1.2 + Math.random() * 1.5;
+  const size = 40 + Math.random() * 50;
   el.style.setProperty('--start-x', startX + 'px');
   el.style.setProperty('--start-y', startY + 'px');
   el.style.setProperty('--end-x', endX + 'px');
   el.style.setProperty('--end-y', endY + 'px');
   el.style.setProperty('--fly-dur', dur + 's');
   el.style.setProperty('--spin', spin + 'deg');
-  el.style.fontSize = size + 'rem';
+  el.style.width = size + 'px';
+  el.style.height = size + 'px';
   el.style.top = '0';
   el.style.left = '0';
   document.body.appendChild(el);
