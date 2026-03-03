@@ -1862,7 +1862,7 @@ function copyToClipboard() {
   const standings = state.players.map((p, i) => ({ ...p, total: totals[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  const header = isAsado ? '🥩🔥 LUNES DE UNO — EDICIÓN ASADO 🔥🥩' : '🃏 LUNES DE UNO 🃏';
+  const header = isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩';
   const posEmojis = ['🏆', '😐', '😬', '🫠', '💀'];
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']

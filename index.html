@@ -499,6 +499,109 @@
 
     .print-header { display: none; }
 
+    /* ---- Copy Toast ---- */
+    .copy-toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--success); color: #000;
+      padding: .6rem 1.5rem; border-radius: 12px;
+      font-weight: 600; font-size: .9rem;
+      opacity: 0; transition: all .3s ease;
+      z-index: 999; pointer-events: none;
+    }
+    .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ---- Hat Pulse ---- */
+    @keyframes hatPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3) rotate(8deg); }
+      100% { transform: scale(1); }
+    }
+    .hat-pulse { animation: hatPulse .35s ease; }
+
+    /* ---- Modo Asado Toggle ---- */
+    .asado-toggle-row {
+      display: flex; align-items: center; gap: .75rem;
+      margin-top: 1.5rem;
+      font-size: .95rem; font-weight: 600; color: var(--text-muted);
+    }
+    .asado-switch {
+      position: relative; width: 52px; height: 28px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 14px; cursor: pointer;
+      transition: background .3s;
+    }
+    .asado-switch input { display: none; }
+    .asado-switch .slider {
+      position: absolute; top: 2px; left: 2px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--text-muted);
+      transition: all .3s; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem;
+    }
+    .asado-switch input:checked + .slider {
+      left: 26px; background: #ff6b35;
+    }
+    body.asado .asado-switch { background: rgba(255,107,53,.25); border-color: #ff6b35; }
+
+    /* ---- Modo Asado Theme ---- */
+    body.asado {
+      --bg: #1a0e08;
+      --surface: #2a1a0e;
+      --surface-2: #3d2b1f;
+      --surface-3: #4a3728;
+      --text: #f5e6d0;
+      --text-muted: #a08060;
+      --border: #5a4030;
+      --danger: #ff6b35;
+      --success: #7cb342;
+      --uno-red: #e64a19;
+      --uno-yellow: #ffb300;
+      --uno-green: #7cb342;
+      --uno-blue: #78909c;
+    }
+    body.asado .btn-primary {
+      background: linear-gradient(135deg, #e64a19, #ff6b35);
+      box-shadow: 0 6px 24px rgba(230,74,25,.35);
+    }
+    body.asado .progress-fill {
+      background: linear-gradient(90deg, #c62828, #e64a19, #ff6b35, #ffb300, #4e342e);
+    }
+    body.asado .logo-title {
+      background: linear-gradient(135deg, #e64a19, #ffb300, #7cb342, #78909c);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    body.asado .round-roast-slide.roast { color: #ff6b35; }
+    body.asado .round-roast-slide.brag { color: #7cb342; }
+
+    /* ---- Flying Meat (Modo Asado) ---- */
+    .flying-meat {
+      position: fixed;
+      z-index: 50;
+      font-size: 2rem;
+      pointer-events: none;
+      user-select: none;
+      animation: meatFly var(--fly-dur, 6s) linear forwards;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+    @keyframes meatFly {
+      0% { transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5); opacity: 0; }
+      10% { opacity: 1; transform: translate(var(--start-x), var(--start-y)) rotate(30deg) scale(1); }
+      90% { opacity: 1; }
+      100% { transform: translate(var(--end-x), var(--end-y)) rotate(var(--spin, 720deg)) scale(0.6); opacity: 0; }
+    }
+
+    /* ---- Share Card ---- */
+    .share-card { margin-top: 1rem; }
+    .share-card h4 { margin-bottom: .75rem; font-size: 1rem; color: var(--text-muted); }
+    .share-actions { display: flex; flex-direction: column; gap: .75rem; }
+    .share-photo-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; justify-content: center; margin-top: .5rem; }
+    .share-photo-box { text-align: center; max-width: 220px; }
+    .share-photo-box img { width: 100%; border-radius: 12px; border: 2px solid var(--border); display: block; }
+    .share-photo-box .share-photo-label { font-size: .75rem; color: var(--text-muted); margin-top: .35rem; }
+    .share-photo-box .btn-small { margin-top: .5rem; }
+    .photo-upload-wrap { margin: .5rem 0; }
+    .photo-upload-wrap input[type="file"] { font-size: .85rem; color: var(--text); }
+
     /* ---- Walk of Shame ---- */
     .walk-of-shame {
       width: 100%; max-width: 480px;
@@ -551,7 +654,7 @@
 
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
-    <a href="#" class="header-logo" onclick="showScreen('home'); return false;" aria-label="Lunes de UNO">
+    <a href="#" class="header-logo" id="headerLogo" onclick="playNextSound(); showScreen('home'); return false;" aria-label="Lunes de UNO">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <!-- Galera negra (top hat): brim + crown -->
         <ellipse cx="20" cy="28" rx="14" ry="4" fill="#0a0a0a"/>
@@ -579,6 +682,13 @@
       <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
+    <div class="asado-toggle-row">
+      <label class="asado-switch">
+        <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
+        <span class="slider">🥩</span>
+      </label>
+      <span data-i18n="asado_mode"></span>
+    </div>
     <div class="home-beta-link">
       <a href="index2.html" class="under-construction" data-i18n-title="home_under_construction" title="En construcción: compartir resultados" aria-label="En construcción: compartir resultados">
         <span class="under-construction-icon" aria-hidden="true">🚧</span>
@@ -695,9 +805,35 @@
     <div class="results-actions no-print">
       <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
       <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
+      <button class="btn btn-secondary" onclick="copyToClipboard()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
       <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
     </div>
+
+    <div class="card share-card no-print">
+      <h4 data-i18n="share_title"></h4>
+      <div class="share-actions">
+        <div class="photo-upload-wrap">
+          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo"></label>
+          <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)">
+        </div>
+        <div class="share-photo-row" id="sharePhotoRow" style="display:none;">
+          <div class="share-photo-box">
+            <img id="sharePhotoOriginal" alt="Original" />
+            <div class="share-photo-label" data-i18n="share_original"></div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original"></button>
+          </div>
+          <div class="share-photo-box">
+            <img id="sharePhotoCartoon" alt="Cartoon" />
+            <div class="share-photo-label" data-i18n="share_cartoon"></div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('cartoon')" data-i18n="share_download_cartoon"></button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Copy toast -->
+  <div class="copy-toast" id="copyToast"></div>
 
   <!-- ============ EDIT MODAL ============ -->
   <div class="modal-overlay" id="editModal">
@@ -739,6 +875,15 @@ const STRINGS = {
     shame_title: 'Paseo de la Vergüenza',
     shame_round_lost: 'ronda perdida',
     shame_rounds_lost: 'rondas perdidas',
+    share_whatsapp: 'Mandale al grupo',
+    share_copied: '¡Copiado al portapapeles!',
+    share_title: 'Compartir resultados',
+    share_upload_photo: 'Subir foto con puntajes',
+    share_original: 'Original',
+    share_cartoon: 'Cartoon con puntajes',
+    share_download_original: 'Descargar original',
+    share_download_cartoon: 'Descargar cartoon',
+    asado_mode: 'Modo Asado 🥩',
     results_winner_sub: '¡ganó con menos puntos, qué crack!',
     results_breakdown: 'Ronda por ronda',
     results_print: 'Imprimir',
@@ -774,6 +919,15 @@ const STRINGS = {
     shame_title: 'Walk of Shame',
     shame_round_lost: 'round lost',
     shame_rounds_lost: 'rounds lost',
+    share_whatsapp: 'Share to group',
+    share_copied: 'Copied to clipboard!',
+    share_title: 'Share results',
+    share_upload_photo: 'Upload photo with scores',
+    share_original: 'Original',
+    share_cartoon: 'Cartoon with scores',
+    share_download_original: 'Download original',
+    share_download_cartoon: 'Download cartoon',
+    asado_mode: 'BBQ Mode 🥩',
     results_winner_sub: 'wins with the lowest score!',
     results_breakdown: 'Round Breakdown',
     results_print: 'Print Scores',
@@ -906,14 +1060,17 @@ function renderPlayerInputs() {
   const container = document.getElementById('playerInputs');
   const existing = container.querySelectorAll('input');
   const oldValues = Array.from(existing).map(i => i.value);
+  const isAsado = document.body.classList.contains('asado');
 
   let html = '';
   for (let i = 0; i < state.playerCount; i++) {
     const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
     const val = oldValues[i] || '';
+    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
+      `<div class="player-color" style="background:${color}"></div>`;
     html += `
       <div class="player-input-row">
-        <div class="player-color" style="background:${color}"></div>
+        ${dot}
         <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup()">
       </div>`;
   }
@@ -1047,16 +1204,19 @@ function renderWalkOfShame() {
   }
   container.classList.add('visible');
   const rankEmoji = ['🥇', '🥈', '🥉'];
-  list.innerHTML = shamers.map((p, i) =>
-    `<div class="shame-row">
+  const isAsado = document.body.classList.contains('asado');
+  list.innerHTML = shamers.map((p, i) => {
+    const dot = isAsado ? `<span style="font-size:1rem;">${getAsadoEmoji(p.idx)}</span>` :
+      `<div class="player-color" style="background:${p.color}"></div>`;
+    return `<div class="shame-row">
       <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
       <div class="shame-name">
-        <div class="player-color" style="background:${p.color}"></div>
+        ${dot}
         ${p.name}
       </div>
       <div class="shame-badge">${p.losses} ${p.losses === 1 ? t('shame_round_lost') : t('shame_rounds_lost')}</div>
-    </div>`
-  ).join('');
+    </div>`;
+  }).join('');
 }
 
 // ============ GAME ============
@@ -1122,12 +1282,15 @@ function renderScoreboard(totals) {
   const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
     .sort((a, b) => a.total - b.total);
 
+  const isAsado = document.body.classList.contains('asado');
   sorted.forEach(p => {
     const overLimit = p.total >= state.maxPoints;
     const isLowest = p.total === sorted[0].total && state.rounds.length > 0;
+    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
+      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
       <td><div class="player-name-cell">
-        <div class="player-color" style="background:${p.color}"></div>
+        ${dot}
         ${p.name}
       </div></td>
       <td style="text-align:right;" class="total-cell ${overLimit ? 'over-limit' : ''}">${p.total}</td>
@@ -1144,12 +1307,15 @@ function renderRoundInputs() {
   }
   document.getElementById('roundInputCard').style.display = '';
   const container = document.getElementById('roundInputs');
+  const isAsado = document.body.classList.contains('asado');
   let html = '';
   state.players.forEach((p, i) => {
+    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
+      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `
       <div class="round-input-row">
         <div class="player-label">
-          <div class="player-color" style="background:${p.color}"></div>
+          ${dot}
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0">
@@ -1268,14 +1434,17 @@ function renderResults() {
 
   const container = document.getElementById('finalStandings');
   const medals = ['gold', 'silver', 'bronze'];
+  const isAsado = document.body.classList.contains('asado');
   let html = '';
   standings.forEach((p, i) => {
+    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
+      `<div class="player-color" style="background:${p.color}"></div>`;
     html += `
       <div class="standing-row">
         <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
         <div class="standing-info">
           <div class="name" style="display:flex;align-items:center;gap:.4rem;">
-            <div class="player-color" style="background:${p.color}"></div>
+            ${dot}
             ${p.name}
           </div>
         </div>
@@ -1344,7 +1513,227 @@ function confirmQuit() {
   }
 }
 
+// ============ +4 SOUND BOARD ============
+let soundCtx = null;
+let soundIndex = 0;
+
+function playNextSound() {
+  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (soundCtx.state === 'suspended') soundCtx.resume();
+  const sounds = [playSadTrombone, playAirHorn, playDramaticSting, playFuneralMarch];
+  sounds[soundIndex % sounds.length]();
+  soundIndex++;
+  const logo = document.querySelector('.header-logo svg');
+  if (logo) { logo.classList.remove('hat-pulse'); void logo.offsetWidth; logo.classList.add('hat-pulse'); }
+}
+
+function playTone(freq, type, start, dur, gainVal) {
+  const osc = soundCtx.createOscillator();
+  const gain = soundCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  gain.gain.value = gainVal || 0.3;
+  osc.connect(gain); gain.connect(soundCtx.destination);
+  osc.start(soundCtx.currentTime + start);
+  osc.stop(soundCtx.currentTime + start + dur);
+  gain.gain.setValueAtTime(gainVal || 0.3, soundCtx.currentTime + start);
+  gain.gain.exponentialRampToValueAtTime(0.001, soundCtx.currentTime + start + dur);
+}
+
+function playSadTrombone() {
+  [293.66, 277.18, 261.63, 246.94].forEach((f, i) => playTone(f, 'sawtooth', i * 0.3, 0.3, 0.2));
+}
+function playAirHorn() {
+  [200, 250, 200, 250].forEach((f, i) => playTone(f, 'sawtooth', i * 0.08, 0.12, 0.25));
+  playTone(220, 'sawtooth', 0.32, 0.5, 0.3);
+}
+function playDramaticSting() {
+  [440, 554, 659, 880].forEach((f, i) => playTone(f, 'square', i * 0.08, 0.15, 0.15));
+  playTone(220, 'sawtooth', 0.4, 0.6, 0.2);
+}
+function playFuneralMarch() {
+  const notes = [[261.63,0,0.5],[261.63,0.5,0.25],[261.63,0.75,0.25],[261.63,1.0,0.75],[311.13,1.0,0.75],[293.66,1.75,0.25],[293.66,2.0,0.25],[261.63,2.25,0.25],[261.63,2.5,0.5],[246.94,2.5,0.5]];
+  notes.forEach(([f, s, d]) => playTone(f, 'triangle', s, d, 0.2));
+}
+
+// ============ MANDALE AL GRUPO ============
+function copyToClipboard() {
+  const totals = getTotals();
+  const standings = state.players.map((p, i) => ({ ...p, total: totals[i], idx: i }))
+    .sort((a, b) => a.total - b.total);
+  const isAsado = document.body.classList.contains('asado');
+  const header = isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩';
+  const posEmojis = ['🏆', '😐', '😬', '🫠', '💀'];
+  const posQuips = currentLang === 'es'
+    ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
+    : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
+  let lines = [header, ''];
+  standings.forEach((p, i) => {
+    const emoji = i === 0 ? posEmojis[0] : i === standings.length - 1 ? '💀' : (posEmojis[Math.min(i, 4)]);
+    const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
+    lines.push(`${emoji} ${p.name}: ${p.total} pts — ${quip}`);
+  });
+  lines.push('');
+  lines.push(`📊 ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'límite' : 'limit'} ${state.maxPoints}`);
+  const lastPlace = standings[standings.length - 1];
+  const closers = currentLang === 'es'
+    ? [`Bo ${lastPlace.name}, dejá el UNO y jugá al dominó 😂`, `${lastPlace.name} se llevó todos los puntos a casa 🏠`, `Alguien avísele a ${lastPlace.name} que acá gana el que tiene menos 💀`]
+    : [`${lastPlace.name}, maybe try checkers instead 😂`, `${lastPlace.name} took the whole pile home 🏠`, `Someone tell ${lastPlace.name} the lowest score wins 💀`];
+  lines.push(closers[Math.floor(Math.random() * closers.length)]);
+  const text = lines.join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showCopyToast());
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); showCopyToast();
+  }
+}
+
+function showCopyToast() {
+  const toast = document.getElementById('copyToast');
+  toast.textContent = t('share_copied');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ============ SHARE: Photo + cartoon with scores ============
+let sharePhotoState = { originalDataUrl: null, cartoonDataUrl: null };
+
+function applyCartoonEffect(imageData, width, height) {
+  var data = imageData.data, len = data.length, levels = 6, stride = width * 4;
+  for (var i = 0; i < len; i += 4) {
+    data[i] = Math.floor(data[i] / (256 / levels)) * (256 / levels);
+    data[i+1] = Math.floor(data[i+1] / (256 / levels)) * (256 / levels);
+    data[i+2] = Math.floor(data[i+2] / (256 / levels)) * (256 / levels);
+  }
+  for (var y = 1; y < height - 1; y++) {
+    for (var x = 1; x < width - 1; x++) {
+      var idx = (y * width + x) * 4;
+      var gx = Math.abs(data[idx] - data[idx-4]) + Math.abs(data[idx+4] - data[idx]);
+      var gy = Math.abs(data[idx] - data[idx-stride]) + Math.abs(data[idx+stride] - data[idx]);
+      if (gx + gy > 80) { data[idx] = 0; data[idx+1] = 0; data[idx+2] = 0; }
+    }
+  }
+  return imageData;
+}
+
+function drawScoresOnCanvas(canvas, img, isCartoon) {
+  const ctx = canvas.getContext('2d');
+  const maxW = 400, maxH = 300;
+  let w = img.width, h = img.height;
+  if (w > maxW || h > maxH) { const r = Math.min(maxW/w, maxH/h); w = Math.round(w*r); h = Math.round(h*r); }
+  canvas.width = w; canvas.height = h;
+  ctx.drawImage(img, 0, 0, w, h);
+  if (isCartoon) { const id = ctx.getImageData(0,0,w,h); ctx.putImageData(applyCartoonEffect(id,w,h),0,0); }
+  const totals = getTotals();
+  const standings = state.players.map((p,i)=>({...p,total:totals[i]})).sort((a,b)=>a.total-b.total);
+  ctx.font = 'bold 14px Inter, sans-serif'; ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2;
+  let ty = 24;
+  standings.forEach((p,i)=>{ const txt = (i+1)+'. '+p.name+' — '+p.total+' pts'; ctx.strokeText(txt,10,ty); ctx.fillText(txt,10,ty); ty+=22; });
+}
+
+function onSharePhotoChange(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  sharePhotoState.originalDataUrl = null; sharePhotoState.cartoonDataUrl = null;
+  var elO = document.getElementById('sharePhotoOriginal'), elC = document.getElementById('sharePhotoCartoon');
+  var row = document.getElementById('sharePhotoRow');
+  row.style.display = 'none'; elO.removeAttribute('src'); elC.removeAttribute('src');
+  var reader = new FileReader();
+  reader.onload = function() {
+    var img = new Image();
+    img.onload = function() {
+      var c1 = document.createElement('canvas'), c2 = document.createElement('canvas');
+      drawScoresOnCanvas(c1,img,false); drawScoresOnCanvas(c2,img,true);
+      sharePhotoState.originalDataUrl = c1.toDataURL('image/png');
+      sharePhotoState.cartoonDataUrl = c2.toDataURL('image/png');
+      elO.src = sharePhotoState.originalDataUrl; elC.src = sharePhotoState.cartoonDataUrl;
+      row.style.display = 'flex'; ev.target.value = '';
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadShareImage(which) {
+  const dataUrl = which === 'original' ? sharePhotoState.originalDataUrl : sharePhotoState.cartoonDataUrl;
+  if (!dataUrl) return;
+  const a = document.createElement('a'); a.href = dataUrl;
+  a.download = 'LunesDeUNO-' + which + '.png'; a.click();
+}
+
+// ============ MODO ASADO ============
+const ASADO_EMOJIS = ['🥩', '🍖', '🌭', '🫒', '🔥', '🧅', '🫑', '🧄', '🍞', '🌶️'];
+const ASADO_CAROUSEL_MSGS = {
+  es: {
+    last: ['{name} está más quemado que la tira de asado que nadie quería 🔥','{name} juntó más puntos que sal tiene el vacío, bo.','A {name} le faltó vuelta y vuelta, se carbonizó esta ronda.','{name} se pasó de cocción, ta hecho carbón.','Pa, {name}, más quemado que chorizo olvidado en la parrilla.'],
+    secondLast: ['{name} quedó a punto, casi se pasa de cocción.','{name} está jugoso todavía, pero ojo con la próxima vuelta.'],
+    first: ['{name} salió al punto justo, término medio perfecto 🥩','{name} es el asador de esta mesa, tremendo nivel.','Esta ronda {name} la clavó como un buen vacío a la brasa.'],
+  },
+  en: {
+    last: ['{name} is more burnt than forgotten ribs on the grill 🔥','{name} collected more points than salt on a steak.','{name} forgot to flip and got charred this round.','{name} is well-done. Way too well-done.','{name} got roasted harder than the sausages.'],
+    secondLast: ['{name} is medium-rare, almost overcooked.','{name} is still juicy, but watch out next round.'],
+    first: ['{name} came out medium-rare perfection 🥩','{name} is the grill master of this table.','{name} nailed it like a perfect cut on the BBQ.'],
+  },
+};
+
+let asadoMode = false;
+let originalCarouselMsgs = null;
+let meatInterval = null;
+const MEAT_EMOJIS = ['🥩', '🍖', '🌭', '🍗', '🥓', '🔥', '🌶️', '🧅', '🫑'];
+
+function getAsadoEmoji(playerIdx) { return ASADO_EMOJIS[playerIdx % ASADO_EMOJIS.length]; }
+
+function spawnFlyingMeat() {
+  const el = document.createElement('span'); el.className = 'flying-meat';
+  el.textContent = MEAT_EMOJIS[Math.floor(Math.random() * MEAT_EMOJIS.length)];
+  const side = Math.floor(Math.random() * 4);
+  let startX, startY, endX, endY;
+  const W = window.innerWidth, H = window.innerHeight;
+  if (side===0){startX=-40;startY=Math.random()*H;endX=W+60;endY=Math.random()*H;}
+  else if(side===1){startX=W+40;startY=Math.random()*H;endX=-60;endY=Math.random()*H;}
+  else if(side===2){startX=Math.random()*W;startY=-40;endX=Math.random()*W;endY=H+60;}
+  else{startX=Math.random()*W;startY=H+40;endX=Math.random()*W;endY=-60;}
+  const dur=4+Math.random()*5, spin=360+Math.random()*720, size=1.2+Math.random()*1.5;
+  el.style.setProperty('--start-x',startX+'px'); el.style.setProperty('--start-y',startY+'px');
+  el.style.setProperty('--end-x',endX+'px'); el.style.setProperty('--end-y',endY+'px');
+  el.style.setProperty('--fly-dur',dur+'s'); el.style.setProperty('--spin',spin+'deg');
+  el.style.fontSize=size+'rem'; el.style.top='0'; el.style.left='0';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), dur*1000+200);
+}
+
+function startMeatRain() { if(meatInterval)return; meatInterval=setInterval(spawnFlyingMeat,800); }
+function stopMeatRain() { if(meatInterval){clearInterval(meatInterval);meatInterval=null;} document.querySelectorAll('.flying-meat').forEach(el=>el.remove()); }
+
+function toggleAsado() {
+  asadoMode = document.getElementById('asadoToggle').checked;
+  localStorage.setItem('lunesdeuno_asado', asadoMode ? 'on' : 'off');
+  applyAsadoMode();
+}
+
+function applyAsadoMode() {
+  if (asadoMode) {
+    document.body.classList.add('asado');
+    if (!originalCarouselMsgs) originalCarouselMsgs = JSON.parse(JSON.stringify(CAROUSEL_MSGS));
+    Object.keys(ASADO_CAROUSEL_MSGS).forEach(lang => { CAROUSEL_MSGS[lang] = ASADO_CAROUSEL_MSGS[lang]; });
+    startMeatRain();
+  } else {
+    document.body.classList.remove('asado');
+    if (originalCarouselMsgs) { Object.keys(originalCarouselMsgs).forEach(lang => { CAROUSEL_MSGS[lang] = originalCarouselMsgs[lang]; }); }
+    stopMeatRain();
+  }
+  if (document.getElementById('game').classList.contains('active')) renderGame();
+  if (document.getElementById('results').classList.contains('active')) renderResults();
+}
+
 // ============ INIT ============
+asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
+document.getElementById('asadoToggle').checked = asadoMode;
+if (asadoMode) applyAsadoMode();
+
 setLang(currentLang);
 initSetup();
 </script>
