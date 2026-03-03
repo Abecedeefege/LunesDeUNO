@@ -1370,7 +1370,7 @@ function renderRoundInputs() {
           ${dot}
           ${p.name}
         </div>
-        <input type="number" id="roundScore_${i}" placeholder="0" min="0">
+        <input type="number" id="roundScore_${i}" placeholder="0">
       </div>`;
   });
   container.innerHTML = html;
@@ -1378,8 +1378,7 @@ function renderRoundInputs() {
 
 function submitRound() {
   const scores = state.players.map((_, i) => {
-    const val = parseInt(document.getElementById(`roundScore_${i}`).value) || 0;
-    return Math.max(0, val);
+    return parseInt(document.getElementById(`roundScore_${i}`).value) || 0;
   });
 
   if (scores.every(s => s === 0)) {
@@ -1442,7 +1441,7 @@ function openEditModal(roundIdx) {
     html += `
       <div class="modal-input-row">
         <label>${p.name}</label>
-        <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}" min="0">
+        <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
       </div>`;
   });
   container.innerHTML = html;
@@ -1457,7 +1456,7 @@ function closeEditModal() {
 function saveEditRound() {
   if (editingRound < 0) return;
   state.players.forEach((_, i) => {
-    state.rounds[editingRound][i] = Math.max(0, parseInt(document.getElementById(`editScore_${i}`).value) || 0);
+    state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
   });
   closeEditModal();
 
