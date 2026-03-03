@@ -672,6 +672,26 @@
       display: flex; flex-direction: row; gap: .5rem;
     }
 
+    /* ---- Fines ---- */
+    .btn-fine {
+      background: rgba(255,180,0,.15); color: var(--uno-yellow);
+      border: 1px solid rgba(255,180,0,.3); font-size: .75rem;
+      padding: .3rem .6rem; border-radius: 8px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 600;
+      transition: all .2s;
+    }
+    .btn-fine:hover { background: rgba(255,180,0,.25); }
+    .btn-fine.has-fine { background: rgba(255,180,0,.3); border-color: var(--uno-yellow); }
+    .fine-input-row {
+      display: none; align-items: center; gap: .5rem;
+      padding-left: 2rem; margin-top: -.3rem;
+    }
+    .fine-input-row.visible { display: flex; }
+    .fine-label { font-size: .8rem; color: var(--uno-yellow); font-weight: 600; white-space: nowrap; }
+    .fine-input-row input { width: 70px; text-align: center; font-size: .9rem; font-weight: 600; padding: .4rem .3rem; }
+    .fine-badge { color: var(--uno-yellow); font-size: .75rem; font-weight: 600; }
+    .fine-total-badge { background: rgba(255,180,0,.12); color: var(--uno-yellow); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
       .logo-title { font-size: 2.4rem; }
@@ -932,6 +952,9 @@ const STRINGS = {
     games_confirm_delete: '¿Eliminar este partido?',
     games_limit: 'Límite',
     games_won: 'ganó',
+    game_fine: 'Multa',
+    game_fines: 'Multas',
+    game_fines_label: 'multas',
   },
   en: {
     home_sub: 'Score Tracker',
@@ -983,6 +1006,9 @@ const STRINGS = {
     games_confirm_delete: 'Delete this game?',
     games_limit: 'Limit',
     games_won: 'won',
+    game_fine: 'Fine',
+    game_fines: 'Fines',
+    game_fines_label: 'fines',
   }
 };
 
@@ -1067,6 +1093,7 @@ let state = {
   maxPoints: 500,
   players: [],
   rounds: [],
+  fines: [],
   currentRound: 0,
   gameOver: false,
   gameId: null
@@ -1157,6 +1184,7 @@ function startGame() {
     color: PLAYER_COLORS[i % PLAYER_COLORS.length]
   }));
   state.rounds = [];
+  state.fines = [];
   state.currentRound = 0;
   state.gameOver = false;
   state.gameId = 'game_' + Date.now();
@@ -1328,8 +1356,9 @@ function renderGame() {
 
 function renderScoreboard(totals) {
   const table = document.getElementById('scoreboard');
-  let html = `<thead><tr><th>${t('game_player')}</th><th style="text-align:right;">${t('game_total')}</th></tr></thead><tbody>`;
-  const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
+  const totalFines = getTotalFines();
+  let html = `<thead><tr><th>${t('game_player')}</th><th style="text-align:center;">${t('game_fines')}</th><th style="text-align:right;">${t('game_total')}</th></tr></thead><tbody>`;
+  const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i], fines: totalFines[i]}))
     .sort((a, b) => a.total - b.total);
 
   const isAsado = document.body.classList.contains('asado');
@@ -1338,11 +1367,13 @@ function renderScoreboard(totals) {
     const isLowest = p.total === sorted[0].total && state.rounds.length > 0;
     const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
       `<div class="player-color" style="background:${p.color}"></div>`;
+    const fineCell = p.fines > 0 ? `<span class="fine-badge">⚠️ +${p.fines}</span>` : '—';
     html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
       <td><div class="player-name-cell">
         ${dot}
         ${p.name}
       </div></td>
+      <td style="text-align:center;">${fineCell}</td>
       <td style="text-align:right;" class="total-cell ${overLimit ? 'over-limit' : ''}">${p.total}</td>
     </tr>`;
   });
@@ -1369,9 +1400,31 @@ function renderRoundInputs() {
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0">
+        <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
+      </div>
+      <div class="fine-input-row" id="fineRow_${i}">
+        <span class="fine-label">⚠️ ${t('game_fine')}:</span>
+        <input type="number" id="roundFine_${i}" placeholder="0" min="0">
       </div>`;
   });
   container.innerHTML = html;
+}
+
+function toggleFineInput(idx) {
+  var row = document.getElementById('fineRow_' + idx);
+  if (row) row.classList.toggle('visible');
+}
+
+function getTotalFines() {
+  return state.players.map(function(_, pi) {
+    return (state.fines || []).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
+  });
+}
+
+function getFinalTotals() {
+  var totals = getTotals();
+  var totalFines = getTotalFines();
+  return totals.map(function(t, i) { return t + totalFines[i]; });
 }
 
 function submitRound() {
@@ -1384,7 +1437,9 @@ function submitRound() {
     return;
   }
 
+  var fines = state.players.map(function(_, i) { return Math.max(0, parseInt(document.getElementById('roundFine_'+i)?.value) || 0); });
   state.rounds.push(scores);
+  state.fines.push(fines);
   state.currentRound = state.rounds.length;
   state.lastRoundRoastMessages = buildRoastMessages(scores);
   state.justSubmittedRound = true;
@@ -1416,7 +1471,10 @@ function renderRoundHistory() {
 
   state.rounds.forEach((round, ri) => {
     html += `<tr><td>R${ri + 1}</td>`;
-    round.forEach(s => { html += `<td>${s}</td>`; });
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
     html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
 
@@ -1424,6 +1482,13 @@ function renderRoundHistory() {
   html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
   html += '<td class="no-print"></td></tr>';
+
+  var totalFinesH = getTotalFines();
+  if (totalFinesH.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesH.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td class="no-print"></td></tr>';
+  }
 
   html += '</tbody>';
   table.innerHTML = html;
@@ -1438,10 +1503,15 @@ function openEditModal(roundIdx) {
   const container = document.getElementById('editModalInputs');
   let html = '';
   state.players.forEach((p, i) => {
+    var fineVal = (state.fines[roundIdx] && state.fines[roundIdx][i]) || 0;
     html += `
       <div class="modal-input-row">
         <label>${p.name}</label>
         <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+      </div>
+      <div class="modal-input-row" style="padding-left:1rem;">
+        <label style="color:var(--uno-yellow);font-size:.8rem;">⚠️ ${t('game_fine')}</label>
+        <input type="number" id="editFine_${i}" value="${fineVal}" min="0" style="width:70px;">
       </div>`;
   });
   container.innerHTML = html;
@@ -1455,8 +1525,10 @@ function closeEditModal() {
 
 function saveEditRound() {
   if (editingRound < 0) return;
+  if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
   state.players.forEach((_, i) => {
     state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
+    state.fines[editingRound][i] = Math.max(0, parseInt(document.getElementById('editFine_'+i)?.value) || 0);
   });
   closeEditModal();
   saveCurrentGame();
@@ -1479,8 +1551,10 @@ function saveEditRound() {
 
 // ============ RESULTS ============
 function renderResults() {
-  const totals = getTotals();
-  const standings = state.players.map((p, i) => ({...p, idx: i, total: totals[i]}))
+  const finalTotals = getFinalTotals();
+  const baseTotals = getTotals();
+  const totalFines = getTotalFines();
+  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i]}))
     .sort((a, b) => a.total - b.total);
 
   document.getElementById('winnerName').textContent = standings[0].name;
@@ -1492,6 +1566,9 @@ function renderResults() {
   standings.forEach((p, i) => {
     const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
       `<div class="player-color" style="background:${p.color}"></div>`;
+    const scoreText = p.fines > 0
+      ? `${p.baseTotal} <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span> = ${p.total} ${t('game_pts')}`
+      : `${p.total} ${t('game_pts')}`;
     html += `
       <div class="standing-row">
         <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
@@ -1501,7 +1578,7 @@ function renderResults() {
             ${p.name}
           </div>
         </div>
-        <div class="standing-score">${p.total} ${t('game_pts')}</div>
+        <div class="standing-score">${scoreText}</div>
       </div>`;
   });
   container.innerHTML = html;
@@ -1517,14 +1594,26 @@ function renderResultsHistory() {
 
   state.rounds.forEach((round, ri) => {
     html += `<tr><td>R${ri + 1}</td>`;
-    round.forEach(s => { html += `<td>${s}</td>`; });
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
     html += '</tr>';
   });
 
   const totals = getTotals();
   html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
-  html += '</tr></tbody>';
+  html += '</tr>';
+
+  var totalFinesR = getTotalFines();
+  if (totalFinesR.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesR.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '</tr>';
+  }
+
+  html += '</tbody>';
   table.innerHTML = html;
 }
 
@@ -1536,14 +1625,26 @@ function showEditableHistory() {
 
   state.rounds.forEach((round, ri) => {
     html += `<tr><td>R${ri + 1}</td>`;
-    round.forEach(s => { html += `<td>${s}</td>`; });
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
     html += `<td class="edit-cell" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
 
   const totals = getTotals();
   html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
-  html += '<td></td></tr></tbody>';
+  html += '<td></td></tr>';
+
+  var totalFinesE = getTotalFines();
+  if (totalFinesE.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesE.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td></td></tr>';
+  }
+
+  html += '</tbody>';
   table.innerHTML = html;
 }
 
@@ -1554,7 +1655,7 @@ function printResults() {
 function newGame() {
   state = {
     playerCount: 2, maxPoints: 500,
-    players: [], rounds: [], currentRound: 0, gameOver: false, gameId: null
+    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null
   };
   document.getElementById('playerCountDisplay').textContent = '2';
   showScreen('home');
@@ -1565,7 +1666,7 @@ function confirmQuit() {
     saveCurrentGame();
     state = {
       playerCount: 2, maxPoints: 500,
-      players: [], rounds: [], currentRound: 0, gameOver: false, gameId: null
+      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null
     };
     document.getElementById('playerCountDisplay').textContent = '2';
     showScreen('home');
@@ -1616,8 +1717,9 @@ function playFuneralMarch() {
 
 // ============ MANDALE AL GRUPO ============
 function copyToClipboard() {
-  const totals = getTotals();
-  const standings = state.players.map((p, i) => ({ ...p, total: totals[i], idx: i }))
+  const finalTotals = getFinalTotals();
+  const totalFinesC = getTotalFines();
+  const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
   const header = isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩';
@@ -1629,7 +1731,8 @@ function copyToClipboard() {
   standings.forEach((p, i) => {
     const emoji = i === 0 ? posEmojis[0] : i === standings.length - 1 ? '💀' : (posEmojis[Math.min(i, 4)]);
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
-    lines.push(`${emoji} ${p.name}: ${p.total} pts — ${quip}`);
+    const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
+    lines.push(`${emoji} ${p.name}: ${p.total} pts${fineStr} — ${quip}`);
   });
   lines.push('');
   lines.push(`📊 ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'límite' : 'limit'} ${state.maxPoints}`);
