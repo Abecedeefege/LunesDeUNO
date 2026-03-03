@@ -641,6 +641,37 @@
       white-space: nowrap;
     }
 
+    /* ---- Games List ---- */
+    .games-list {
+      width: 100%; max-width: 480px; margin-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .games-list h3 {
+      font-size: 1rem; color: var(--text-muted); margin-bottom: .25rem;
+    }
+    .game-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .game-item-info {
+      display: flex; flex-direction: column; gap: .2rem;
+    }
+    .game-item-info .game-item-title {
+      font-weight: 600; font-size: .95rem;
+    }
+    .game-item-scores {
+      font-size: .85rem; color: var(--text); font-weight: 500;
+    }
+    .game-item-meta {
+      font-size: .75rem; color: var(--text-muted);
+    }
+    .game-item-actions {
+      display: flex; flex-direction: row; gap: .5rem;
+    }
+
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
       .logo-title { font-size: 2.4rem; }
@@ -689,6 +720,7 @@
       </label>
       <span data-i18n="asado_mode"></span>
     </div>
+    <div id="gamesList"></div>
     <div class="home-beta-link">
       <a href="index2.html" class="under-construction" data-i18n-title="home_under_construction" title="En construcción: compartir resultados" aria-label="En construcción: compartir resultados">
         <span class="under-construction-icon" aria-hidden="true">🚧</span>
@@ -893,6 +925,13 @@ const STRINGS = {
     modal_cancel: 'Na, dejá',
     modal_save: 'Guardar',
     player_placeholder: 'Jugador',
+    games_title: 'Partidos guardados',
+    games_resume: 'Reanudar',
+    games_view: 'Ver resultado',
+    games_delete: 'Eliminar',
+    games_confirm_delete: '¿Eliminar este partido?',
+    games_limit: 'Límite',
+    games_won: 'ganó',
   },
   en: {
     home_sub: 'Score Tracker',
@@ -937,6 +976,13 @@ const STRINGS = {
     modal_cancel: 'Cancel',
     modal_save: 'Save',
     player_placeholder: 'Player',
+    games_title: 'Saved Games',
+    games_resume: 'Resume',
+    games_view: 'View Result',
+    games_delete: 'Delete',
+    games_confirm_delete: 'Delete this game?',
+    games_limit: 'Limit',
+    games_won: 'won',
   }
 };
 
@@ -1022,7 +1068,8 @@ let state = {
   players: [],
   rounds: [],
   currentRound: 0,
-  gameOver: false
+  gameOver: false,
+  gameId: null
 };
 
 const PLAYER_COLORS = [
@@ -1039,6 +1086,7 @@ function showScreen(id) {
   }
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if (id === 'home') renderGamesList();
   if (id === 'setup') initSetup();
   if (id === 'game') renderGame();
   if (id === 'results') renderResults();
@@ -1111,6 +1159,8 @@ function startGame() {
   state.rounds = [];
   state.currentRound = 0;
   state.gameOver = false;
+  state.gameId = 'game_' + Date.now();
+  saveCurrentGame();
   showScreen('game');
 }
 
@@ -1342,10 +1392,12 @@ function submitRound() {
   const totals = getTotals();
   if (totals.some(t => t >= state.maxPoints)) {
     state.gameOver = true;
+    saveCurrentGame();
     showScreen('results');
     return;
   }
 
+  saveCurrentGame();
   renderGame();
 }
 
@@ -1407,6 +1459,7 @@ function saveEditRound() {
     state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
   });
   closeEditModal();
+  saveCurrentGame();
 
   const totals = getTotals();
   const wasOver = state.gameOver;
@@ -1501,7 +1554,7 @@ function printResults() {
 function newGame() {
   state = {
     playerCount: 2, maxPoints: 500,
-    players: [], rounds: [], currentRound: 0, gameOver: false
+    players: [], rounds: [], currentRound: 0, gameOver: false, gameId: null
   };
   document.getElementById('playerCountDisplay').textContent = '2';
   showScreen('home');
@@ -1509,7 +1562,13 @@ function newGame() {
 
 function confirmQuit() {
   if (confirm(t('game_confirm_quit'))) {
-    newGame();
+    saveCurrentGame();
+    state = {
+      playerCount: 2, maxPoints: 500,
+      players: [], rounds: [], currentRound: 0, gameOver: false, gameId: null
+    };
+    document.getElementById('playerCountDisplay').textContent = '2';
+    showScreen('home');
   }
 }
 
@@ -1729,6 +1788,121 @@ function applyAsadoMode() {
   if (document.getElementById('results').classList.contains('active')) renderResults();
 }
 
+// ============ GAME PERSISTENCE ============
+function loadGames() {
+  try {
+    var data = localStorage.getItem('lunesdeuno_games');
+    return data ? JSON.parse(data) : [];
+  } catch (e) { return []; }
+}
+
+function saveGames(games) {
+  localStorage.setItem('lunesdeuno_games', JSON.stringify(games));
+}
+
+function saveCurrentGame() {
+  if (!state.gameId) return;
+  var games = loadGames();
+  var entry = {
+    id: state.gameId,
+    timestamp: parseInt(state.gameId.replace('game_', ''), 10) || Date.now(),
+    state: {
+      playerCount: state.playerCount,
+      maxPoints: state.maxPoints,
+      players: state.players,
+      rounds: state.rounds,
+      currentRound: state.currentRound,
+      gameOver: state.gameOver,
+      gameId: state.gameId,
+      fines: state.fines || []
+    },
+    finished: !!state.gameOver
+  };
+  var idx = games.findIndex(function(g) { return g.id === state.gameId; });
+  if (idx >= 0) { games[idx] = entry; } else { games.push(entry); }
+  saveGames(games);
+}
+
+function formatTimestamp(ts) {
+  var d = new Date(ts);
+  var days = currentLang === 'es'
+    ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+    : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = currentLang === 'es'
+    ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var hh = String(d.getHours()).padStart(2, '0');
+  var mm = String(d.getMinutes()).padStart(2, '0');
+  return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()] + ', ' + hh + ':' + mm;
+}
+
+function renderGamesList() {
+  var container = document.getElementById('gamesList');
+  var games = loadGames();
+  if (games.length === 0) { container.innerHTML = ''; return; }
+  games.sort(function(a, b) { return b.timestamp - a.timestamp; });
+  var html = '<div class="games-list"><h3>' + t('games_title') + '</h3>';
+  games.forEach(function(g) {
+    var s = g.state;
+    var names = s.players.map(function(p) { return p.name; });
+    var totals = s.players.map(function(_, pi) {
+      return s.rounds.reduce(function(sum, round) { return sum + (round[pi] || 0); }, 0);
+    });
+    var scoresStr = totals.join('-');
+    var title;
+    if (g.finished) {
+      var minIdx = 0;
+      totals.forEach(function(t, i) { if (t < totals[minIdx]) minIdx = i; });
+      title = '🏆 ' + names[minIdx] + ' ' + t('games_won') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints;
+    } else {
+      title = '📋 ' + names.join(', ') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints;
+    }
+    var btnLabel = g.finished ? t('games_view') : t('games_resume');
+    var btnAction = g.finished
+      ? 'resumeGame(\'' + g.id + '\')'
+      : 'resumeGame(\'' + g.id + '\')';
+    html += '<div class="game-item">' +
+      '<div class="game-item-info">' +
+        '<div class="game-item-title">' + title + '</div>' +
+        '<div class="game-item-meta">' + formatTimestamp(g.timestamp) + '</div>' +
+      '</div>' +
+      '<div class="game-item-actions">' +
+        '<button class="btn btn-secondary btn-small" onclick="' + btnAction + '">' + btnLabel + '</button>' +
+        '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function resumeGame(gameId) {
+  var games = loadGames();
+  var g = games.find(function(g) { return g.id === gameId; });
+  if (!g) return;
+  state.playerCount = g.state.playerCount;
+  state.maxPoints = g.state.maxPoints;
+  state.players = g.state.players;
+  state.rounds = g.state.rounds;
+  state.currentRound = g.state.currentRound;
+  state.gameOver = g.state.gameOver;
+  state.gameId = g.state.gameId;
+  state.fines = g.state.fines || [];
+  if (g.finished) {
+    showScreen('results');
+  } else {
+    showScreen('game');
+  }
+}
+
+function deleteGame(gameId) {
+  if (!confirm(t('games_confirm_delete'))) return;
+  var games = loadGames();
+  games = games.filter(function(g) { return g.id !== gameId; });
+  saveGames(games);
+  renderGamesList();
+}
+
 // ============ INIT ============
 asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
 document.getElementById('asadoToggle').checked = asadoMode;
@@ -1736,6 +1910,7 @@ if (asadoMode) applyAsadoMode();
 
 setLang(currentLang);
 initSetup();
+renderGamesList();
 </script>
 </body>
 </html>
