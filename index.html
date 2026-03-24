@@ -710,6 +710,15 @@
     .fine-badge { color: var(--uno-yellow); font-size: .75rem; font-weight: 600; }
     .fine-total-badge { background: rgba(255,180,0,.12); color: var(--uno-yellow); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
 
+    /* ---- Edit limit inline ---- */
+    .edit-limit-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: .8rem; padding: .1rem .3rem;
+      border-radius: 4px; transition: color .2s;
+      vertical-align: middle;
+    }
+    .edit-limit-btn:hover { color: var(--uno-yellow); }
+
     /* ---- Responsive ---- */
     @media (max-width: 500px) {
       .logo-title { font-size: 2.4rem; }
@@ -723,7 +732,7 @@
 
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
-    <a href="#" class="header-logo" id="headerLogo" onclick="playNextSound(); showScreen('home'); return false;" aria-label="Lunes de UNO">
+    <button type="button" class="header-logo" id="headerLogo" onclick="playNextSound()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
       <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <!-- Galera (top hat): white for contrast on dark header -->
         <ellipse cx="20" cy="28" rx="14" ry="4" fill="#fff"/>
@@ -731,7 +740,7 @@
         <ellipse cx="20" cy="12" rx="12" ry="3" fill="#f0f0f5"/>
         <rect x="10" y="12" width="20" height="16" fill="#fff"/>
       </svg>
-    </a>
+    </button>
     <div class="lang-switcher">
       <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">
         <svg viewBox="0 0 30 20" style="width:28px;height:18px;border-radius:3px;"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="2.22" fill="#001489"/><rect y="4.44" width="30" height="2.22" fill="#001489"/><rect y="8.89" width="30" height="2.22" fill="#001489"/><rect y="13.33" width="30" height="2.22" fill="#001489"/><rect y="17.78" width="30" height="2.22" fill="#001489"/><rect width="12" height="8.89" fill="#fff"/><circle cx="6" cy="4.44" r="2.8" fill="#FCD116"/><circle cx="6" cy="4.44" r="2.2" fill="#FCD116"/></svg>
@@ -801,6 +810,13 @@
       </div>
     </div>
 
+    <div class="card">
+      <div class="input-group">
+        <label data-i18n="setup_venue_label"></label>
+        <input type="text" id="venueInput" data-i18n-ph="setup_venue_placeholder" maxlength="60">
+      </div>
+    </div>
+
     <div class="setup-footer">
       <button class="btn btn-primary" id="startGameBtn" onclick="startGame()" data-i18n="setup_start_btn"></button>
     </div>
@@ -819,7 +835,10 @@
     <div class="progress-container" id="progressContainer">
       <div class="progress-label">
         <span id="progressLeader">-</span>
-        <span id="progressText">0 / 500</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span id="progressText">0 / 500</span>
+          <button type="button" class="edit-limit-btn no-print" onclick="openEditMaxPoints()" title="Cambiar límite">✏️</button>
+        </span>
       </div>
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill" style="width:0%"></div>
@@ -856,7 +875,10 @@
       <table class="round-history-table" id="roundHistoryTable"></table>
     </div>
 
-    <button class="btn btn-secondary btn-small no-print" onclick="confirmQuit()" style="margin-top:.5rem; color:var(--danger);" data-i18n="game_quit"></button>
+    <div style="display:flex;gap:.75rem;margin-top:.5rem;" class="no-print">
+      <button class="btn btn-secondary btn-small" onclick="goHome()" data-i18n="game_go_home"></button>
+      <button class="btn btn-secondary btn-small" onclick="confirmQuit()" style="color:var(--danger);" data-i18n="game_quit"></button>
+    </div>
   </div>
 
   <!-- ============ RESULTS ============ -->
@@ -866,6 +888,8 @@
     <div>
       <div class="winner-name" id="winnerName">-</div>
       <p class="winner-subtitle" data-i18n="results_winner_sub"></p>
+      <p id="resultsVenue" style="color:var(--text-muted);font-size:.85rem;margin-top:.3rem;"></p>
+      <p id="resultsLimit" style="color:var(--text-muted);font-size:.85rem;margin-top:.15rem;"></p>
     </div>
 
     <div class="final-standings" id="finalStandings"></div>
@@ -877,9 +901,11 @@
     </div>
 
     <div class="results-actions no-print">
+      <button class="btn btn-secondary" onclick="goHome()" data-i18n="game_go_home"></button>
       <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
       <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
-      <button class="btn btn-secondary" onclick="copyToClipboard()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
+      <button class="btn btn-secondary" onclick="openEditMaxPoints()" data-i18n="results_edit_limit"></button>
+      <button class="btn btn-secondary" onclick="shareToWhatsApp()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
       <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
     </div>
 
@@ -903,6 +929,23 @@
 
   <!-- Copy toast -->
   <div class="copy-toast" id="copyToast"></div>
+
+  <!-- ============ EDIT MAX POINTS MODAL ============ -->
+  <div class="modal-overlay" id="editMaxPointsModal">
+    <div class="modal">
+      <h3 data-i18n="edit_limit_title"></h3>
+      <div class="modal-inputs">
+        <div class="modal-input-row">
+          <label data-i18n="edit_limit_label"></label>
+          <input type="number" id="newMaxPointsInput" min="50" style="width:100px;text-align:center;font-weight:600;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-small" onclick="closeEditMaxPoints()" data-i18n="modal_cancel"></button>
+        <button class="btn btn-primary btn-small" onclick="saveEditMaxPoints()" data-i18n="modal_save"></button>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ EDIT MODAL ============ -->
   <div class="modal-overlay" id="editModal">
@@ -933,6 +976,7 @@ const STRINGS = {
     game_end_round: 'Cerrar ronda',
     game_round_history: 'Lo que fue pasando',
     game_quit: 'Rajar del juego',
+    game_go_home: '🏠 Inicio',
     game_round: 'Ronda',
     game_player: 'Jugador',
     game_total: 'Total',
@@ -973,6 +1017,11 @@ const STRINGS = {
     game_fine: 'Multa',
     game_fines: 'Multas',
     game_fines_label: 'multas',
+    setup_venue_label: 'Sede (opcional)',
+    setup_venue_placeholder: 'Casa de PT, Bar El Tano...',
+    results_edit_limit: '🎯 Cambiar límite',
+    edit_limit_title: 'Cambiar límite de puntos',
+    edit_limit_label: 'Nuevo límite (mín. 50)',
   },
   en: {
     home_sub: 'Score Tracker',
@@ -988,6 +1037,7 @@ const STRINGS = {
     game_end_round: 'End Round',
     game_round_history: 'Round History',
     game_quit: 'Quit Game',
+    game_go_home: '🏠 Home',
     game_round: 'Round',
     game_player: 'Player',
     game_total: 'Total',
@@ -1028,6 +1078,11 @@ const STRINGS = {
     game_fine: 'Fine',
     game_fines: 'Fines',
     game_fines_label: 'fines',
+    setup_venue_label: 'Venue (optional)',
+    setup_venue_placeholder: 'PT\'s place, El Tano Bar...',
+    results_edit_limit: '🎯 Change limit',
+    edit_limit_title: 'Change point limit',
+    edit_limit_label: 'New limit (min. 50)',
   }
 };
 
@@ -1035,38 +1090,46 @@ const STRINGS = {
 const CAROUSEL_MSGS = {
   es: {
     last: [
-      'Bo {name}, te comiste todos los puntos de la mesa 😂',
-      '{name} juntó más puntos que boleto de STM, ta bravo.',
-      '¿{name} estaba jugando al UNO o al “sumá todo, bo”?',
-      'Pa, {name}, dejale algún punto a los demás, ¿no?',
-      'Alguien avísele a {name} que acá gana el que tiene menos, ta.',
+      'La puta madre {name}, ¿en qué carajo estabas pensando?! 🤦',
+      '{name} jugó como el orto esta ronda, bo. Qué asco.',
+      '¿{name} vino a jugar al UNO o a juntar toda la mierda de la mesa?',
+      'Pa {name}, la concha de tu madre, ¿cómo hacés para jugar tan mal?',
+      'Alguien sáquenle las cartas a {name} por favor, es una vergüenza ajena.',
+      '{name} es un desastre de persona y esta ronda lo confirmó, bo.',
+      '¿{name} está bien? Porque eso que hizo no lo hace ni un boludo de remate.',
+      'Qué hijo de puta {name}, se comió TODOS los puntos. Increíble.',
     ],
     secondLast: [
-      '{name} zafó por poquito de ser el desastre de la ronda.',
-      'Bo {name}, casi quedás último también, ojo ahí.',
+      '{name} también jugó como el orto, pero el mérito se lo llevó otro.',
+      'Bo {name}, casi sos el campeón de los pelotudos esta ronda. Casi.',
+      '{name} zafó de pedo de quedar último, qué pena.',
+      'Casi {name}, casi... seguí así y vas a ganar el premio al más inútil.',
     ],
     first: [
       '¡{name} salió hecho un crack esta ronda, bo! 🏆',
       '{name} se fue livianito de puntos, ta que bien jugado.',
       'Esta ronda fue toda de {name}, tremendo nivel.',
+      '{name} les dio clases a todos, qué jugada más hermosa.',
     ],
   },
   en: {
     last: [
-      '{name} went full send and took the whole pile! 😂',
-      '{name} collected more than the dealer. Yikes.',
-      'Was {name} playing UNO or “add everything”?',
-      '{name} built a monument to points! 🗿',
-      'Someone tell {name} that the lowest score wins.',
+      'What the hell {name}?! Did you even look at your cards?! 🤦',
+      '{name} played like absolute garbage this round. Embarrassing.',
+      'Was {name} trying to lose? Because holy shit that worked.',
+      '{name} collected every damn point on the table. Legend of bad play.',
+      'Someone take the cards away from {name}, for everyone\'s sake.',
+      '{name} is a disaster and this round proved it beyond doubt.',
     ],
     secondLast: [
-      '{name} came second at… hoarding. So close.',
-      '{name} almost had the highest round. Next time!',
+      '{name} also played like crap, but someone else was worse. Barely.',
+      '{name} almost took home the crown of incompetence. Almost.',
+      '{name} escaped last place by pure luck. Don\'t get cocky.',
     ],
     first: [
       '{name} crushed it this round! 🏆',
       '{name} kept it low. That\'s how you play!',
-      'That round belonged to {name}. Applause.',
+      'That round belonged to {name}. Take notes, losers.',
     ],
   },
 };
@@ -1115,7 +1178,8 @@ let state = {
   fines: [],
   currentRound: 0,
   gameOver: false,
-  gameId: null
+  gameId: null,
+  venue: ''
 };
 
 const PRESET_NAMES = ['PT', 'Mac', 'Mata', 'Gael', 'Nachi', 'Carucha', 'Negro', 'Naso', 'Tano', 'Gordo', 'Cobra'];
@@ -1238,6 +1302,7 @@ function startGame() {
   state.currentRound = 0;
   state.gameOver = false;
   state.gameId = 'game_' + Date.now();
+  state.venue = (document.getElementById('venueInput').value || '').trim();
   saveCurrentGame();
   showScreen('game');
 }
@@ -1369,7 +1434,7 @@ function renderGame() {
   const totals = getTotals();
   const roundNum = state.rounds.length + 1;
 
-  document.getElementById('gameTitle').textContent = 'Lunes de UNO';
+  document.getElementById('gameTitle').textContent = state.venue ? `Lunes de UNO — ${state.venue}` : 'Lunes de UNO';
   document.getElementById('roundBadge').textContent = `${t('game_round')} ${roundNum}`;
 
   // Progress
@@ -1404,9 +1469,33 @@ function renderGame() {
   renderRoundHistory();
 }
 
+// Returns sorted player indices (by total ascending) for a given number of rounds played
+function getRankingAfterRounds(numRounds) {
+  var partialTotals = state.players.map(function(_, pi) {
+    var base = state.rounds.slice(0, numRounds).reduce(function(sum, round) { return sum + (round[pi] || 0); }, 0);
+    var finesSum = (state.fines || []).slice(0, numRounds).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
+    return base + finesSum;
+  });
+  return state.players.map(function(_, i) { return i; })
+    .sort(function(a, b) { return partialTotals[a] - partialTotals[b] || a - b; });
+}
+
 function renderScoreboard(totals) {
   const table = document.getElementById('scoreboard');
   const totalFines = getTotalFines();
+
+  // Compute position deltas vs. previous round
+  var deltaMap = {};
+  if (state.rounds.length >= 2) {
+    var prevRanking = getRankingAfterRounds(state.rounds.length - 1);
+    var currRanking = getRankingAfterRounds(state.rounds.length);
+    state.players.forEach(function(_, idx) {
+      var prevPos = prevRanking.indexOf(idx);
+      var currPos = currRanking.indexOf(idx);
+      deltaMap[idx] = prevPos - currPos; // positive = moved up (better = lower position num)
+    });
+  }
+
   let html = `<thead><tr><th>${t('game_player')}</th><th style="text-align:center;">${t('game_fines')}</th><th style="text-align:right;">${t('game_total')}</th></tr></thead><tbody>`;
   const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i], fines: totalFines[i]}))
     .sort((a, b) => a.total - b.total);
@@ -1418,10 +1507,25 @@ function renderScoreboard(totals) {
     const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
       `<div class="player-color" style="background:${p.color}"></div>`;
     const fineCell = p.fines > 0 ? `<span class="fine-badge">⚠️ +${p.fines}</span>` : '—';
+
+    var deltaHtml = '';
+    if (state.rounds.length >= 2 && deltaMap[p.idx] !== undefined) {
+      var d = deltaMap[p.idx];
+      if (d > 0) deltaHtml = `<span style="color:var(--success);font-size:.75rem;font-weight:700;margin-left:.3rem;">▲${d}</span>`;
+      else if (d < 0) deltaHtml = `<span style="color:var(--danger);font-size:.75rem;font-weight:700;margin-left:.3rem;">▼${Math.abs(d)}</span>`;
+    }
+
+    var posInRanking = sorted.indexOf(p);
+    var mealBadge = '';
+    var n = sorted.length;
+    if (posInRanking === n - 1) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la cena">🍽️</span>';
+    else if (posInRanking === n - 2 && n >= 2) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga el postre">🍮</span>';
+    else if (posInRanking === n - 3 && n >= 3) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la picada">🧀</span>';
+
     html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
       <td><div class="player-name-cell">
         ${dot}
-        ${p.name}
+        ${p.name}${deltaHtml}${mealBadge}
       </div></td>
       <td style="text-align:center;">${fineCell}</td>
       <td style="text-align:right;" class="total-cell ${overLimit ? 'over-limit' : ''}">${p.total}</td>
@@ -1573,6 +1677,39 @@ function closeEditModal() {
   editingRound = -1;
 }
 
+// ============ EDIT MAX POINTS MODAL ============
+function openEditMaxPoints() {
+  document.getElementById('newMaxPointsInput').value = state.maxPoints;
+  document.getElementById('editMaxPointsModal').classList.add('active');
+  document.getElementById('newMaxPointsInput').focus();
+  document.getElementById('newMaxPointsInput').select();
+}
+
+function closeEditMaxPoints() {
+  document.getElementById('editMaxPointsModal').classList.remove('active');
+}
+
+function saveEditMaxPoints() {
+  const val = parseInt(document.getElementById('newMaxPointsInput').value);
+  if (!val || val < 50) { alert(t('edit_limit_label')); return; }
+  state.maxPoints = val;
+  closeEditMaxPoints();
+
+  const finalTotals = getFinalTotals();
+  const wasOver = state.gameOver;
+  state.gameOver = finalTotals.some(function(t) { return t >= state.maxPoints; });
+  saveCurrentGame();
+
+  if (!state.gameOver && wasOver) {
+    // Game re-opened: go back to game screen
+    showScreen('game');
+  } else if (document.getElementById('game').classList.contains('active')) {
+    renderGame();
+  } else if (document.getElementById('results').classList.contains('active')) {
+    renderResults();
+  }
+}
+
 function saveEditRound() {
   if (editingRound < 0) return;
   if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
@@ -1608,6 +1745,10 @@ function renderResults() {
     .sort((a, b) => a.total - b.total);
 
   document.getElementById('winnerName').textContent = standings[0].name;
+  var venueEl = document.getElementById('resultsVenue');
+  if (venueEl) venueEl.textContent = state.venue ? '📍 ' + state.venue : '';
+  var limitEl = document.getElementById('resultsLimit');
+  if (limitEl) limitEl.textContent = '🎯 Límite: ' + state.maxPoints + ' pts';
 
   const container = document.getElementById('finalStandings');
   const medals = ['gold', 'silver', 'bronze'];
@@ -1632,6 +1773,23 @@ function renderResults() {
       </div>`;
   });
   container.innerHTML = html;
+
+  // Meal assignments
+  var mealHtml = '';
+  var n = standings.length;
+  if (n >= 1) {
+    var mealItems = [];
+    mealItems.push(`🍽️ <b>${standings[n-1].name}</b> paga la <b>cena</b>`);
+    if (n >= 2) mealItems.push(`🍮 <b>${standings[n-2].name}</b> paga el <b>postre</b>`);
+    if (n >= 3) mealItems.push(`🧀 <b>${standings[n-3].name}</b> paga la <b>picada</b>`);
+    mealHtml = `<div id="mealAssignments" style="width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-top:.5rem;">
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:.6rem;color:var(--text-muted);">🍴 Quién paga qué</div>
+      ${mealItems.map(function(item) { return '<div style="padding:.35rem 0;font-size:.95rem;border-bottom:1px solid var(--border);">' + item + '</div>'; }).join('')}
+    </div>`;
+  }
+  var existingMeal = document.getElementById('mealAssignments');
+  if (existingMeal) existingMeal.parentElement.removeChild(existingMeal);
+  container.insertAdjacentHTML('afterend', mealHtml);
 
   renderResultsHistory();
 }
@@ -1705,9 +1863,14 @@ function printResults() {
 function newGame() {
   state = {
     playerCount: 2, maxPoints: 500,
-    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null
+    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
   };
   document.getElementById('playerCountDisplay').textContent = '2';
+  showScreen('home');
+}
+
+function goHome() {
+  saveCurrentGame();
   showScreen('home');
 }
 
@@ -1716,7 +1879,7 @@ function confirmQuit() {
     saveCurrentGame();
     state = {
       playerCount: 2, maxPoints: 500,
-      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null
+      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
     };
     document.getElementById('playerCountDisplay').textContent = '2';
     showScreen('home');
@@ -1766,18 +1929,19 @@ function playFuneralMarch() {
 }
 
 // ============ MANDALE AL GRUPO ============
-function copyToClipboard() {
+function buildShareText() {
   const finalTotals = getFinalTotals();
   const totalFinesC = getTotalFines();
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  const header = isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩';
+  var headerParts = [isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩'];
+  if (state.venue) headerParts.push('📍 ' + state.venue);
   const posEmojis = ['🏆', '😐', '😬', '🫠', '💀'];
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
     : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
-  let lines = [header, ''];
+  let lines = [headerParts.join(' — '), ''];
   standings.forEach((p, i) => {
     const emoji = i === 0 ? posEmojis[0] : i === standings.length - 1 ? '💀' : (posEmojis[Math.min(i, 4)]);
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
@@ -1786,20 +1950,37 @@ function copyToClipboard() {
   });
   lines.push('');
   lines.push(`📊 ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'límite' : 'limit'} ${state.maxPoints}`);
+
+  // Meal assignments
+  var n = standings.length;
+  var mealLines = [];
+  mealLines.push('🍽️ ' + standings[n-1].name + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'));
+  if (n >= 2) mealLines.push('🍮 ' + standings[n-2].name + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'));
+  if (n >= 3) mealLines.push('🧀 ' + standings[n-3].name + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'));
+  lines.push('');
+  lines = lines.concat(mealLines);
+
   const lastPlace = standings[standings.length - 1];
   const closers = currentLang === 'es'
-    ? [`Bo ${lastPlace.name}, dejá el UNO y jugá al dominó 😂`, `${lastPlace.name} se llevó todos los puntos a casa 🏠`, `Alguien avísele a ${lastPlace.name} que acá gana el que tiene menos 💀`]
-    : [`${lastPlace.name}, maybe try checkers instead 😂`, `${lastPlace.name} took the whole pile home 🏠`, `Someone tell ${lastPlace.name} the lowest score wins 💀`];
+    ? [
+        `${lastPlace.name}, la concha de tu madre, eso fue lo más triste que vi en mi vida 💀`,
+        `Por favor que alguien le enseñe a jugar al UNO a ${lastPlace.name}, esto es una vergüenza 😭`,
+        `${lastPlace.name} se mandó una cagada monumental. Aplausos de pie por lo mal que jugó 👏`,
+        `Felicitaciones ${lastPlace.name}, sos un desastre de persona y esta partida lo dejó en evidencia 🏆💩`,
+      ]
+    : [
+        `${lastPlace.name}, that was genuinely painful to watch. Get help. 💀`,
+        `${lastPlace.name} managed to play the worst game in recorded history. Impressive. 💩`,
+        `Someone please teach ${lastPlace.name} how to play UNO, this is embarrassing for everyone 😭`,
+      ];
+  lines.push('');
   lines.push(closers[Math.floor(Math.random() * closers.length)]);
-  const text = lines.join('\n');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(() => showCopyToast());
-  } else {
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta); showCopyToast();
-  }
+  return lines.join('\n');
+}
+
+function shareToWhatsApp() {
+  const text = buildShareText();
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
 }
 
 function showCopyToast() {
@@ -1955,7 +2136,8 @@ function saveCurrentGame() {
       currentRound: state.currentRound,
       gameOver: state.gameOver,
       gameId: state.gameId,
-      fines: state.fines || []
+      fines: state.fines || [],
+      venue: state.venue || ''
     },
     finished: !!state.gameOver
   };
@@ -1991,12 +2173,13 @@ function renderGamesList() {
     });
     var scoresStr = totals.join('-');
     var title;
+    var venueStr = s.venue ? ' · 📍 ' + s.venue : '';
     if (g.finished) {
       var minIdx = 0;
       totals.forEach(function(t, i) { if (t < totals[minIdx]) minIdx = i; });
-      title = '🏆 ' + names[minIdx] + ' ' + t('games_won') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints;
+      title = '🏆 ' + names[minIdx] + ' ' + t('games_won') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
     } else {
-      title = '📋 ' + names.join(', ') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints;
+      title = '📋 ' + names.join(', ') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
     }
     var btnLabel = g.finished ? t('games_view') : t('games_resume');
     var btnAction = g.finished
@@ -2029,6 +2212,7 @@ function resumeGame(gameId) {
   state.gameOver = g.state.gameOver;
   state.gameId = g.state.gameId;
   state.fines = g.state.fines || [];
+  state.venue = g.state.venue || '';
   if (g.finished) {
     showScreen('results');
   } else {
