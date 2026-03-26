@@ -1929,13 +1929,15 @@ function playFuneralMarch() {
 }
 
 // ============ MANDALE AL GRUPO ============
+let loserPoemRotation = 0;
+
 function buildShareText() {
   const finalTotals = getFinalTotals();
   const totalFinesC = getTotalFines();
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  var headerParts = [isAsado ? '*Lunes de UNO* - EDICION ASADO' : '*Lunes de UNO*'];
+  var headerParts = [isAsado ? '🎩 *Lunes de UNO* - EDICION ASADO' : '🎩 *Lunes de UNO*'];
   if (state.venue) headerParts.push('Lugar: ' + state.venue);
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
@@ -1944,7 +1946,7 @@ function buildShareText() {
   standings.forEach((p, i) => {
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
+    lines.push(`🎩 ${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
   });
   lines.push('');
   lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
@@ -1968,20 +1970,62 @@ function buildShareText() {
 }
 
 function buildLoserPoem(name, lang) {
-  if (lang === 'es') {
-    return [
-      `${name}, jugás como el orto.`,
-      `En cada mano, puro fracaso.`,
-      `Te rompiste solo, pedazo de boludo.`,
-      `Perdiste feo: cerrá el culo y pagá.`,
+  const poemSets = lang === 'es'
+    ? [
+      [
+        `${name}, jugás como el orto.`,
+        `En cada mano, puro fracaso.`,
+        `Te rompiste solo, pedazo de boludo.`,
+        `Perdiste feo: cerrá el culo y pagá.`,
+      ],
+      [
+        `${name}, qué desastre de jugador.`,
+        `Tu UNO fue un funeral de terror.`,
+        `Te humillaste solo, tremendo inútil.`,
+        `Pagá la cena y desaparecé del chat.`,
+      ],
+      [
+        `${name}, hoy diste pura vergüenza.`,
+        `Ni una jugada con consistencia.`,
+        `Sos un papelón con patas, maestro.`,
+        `Perdiste feísimo: pagá y no llores.`,
+      ],
+      [
+        `${name}, fuiste un chiste barato.`,
+        `Tu estrategia murió en el primer rato.`,
+        `Te autodestruiste, genio del fracaso.`,
+        `Cerrá la boca, soltá la guita y listo.`,
+      ],
+    ]
+    : [
+      [
+        `${name}, you play like total shit.`,
+        `Every hand is another hard choke.`,
+        `You clown yourself, dumb as hell.`,
+        `You lost ugly, shut up and pay.`,
+      ],
+      [
+        `${name}, that was a brutal collapse.`,
+        `Your game plan died in two turns flat.`,
+        `You roasted yourself, absolute clown.`,
+        `Take the L, pay dinner, stay down.`,
+      ],
+      [
+        `${name}, pure trash from start to end.`,
+        `No skill, no luck, no chance to defend.`,
+        `You fumbled every card like a fool.`,
+        `Pay up now and stop acting cool.`,
+      ],
+      [
+        `${name}, you were chaos all night.`,
+        `Every move wrong, nothing done right.`,
+        `You sank yourself, loud and proud.`,
+        `Lost hard. Pay cash. Leave the crowd.`,
+      ],
     ];
-  }
-  return [
-    `${name}, you play like total shit.`,
-    `Every hand is another hard choke.`,
-    `You clown yourself, dumb as hell.`,
-    `You lost ugly, shut up and pay.`,
-  ];
+  const selected = poemSets[loserPoemRotation % poemSets.length];
+  loserPoemRotation += 1;
+  return selected;
 }
 
 function shareToWhatsApp() {
