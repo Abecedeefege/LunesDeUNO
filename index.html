@@ -1935,19 +1935,19 @@ function buildShareText() {
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  var headerParts = [isAsado ? '*Lunes de UNO* — EDICION ASADO' : '*Lunes de UNO*'];
+  var headerParts = [isAsado ? '*Lunes de UNO* - EDICION ASADO' : '*Lunes de UNO*'];
   if (state.venue) headerParts.push('Lugar: ' + state.venue);
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
     : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
-  let lines = [headerParts.join(' — '), ''];
+  let lines = [headerParts.join(' - '), ''];
   standings.forEach((p, i) => {
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} — ${quip}`);
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
   });
   lines.push('');
-  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
+  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
 
   // Meal assignments
   var n = standings.length;

@@ -2020,20 +2020,29 @@ function copyToClipboard() {
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  const header = isAsado ? '*Lunes de UNO* — EDICION ASADO' : '*Lunes de UNO*';
+  var headerParts = [isAsado ? '*Lunes de UNO* - EDICION ASADO' : '*Lunes de UNO*'];
+  if (state.venue) headerParts.push('Lugar: ' + state.venue);
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
     : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
-  let lines = [header, ''];
+  let lines = [headerParts.join(' - '), ''];
   standings.forEach((p, i) => {
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} — ${quip}`);
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
   });
   lines.push('');
-  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
+  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
+  var n = standings.length;
+  lines.push('');
+  lines.push('Cena: ' + standings[n-1].name + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'));
+  if (n >= 2) lines.push('Postre: ' + standings[n-2].name + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'));
+  if (n >= 3) lines.push('Picada: ' + standings[n-3].name + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'));
+  lines.push('');
   const lastPlace = standings[standings.length - 1];
-  lines.push(`${lastPlace.name}, poema para tu derrota:`);
+  lines.push(currentLang === 'es'
+    ? `${lastPlace.name}, poema para tu derrota:`
+    : `${lastPlace.name}, a poem for your defeat:`);
   lines.push(...buildLoserPoem(lastPlace.name, currentLang));
   const text = lines.join('\n');
   if (navigator.clipboard && navigator.clipboard.writeText) {
