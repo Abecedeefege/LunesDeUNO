@@ -2020,25 +2020,21 @@ function copyToClipboard() {
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  const header = isAsado ? '🥩🔥 *Lunes de UNO* — EDICIÓN ASADO 🔥🥩' : '🎩 *Lunes de UNO* 🎩';
-  const posEmojis = ['🏆', '😐', '😬', '🫠', '💀'];
+  const header = isAsado ? '*Lunes de UNO* — EDICION ASADO' : '*Lunes de UNO*';
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
     : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
   let lines = [header, ''];
   standings.forEach((p, i) => {
-    const emoji = i === 0 ? posEmojis[0] : i === standings.length - 1 ? '💀' : (posEmojis[Math.min(i, 4)]);
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`${emoji} ${p.name}: ${p.total} pts${fineStr} — ${quip}`);
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} — ${quip}`);
   });
   lines.push('');
-  lines.push(`📊 ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'límite' : 'limit'} ${state.maxPoints}`);
+  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} · ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
   const lastPlace = standings[standings.length - 1];
-  const closers = currentLang === 'es'
-    ? [`Bo ${lastPlace.name}, dejá el UNO y jugá al dominó 😂`, `${lastPlace.name} se llevó todos los puntos a casa 🏠`, `Alguien avísele a ${lastPlace.name} que acá gana el que tiene menos 💀`]
-    : [`${lastPlace.name}, maybe try checkers instead 😂`, `${lastPlace.name} took the whole pile home 🏠`, `Someone tell ${lastPlace.name} the lowest score wins 💀`];
-  lines.push(closers[Math.floor(Math.random() * closers.length)]);
+  lines.push(`${lastPlace.name}, poema para tu derrota:`);
+  lines.push(...buildLoserPoem(lastPlace.name, currentLang));
   const text = lines.join('\n');
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text).then(() => showCopyToast());
@@ -2048,6 +2044,23 @@ function copyToClipboard() {
     document.body.appendChild(ta); ta.select(); document.execCommand('copy');
     document.body.removeChild(ta); showCopyToast();
   }
+}
+
+function buildLoserPoem(name, lang) {
+  if (lang === 'es') {
+    return [
+      `${name}, jugás como el orto.`,
+      `En cada mano, puro fracaso.`,
+      `Te rompiste solo, pedazo de boludo.`,
+      `Perdiste feo: cerrá el culo y pagá.`,
+    ];
+  }
+  return [
+    `${name}, you play like total shit.`,
+    `Every hand is another hard choke.`,
+    `You clown yourself, dumb as hell.`,
+    `You lost ugly, shut up and pay.`,
+  ];
 }
 
 function showCopyToast() {
