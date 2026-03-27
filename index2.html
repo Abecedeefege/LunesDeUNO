@@ -2022,7 +2022,7 @@ function copyToClipboard() {
   const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
     .sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  var headerParts = [isAsado ? '🎩 *Lunes de UNO* - EDICION ASADO' : '🎩 *Lunes de UNO*'];
+  var headerParts = [isAsado ? '🎩 *Lunes de UNO* 🎩 - EDICION ASADO' : '🎩 *Lunes de UNO* 🎩'];
   if (state.venue) headerParts.push('Lugar: ' + state.venue);
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
@@ -2031,7 +2031,7 @@ function copyToClipboard() {
   standings.forEach((p, i) => {
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`🎩 ${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
   });
   lines.push('');
   lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
@@ -2061,54 +2061,54 @@ function buildLoserPoem(name, lang) {
   const poemSets = lang === 'es'
     ? [
       [
-        `${name}, jugás como el orto.`,
-        `En cada mano, puro fracaso.`,
-        `Te rompiste solo, pedazo de boludo.`,
-        `Perdiste feo: cerrá el culo y pagá.`,
+        `${name}, jugaste mal, papelón total.`,
+        `Toda la mesa vio tu final fatal.`,
+        `Te hundiste solo, torpe y banal.`,
+        `Pagá la cena y cerrá: final.`,
       ],
       [
-        `${name}, qué desastre de jugador.`,
-        `Tu UNO fue un funeral de terror.`,
-        `Te humillaste solo, tremendo inútil.`,
-        `Pagá la cena y desaparecé del chat.`,
+        `${name}, tu nivel fue puro dolor.`,
+        `Tiraste cada carta con menos honor.`,
+        `Hiciste del UNO un triste error.`,
+        `Pagá sin llorar, perdedor sin honor.`,
       ],
       [
-        `${name}, hoy diste pura vergüenza.`,
-        `Ni una jugada con consistencia.`,
-        `Sos un papelón con patas, maestro.`,
-        `Perdiste feísimo: pagá y no llores.`,
+        `${name}, hoy fuiste desastre cantado.`,
+        `Cada movimiento salió arruinado.`,
+        `Te fuiste al fondo, todo quebrado.`,
+        `Poné la guita y quedate callado.`,
       ],
       [
-        `${name}, fuiste un chiste barato.`,
-        `Tu estrategia murió en el primer rato.`,
-        `Te autodestruiste, genio del fracaso.`,
-        `Cerrá la boca, soltá la guita y listo.`,
+        `${name}, otra noche de fracaso feroz.`,
+        `No pegaste una, ni por casualidad, vos.`,
+        `Hiciste el ridículo con ruido atroz.`,
+        `Pagá lo que debés y apagá esa voz.`,
       ],
     ]
     : [
       [
-        `${name}, you play like total shit.`,
-        `Every hand is another hard choke.`,
-        `You clown yourself, dumb as hell.`,
-        `You lost ugly, shut up and pay.`,
+        `${name}, your game tonight was pure trash.`,
+        `Every card you played went down in a crash.`,
+        `You talked big, then burned out in a flash.`,
+        `Now shut up, pay dinner, and stash your cash.`,
       ],
       [
-        `${name}, that was a brutal collapse.`,
-        `Your game plan died in two turns flat.`,
-        `You roasted yourself, absolute clown.`,
-        `Take the L, pay dinner, stay down.`,
+        `${name}, that match was a brutal fall.`,
+        `You made bad calls, then worse calls all.`,
+        `You sank your hand trying to stand tall.`,
+        `Take the L, pay up, and end the brawl.`,
       ],
       [
-        `${name}, pure trash from start to end.`,
-        `No skill, no luck, no chance to defend.`,
-        `You fumbled every card like a fool.`,
-        `Pay up now and stop acting cool.`,
+        `${name}, your UNO was weak and slow.`,
+        `Each turn you played made your score just grow.`,
+        `You crashed and burned in one bad show.`,
+        `Pay for dinner, take your L, and go.`,
       ],
       [
-        `${name}, you were chaos all night.`,
-        `Every move wrong, nothing done right.`,
-        `You sank yourself, loud and proud.`,
-        `Lost hard. Pay cash. Leave the crowd.`,
+        `${name}, tonight you were chaos and noise.`,
+        `Wrong move after wrong move, no poise, no poise.`,
+        `You lost your stack with reckless choice.`,
+        `Now pay and leave; that’s the house voice.`,
       ],
     ];
   const selected = poemSets[loserPoemRotation % poemSets.length];
