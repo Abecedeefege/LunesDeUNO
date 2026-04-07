@@ -1430,13 +1430,16 @@ function setRoundRoastSlide(index) {
 }
 
 function speakRoastMessage() {
-  const activeSlide = document.querySelector('.round-roast-slide.active');
-  if (!activeSlide) return;
+  const slides = document.querySelectorAll('.round-roast-slide');
+  if (!slides.length) return;
   speechSynthesis.cancel();
-  const text = activeSlide.textContent.trim();
-  if (!text) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  const phrases = Array.from(slides).map(s => s.textContent.trim()).filter(Boolean);
+  if (!phrases.length) return;
+  const pause = currentLang === 'es' ? '... ' : '... ';
+  const fullText = phrases.join(pause);
+  const utterance = new SpeechSynthesisUtterance(fullText);
+  utterance.lang = lang;
   utterance.rate = 0.95;
   const btn = document.getElementById('roastSpeakBtn');
   if (btn) btn.classList.add('speaking');
