@@ -1224,28 +1224,32 @@ function playBellSound() {
   if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (soundCtx.state === 'suspended') soundCtx.resume();
   const now = soundCtx.currentTime;
-  // Bell-like tone: high sine + harmonic
-  [830, 1660].forEach(freq => {
-    const osc = soundCtx.createOscillator();
-    const gain = soundCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(freq === 830 ? 0.35 : 0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-    osc.connect(gain);
-    gain.connect(soundCtx.destination);
-    osc.start(now);
-    osc.stop(now + 0.8);
-  });
+  // Cowbell: two quick metallic strikes ("da-kling, da-kling")
+  function cowbellStrike(time) {
+    [587, 845].forEach(freq => {
+      const osc = soundCtx.createOscillator();
+      const gain = soundCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.3, time);
+      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+      osc.connect(gain);
+      gain.connect(soundCtx.destination);
+      osc.start(time);
+      osc.stop(time + 0.12);
+    });
+  }
+  cowbellStrike(now);
+  cowbellStrike(now + 0.15);
 }
 
 function speakShame(name, event) {
   speechSynthesis.cancel();
   const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
-  // Build sequence: Shame, [bell], Name, Shame, [bell], Name, Shame, [bell], Name
+  // Build sequence: Shaaame, [bell], Name, Shaaame, [bell], Name, Shaaame, [bell], Name
   const steps = [];
   for (let i = 0; i < 3; i++) {
-    steps.push({ type: 'speak', text: 'Shame' });
+    steps.push({ type: 'speak', text: 'Shaaame', isShame: true });
     steps.push({ type: 'bell' });
     steps.push({ type: 'speak', text: name });
   }
@@ -1255,10 +1259,10 @@ function speakShame(name, event) {
     const step = steps[idx++];
     if (step.type === 'bell') {
       playBellSound();
-      setTimeout(next, 500);
+      setTimeout(next, 400);
     } else {
       const utt = new SpeechSynthesisUtterance(step.text);
-      utt.lang = lang;
+      utt.lang = step.isShame ? 'en-US' : lang;
       utt.rate = 0.85;
       utt.onend = next;
       utt.onerror = next;
@@ -1484,16 +1488,22 @@ function speakRoastMessage() {
   const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
   const phrases = Array.from(slides).map(s => s.textContent.trim()).filter(Boolean);
   if (!phrases.length) return;
-  const pause = currentLang === 'es' ? '... ' : '... ';
-  const fullText = phrases.join(pause);
-  const utterance = new SpeechSynthesisUtterance(fullText);
-  utterance.lang = lang;
-  utterance.rate = 0.95;
   const btn = document.getElementById('roastSpeakBtn');
   if (btn) btn.classList.add('speaking');
-  utterance.onend = () => { if (btn) btn.classList.remove('speaking'); };
-  utterance.onerror = () => { if (btn) btn.classList.remove('speaking'); };
-  speechSynthesis.speak(utterance);
+  let idx = 0;
+  function speakNext() {
+    if (idx >= phrases.length) {
+      if (btn) btn.classList.remove('speaking');
+      return;
+    }
+    const utt = new SpeechSynthesisUtterance(phrases[idx++]);
+    utt.lang = lang;
+    utt.rate = 0.95;
+    utt.onend = () => setTimeout(speakNext, 300);
+    utt.onerror = () => { if (btn) btn.classList.remove('speaking'); };
+    speechSynthesis.speak(utt);
+  }
+  speakNext();
 }
 
 function updateRoundRoastCarousel(messages, startAutoAdvance) {
