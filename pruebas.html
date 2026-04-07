@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunes de UNO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --uno-red: #ED1C24;
+      --uno-yellow: #FFDE00;
+      --uno-green: #00A651;
+      --uno-blue: #0072BC;
+      --bg: #0f0f1a;
+      --surface: #1a1a2e;
+      --surface-2: #242442;
+      --surface-3: #2e2e50;
+      --text: #f0f0f5;
+      --text-muted: #8888a8;
+      --border: #3a3a5c;
+      --danger: #ff4d6a;
+      --success: #4dff91;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ---- Header (logo + flags) ---- */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 20vh;
+      min-height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-logo {
+      display: flex; align-items: center; gap: .5rem;
+      text-decoration: none; color: var(--text);
+      height: 100%;
+    }
+    .header-logo svg {
+      height: 80%;
+      width: auto;
+      max-height: 20vh;
+      display: block;
+    }
+    .lang-switcher {
+      display: flex; gap: .4rem;
+    }
+    .lang-btn {
+      width: 44px; height: 32px; border-radius: 8px; cursor: pointer;
+      border: 2px solid var(--border); overflow: hidden;
+      transition: all .2s; opacity: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; line-height: 1;
+      background: var(--surface-2);
+    }
+    .lang-btn:hover { border-color: var(--text-muted); background: var(--surface-3); }
+    .lang-btn.active { border-color: var(--uno-yellow); background: rgba(255,222,0,.1); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
+
+    @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
+
+    /* ---- Shared Layout ---- */
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      animation: fadeIn .35s ease;
+    }
+    .screen.active { display: flex; }
+    .screen { padding-top: calc(20vh + 2rem); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3, h4 { font-family: 'Fredoka One', cursive; letter-spacing: .02em; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      border: none; border-radius: 14px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 600;
+      transition: all .2s ease;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--uno-red), #ff4060);
+      color: #fff; font-size: 1.15rem; padding: 1rem 2.5rem;
+      box-shadow: 0 6px 24px rgba(237,28,36,.35);
+    }
+    .btn-primary:hover:not(:disabled) { box-shadow: 0 8px 32px rgba(237,28,36,.5); transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: var(--surface-2); color: var(--text);
+      font-size: .95rem; padding: .75rem 1.5rem; border: 1px solid var(--border);
+    }
+    .btn-secondary:hover:not(:disabled) { background: var(--surface-3); }
+
+    .btn-small {
+      font-size: .8rem; padding: .45rem 1rem; border-radius: 8px;
+    }
+
+    .btn-icon {
+      width: 38px; height: 38px; padding: 0; border-radius: 10px;
+      background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+      font-size: 1.1rem;
+    }
+
+    /* ---- Cards ---- */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ---- Inputs ---- */
+    .input-group { display: flex; flex-direction: column; gap: .4rem; }
+    .input-group label { font-size: .85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+
+    input[type="text"], input[type="number"], select {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      padding: .7rem 1rem;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    input:focus, select:focus { border-color: var(--uno-blue); }
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* ---- HOME SCREEN ---- */
+    #home { justify-content: center; gap: 2.5rem; text-align: center; }
+    .logo-title {
+      font-size: 3.2rem;
+      background: linear-gradient(135deg, var(--uno-red), var(--uno-yellow), var(--uno-green), var(--uno-blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 12px rgba(237,28,36,.3));
+    }
+    .logo-sub { color: var(--text-muted); font-size: 1rem; margin-top: .5rem; }
+
+    .uno-cards {
+      display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
+    }
+    .uno-card-mini {
+      width: clamp(56px, 15vw, 80px);
+      display: block;
+      transform: rotate(var(--rot, 0deg));
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.2);
+    }
+    .uno-card-mini img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* ---- SETUP SCREEN ---- */
+    #setup { gap: 1.5rem; padding-top: calc(20vh + 1.5rem); }
+    #setup .card + .card { margin-top: 0; }
+
+    .player-inputs { display: flex; flex-direction: column; gap: .75rem; margin-top: .75rem; }
+    .player-input-row {
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .player-color {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    }
+    .player-input-row input { flex: 1; }
+
+    .preset-names {
+      display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; margin-bottom: .25rem;
+    }
+    .preset-names-label {
+      font-size: .75rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em; width: 100%; margin-bottom: .15rem;
+    }
+    .preset-chip {
+      display: flex; flex-direction: column; align-items: center;
+      width: 70px; padding: .4rem; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface-2);
+      cursor: pointer; transition: all .2s; gap: .25rem;
+    }
+    .preset-chip img {
+      width: 52px; height: 52px; border-radius: 6px; object-fit: cover;
+    }
+    .preset-chip .chip-name {
+      font-family: 'Inter', sans-serif; font-size: .7rem; font-weight: 600;
+      color: var(--text); text-align: center;
+    }
+    .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); }
+    .preset-chip.used { opacity: .3; cursor: not-allowed; pointer-events: none; }
+    .player-face {
+      width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover; flex-shrink: 0;
+    }
+    .player-face-sm {
+      width: 1.2rem; height: 1.2rem; border-radius: 3px; object-fit: cover; vertical-align: middle;
+    }
+
+    .points-presets {
+      display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
+    }
+    .preset-btn {
+      padding: .5rem 1rem; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text); cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: .9rem; font-weight: 500;
+      transition: all .2s;
+    }
+    .preset-btn:hover, .preset-btn.selected {
+      border-color: var(--uno-yellow); background: rgba(255,222,0,.12); color: var(--uno-yellow);
+    }
+
+    .setup-footer { margin-top: .5rem; }
+
+    /* Number selector */
+    .number-selector {
+      display: flex; align-items: center; gap: 1rem; margin-top: .75rem;
+    }
+    .number-display {
+      font-family: 'Fredoka One', cursive; font-size: 2.2rem;
+      width: 60px; text-align: center; color: var(--uno-yellow);
+    }
+
+    /* ---- GAME SCREEN ---- */
+    #game { gap: 1.25rem; padding-top: calc(20vh + 1rem); }
+
+    .game-header {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 480px;
+    }
+    .game-header h2 { font-size: 1.4rem; }
+
+    .round-badge {
+      background: var(--uno-blue); color: #fff;
+      padding: .3rem .9rem; border-radius: 20px;
+      font-size: .85rem; font-weight: 600;
+    }
+
+    .scoreboard {
+      width: 100%; max-width: 480px;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .scoreboard th, .scoreboard td {
+      padding: .65rem .75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .scoreboard th {
+      background: var(--surface-2);
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .scoreboard tr:last-child td { border-bottom: none; }
+    .scoreboard .player-name-cell {
+      display: flex; align-items: center; gap: .5rem; font-weight: 600;
+    }
+    .scoreboard .total-cell {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+    }
+    .scoreboard .over-limit { color: var(--danger); }
+    .scoreboard .winner-row { background: rgba(77, 255, 145, .08); }
+
+    .round-inputs { display: flex; flex-direction: column; gap: .65rem; }
+    .round-input-row {
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .round-input-row .player-label {
+      display: flex; align-items: center; gap: .5rem;
+      font-weight: 600; font-size: .95rem;
+      min-width: 120px;
+    }
+    .round-input-row input {
+      width: 90px; text-align: center;
+      font-size: 1.1rem; font-weight: 600;
+      padding: .6rem .5rem;
+    }
+
+    .game-actions {
+      display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+    }
+
+    /* Progress bar */
+    .progress-container { width: 100%; max-width: 480px; }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-size: .8rem; color: var(--text-muted); margin-bottom: .35rem;
+    }
+    .progress-bar {
+      height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 3px;
+      transition: width .4s ease;
+      background: linear-gradient(90deg, var(--uno-green), var(--uno-yellow), var(--uno-red));
+    }
+
+    /* Round history */
+    .round-history {
+      width: 100%; max-width: 480px;
+    }
+    /* Round roast carousel */
+    .round-roast {
+      width: 100%; max-width: 480px;
+      display: none;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .round-roast.visible { display: flex; }
+    .round-roast-slides {
+      min-height: 80px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .round-roast-slide {
+      display: none;
+      padding: 1rem 1.25rem;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: .95rem;
+      line-height: 1.4;
+      min-height: 80px;
+      box-sizing: border-box;
+    }
+    .round-roast-slide.active {
+      display: flex;
+    }
+    .round-roast-slide.roast { color: var(--danger); }
+    .round-roast-slide.brag { color: var(--success); }
+    .round-roast-dots {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .round-roast-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--surface-3);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform .2s, background .2s;
+    }
+    .round-roast-dot:hover { background: var(--border); }
+    .round-roast-dot.active { background: var(--uno-yellow); transform: scale(1.2); }
+
+    /* ---- Roast Speak Button ---- */
+    .roast-speak-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      padding: 0.3rem;
+      transition: color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .roast-speak-btn:hover {
+      color: var(--uno-yellow);
+      transform: scale(1.15);
+    }
+    .roast-speak-btn.speaking {
+      color: var(--uno-yellow);
+      animation: pulse-speak 0.8s ease infinite;
+    }
+    @keyframes pulse-speak {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .round-history h3 { font-size: 1rem; margin-bottom: .75rem; color: var(--text-muted); }
+    .round-history-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      font-size: .85rem;
+    }
+    .round-history-table th, .round-history-table td {
+      padding: .5rem .6rem; text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .round-history-table th {
+      background: var(--surface-2); font-size: .7rem;
+      text-transform: uppercase; letter-spacing: .04em;
+      color: var(--text-muted); font-weight: 600;
+    }
+    .round-history-table tr:last-child td { border-bottom: none; }
+    .round-history-table td:first-child { font-weight: 600; text-align: left; padding-left: .75rem; }
+    .round-history-table th:first-child { text-align: left; padding-left: .75rem; }
+    .round-history-table .edit-cell {
+      cursor: pointer; color: var(--uno-blue); font-weight: 600;
+    }
+    .round-history-table .edit-cell:hover { text-decoration: underline; }
+
+    /* ---- RESULTS SCREEN ---- */
+    #results { gap: 1.5rem; padding-top: calc(20vh + 1.5rem); text-align: center; }
+
+    .trophy { font-size: 4rem; margin-bottom: .25rem; }
+    .winner-name {
+      font-family: 'Fredoka One', cursive; font-size: 2rem;
+      background: linear-gradient(135deg, var(--uno-yellow), #ffaa00);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .winner-subtitle { color: var(--text-muted); font-size: .95rem; margin-top: .25rem; }
+
+    .final-standings {
+      width: 100%; max-width: 480px;
+    }
+    .standing-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: .85rem 1rem; margin-bottom: .5rem;
+      transition: background .2s;
+    }
+    .standing-row:first-child { border-color: var(--uno-yellow); background: rgba(255,222,0,.06); }
+    .standing-position {
+      font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+      width: 36px; text-align: center;
+    }
+    .standing-position.gold { color: var(--uno-yellow); }
+    .standing-position.silver { color: #c0c0c0; }
+    .standing-position.bronze { color: #cd7f32; }
+    .standing-info { flex: 1; text-align: left; }
+    .standing-info .name { font-weight: 600; font-size: 1rem; }
+    .standing-score {
+      font-family: 'Fredoka One', cursive; font-size: 1.2rem;
+    }
+
+    .results-actions {
+      display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center;
+      margin-top: .5rem;
+    }
+
+    /* ---- EDIT MODAL ---- */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
+      z-index: 100; align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.75rem;
+      width: 100%; max-width: 400px;
+      animation: fadeIn .25s ease;
+    }
+    .modal h3 { margin-bottom: 1rem; font-size: 1.15rem; }
+    .modal-inputs { display: flex; flex-direction: column; gap: .65rem; }
+    .modal-input-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .modal-input-row label { font-weight: 600; font-size: .9rem; }
+    .modal-input-row input { width: 90px; text-align: center; font-weight: 600; }
+    .modal-actions { display: flex; gap: .75rem; margin-top: 1.25rem; justify-content: flex-end; }
+
+    /* ---- PRINT STYLES ---- */
+    @media print {
+      body { background: #fff; color: #000; }
+      .screen { padding: 0; min-height: auto; }
+      .no-print { display: none !important; }
+      .card, .scoreboard, .round-history-table, .standing-row {
+        background: #fff; border-color: #ddd; color: #000;
+      }
+      .scoreboard th, .round-history-table th { background: #f5f5f5; color: #333; }
+      .scoreboard td, .round-history-table td { color: #000; }
+      .logo-title, .winner-name {
+        -webkit-text-fill-color: #000;
+        background: none; color: #000;
+      }
+      .standing-position.gold { color: #b8860b; -webkit-text-fill-color: #b8860b; }
+      .trophy { font-size: 2rem; }
+      .print-header {
+        display: block !important;
+        text-align: center; margin-bottom: 1rem;
+        font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+      }
+      .standing-row { border-color: #ccc; }
+      .standing-row:first-child { border-color: #b8860b; }
+    }
+
+    .print-header { display: none; }
+
+    /* ---- Copy Toast ---- */
+    .copy-toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--success); color: #000;
+      padding: .6rem 1.5rem; border-radius: 12px;
+      font-weight: 600; font-size: .9rem;
+      opacity: 0; transition: all .3s ease;
+      z-index: 999; pointer-events: none;
+    }
+    .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ---- Hat Pulse ---- */
+    @keyframes hatPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3) rotate(8deg); }
+      100% { transform: scale(1); }
+    }
+    .hat-pulse { animation: hatPulse .35s ease; }
+
+    /* ---- Modo Asado Toggle ---- */
+    .asado-toggle-row {
+      display: flex; align-items: center; gap: .75rem;
+      margin-top: 1.5rem;
+      font-size: .95rem; font-weight: 600; color: var(--text-muted);
+    }
+    .asado-switch {
+      position: relative; width: 52px; height: 28px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 14px; cursor: pointer;
+      transition: background .3s;
+    }
+    .asado-switch input { display: none; }
+    .asado-switch .slider {
+      position: absolute; top: 2px; left: 2px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--text-muted);
+      transition: all .3s; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem;
+    }
+    .asado-switch input:checked + .slider {
+      left: 26px; background: #ff6b35;
+    }
+    body.asado .asado-switch { background: rgba(255,107,53,.25); border-color: #ff6b35; }
+
+    /* ---- Modo Asado Theme ---- */
+    body.asado {
+      --bg: #1a0e08;
+      --surface: #2a1a0e;
+      --surface-2: #3d2b1f;
+      --surface-3: #4a3728;
+      --text: #f5e6d0;
+      --text-muted: #a08060;
+      --border: #5a4030;
+      --danger: #ff6b35;
+      --success: #7cb342;
+      --uno-red: #e64a19;
+      --uno-yellow: #ffb300;
+      --uno-green: #7cb342;
+      --uno-blue: #78909c;
+    }
+    body.asado .btn-primary {
+      background: linear-gradient(135deg, #e64a19, #ff6b35);
+      box-shadow: 0 6px 24px rgba(230,74,25,.35);
+    }
+    body.asado .progress-fill {
+      background: linear-gradient(90deg, #c62828, #e64a19, #ff6b35, #ffb300, #4e342e);
+    }
+    body.asado .logo-title {
+      background: linear-gradient(135deg, #e64a19, #ffb300, #7cb342, #78909c);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    body.asado .round-roast-slide.roast { color: #ff6b35; }
+    body.asado .round-roast-slide.brag { color: #7cb342; }
+
+    /* ---- Flying Meat (Modo Asado) ---- */
+    .flying-meat {
+      position: fixed;
+      z-index: 50;
+      width: 60px; height: 60px;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      animation: meatFly var(--fly-dur, 6s) linear forwards;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+    @keyframes meatFly {
+      0% { transform: translate(var(--start-x), var(--start-y)) rotate(0deg) scale(0.5); opacity: 0; }
+      10% { opacity: 1; transform: translate(var(--start-x), var(--start-y)) rotate(30deg) scale(1); }
+      90% { opacity: 1; }
+      100% { transform: translate(var(--end-x), var(--end-y)) rotate(var(--spin, 720deg)) scale(0.6); opacity: 0; }
+    }
+
+    /* ---- Share Card ---- */
+    .share-card { margin-top: 1rem; }
+    .share-card h4 { margin-bottom: .75rem; font-size: 1rem; color: var(--text-muted); }
+    .share-actions { display: flex; flex-direction: column; gap: .75rem; }
+    .share-photo-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; justify-content: center; margin-top: .5rem; }
+    .share-photo-box { text-align: center; max-width: 220px; }
+    .share-photo-box img { width: 100%; border-radius: 12px; border: 2px solid var(--border); display: block; }
+    .share-photo-box .share-photo-label { font-size: .75rem; color: var(--text-muted); margin-top: .35rem; }
+    .share-photo-box .btn-small { margin-top: .5rem; }
+    .photo-upload-wrap { margin: .5rem 0; }
+    .photo-upload-wrap input[type="file"] { font-size: .85rem; color: var(--text); }
+
+    /* ---- Walk of Shame ---- */
+    .walk-of-shame {
+      width: 100%; max-width: 480px;
+      display: none;
+    }
+    .walk-of-shame.visible { display: block; }
+    .walk-of-shame h3 {
+      font-size: .95rem; color: var(--danger); margin-bottom: .5rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .shame-list {
+      display: flex; flex-direction: column; gap: .4rem;
+    }
+    .shame-row {
+      display: flex; align-items: center; gap: .6rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .55rem .75rem;
+    }
+    .shame-rank {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem; width: 24px; text-align: center;
+      color: var(--danger);
+    }
+    .shame-name {
+      flex: 1; font-weight: 600; font-size: .9rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .shame-badge {
+      background: rgba(255,77,106,.15);
+      color: var(--danger);
+      padding: .2rem .6rem;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ---- Bucket Overlay (Walk of Shame) ---- */
+    .shame-face-container {
+      position: relative;
+      display: inline-block;
+    }
+    .shame-face-container .bucket-overlay {
+      position: absolute;
+      top: -60%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.2rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* ---- Games List ---- */
+    .games-list {
+      width: 100%; max-width: 480px; margin-top: 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .games-list h3 {
+      font-size: 1rem; color: var(--text-muted); margin-bottom: .25rem;
+    }
+    .game-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .game-item-info {
+      display: flex; flex-direction: column; gap: .2rem;
+    }
+    .game-item-info .game-item-title {
+      font-weight: 600; font-size: .95rem;
+    }
+    .game-item-scores {
+      font-size: .85rem; color: var(--text); font-weight: 500;
+    }
+    .game-item-meta {
+      font-size: .75rem; color: var(--text-muted);
+    }
+    .game-item-actions {
+      display: flex; flex-direction: row; gap: .5rem;
+    }
+
+    /* ---- Fines ---- */
+    .btn-fine {
+      background: rgba(255,180,0,.15); color: var(--uno-yellow);
+      border: 1px solid rgba(255,180,0,.3); font-size: .75rem;
+      padding: .3rem .6rem; border-radius: 8px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 600;
+      transition: all .2s;
+    }
+    .btn-fine:hover { background: rgba(255,180,0,.25); }
+    .btn-fine.has-fine { background: rgba(255,180,0,.3); border-color: var(--uno-yellow); }
+    .fine-input-row {
+      display: none; align-items: center; gap: .5rem;
+      padding-left: 2rem; margin-top: -.3rem;
+    }
+    .fine-input-row.visible { display: flex; }
+    .fine-label { font-size: .8rem; color: var(--uno-yellow); font-weight: 600; white-space: nowrap; }
+    .fine-input-row input { width: 70px; text-align: center; font-size: .9rem; font-weight: 600; padding: .4rem .3rem; }
+    .fine-badge { color: var(--uno-yellow); font-size: .75rem; font-weight: 600; }
+    .fine-total-badge { background: rgba(255,180,0,.12); color: var(--uno-yellow); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+
+    /* ---- Edit limit inline ---- */
+    .edit-limit-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: .8rem; padding: .1rem .3rem;
+      border-radius: 4px; transition: color .2s;
+      vertical-align: middle;
+    }
+    .edit-limit-btn:hover { color: var(--uno-yellow); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 500px) {
+      .logo-title { font-size: 2.4rem; }
+      .round-input-row .player-label { min-width: 90px; font-size: .85rem; }
+      .round-input-row input { width: 75px; }
+      .scoreboard th, .scoreboard td { padding: .5rem .4rem; font-size: .85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ HEADER (logo + flags) ============ -->
+  <header class="app-header no-print">
+    <button type="button" class="header-logo" id="headerLogo" onclick="playNextSound()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Galera (top hat): white for contrast on dark header -->
+        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#fff"/>
+        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#fff"/>
+        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#f0f0f5"/>
+        <rect x="10" y="12" width="20" height="16" fill="#fff"/>
+      </svg>
+    </button>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">
+        <svg viewBox="0 0 30 20" style="width:28px;height:18px;border-radius:3px;"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="2.22" fill="#001489"/><rect y="4.44" width="30" height="2.22" fill="#001489"/><rect y="8.89" width="30" height="2.22" fill="#001489"/><rect y="13.33" width="30" height="2.22" fill="#001489"/><rect y="17.78" width="30" height="2.22" fill="#001489"/><rect width="12" height="8.89" fill="#fff"/><circle cx="6" cy="4.44" r="2.8" fill="#FCD116"/><circle cx="6" cy="4.44" r="2.2" fill="#FCD116"/></svg>
+      </button>
+      <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">
+        <svg viewBox="0 0 30 20" style="width:28px;height:18px;border-radius:3px;"><rect width="30" height="20" fill="#B22234"/><rect y="1.54" width="30" height="1.54" fill="#fff"/><rect y="4.62" width="30" height="1.54" fill="#fff"/><rect y="7.69" width="30" height="1.54" fill="#fff"/><rect y="10.77" width="30" height="1.54" fill="#fff"/><rect y="13.85" width="30" height="1.54" fill="#fff"/><rect y="16.92" width="30" height="1.54" fill="#fff"/><rect width="12" height="10.77" fill="#3C3B6E"/><g fill="#fff" font-size="2" font-family="sans-serif"><text x="1.5" y="2.5">★★★★★</text><text x="2.5" y="4.5">★★★★</text><text x="1.5" y="6.5">★★★★★</text><text x="2.5" y="8.5">★★★★</text><text x="1.5" y="10.5">★★★★★</text></g></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <div id="home" class="screen active">
+    <div>
+      <div class="uno-cards">
+        <div class="uno-card-mini" style="--rot:-8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+        <div class="uno-card-mini" style="--rot:-3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+        <div class="uno-card-mini" style="--rot:3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+        <div class="uno-card-mini" style="--rot:8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+      </div>
+      <h1 class="logo-title">Lunes de UNO</h1>
+      <p class="logo-sub" data-i18n="home_sub"></p>
+    </div>
+    <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
+    <div class="asado-toggle-row">
+      <label class="asado-switch">
+        <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
+        <span class="slider">🥩</span>
+      </label>
+      <span data-i18n="asado_mode"></span>
+    </div>
+    <div id="gamesList"></div>
+  </div>
+
+  <!-- ============ SETUP ============ -->
+  <div id="setup" class="screen">
+    <h2 style="font-size:1.6rem; margin-bottom:.5rem;" data-i18n="setup_title"></h2>
+
+    <div class="card">
+      <div class="input-group">
+        <label data-i18n="setup_players_label"></label>
+        <div class="number-selector">
+          <button class="btn btn-icon" onclick="changePlayerCount(-1)">-</button>
+          <div class="number-display" id="playerCountDisplay">2</div>
+          <button class="btn btn-icon" onclick="changePlayerCount(1)">+</button>
+        </div>
+      </div>
+      <div class="player-inputs" id="playerInputs"></div>
+    </div>
+
+    <div class="card">
+      <div class="input-group">
+        <label data-i18n="setup_points_label"></label>
+        <div class="points-presets" id="pointsPresets">
+          <button class="preset-btn" data-val="200" onclick="selectPoints(this, 200)">200</button>
+          <button class="preset-btn" data-val="300" onclick="selectPoints(this, 300)">300</button>
+          <button class="preset-btn selected" data-val="500" onclick="selectPoints(this, 500)">500</button>
+          <button class="preset-btn" data-val="1000" onclick="selectPoints(this, 1000)">1000</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:.5rem; margin-top:.75rem;">
+          <input type="number" id="customPoints" placeholder="" data-i18n-ph="setup_custom_placeholder" min="50" style="flex:1;" oninput="onCustomPoints()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="input-group">
+        <label data-i18n="setup_venue_label"></label>
+        <input type="text" id="venueInput" data-i18n-ph="setup_venue_placeholder" maxlength="60">
+      </div>
+    </div>
+
+    <div class="setup-footer">
+      <button class="btn btn-primary" id="startGameBtn" onclick="startGame()" data-i18n="setup_start_btn"></button>
+    </div>
+
+    <button class="btn btn-secondary btn-small no-print" onclick="showScreen('home')" style="margin-top:.5rem;" data-i18n="back_btn"></button>
+  </div>
+
+  <!-- ============ GAME ============ -->
+  <div id="game" class="screen">
+    <div class="game-header">
+      <h2 id="gameTitle">Lunes de UNO</h2>
+      <span class="round-badge" id="roundBadge"></span>
+    </div>
+
+    <!-- Progress of leading player -->
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-label">
+        <span id="progressLeader">-</span>
+        <span style="display:flex;align-items:center;gap:.3rem;">
+          <span id="progressText">0 / 500</span>
+          <button type="button" class="edit-limit-btn no-print" onclick="openEditMaxPoints()" title="Cambiar límite">✏️</button>
+        </span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Current Scoreboard -->
+    <table class="scoreboard" id="scoreboard"></table>
+
+    <!-- Walk of Shame -->
+    <div class="walk-of-shame no-print" id="walkOfShame">
+      <h3><span>💀</span> <span data-i18n="shame_title"></span></h3>
+      <div class="shame-list" id="shameList"></div>
+    </div>
+
+    <!-- Round Score Input -->
+    <div class="card" id="roundInputCard">
+      <h4 style="margin-bottom:.75rem; font-size:1rem;" data-i18n="game_enter_scores"></h4>
+      <div class="round-inputs" id="roundInputs"></div>
+      <div class="game-actions" style="margin-top:1rem;">
+        <button class="btn btn-primary" style="font-size:1rem; padding:.75rem 2rem;" onclick="submitRound()" data-i18n="game_end_round"></button>
+      </div>
+    </div>
+
+    <!-- Round roast carousel (after each round) -->
+    <div class="round-roast no-print" id="roundRoastCarousel">
+      <div class="round-roast-slides" id="roundRoastSlides"></div>
+      <div class="round-roast-dots" id="roundRoastDots"></div>
+    </div>
+
+    <!-- Round History -->
+    <div class="round-history" id="roundHistoryContainer" style="display:none;">
+      <h3 data-i18n="game_round_history"></h3>
+      <table class="round-history-table" id="roundHistoryTable"></table>
+    </div>
+
+    <div style="display:flex;gap:.75rem;margin-top:.5rem;" class="no-print">
+      <button class="btn btn-secondary btn-small" onclick="goHome()" data-i18n="game_go_home"></button>
+      <button class="btn btn-secondary btn-small" onclick="confirmQuit()" style="color:var(--danger);" data-i18n="game_quit"></button>
+    </div>
+  </div>
+
+  <!-- ============ RESULTS ============ -->
+  <div id="results" class="screen">
+    <div class="print-header">Lunes de UNO - Final Scores</div>
+    <div class="trophy">&#127942;</div>
+    <div>
+      <div class="winner-name" id="winnerName">-</div>
+      <p class="winner-subtitle" data-i18n="results_winner_sub"></p>
+      <p id="resultsVenue" style="color:var(--text-muted);font-size:.85rem;margin-top:.3rem;"></p>
+      <p id="resultsLimit" style="color:var(--text-muted);font-size:.85rem;margin-top:.15rem;"></p>
+    </div>
+
+    <div class="final-standings" id="finalStandings"></div>
+
+    <!-- Full breakdown for print -->
+    <div class="round-history" id="resultsHistoryContainer">
+      <h3 data-i18n="results_breakdown"></h3>
+      <table class="round-history-table" id="resultsHistoryTable"></table>
+    </div>
+
+    <div class="results-actions no-print">
+      <button class="btn btn-secondary" onclick="goHome()" data-i18n="game_go_home"></button>
+      <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
+      <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
+      <button class="btn btn-secondary" onclick="openEditMaxPoints()" data-i18n="results_edit_limit"></button>
+      <button class="btn btn-secondary" onclick="shareToWhatsApp()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
+      <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
+    </div>
+
+    <div class="card share-card no-print">
+      <h4 data-i18n="share_title"></h4>
+      <div class="share-actions">
+        <div class="photo-upload-wrap">
+          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo"></label>
+          <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)">
+        </div>
+        <div class="share-photo-row" id="sharePhotoRow" style="display:none;">
+          <div class="share-photo-box">
+            <img id="sharePhotoOriginal" alt="Original" />
+            <div class="share-photo-label" data-i18n="share_original"></div>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copy toast -->
+  <div class="copy-toast" id="copyToast"></div>
+
+  <!-- ============ EDIT MAX POINTS MODAL ============ -->
+  <div class="modal-overlay" id="editMaxPointsModal">
+    <div class="modal">
+      <h3 data-i18n="edit_limit_title"></h3>
+      <div class="modal-inputs">
+        <div class="modal-input-row">
+          <label data-i18n="edit_limit_label"></label>
+          <input type="number" id="newMaxPointsInput" min="50" style="width:100px;text-align:center;font-weight:600;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-small" onclick="closeEditMaxPoints()" data-i18n="modal_cancel"></button>
+        <button class="btn btn-primary btn-small" onclick="saveEditMaxPoints()" data-i18n="modal_save"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ EDIT MODAL ============ -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <h3 id="editModalTitle"></h3>
+      <div class="modal-inputs" id="editModalInputs"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-small" onclick="closeEditModal()" data-i18n="modal_cancel"></button>
+        <button class="btn btn-primary btn-small" onclick="saveEditRound()" data-i18n="modal_save"></button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ============ I18N ============
+const STRINGS = {
+  es: {
+    home_sub: 'Contador de puntos, bó',
+    home_start: 'Arrancar partida nueva',
+    setup_title: 'Partida nueva',
+    setup_players_label: '¿Cuántos juegan?',
+    setup_points_label: '¿Hasta cuántos puntos?',
+    setup_custom_placeholder: 'Ponele lo que quieras...',
+    setup_start_btn: '¡Dale que va!',
+    back_btn: 'Volver',
+    game_enter_scores: 'Metele los puntos de la ronda',
+    game_end_round: 'Cerrar ronda',
+    game_round_history: 'Lo que fue pasando',
+    game_quit: 'Rajar del juego',
+    game_go_home: '🏠 Inicio',
+    game_round: 'Ronda',
+    game_player: 'Jugador',
+    game_total: 'Total',
+    game_no_scores: 'Todavía no arrancó nadie',
+    game_pts: 'pts',
+    game_edit: 'editar',
+    game_alert_no_scores: 'Bo, metele algún puntaje a alguien por lo menos.',
+    game_confirm_quit: '¿Posta te querés ir? Se pierde todo eh.',
+    shame_title: 'Walk of Shame',
+    shame_round_lost: 'ronda perdida',
+    shame_rounds_lost: 'rondas perdidas',
+    share_whatsapp: 'Mandale al grupo',
+    share_copied: '¡Copiado al portapapeles!',
+    share_title: 'Compartir resultados',
+    share_upload_photo: 'Subir foto con puntajes',
+    share_original: 'Original',
+    share_cartoon: 'Cartoon con puntajes',
+    share_download_original: 'Descargar original',
+    share_download_cartoon: 'Descargar cartoon',
+    asado_mode: 'Modo Asado 🥩',
+    results_winner_sub: '¡ganó con menos puntos, qué crack!',
+    results_breakdown: 'Ronda por ronda',
+    results_print: 'Imprimir',
+    results_edit: 'Editar puntajes',
+    results_new_game: 'Otra partidita',
+    modal_edit_round: 'Editar Ronda',
+    modal_cancel: 'Na, dejá',
+    modal_save: 'Guardar',
+    player_placeholder: 'Jugador',
+    preset_names_label: 'Nombres rápidos',
+    games_title: 'Partidos guardados',
+    games_resume: 'Reanudar',
+    games_view: 'Ver resultado',
+    games_delete: 'Eliminar',
+    games_confirm_delete: '¿Eliminar este partido?',
+    games_limit: 'Límite',
+    games_won: 'ganó',
+    game_fine: 'Multa',
+    game_fines: 'Multas',
+    game_fines_label: 'multas',
+    setup_venue_label: 'Sede (opcional)',
+    setup_venue_placeholder: 'Casa de PT, Bar El Tano...',
+    results_edit_limit: '🎯 Cambiar límite',
+    edit_limit_title: 'Cambiar límite de puntos',
+    edit_limit_label: 'Nuevo límite (mín. 50)',
+  },
+  en: {
+    home_sub: 'Score Tracker',
+    home_start: 'Start New Game',
+    setup_title: 'New Game',
+    setup_players_label: 'Number of Players',
+    setup_points_label: 'Points to Play',
+    setup_custom_placeholder: 'Custom...',
+    setup_start_btn: 'Start Game',
+    back_btn: 'Back',
+    game_enter_scores: 'Enter Round Scores',
+    game_end_round: 'End Round',
+    game_round_history: 'Round History',
+    game_quit: 'Quit Game',
+    game_go_home: '🏠 Home',
+    game_round: 'Round',
+    game_player: 'Player',
+    game_total: 'Total',
+    game_no_scores: 'No scores yet',
+    game_pts: 'pts',
+    game_edit: 'edit',
+    game_alert_no_scores: 'Enter at least one score for this round.',
+    game_confirm_quit: 'Are you sure you want to quit this game?',
+    shame_title: 'Walk of Shame',
+    shame_round_lost: 'round lost',
+    shame_rounds_lost: 'rounds lost',
+    share_whatsapp: 'Share to group',
+    share_copied: 'Copied to clipboard!',
+    share_title: 'Share results',
+    share_upload_photo: 'Upload photo with scores',
+    share_original: 'Original',
+    share_cartoon: 'Cartoon with scores',
+    share_download_original: 'Download original',
+    share_download_cartoon: 'Download cartoon',
+    asado_mode: 'BBQ Mode 🥩',
+    results_winner_sub: 'wins with the lowest score!',
+    results_breakdown: 'Round Breakdown',
+    results_print: 'Print Scores',
+    results_edit: 'Edit Scores',
+    results_new_game: 'New Game',
+    modal_edit_round: 'Edit Round',
+    modal_cancel: 'Cancel',
+    modal_save: 'Save',
+    player_placeholder: 'Player',
+    preset_names_label: 'Quick names',
+    games_title: 'Saved Games',
+    games_resume: 'Resume',
+    games_view: 'View Result',
+    games_delete: 'Delete',
+    games_confirm_delete: 'Delete this game?',
+    games_limit: 'Limit',
+    games_won: 'won',
+    game_fine: 'Fine',
+    game_fines: 'Fines',
+    game_fines_label: 'fines',
+    setup_venue_label: 'Venue (optional)',
+    setup_venue_placeholder: 'PT\'s place, El Tano Bar...',
+    results_edit_limit: '🎯 Change limit',
+    edit_limit_title: 'Change point limit',
+    edit_limit_label: 'New limit (min. 50)',
+  }
+};
+
+// Messages for round roast carousel: 2 at last (most pts), 1 at second-last, 1 at first (least pts)
+const CAROUSEL_MSGS = {
+  es: {
+    last: [
+      'La puta madre {name}, ¿en qué carajo estabas pensando?! 🤦',
+      '{name} jugó como el orto esta ronda, bo. Qué asco.',
+      '¿{name} vino a jugar al UNO o a juntar toda la mierda de la mesa?',
+      'Pa {name}, la concha de tu madre, ¿cómo hacés para jugar tan mal?',
+      'Alguien sáquenle las cartas a {name} por favor, es una vergüenza ajena.',
+      '{name} es un desastre de persona y esta ronda lo confirmó, bo.',
+      '¿{name} está bien? Porque eso que hizo no lo hace ni un boludo de remate.',
+      'Qué hijo de puta {name}, se comió TODOS los puntos. Increíble.',
+    ],
+    secondLast: [
+      '{name} también jugó como el orto, pero el mérito se lo llevó otro.',
+      'Bo {name}, casi sos el campeón de los pelotudos esta ronda. Casi.',
+      '{name} zafó de pedo de quedar último, qué pena.',
+      'Casi {name}, casi... seguí así y vas a ganar el premio al más inútil.',
+    ],
+    first: [
+      '¡{name} salió hecho un crack esta ronda, bo! 🏆',
+      '{name} se fue livianito de puntos, ta que bien jugado.',
+      'Esta ronda fue toda de {name}, tremendo nivel.',
+      '{name} les dio clases a todos, qué jugada más hermosa.',
+    ],
+  },
+  en: {
+    last: [
+      'What the hell {name}?! Did you even look at your cards?! 🤦',
+      '{name} played like absolute garbage this round. Embarrassing.',
+      'Was {name} trying to lose? Because holy shit that worked.',
+      '{name} collected every damn point on the table. Legend of bad play.',
+      'Someone take the cards away from {name}, for everyone\'s sake.',
+      '{name} is a disaster and this round proved it beyond doubt.',
+    ],
+    secondLast: [
+      '{name} also played like crap, but someone else was worse. Barely.',
+      '{name} almost took home the crown of incompetence. Almost.',
+      '{name} escaped last place by pure luck. Don\'t get cocky.',
+    ],
+    first: [
+      '{name} crushed it this round! 🏆',
+      '{name} kept it low. That\'s how you play!',
+      'That round belonged to {name}. Take notes, losers.',
+    ],
+  },
+};
+
+let currentLang = localStorage.getItem('lunesdeuno_lang') || 'es';
+let roundRoastInterval = null;
+
+function t(key) {
+  return (STRINGS[currentLang] && STRINGS[currentLang][key]) || STRINGS.en[key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lunesdeuno_lang', lang);
+  document.documentElement.lang = lang;
+
+  // Update flag buttons
+  document.getElementById('langEs').classList.toggle('active', lang === 'es');
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+
+  // Apply all data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPh);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const val = t(el.dataset.i18nTitle);
+    el.title = val;
+    el.setAttribute('aria-label', val);
+  });
+
+  // Re-render dynamic content if a game screen is active
+  if (document.getElementById('setup').classList.contains('active')) renderPlayerInputs();
+  if (document.getElementById('game').classList.contains('active')) renderGame();
+  if (document.getElementById('results').classList.contains('active')) renderResults();
+}
+
+// ============ STATE ============
+let state = {
+  playerCount: 2,
+  maxPoints: 500,
+  players: [],
+  rounds: [],
+  fines: [],
+  currentRound: 0,
+  gameOver: false,
+  gameId: null,
+  venue: ''
+};
+
+const PRESET_NAMES = ['PT', 'Mac', 'Mata', 'Gael', 'Nachi', 'Carucha', 'Negro', 'Naso', 'Tano', 'Gordo', 'Cobra'];
+
+const PRESET_FACES = {
+  'pt': 'assets/faces/pt.png',
+  'mac': 'assets/faces/mac.png',
+  'mata': 'assets/faces/mata.png',
+  'gael': 'assets/faces/gael.png',
+  'nachi': 'assets/faces/nachi.png',
+  'carucha': 'assets/faces/carucha.png',
+  'negro': 'assets/faces/negro.png',
+  'naso': 'assets/faces/naso.png',
+  'tano': 'assets/faces/tano.png',
+  'gordo': 'assets/faces/gordo.png',
+  'cobra': 'assets/faces/cobra.png'
+};
+
+function speakName(name, event) {
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(name);
+  utterance.lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  utterance.rate = 1.0;
+  speechSynthesis.speak(utterance);
+}
+
+function getPlayerDot(player, idx) {
+  const isAsado = document.body.classList.contains('asado');
+  if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
+  return `<div class="player-color" style="background:${player.color}"></div>`;
+}
+
+function getPlayerDotSm(player, idx) {
+  const isAsado = document.body.classList.contains('asado');
+  if (isAsado) return `<span style="font-size:1rem;">${getAsadoEmoji(idx)}</span>`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face-sm" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
+  return `<div class="player-color" style="background:${player.color}"></div>`;
+}
+
+const PLAYER_COLORS = [
+  '#ED1C24', '#FFDE00', '#00A651', '#0072BC',
+  '#FF6B35', '#A855F7', '#EC4899', '#14B8A6',
+  '#F97316', '#6366F1', '#84CC16', '#F43F5E', '#06B6D4'
+];
+
+// ============ NAVIGATION ============
+function showScreen(id) {
+  if (id !== 'game' && roundRoastInterval) {
+    clearInterval(roundRoastInterval);
+    roundRoastInterval = null;
+  }
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'home') renderGamesList();
+  if (id === 'setup') initSetup();
+  if (id === 'game') renderGame();
+  if (id === 'results') renderResults();
+}
+
+// ============ SETUP ============
+function initSetup() {
+  renderPlayerInputs();
+  validateSetup();
+}
+
+function changePlayerCount(delta) {
+  state.playerCount = Math.max(2, Math.min(13, state.playerCount + delta));
+  document.getElementById('playerCountDisplay').textContent = state.playerCount;
+  renderPlayerInputs();
+}
+
+function renderPlayerInputs() {
+  const container = document.getElementById('playerInputs');
+  const existing = container.querySelectorAll('input');
+  const oldValues = Array.from(existing).map(i => i.value);
+  const isAsado = document.body.classList.contains('asado');
+  const usedNames = oldValues.map(v => v.trim().toLowerCase()).filter(Boolean);
+
+  let html = '<div class="preset-names">';
+  html += `<div class="preset-names-label" data-i18n="preset_names_label">${t('preset_names_label')}</div>`;
+  PRESET_NAMES.forEach(name => {
+    const used = usedNames.includes(name.toLowerCase());
+    const face = PRESET_FACES[name.toLowerCase()];
+    html += `<span class="preset-chip ${used ? 'used' : ''}" onclick="fillPresetName('${name}')">
+      <img src="${face}" alt="${name}" onclick="speakName('${name}', event)" style="cursor:pointer;">
+      <span class="chip-name">${name}</span>
+    </span>`;
+  });
+  html += '</div>';
+
+  for (let i = 0; i < state.playerCount; i++) {
+    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
+    const val = oldValues[i] || '';
+    const face = PRESET_FACES[val.trim().toLowerCase()];
+    let dot;
+    if (isAsado) {
+      dot = `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>`;
+    } else if (face) {
+      dot = `<img src="${face}" alt="${val}" class="player-face" onclick="speakName('${val.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
+    } else {
+      dot = `<div class="player-color" style="background:${color}"></div>`;
+    }
+    html += `
+      <div class="player-input-row">
+        ${dot}
+        <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup(); updatePresetChips()">
+      </div>`;
+  }
+  container.innerHTML = html;
+  validateSetup();
+}
+
+function fillPresetName(name) {
+  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
+  for (const inp of inputs) {
+    if (!inp.value.trim()) {
+      inp.value = name;
+      validateSetup();
+      updatePresetChips();
+      return;
+    }
+  }
+}
+
+function updatePresetChips() {
+  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
+  const usedNames = Array.from(inputs).map(i => i.value.trim().toLowerCase()).filter(Boolean);
+  document.querySelectorAll('.preset-chip').forEach(chip => {
+    const nameEl = chip.querySelector('.chip-name');
+    const isUsed = nameEl && usedNames.includes(nameEl.textContent.trim().toLowerCase());
+    chip.classList.toggle('used', isUsed);
+  });
+  const isAsado = document.body.classList.contains('asado');
+  inputs.forEach((inp, i) => {
+    const row = inp.closest('.player-input-row');
+    if (!row) return;
+    const dotEl = row.firstElementChild;
+    const val = inp.value.trim().toLowerCase();
+    const face = PRESET_FACES[val];
+    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
+    let newDot;
+    if (isAsado) return;
+    if (face) {
+      newDot = document.createElement('img');
+      newDot.src = face;
+      newDot.alt = val;
+      newDot.className = 'player-face';
+    } else {
+      newDot = document.createElement('div');
+      newDot.className = 'player-color';
+      newDot.style.background = color;
+    }
+    if (dotEl) row.replaceChild(newDot, dotEl);
+  });
+}
+
+function selectPoints(btn, val) {
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.maxPoints = val;
+  document.getElementById('customPoints').value = '';
+  validateSetup();
+}
+
+function onCustomPoints() {
+  const v = parseInt(document.getElementById('customPoints').value);
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  if (v && v >= 50) {
+    state.maxPoints = v;
+  }
+  validateSetup();
+}
+
+function validateSetup() {
+  const inputs = document.querySelectorAll('#playerInputs input');
+  const allNamed = Array.from(inputs).every(i => i.value.trim().length > 0);
+  const hasPoints = state.maxPoints >= 50;
+  document.getElementById('startGameBtn').disabled = !(allNamed && hasPoints);
+}
+
+function startGame() {
+  const inputs = document.querySelectorAll('#playerInputs input');
+  state.players = Array.from(inputs).map((inp, i) => {
+    const name = inp.value.trim() || `${t('player_placeholder')} ${i+1}`;
+    return {
+      name: name,
+      color: PLAYER_COLORS[i % PLAYER_COLORS.length],
+      face: PRESET_FACES[name.toLowerCase()] || null
+    };
+  });
+  state.rounds = [];
+  state.fines = [];
+  state.currentRound = 0;
+  state.gameOver = false;
+  state.gameId = 'game_' + Date.now();
+  state.venue = (document.getElementById('venueInput').value || '').trim();
+  saveCurrentGame();
+  showScreen('game');
+}
+
+// ============ ROUND ROAST CAROUSEL ============
+function getRoundRanking(roundScores) {
+  const withIdx = state.players.map((p, i) => ({ idx: i, name: p.name, score: roundScores[i] || 0 }));
+  const byScoreDesc = [...withIdx].sort((a, b) => b.score - a.score);
+  return {
+    first: byScoreDesc[byScoreDesc.length - 1],
+    secondLast: byScoreDesc.length >= 2 ? byScoreDesc[1] : byScoreDesc[0],
+    last: byScoreDesc[0],
+  };
+}
+
+function buildRoastMessages(roundScores) {
+  const rank = getRoundRanking(roundScores);
+  const lang = currentLang in CAROUSEL_MSGS ? currentLang : 'es';
+  const M = CAROUSEL_MSGS[lang];
+  const pick = (arr, name) => arr[Math.floor(Math.random() * arr.length)].replace(/\{name\}/g, name);
+  return [
+    pick(M.last, rank.last.name),
+    pick(M.last, rank.last.name),
+    pick(M.secondLast, rank.secondLast.name),
+    pick(M.first, rank.first.name),
+  ];
+}
+
+function setRoundRoastSlide(index) {
+  speechSynthesis.cancel();
+  const btn = document.getElementById('roastSpeakBtn');
+  if (btn) btn.classList.remove('speaking');
+  const slides = document.querySelectorAll('.round-roast-slide');
+  const dots = document.querySelectorAll('.round-roast-dot');
+  slides.forEach((s, i) => s.classList.toggle('active', i === index));
+  dots.forEach((d, i) => d.classList.toggle('active', i === index));
+}
+
+function speakRoastMessage() {
+  const activeSlide = document.querySelector('.round-roast-slide.active');
+  if (!activeSlide) return;
+  speechSynthesis.cancel();
+  const text = activeSlide.textContent.trim();
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  utterance.rate = 0.95;
+  const btn = document.getElementById('roastSpeakBtn');
+  if (btn) btn.classList.add('speaking');
+  utterance.onend = () => { if (btn) btn.classList.remove('speaking'); };
+  utterance.onerror = () => { if (btn) btn.classList.remove('speaking'); };
+  speechSynthesis.speak(utterance);
+}
+
+function updateRoundRoastCarousel(messages, startAutoAdvance) {
+  if (roundRoastInterval) clearInterval(roundRoastInterval);
+  roundRoastInterval = null;
+
+  const container = document.getElementById('roundRoastCarousel');
+  const slidesEl = document.getElementById('roundRoastSlides');
+  const dotsEl = document.getElementById('roundRoastDots');
+  if (!messages || messages.length === 0) {
+    container.classList.remove('visible');
+    return;
+  }
+
+  const classes = ['roast', 'roast', 'roast', 'brag'];
+  slidesEl.innerHTML = messages.map((text, i) =>
+    `<div class="round-roast-slide ${classes[i]}" data-index="${i}">${text}</div>`
+  ).join('');
+  dotsEl.innerHTML = messages.map((_, i) =>
+    `<button type="button" class="round-roast-dot" aria-label="Slide ${i + 1}" onclick="setRoundRoastSlide(${i})"></button>`
+  ).join('') + `<button type="button" id="roastSpeakBtn" class="roast-speak-btn" onclick="speakRoastMessage()" aria-label="Read aloud" title="Read aloud">&#9654;</button>`;
+
+  container.classList.add('visible');
+  setRoundRoastSlide(0);
+  container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  if (startAutoAdvance && messages.length > 1) {
+    let idx = 0;
+    roundRoastInterval = setInterval(() => {
+      idx = (idx + 1) % messages.length;
+      setRoundRoastSlide(idx);
+    }, 3200);
+  }
+}
+
+// ============ WALK OF SHAME ============
+function getRoundLossCounts() {
+  const losses = state.players.map(() => 0);
+  state.rounds.forEach(round => {
+    const maxScore = Math.max(...round);
+    if (maxScore > 0) {
+      round.forEach((s, i) => { if (s === maxScore) losses[i]++; });
+    }
+  });
+  return state.players
+    .map((p, i) => ({ idx: i, name: p.name, color: p.color, losses: losses[i] }))
+    .filter(p => p.losses > 0)
+    .sort((a, b) => b.losses - a.losses)
+    .slice(0, 3);
+}
+
+function renderWalkOfShame() {
+  const container = document.getElementById('walkOfShame');
+  const list = document.getElementById('shameList');
+  const shamers = getRoundLossCounts();
+  if (shamers.length === 0) {
+    container.classList.remove('visible');
+    return;
+  }
+  container.classList.add('visible');
+  const rankEmoji = ['🥇', '🥈', '🥉'];
+  list.innerHTML = shamers.map((p, i) => {
+    const fullPlayer = state.players[p.idx];
+    const dot = getPlayerDot(fullPlayer || p, p.idx);
+    const dotHtml = i === 0
+      ? `<span class="shame-face-container">${dot}<img src="assets/Bucket.png" class="bucket-overlay" alt="bucket"></span>`
+      : dot;
+    return `<div class="shame-row">
+      <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
+      <div class="shame-name">
+        ${dotHtml}
+        ${p.name}
+      </div>
+      <div class="shame-badge">${p.losses} ${p.losses === 1 ? t('shame_round_lost') : t('shame_rounds_lost')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============ GAME ============
+function getTotals() {
+  return state.players.map((_, pi) =>
+    state.rounds.reduce((sum, round) => sum + (round[pi] || 0), 0)
+  );
+}
+
+function getLeaderIndex() {
+  const totals = getTotals();
+  let minIdx = 0;
+  totals.forEach((t, i) => { if (t < totals[minIdx]) minIdx = i; });
+  return minIdx;
+}
+
+function getMaxTotal() {
+  return Math.max(...getTotals(), 0);
+}
+
+function renderGame() {
+  const totals = getTotals();
+  const roundNum = state.rounds.length + 1;
+
+  document.getElementById('gameTitle').textContent = state.venue ? `Lunes de UNO — ${state.venue}` : 'Lunes de UNO';
+  document.getElementById('roundBadge').textContent = `${t('game_round')} ${roundNum}`;
+
+  // Progress
+  const maxT = getMaxTotal();
+  const leaderIdx = totals.indexOf(Math.max(...totals));
+  const pct = Math.min((maxT / state.maxPoints) * 100, 100);
+  const leaderPlayer = state.players[leaderIdx];
+  document.getElementById('progressLeader').innerHTML =
+    maxT > 0 ? `${getPlayerDotSm(leaderPlayer, leaderIdx)} ${leaderPlayer.name}: ${totals[leaderIdx]} ${t('game_pts')}` : t('game_no_scores');
+  document.getElementById('progressText').textContent = `${maxT} / ${state.maxPoints}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // Scoreboard
+  renderScoreboard(totals);
+
+  // Walk of Shame
+  renderWalkOfShame();
+
+  // Round inputs
+  renderRoundInputs();
+
+  // Round roast carousel (after each round)
+  if (state.rounds.length > 0) {
+    const messages = state.lastRoundRoastMessages || buildRoastMessages(state.rounds[state.rounds.length - 1]);
+    if (!state.lastRoundRoastMessages) state.lastRoundRoastMessages = messages;
+    updateRoundRoastCarousel(messages, state.justSubmittedRound === true);
+    if (state.justSubmittedRound) state.justSubmittedRound = false;
+  } else {
+    document.getElementById('roundRoastCarousel').classList.remove('visible');
+  }
+
+  // Round history
+  renderRoundHistory();
+}
+
+// Returns sorted player indices (by total ascending) for a given number of rounds played
+function getRankingAfterRounds(numRounds) {
+  var partialTotals = state.players.map(function(_, pi) {
+    var base = state.rounds.slice(0, numRounds).reduce(function(sum, round) { return sum + (round[pi] || 0); }, 0);
+    var finesSum = (state.fines || []).slice(0, numRounds).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
+    return base + finesSum;
+  });
+  return state.players.map(function(_, i) { return i; })
+    .sort(function(a, b) { return partialTotals[a] - partialTotals[b] || a - b; });
+}
+
+function renderScoreboard(totals) {
+  const table = document.getElementById('scoreboard');
+  const totalFines = getTotalFines();
+
+  // Compute position deltas vs. previous round
+  var deltaMap = {};
+  if (state.rounds.length >= 2) {
+    var prevRanking = getRankingAfterRounds(state.rounds.length - 1);
+    var currRanking = getRankingAfterRounds(state.rounds.length);
+    state.players.forEach(function(_, idx) {
+      var prevPos = prevRanking.indexOf(idx);
+      var currPos = currRanking.indexOf(idx);
+      deltaMap[idx] = prevPos - currPos; // positive = moved up (better = lower position num)
+    });
+  }
+
+  let html = `<thead><tr><th>${t('game_player')}</th><th style="text-align:center;">${t('game_fines')}</th><th style="text-align:right;">${t('game_total')}</th></tr></thead><tbody>`;
+  const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i], fines: totalFines[i]}))
+    .sort((a, b) => a.total - b.total);
+
+  sorted.forEach(p => {
+    const overLimit = p.total >= state.maxPoints;
+    const isLowest = p.total === sorted[0].total && state.rounds.length > 0;
+    const dot = getPlayerDot(p, p.idx);
+    const fineCell = p.fines > 0 ? `<span class="fine-badge">⚠️ +${p.fines}</span>` : '—';
+
+    var deltaHtml = '';
+    if (state.rounds.length >= 2 && deltaMap[p.idx] !== undefined) {
+      var d = deltaMap[p.idx];
+      if (d > 0) deltaHtml = `<span style="color:var(--success);font-size:.75rem;font-weight:700;margin-left:.3rem;">▲${d}</span>`;
+      else if (d < 0) deltaHtml = `<span style="color:var(--danger);font-size:.75rem;font-weight:700;margin-left:.3rem;">▼${Math.abs(d)}</span>`;
+    }
+
+    var posInRanking = sorted.indexOf(p);
+    var mealBadge = '';
+    var n = sorted.length;
+    if (posInRanking === n - 1) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la cena">🍽️</span>';
+    else if (posInRanking === n - 2 && n >= 2) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga el postre">🍮</span>';
+    else if (posInRanking === n - 3 && n >= 3) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la picada">🧀</span>';
+
+    html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
+      <td><div class="player-name-cell">
+        ${dot}
+        ${p.name}${deltaHtml}${mealBadge}
+      </div></td>
+      <td style="text-align:center;">${fineCell}</td>
+      <td style="text-align:right;" class="total-cell ${overLimit ? 'over-limit' : ''}">${p.total}</td>
+    </tr>`;
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function renderRoundInputs() {
+  if (state.gameOver) {
+    document.getElementById('roundInputCard').style.display = 'none';
+    return;
+  }
+  document.getElementById('roundInputCard').style.display = '';
+  const container = document.getElementById('roundInputs');
+  let html = '';
+  state.players.forEach((p, i) => {
+    const dot = getPlayerDot(p, i);
+    html += `
+      <div class="round-input-row">
+        <div class="player-label">
+          ${dot}
+          ${p.name}
+        </div>
+        <input type="number" id="roundScore_${i}" placeholder="0">
+        <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
+      </div>
+      <div class="fine-input-row" id="fineRow_${i}">
+        <span class="fine-label">⚠️ ${t('game_fine')}:</span>
+        <input type="number" id="roundFine_${i}" placeholder="0" min="0">
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleFineInput(idx) {
+  var row = document.getElementById('fineRow_' + idx);
+  if (row) row.classList.toggle('visible');
+}
+
+function getTotalFines() {
+  return state.players.map(function(_, pi) {
+    return (state.fines || []).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
+  });
+}
+
+function getFinalTotals() {
+  var totals = getTotals();
+  var totalFines = getTotalFines();
+  return totals.map(function(t, i) { return t + totalFines[i]; });
+}
+
+function submitRound() {
+  const scores = state.players.map((_, i) => {
+    return parseInt(document.getElementById(`roundScore_${i}`).value) || 0;
+  });
+
+  if (scores.every(s => s === 0)) {
+    alert(t('game_alert_no_scores'));
+    return;
+  }
+
+  var fines = state.players.map(function(_, i) { return Math.max(0, parseInt(document.getElementById('roundFine_'+i)?.value) || 0); });
+  state.rounds.push(scores);
+  state.fines.push(fines);
+  state.currentRound = state.rounds.length;
+  state.lastRoundRoastMessages = buildRoastMessages(scores);
+  state.justSubmittedRound = true;
+
+  const totals = getTotals();
+  if (totals.some(t => t >= state.maxPoints)) {
+    state.gameOver = true;
+    saveCurrentGame();
+    showScreen('results');
+    return;
+  }
+
+  saveCurrentGame();
+  renderGame();
+}
+
+function renderRoundHistory() {
+  const container = document.getElementById('roundHistoryContainer');
+  if (state.rounds.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = '';
+
+  const table = document.getElementById('roundHistoryTable');
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
+  state.players.forEach((p, i) => { html += `<th>${getPlayerDotSm(p, i)} ${p.name}</th>`; });
+  html += '<th class="no-print"></th></tr></thead><tbody>';
+
+  state.rounds.forEach((round, ri) => {
+    html += `<tr><td>R${ri + 1}</td>`;
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
+    html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
+  });
+
+  const totals = getTotals();
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
+  totals.forEach(t => { html += `<td>${t}</td>`; });
+  html += '<td class="no-print"></td></tr>';
+
+  var totalFinesH = getTotalFines();
+  if (totalFinesH.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesH.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td class="no-print"></td></tr>';
+  }
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ============ EDIT MODAL ============
+let editingRound = -1;
+
+function openEditModal(roundIdx) {
+  editingRound = roundIdx;
+  document.getElementById('editModalTitle').textContent = `${t('modal_edit_round')} ${roundIdx + 1}`;
+  const container = document.getElementById('editModalInputs');
+  let html = '';
+  state.players.forEach((p, i) => {
+    var fineVal = (state.fines[roundIdx] && state.fines[roundIdx][i]) || 0;
+    html += `
+      <div class="modal-input-row">
+        <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
+        <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+      </div>
+      <div class="modal-input-row" style="padding-left:1rem;">
+        <label style="color:var(--uno-yellow);font-size:.8rem;">⚠️ ${t('game_fine')}</label>
+        <input type="number" id="editFine_${i}" value="${fineVal}" min="0" style="width:70px;">
+      </div>`;
+  });
+  container.innerHTML = html;
+  document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('active');
+  editingRound = -1;
+}
+
+// ============ EDIT MAX POINTS MODAL ============
+function openEditMaxPoints() {
+  document.getElementById('newMaxPointsInput').value = state.maxPoints;
+  document.getElementById('editMaxPointsModal').classList.add('active');
+  document.getElementById('newMaxPointsInput').focus();
+  document.getElementById('newMaxPointsInput').select();
+}
+
+function closeEditMaxPoints() {
+  document.getElementById('editMaxPointsModal').classList.remove('active');
+}
+
+function saveEditMaxPoints() {
+  const val = parseInt(document.getElementById('newMaxPointsInput').value);
+  if (!val || val < 50) { alert(t('edit_limit_label')); return; }
+  state.maxPoints = val;
+  closeEditMaxPoints();
+
+  const finalTotals = getFinalTotals();
+  const wasOver = state.gameOver;
+  state.gameOver = finalTotals.some(function(t) { return t >= state.maxPoints; });
+  saveCurrentGame();
+
+  if (!state.gameOver && wasOver) {
+    // Game re-opened: go back to game screen
+    showScreen('game');
+  } else if (document.getElementById('game').classList.contains('active')) {
+    renderGame();
+  } else if (document.getElementById('results').classList.contains('active')) {
+    renderResults();
+  }
+}
+
+function saveEditRound() {
+  if (editingRound < 0) return;
+  if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
+  state.players.forEach((_, i) => {
+    state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
+    state.fines[editingRound][i] = Math.max(0, parseInt(document.getElementById('editFine_'+i)?.value) || 0);
+  });
+  closeEditModal();
+  saveCurrentGame();
+
+  const totals = getTotals();
+  const wasOver = state.gameOver;
+  state.gameOver = totals.some(t => t >= state.maxPoints);
+
+  if (state.gameOver && document.getElementById('results').classList.contains('active')) {
+    renderResults();
+  } else if (state.gameOver && !wasOver) {
+    showScreen('results');
+  } else if (!state.gameOver && wasOver) {
+    showScreen('game');
+  } else {
+    if (document.getElementById('game').classList.contains('active')) renderGame();
+    if (document.getElementById('results').classList.contains('active')) renderResults();
+  }
+}
+
+// ============ RESULTS ============
+function renderResults() {
+  const finalTotals = getFinalTotals();
+  const baseTotals = getTotals();
+  const totalFines = getTotalFines();
+  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i]}))
+    .sort((a, b) => a.total - b.total);
+
+  document.getElementById('winnerName').textContent = standings[0].name;
+  var venueEl = document.getElementById('resultsVenue');
+  if (venueEl) venueEl.textContent = state.venue ? '📍 ' + state.venue : '';
+  var limitEl = document.getElementById('resultsLimit');
+  if (limitEl) limitEl.textContent = '🎯 Límite: ' + state.maxPoints + ' pts';
+
+  const container = document.getElementById('finalStandings');
+  const medals = ['gold', 'silver', 'bronze'];
+  let html = '';
+  standings.forEach((p, i) => {
+    const dot = getPlayerDot(p, p.idx);
+    const scoreText = p.fines > 0
+      ? `${p.baseTotal} <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span> = ${p.total} ${t('game_pts')}`
+      : `${p.total} ${t('game_pts')}`;
+    html += `
+      <div class="standing-row">
+        <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
+        <div class="standing-info">
+          <div class="name" style="display:flex;align-items:center;gap:.4rem;">
+            ${dot}
+            ${p.name}
+          </div>
+        </div>
+        <div class="standing-score">${scoreText}</div>
+      </div>`;
+  });
+  container.innerHTML = html;
+
+  // Meal assignments
+  var mealHtml = '';
+  var n = standings.length;
+  if (n >= 1) {
+    var mealItems = [];
+    mealItems.push(`🍽️ <b>${standings[n-1].name}</b> paga la <b>cena</b>`);
+    if (n >= 2) mealItems.push(`🍮 <b>${standings[n-2].name}</b> paga el <b>postre</b>`);
+    if (n >= 3) mealItems.push(`🧀 <b>${standings[n-3].name}</b> paga la <b>picada</b>`);
+    mealHtml = `<div id="mealAssignments" style="width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-top:.5rem;">
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:.6rem;color:var(--text-muted);">🍴 Quién paga qué</div>
+      ${mealItems.map(function(item) { return '<div style="padding:.35rem 0;font-size:.95rem;border-bottom:1px solid var(--border);">' + item + '</div>'; }).join('')}
+    </div>`;
+  }
+  var existingMeal = document.getElementById('mealAssignments');
+  if (existingMeal) existingMeal.parentElement.removeChild(existingMeal);
+  container.insertAdjacentHTML('afterend', mealHtml);
+
+  renderResultsHistory();
+}
+
+function renderResultsHistory() {
+  const table = document.getElementById('resultsHistoryTable');
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
+  state.players.forEach((p, i) => { html += `<th>${getPlayerDotSm(p, i)} ${p.name}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  state.rounds.forEach((round, ri) => {
+    html += `<tr><td>R${ri + 1}</td>`;
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  const totals = getTotals();
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
+  totals.forEach(t => { html += `<td>${t}</td>`; });
+  html += '</tr>';
+
+  var totalFinesR = getTotalFines();
+  if (totalFinesR.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesR.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '</tr>';
+  }
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function showEditableHistory() {
+  const table = document.getElementById('resultsHistoryTable');
+  let html = `<thead><tr><th>${t('game_round')}</th>`;
+  state.players.forEach(p => { html += `<th>${p.name}</th>`; });
+  html += '<th></th></tr></thead><tbody>';
+
+  state.rounds.forEach((round, ri) => {
+    html += `<tr><td>R${ri + 1}</td>`;
+    round.forEach((s, pi) => {
+      var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
+      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+    });
+    html += `<td class="edit-cell" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
+  });
+
+  const totals = getTotals();
+  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
+  totals.forEach(t => { html += `<td>${t}</td>`; });
+  html += '<td></td></tr>';
+
+  var totalFinesE = getTotalFines();
+  if (totalFinesE.some(function(f) { return f > 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    totalFinesE.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td></td></tr>';
+  }
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function printResults() {
+  window.print();
+}
+
+function newGame() {
+  state = {
+    playerCount: 2, maxPoints: 500,
+    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+  };
+  document.getElementById('playerCountDisplay').textContent = '2';
+  showScreen('home');
+}
+
+function goHome() {
+  saveCurrentGame();
+  showScreen('home');
+}
+
+function confirmQuit() {
+  if (confirm(t('game_confirm_quit'))) {
+    saveCurrentGame();
+    state = {
+      playerCount: 2, maxPoints: 500,
+      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+    };
+    document.getElementById('playerCountDisplay').textContent = '2';
+    showScreen('home');
+  }
+}
+
+// ============ +4 SOUND BOARD ============
+let soundCtx = null;
+let soundIndex = 0;
+
+function playNextSound() {
+  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (soundCtx.state === 'suspended') soundCtx.resume();
+  const sounds = [playSadTrombone, playAirHorn, playDramaticSting, playFuneralMarch];
+  sounds[soundIndex % sounds.length]();
+  soundIndex++;
+  const logo = document.querySelector('.header-logo svg');
+  if (logo) { logo.classList.remove('hat-pulse'); void logo.offsetWidth; logo.classList.add('hat-pulse'); }
+}
+
+function playTone(freq, type, start, dur, gainVal) {
+  const osc = soundCtx.createOscillator();
+  const gain = soundCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  gain.gain.value = gainVal || 0.3;
+  osc.connect(gain); gain.connect(soundCtx.destination);
+  osc.start(soundCtx.currentTime + start);
+  osc.stop(soundCtx.currentTime + start + dur);
+  gain.gain.setValueAtTime(gainVal || 0.3, soundCtx.currentTime + start);
+  gain.gain.exponentialRampToValueAtTime(0.001, soundCtx.currentTime + start + dur);
+}
+
+function playSadTrombone() {
+  [293.66, 277.18, 261.63, 246.94].forEach((f, i) => playTone(f, 'sawtooth', i * 0.3, 0.3, 0.2));
+}
+function playAirHorn() {
+  [200, 250, 200, 250].forEach((f, i) => playTone(f, 'sawtooth', i * 0.08, 0.12, 0.25));
+  playTone(220, 'sawtooth', 0.32, 0.5, 0.3);
+}
+function playDramaticSting() {
+  [440, 554, 659, 880].forEach((f, i) => playTone(f, 'square', i * 0.08, 0.15, 0.15));
+  playTone(220, 'sawtooth', 0.4, 0.6, 0.2);
+}
+function playFuneralMarch() {
+  const notes = [[261.63,0,0.5],[261.63,0.5,0.25],[261.63,0.75,0.25],[261.63,1.0,0.75],[311.13,1.0,0.75],[293.66,1.75,0.25],[293.66,2.0,0.25],[261.63,2.25,0.25],[261.63,2.5,0.5],[246.94,2.5,0.5]];
+  notes.forEach(([f, s, d]) => playTone(f, 'triangle', s, d, 0.2));
+}
+
+// ============ MANDALE AL GRUPO ============
+let loserPoemRotation = 0;
+
+function buildShareText() {
+  const finalTotals = getFinalTotals();
+  const totalFinesC = getTotalFines();
+  const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
+    .sort((a, b) => a.total - b.total);
+  const isAsado = document.body.classList.contains('asado');
+  var headerParts = [isAsado ? '🎩 *Lunes de UNO* 🎩 - EDICION ASADO' : '🎩 *Lunes de UNO* 🎩'];
+  if (state.venue) headerParts.push('Lugar: ' + state.venue);
+  const posQuips = currentLang === 'es'
+    ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
+    : ['CHAMP!', 'survived', 'meh', 'yikes...', 'F'];
+  let lines = [headerParts.join(' - '), ''];
+  standings.forEach((p, i) => {
+    const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
+    const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
+  });
+  lines.push('');
+  lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
+
+  // Meal assignments
+  var n = standings.length;
+  var mealLines = [];
+  mealLines.push('Cena: ' + standings[n-1].name + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'));
+  if (n >= 2) mealLines.push('Postre: ' + standings[n-2].name + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'));
+  if (n >= 3) mealLines.push('Picada: ' + standings[n-3].name + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'));
+  lines.push('');
+  lines = lines.concat(mealLines);
+
+  const lastPlace = standings[standings.length - 1];
+  lines.push('');
+  lines.push(currentLang === 'es'
+    ? `${lastPlace.name}, poema para tu derrota:`
+    : `${lastPlace.name}, a poem for your defeat:`);
+  lines.push(...buildLoserPoem(lastPlace.name, currentLang));
+  return lines.join('\n');
+}
+
+function buildLoserPoem(name, lang) {
+  const poemSets = lang === 'es'
+    ? [
+      [
+        `${name}, jugaste mal, papelón total.`,
+        `Toda la mesa vio tu final fatal.`,
+        `Te hundiste solo, torpe y banal.`,
+        `Pagá la cena y cerrá: final.`,
+      ],
+      [
+        `${name}, tu nivel fue puro dolor.`,
+        `Tiraste cada carta con menos honor.`,
+        `Hiciste del UNO un triste error.`,
+        `Pagá sin llorar, perdedor sin honor.`,
+      ],
+      [
+        `${name}, hoy fuiste desastre cantado.`,
+        `Cada movimiento salió arruinado.`,
+        `Te fuiste al fondo, todo quebrado.`,
+        `Poné la guita y quedate callado.`,
+      ],
+      [
+        `${name}, otra noche de fracaso feroz.`,
+        `No pegaste una, ni por casualidad, vos.`,
+        `Hiciste el ridículo con ruido atroz.`,
+        `Pagá lo que debés y apagá esa voz.`,
+      ],
+    ]
+    : [
+      [
+        `${name}, your game tonight was pure trash.`,
+        `Every card you played went down in a crash.`,
+        `You talked big, then burned out in a flash.`,
+        `Now shut up, pay dinner, and stash your cash.`,
+      ],
+      [
+        `${name}, that match was a brutal fall.`,
+        `You made bad calls, then worse calls all.`,
+        `You sank your hand trying to stand tall.`,
+        `Take the L, pay up, and end the brawl.`,
+      ],
+      [
+        `${name}, your UNO was weak and slow.`,
+        `Each turn you played made your score just grow.`,
+        `You crashed and burned in one bad show.`,
+        `Pay for dinner, take your L, and go.`,
+      ],
+      [
+        `${name}, tonight you were chaos and noise.`,
+        `Wrong move after wrong move, no poise, no poise.`,
+        `You lost your stack with reckless choice.`,
+        `Now pay and leave; that’s the house voice.`,
+      ],
+    ];
+  const selected = poemSets[loserPoemRotation % poemSets.length];
+  loserPoemRotation += 1;
+  return selected;
+}
+
+function shareToWhatsApp() {
+  const text = buildShareText();
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+function showCopyToast() {
+  const toast = document.getElementById('copyToast');
+  toast.textContent = t('share_copied');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ============ SHARE: Photo with scores ============
+let sharePhotoState = { originalDataUrl: null };
+
+function drawScoresOnCanvas(canvas, img) {
+  const ctx = canvas.getContext('2d');
+  const maxW = 400, maxH = 300;
+  let w = img.width, h = img.height;
+  if (w > maxW || h > maxH) { const r = Math.min(maxW/w, maxH/h); w = Math.round(w*r); h = Math.round(h*r); }
+  canvas.width = w; canvas.height = h;
+  ctx.drawImage(img, 0, 0, w, h);
+  const totals = getTotals();
+  const standings = state.players.map((p,i)=>({...p,total:totals[i]})).sort((a,b)=>a.total-b.total);
+  ctx.font = 'bold 14px Inter, sans-serif'; ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2;
+  let ty = 24;
+  standings.forEach((p,i)=>{ const txt = (i+1)+'. '+p.name+' — '+p.total+' pts'; ctx.strokeText(txt,10,ty); ctx.fillText(txt,10,ty); ty+=22; });
+}
+
+function onSharePhotoChange(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  sharePhotoState.originalDataUrl = null;
+  var elO = document.getElementById('sharePhotoOriginal');
+  var row = document.getElementById('sharePhotoRow');
+  row.style.display = 'none'; elO.removeAttribute('src');
+  var reader = new FileReader();
+  reader.onload = function() {
+    var img = new Image();
+    img.onload = function() {
+      var c1 = document.createElement('canvas');
+      drawScoresOnCanvas(c1, img);
+      sharePhotoState.originalDataUrl = c1.toDataURL('image/png');
+      elO.src = sharePhotoState.originalDataUrl;
+      row.style.display = 'flex'; ev.target.value = '';
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function downloadShareImage(which) {
+  if (!sharePhotoState.originalDataUrl) return;
+  const a = document.createElement('a'); a.href = sharePhotoState.originalDataUrl;
+  a.download = 'LunesDeUNO.png'; a.click();
+}
+
+// ============ MODO ASADO ============
+const ASADO_EMOJIS = ['🥩', '🍖', '🌭', '🫒', '🔥', '🧅', '🫑', '🧄', '🍞', '🌶️'];
+const ASADO_CAROUSEL_MSGS = {
+  es: {
+    last: ['{name} está más quemado que la tira de asado que nadie quería 🔥','{name} juntó más puntos que sal tiene el vacío, bo.','A {name} le faltó vuelta y vuelta, se carbonizó esta ronda.','{name} se pasó de cocción, ta hecho carbón.','Pa, {name}, más quemado que chorizo olvidado en la parrilla.'],
+    secondLast: ['{name} quedó a punto, casi se pasa de cocción.','{name} está jugoso todavía, pero ojo con la próxima vuelta.'],
+    first: ['{name} salió al punto justo, término medio perfecto 🥩','{name} es el asador de esta mesa, tremendo nivel.','Esta ronda {name} la clavó como un buen vacío a la brasa.'],
+  },
+  en: {
+    last: ['{name} is more burnt than forgotten ribs on the grill 🔥','{name} collected more points than salt on a steak.','{name} forgot to flip and got charred this round.','{name} is well-done. Way too well-done.','{name} got roasted harder than the sausages.'],
+    secondLast: ['{name} is medium-rare, almost overcooked.','{name} is still juicy, but watch out next round.'],
+    first: ['{name} came out medium-rare perfection 🥩','{name} is the grill master of this table.','{name} nailed it like a perfect cut on the BBQ.'],
+  },
+};
+
+let asadoMode = false;
+let originalCarouselMsgs = null;
+let meatInterval = null;
+const MEAT_IMAGES = [
+  'assets/image-1cec047c-2204-4f4f-9954-419f7c1774d0.png',
+  'assets/image-64c59a6f-c9d4-47a9-9663-48336dd81f5b.png',
+  'assets/image-50beb5db-594f-4eb3-98f7-ab4301da9365.png',
+  'assets/image-98020a15-ad43-43af-8d31-d3d59b289066.png',
+  'assets/image-b0867c9d-6a8c-4794-b634-724797c38bd0.png',
+  'assets/image-d8b1829c-28cd-4ba4-8701-74d669afedf3.png',
+  'assets/image-bdae4363-a3f7-4ec9-8776-9e7aed39fe3c.png',
+];
+
+function getAsadoEmoji(playerIdx) { return ASADO_EMOJIS[playerIdx % ASADO_EMOJIS.length]; }
+
+function spawnFlyingMeat() {
+  const el = document.createElement('img'); el.className = 'flying-meat';
+  el.src = MEAT_IMAGES[Math.floor(Math.random() * MEAT_IMAGES.length)];
+  el.alt = '';
+  const side = Math.floor(Math.random() * 4);
+  let startX, startY, endX, endY;
+  const W = window.innerWidth, H = window.innerHeight;
+  if (side===0){startX=-40;startY=Math.random()*H;endX=W+60;endY=Math.random()*H;}
+  else if(side===1){startX=W+40;startY=Math.random()*H;endX=-60;endY=Math.random()*H;}
+  else if(side===2){startX=Math.random()*W;startY=-40;endX=Math.random()*W;endY=H+60;}
+  else{startX=Math.random()*W;startY=H+40;endX=Math.random()*W;endY=-60;}
+  const dur=4+Math.random()*5, spin=360+Math.random()*720, size=40+Math.random()*50;
+  el.style.setProperty('--start-x',startX+'px'); el.style.setProperty('--start-y',startY+'px');
+  el.style.setProperty('--end-x',endX+'px'); el.style.setProperty('--end-y',endY+'px');
+  el.style.setProperty('--fly-dur',dur+'s'); el.style.setProperty('--spin',spin+'deg');
+  el.style.width=size+'px'; el.style.height=size+'px'; el.style.top='0'; el.style.left='0';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), dur*1000+200);
+}
+
+function startMeatRain() { if(meatInterval)return; meatInterval=setInterval(spawnFlyingMeat,800); }
+function stopMeatRain() { if(meatInterval){clearInterval(meatInterval);meatInterval=null;} document.querySelectorAll('.flying-meat').forEach(el=>el.remove()); }
+
+function toggleAsado() {
+  asadoMode = document.getElementById('asadoToggle').checked;
+  localStorage.setItem('lunesdeuno_asado', asadoMode ? 'on' : 'off');
+  applyAsadoMode();
+}
+
+function applyAsadoMode() {
+  if (asadoMode) {
+    document.body.classList.add('asado');
+    if (!originalCarouselMsgs) originalCarouselMsgs = JSON.parse(JSON.stringify(CAROUSEL_MSGS));
+    Object.keys(ASADO_CAROUSEL_MSGS).forEach(lang => { CAROUSEL_MSGS[lang] = ASADO_CAROUSEL_MSGS[lang]; });
+    startMeatRain();
+  } else {
+    document.body.classList.remove('asado');
+    if (originalCarouselMsgs) { Object.keys(originalCarouselMsgs).forEach(lang => { CAROUSEL_MSGS[lang] = originalCarouselMsgs[lang]; }); }
+    stopMeatRain();
+  }
+  if (document.getElementById('game').classList.contains('active')) renderGame();
+  if (document.getElementById('results').classList.contains('active')) renderResults();
+}
+
+// ============ GAME PERSISTENCE ============
+function loadGames() {
+  try {
+    var data = localStorage.getItem('lunesdeuno_games');
+    return data ? JSON.parse(data) : [];
+  } catch (e) { return []; }
+}
+
+function saveGames(games) {
+  localStorage.setItem('lunesdeuno_games', JSON.stringify(games));
+}
+
+function saveCurrentGame() {
+  if (!state.gameId) return;
+  var games = loadGames();
+  var entry = {
+    id: state.gameId,
+    timestamp: parseInt(state.gameId.replace('game_', ''), 10) || Date.now(),
+    state: {
+      playerCount: state.playerCount,
+      maxPoints: state.maxPoints,
+      players: state.players,
+      rounds: state.rounds,
+      currentRound: state.currentRound,
+      gameOver: state.gameOver,
+      gameId: state.gameId,
+      fines: state.fines || [],
+      venue: state.venue || ''
+    },
+    finished: !!state.gameOver
+  };
+  var idx = games.findIndex(function(g) { return g.id === state.gameId; });
+  if (idx >= 0) { games[idx] = entry; } else { games.push(entry); }
+  saveGames(games);
+}
+
+function formatTimestamp(ts) {
+  var d = new Date(ts);
+  var days = currentLang === 'es'
+    ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+    : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = currentLang === 'es'
+    ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var hh = String(d.getHours()).padStart(2, '0');
+  var mm = String(d.getMinutes()).padStart(2, '0');
+  return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()] + ', ' + hh + ':' + mm;
+}
+
+function renderGamesList() {
+  var container = document.getElementById('gamesList');
+  var games = loadGames();
+  if (games.length === 0) { container.innerHTML = ''; return; }
+  games.sort(function(a, b) { return b.timestamp - a.timestamp; });
+  var html = '<div class="games-list"><h3>' + t('games_title') + '</h3>';
+  games.forEach(function(g) {
+    var s = g.state;
+    var names = s.players.map(function(p) { return p.name; });
+    var totals = s.players.map(function(_, pi) {
+      return s.rounds.reduce(function(sum, round) { return sum + (round[pi] || 0); }, 0);
+    });
+    var scoresStr = totals.join('-');
+    var title;
+    var venueStr = s.venue ? ' · 📍 ' + s.venue : '';
+    if (g.finished) {
+      var minIdx = 0;
+      totals.forEach(function(t, i) { if (t < totals[minIdx]) minIdx = i; });
+      title = '🏆 ' + names[minIdx] + ' ' + t('games_won') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
+    } else {
+      title = '📋 ' + names.join(', ') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
+    }
+    var btnLabel = g.finished ? t('games_view') : t('games_resume');
+    var btnAction = g.finished
+      ? 'resumeGame(\'' + g.id + '\')'
+      : 'resumeGame(\'' + g.id + '\')';
+    html += '<div class="game-item">' +
+      '<div class="game-item-info">' +
+        '<div class="game-item-title">' + title + '</div>' +
+        '<div class="game-item-meta">' + formatTimestamp(g.timestamp) + '</div>' +
+      '</div>' +
+      '<div class="game-item-actions">' +
+        '<button class="btn btn-secondary btn-small" onclick="' + btnAction + '">' + btnLabel + '</button>' +
+        '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>' +
+      '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function resumeGame(gameId) {
+  var games = loadGames();
+  var g = games.find(function(g) { return g.id === gameId; });
+  if (!g) return;
+  state.playerCount = g.state.playerCount;
+  state.maxPoints = g.state.maxPoints;
+  state.players = g.state.players;
+  state.rounds = g.state.rounds;
+  state.currentRound = g.state.currentRound;
+  state.gameOver = g.state.gameOver;
+  state.gameId = g.state.gameId;
+  state.fines = g.state.fines || [];
+  state.venue = g.state.venue || '';
+  if (g.finished) {
+    showScreen('results');
+  } else {
+    showScreen('game');
+  }
+}
+
+function deleteGame(gameId) {
+  if (!confirm(t('games_confirm_delete'))) return;
+  var games = loadGames();
+  games = games.filter(function(g) { return g.id !== gameId; });
+  saveGames(games);
+  renderGamesList();
+}
+
+// ============ INIT ============
+asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
+document.getElementById('asadoToggle').checked = asadoMode;
+if (asadoMode) applyAsadoMode();
+
+setLang(currentLang);
+initSetup();
+renderGamesList();
+</script>
+</body>
+</html>
