@@ -163,38 +163,6 @@
     }
     .logo-sub { color: var(--text-muted); font-size: 1rem; margin-top: .5rem; }
 
-    .home-beta-link {
-      margin-top: 2rem;
-      width: 100%;
-      max-width: 480px;
-    }
-    .under-construction {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 33.333vh;
-      min-height: 80px;
-      background: transparent;
-      border: none;
-      border-radius: 16px;
-      text-decoration: none;
-      color: var(--text-muted);
-      transition: color .2s, opacity .2s;
-      cursor: pointer;
-      min-width: 44px;
-    }
-    .under-construction:hover {
-      color: var(--uno-yellow);
-    }
-    .under-construction:hover .under-construction-icon {
-      opacity: 0.9;
-    }
-    .under-construction-icon {
-      font-size: 0.75rem;
-      line-height: 1;
-      opacity: 0.25;
-    }
-
     .uno-cards {
       display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
     }
@@ -233,14 +201,26 @@
       text-transform: uppercase; letter-spacing: .06em; width: 100%; margin-bottom: .15rem;
     }
     .preset-chip {
-      padding: .35rem .7rem; border-radius: 20px;
+      display: flex; flex-direction: column; align-items: center;
+      width: 70px; padding: .4rem; border-radius: 10px;
       border: 1px solid var(--border); background: var(--surface-2);
-      color: var(--text); cursor: pointer;
-      font-family: 'Inter', sans-serif; font-size: .8rem; font-weight: 600;
-      transition: all .2s;
+      cursor: pointer; transition: all .2s; gap: .25rem;
     }
-    .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); color: var(--uno-yellow); }
+    .preset-chip img {
+      width: 52px; height: 52px; border-radius: 6px; object-fit: cover;
+    }
+    .preset-chip .chip-name {
+      font-family: 'Inter', sans-serif; font-size: .7rem; font-weight: 600;
+      color: var(--text); text-align: center;
+    }
+    .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); }
     .preset-chip.used { opacity: .3; cursor: not-allowed; pointer-events: none; }
+    .player-face {
+      width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover; flex-shrink: 0;
+    }
+    .player-face-sm {
+      width: 1.2rem; height: 1.2rem; border-radius: 3px; object-fit: cover; vertical-align: middle;
+    }
 
     .points-presets {
       display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
@@ -772,11 +752,6 @@
       <span data-i18n="asado_mode"></span>
     </div>
     <div id="gamesList"></div>
-    <div class="home-beta-link">
-      <a href="index2.html" class="under-construction" data-i18n-title="home_under_construction" title="En construcción: compartir resultados" aria-label="En construcción: compartir resultados">
-        <span class="under-construction-icon" aria-hidden="true">🚧</span>
-      </a>
-    </div>
   </div>
 
   <!-- ============ SETUP ============ -->
@@ -965,7 +940,6 @@ const STRINGS = {
   es: {
     home_sub: 'Contador de puntos, bó',
     home_start: 'Arrancar partida nueva',
-    home_under_construction: 'En construcción: compartir resultados',
     setup_title: 'Partida nueva',
     setup_players_label: '¿Cuántos juegan?',
     setup_points_label: '¿Hasta cuántos puntos?',
@@ -1026,7 +1000,6 @@ const STRINGS = {
   en: {
     home_sub: 'Score Tracker',
     home_start: 'Start New Game',
-    home_under_construction: 'Under construction: share results',
     setup_title: 'New Game',
     setup_players_label: 'Number of Players',
     setup_points_label: 'Points to Play',
@@ -1184,6 +1157,34 @@ let state = {
 
 const PRESET_NAMES = ['PT', 'Mac', 'Mata', 'Gael', 'Nachi', 'Carucha', 'Negro', 'Naso', 'Tano', 'Gordo', 'Cobra'];
 
+const PRESET_FACES = {
+  'pt': 'assets/faces/pt.png',
+  'mac': 'assets/faces/mac.png',
+  'mata': 'assets/faces/mata.png',
+  'gael': 'assets/faces/gael.png',
+  'nachi': 'assets/faces/nachi.png',
+  'carucha': 'assets/faces/carucha.png',
+  'negro': 'assets/faces/negro.png',
+  'naso': 'assets/faces/naso.png',
+  'tano': 'assets/faces/tano.png',
+  'gordo': 'assets/faces/gordo.png',
+  'cobra': 'assets/faces/cobra.png'
+};
+
+function getPlayerDot(player, idx) {
+  const isAsado = document.body.classList.contains('asado');
+  if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face">`;
+  return `<div class="player-color" style="background:${player.color}"></div>`;
+}
+
+function getPlayerDotSm(player, idx) {
+  const isAsado = document.body.classList.contains('asado');
+  if (isAsado) return `<span style="font-size:1rem;">${getAsadoEmoji(idx)}</span>`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face-sm">`;
+  return `<div class="player-color" style="background:${player.color}"></div>`;
+}
+
 const PLAYER_COLORS = [
   '#ED1C24', '#FFDE00', '#00A651', '#0072BC',
   '#FF6B35', '#A855F7', '#EC4899', '#14B8A6',
@@ -1227,15 +1228,26 @@ function renderPlayerInputs() {
   html += `<div class="preset-names-label" data-i18n="preset_names_label">${t('preset_names_label')}</div>`;
   PRESET_NAMES.forEach(name => {
     const used = usedNames.includes(name.toLowerCase());
-    html += `<span class="preset-chip ${used ? 'used' : ''}" onclick="fillPresetName('${name}')">${name}</span>`;
+    const face = PRESET_FACES[name.toLowerCase()];
+    html += `<span class="preset-chip ${used ? 'used' : ''}" onclick="fillPresetName('${name}')">
+      <img src="${face}" alt="${name}">
+      <span class="chip-name">${name}</span>
+    </span>`;
   });
   html += '</div>';
 
   for (let i = 0; i < state.playerCount; i++) {
     const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
     const val = oldValues[i] || '';
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
-      `<div class="player-color" style="background:${color}"></div>`;
+    const face = PRESET_FACES[val.trim().toLowerCase()];
+    let dot;
+    if (isAsado) {
+      dot = `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>`;
+    } else if (face) {
+      dot = `<img src="${face}" alt="${val}" class="player-face">`;
+    } else {
+      dot = `<div class="player-color" style="background:${color}"></div>`;
+    }
     html += `
       <div class="player-input-row">
         ${dot}
@@ -1262,8 +1274,31 @@ function updatePresetChips() {
   const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
   const usedNames = Array.from(inputs).map(i => i.value.trim().toLowerCase()).filter(Boolean);
   document.querySelectorAll('.preset-chip').forEach(chip => {
-    const isUsed = usedNames.includes(chip.textContent.toLowerCase());
+    const nameEl = chip.querySelector('.chip-name');
+    const isUsed = nameEl && usedNames.includes(nameEl.textContent.trim().toLowerCase());
     chip.classList.toggle('used', isUsed);
+  });
+  const isAsado = document.body.classList.contains('asado');
+  inputs.forEach((inp, i) => {
+    const row = inp.closest('.player-input-row');
+    if (!row) return;
+    const dotEl = row.firstElementChild;
+    const val = inp.value.trim().toLowerCase();
+    const face = PRESET_FACES[val];
+    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
+    let newDot;
+    if (isAsado) return;
+    if (face) {
+      newDot = document.createElement('img');
+      newDot.src = face;
+      newDot.alt = val;
+      newDot.className = 'player-face';
+    } else {
+      newDot = document.createElement('div');
+      newDot.className = 'player-color';
+      newDot.style.background = color;
+    }
+    if (dotEl) row.replaceChild(newDot, dotEl);
   });
 }
 
@@ -1293,10 +1328,14 @@ function validateSetup() {
 
 function startGame() {
   const inputs = document.querySelectorAll('#playerInputs input');
-  state.players = Array.from(inputs).map((inp, i) => ({
-    name: inp.value.trim() || `${t('player_placeholder')} ${i+1}`,
-    color: PLAYER_COLORS[i % PLAYER_COLORS.length]
-  }));
+  state.players = Array.from(inputs).map((inp, i) => {
+    const name = inp.value.trim() || `${t('player_placeholder')} ${i+1}`;
+    return {
+      name: name,
+      color: PLAYER_COLORS[i % PLAYER_COLORS.length],
+      face: PRESET_FACES[name.toLowerCase()] || null
+    };
+  });
   state.rounds = [];
   state.fines = [];
   state.currentRound = 0;
@@ -1397,10 +1436,9 @@ function renderWalkOfShame() {
   }
   container.classList.add('visible');
   const rankEmoji = ['🥇', '🥈', '🥉'];
-  const isAsado = document.body.classList.contains('asado');
   list.innerHTML = shamers.map((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1rem;">${getAsadoEmoji(p.idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
+    const fullPlayer = state.players[p.idx];
+    const dot = getPlayerDot(fullPlayer || p, p.idx);
     return `<div class="shame-row">
       <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
       <div class="shame-name">
@@ -1441,8 +1479,9 @@ function renderGame() {
   const maxT = getMaxTotal();
   const leaderIdx = totals.indexOf(Math.max(...totals));
   const pct = Math.min((maxT / state.maxPoints) * 100, 100);
-  document.getElementById('progressLeader').textContent =
-    maxT > 0 ? `${state.players[leaderIdx].name}: ${totals[leaderIdx]} ${t('game_pts')}` : t('game_no_scores');
+  const leaderPlayer = state.players[leaderIdx];
+  document.getElementById('progressLeader').innerHTML =
+    maxT > 0 ? `${getPlayerDotSm(leaderPlayer, leaderIdx)} ${leaderPlayer.name}: ${totals[leaderIdx]} ${t('game_pts')}` : t('game_no_scores');
   document.getElementById('progressText').textContent = `${maxT} / ${state.maxPoints}`;
   document.getElementById('progressFill').style.width = pct + '%';
 
@@ -1500,12 +1539,10 @@ function renderScoreboard(totals) {
   const sorted = state.players.map((p, i) => ({...p, idx: i, total: totals[i], fines: totalFines[i]}))
     .sort((a, b) => a.total - b.total);
 
-  const isAsado = document.body.classList.contains('asado');
   sorted.forEach(p => {
     const overLimit = p.total >= state.maxPoints;
     const isLowest = p.total === sorted[0].total && state.rounds.length > 0;
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
+    const dot = getPlayerDot(p, p.idx);
     const fineCell = p.fines > 0 ? `<span class="fine-badge">⚠️ +${p.fines}</span>` : '—';
 
     var deltaHtml = '';
@@ -1542,11 +1579,9 @@ function renderRoundInputs() {
   }
   document.getElementById('roundInputCard').style.display = '';
   const container = document.getElementById('roundInputs');
-  const isAsado = document.body.classList.contains('asado');
   let html = '';
   state.players.forEach((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
+    const dot = getPlayerDot(p, i);
     html += `
       <div class="round-input-row">
         <div class="player-label">
@@ -1620,7 +1655,7 @@ function renderRoundHistory() {
 
   const table = document.getElementById('roundHistoryTable');
   let html = `<thead><tr><th>${t('game_round')}</th>`;
-  state.players.forEach(p => { html += `<th>${p.name}</th>`; });
+  state.players.forEach((p, i) => { html += `<th>${getPlayerDotSm(p, i)} ${p.name}</th>`; });
   html += '<th class="no-print"></th></tr></thead><tbody>';
 
   state.rounds.forEach((round, ri) => {
@@ -1660,7 +1695,7 @@ function openEditModal(roundIdx) {
     var fineVal = (state.fines[roundIdx] && state.fines[roundIdx][i]) || 0;
     html += `
       <div class="modal-input-row">
-        <label>${p.name}</label>
+        <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
         <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
@@ -1752,11 +1787,9 @@ function renderResults() {
 
   const container = document.getElementById('finalStandings');
   const medals = ['gold', 'silver', 'bronze'];
-  const isAsado = document.body.classList.contains('asado');
   let html = '';
   standings.forEach((p, i) => {
-    const dot = isAsado ? `<span style="font-size:1.1rem;">${getAsadoEmoji(p.idx)}</span>` :
-      `<div class="player-color" style="background:${p.color}"></div>`;
+    const dot = getPlayerDot(p, p.idx);
     const scoreText = p.fines > 0
       ? `${p.baseTotal} <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span> = ${p.total} ${t('game_pts')}`
       : `${p.total} ${t('game_pts')}`;
@@ -1797,7 +1830,7 @@ function renderResults() {
 function renderResultsHistory() {
   const table = document.getElementById('resultsHistoryTable');
   let html = `<thead><tr><th>${t('game_round')}</th>`;
-  state.players.forEach(p => { html += `<th>${p.name}</th>`; });
+  state.players.forEach((p, i) => { html += `<th>${getPlayerDotSm(p, i)} ${p.name}</th>`; });
   html += '</tr></thead><tbody>';
 
   state.rounds.forEach((round, ri) => {
