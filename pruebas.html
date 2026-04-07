@@ -1220,6 +1220,54 @@ function speakName(name, event) {
   speechSynthesis.speak(utterance);
 }
 
+function playBellSound() {
+  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (soundCtx.state === 'suspended') soundCtx.resume();
+  const now = soundCtx.currentTime;
+  // Bell-like tone: high sine + harmonic
+  [830, 1660].forEach(freq => {
+    const osc = soundCtx.createOscillator();
+    const gain = soundCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(freq === 830 ? 0.35 : 0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+    osc.connect(gain);
+    gain.connect(soundCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.8);
+  });
+}
+
+function speakShame(name, event) {
+  speechSynthesis.cancel();
+  const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  // Build sequence: Shame, [bell], Name, Shame, [bell], Name, Shame, [bell], Name
+  const steps = [];
+  for (let i = 0; i < 3; i++) {
+    steps.push({ type: 'speak', text: 'Shame' });
+    steps.push({ type: 'bell' });
+    steps.push({ type: 'speak', text: name });
+  }
+  let idx = 0;
+  function next() {
+    if (idx >= steps.length) return;
+    const step = steps[idx++];
+    if (step.type === 'bell') {
+      playBellSound();
+      setTimeout(next, 500);
+    } else {
+      const utt = new SpeechSynthesisUtterance(step.text);
+      utt.lang = lang;
+      utt.rate = 0.85;
+      utt.onend = next;
+      utt.onerror = next;
+      speechSynthesis.speak(utt);
+    }
+  }
+  next();
+}
+
 function getPlayerDot(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
@@ -1509,7 +1557,10 @@ function renderWalkOfShame() {
   const rankEmoji = ['🥇', '🥈', '🥉'];
   list.innerHTML = shamers.map((p, i) => {
     const fullPlayer = state.players[p.idx];
-    const dot = getPlayerDot(fullPlayer || p, p.idx);
+    const dot = getPlayerDot(fullPlayer || p, p.idx).replace(
+      /onclick="speakName\(/,
+      'onclick="speakShame('
+    );
     const dotHtml = i === 0
       ? `<span class="shame-face-container">${dot}<img src="assets/Bucket.png" class="bucket-overlay" alt="bucket"></span>`
       : dot;
