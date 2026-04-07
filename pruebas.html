@@ -1220,56 +1220,24 @@ function speakName(name, event) {
   speechSynthesis.speak(utterance);
 }
 
-function playBellSound() {
-  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (soundCtx.state === 'suspended') soundCtx.resume();
-  const now = soundCtx.currentTime;
-  // Cowbell: two quick metallic strikes ("da-kling, da-kling")
-  function cowbellStrike(time) {
-    [587, 845].forEach(freq => {
-      const osc = soundCtx.createOscillator();
-      const gain = soundCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.3, time);
-      gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
-      osc.connect(gain);
-      gain.connect(soundCtx.destination);
-      osc.start(time);
-      osc.stop(time + 0.12);
-    });
-  }
-  cowbellStrike(now);
-  cowbellStrike(now + 0.15);
-}
-
 function speakShame(name, event) {
   speechSynthesis.cancel();
   const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
-  // Build sequence: Shaaame, [bell], Name, Shaaame, [bell], Name, Shaaame, [bell], Name
-  const steps = [];
-  for (let i = 0; i < 3; i++) {
-    steps.push({ type: 'speak', text: 'Shaaame', isShame: true });
-    steps.push({ type: 'bell' });
-    steps.push({ type: 'speak', text: name });
-  }
-  let idx = 0;
-  function next() {
-    if (idx >= steps.length) return;
-    const step = steps[idx++];
-    if (step.type === 'bell') {
-      playBellSound();
-      setTimeout(next, 400);
-    } else {
-      const utt = new SpeechSynthesisUtterance(step.text);
-      utt.lang = step.isShame ? 'en-US' : lang;
-      utt.rate = 0.85;
-      utt.onend = next;
-      utt.onerror = next;
-      speechSynthesis.speak(utt);
-    }
-  }
-  next();
+  // Sequence: Name → shame-bell.mp3 → Name
+  const utt1 = new SpeechSynthesisUtterance(name);
+  utt1.lang = lang;
+  utt1.rate = 0.9;
+  utt1.onend = () => {
+    const audio = new Audio('assets/shame-bell.mp3');
+    audio.onended = () => {
+      const utt2 = new SpeechSynthesisUtterance(name);
+      utt2.lang = lang;
+      utt2.rate = 0.9;
+      speechSynthesis.speak(utt2);
+    };
+    audio.play();
+  };
+  speechSynthesis.speak(utt1);
 }
 
 function getPlayerDot(player, idx) {
@@ -1472,9 +1440,6 @@ function buildRoastMessages(roundScores) {
 }
 
 function setRoundRoastSlide(index) {
-  speechSynthesis.cancel();
-  const btn = document.getElementById('roastSpeakBtn');
-  if (btn) btn.classList.remove('speaking');
   const slides = document.querySelectorAll('.round-roast-slide');
   const dots = document.querySelectorAll('.round-roast-dot');
   slides.forEach((s, i) => s.classList.toggle('active', i === index));
