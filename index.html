@@ -1143,23 +1143,23 @@
   Until a real config is pasted, the app falls back to localStorage-only.
 -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
   import {
     initializeFirestore,
     persistentLocalCache,
     persistentMultipleTabManager,
     collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
     query, where, orderBy, serverTimestamp, Timestamp
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
-  // TODO: replace with your Firebase project's web config.
   const firebaseConfig = {
-    apiKey: "REPLACE_ME",
-    authDomain: "REPLACE_ME.firebaseapp.com",
-    projectId: "REPLACE_ME",
-    storageBucket: "REPLACE_ME.appspot.com",
-    messagingSenderId: "REPLACE_ME",
-    appId: "REPLACE_ME"
+    apiKey: "AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM",
+    authDomain: "lunesdeuno.firebaseapp.com",
+    projectId: "lunesdeuno",
+    storageBucket: "lunesdeuno.firebasestorage.app",
+    messagingSenderId: "694296428363",
+    appId: "1:694296428363:web:fb8cc52a4a5c58e24372ce",
+    measurementId: "G-BL6BEJ39C1"
   };
 
   const isConfigured = firebaseConfig.projectId && firebaseConfig.projectId !== "REPLACE_ME";
@@ -1176,7 +1176,7 @@
           localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
         });
       } catch (e) {
-        const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+        const { getFirestore } = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js");
         db = getFirestore(app);
       }
 
