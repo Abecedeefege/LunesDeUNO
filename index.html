@@ -215,33 +215,6 @@
     }
     .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); }
     .preset-chip.used { opacity: .3; cursor: not-allowed; pointer-events: none; }
-    .preset-chip.attending {
-      border-color: var(--uno-green); background: rgba(0,166,81,.18);
-      box-shadow: 0 0 0 2px rgba(0,166,81,.25);
-    }
-    .preset-chip.host-chip::after {
-      content: '🏠'; position: absolute; top: -6px; right: -6px; font-size: .9rem;
-    }
-    .preset-chip { position: relative; }
-    .roster-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
-    .host-select-row { margin-top: .9rem; display: flex; align-items: center; gap: .5rem; }
-    .host-select-row select { flex: 1; }
-    .guests-section { margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--border); }
-    .guests-section-label {
-      font-size: .75rem; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: .06em;
-    }
-    .btn-add-guest {
-      background: var(--surface-2); color: var(--text-muted);
-      border: 1px dashed var(--border); padding: .4rem .75rem; border-radius: 8px;
-      font-size: .8rem; cursor: pointer; margin-top: .5rem;
-    }
-    .btn-add-guest:hover { color: var(--text); border-color: var(--text-muted); }
-    .guest-remove {
-      background: none; border: none; color: var(--text-muted);
-      cursor: pointer; font-size: 1rem; padding: .2rem .4rem;
-    }
-    .guest-remove:hover { color: var(--danger); }
     .player-face {
       width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover; flex-shrink: 0;
     }
@@ -406,6 +379,32 @@
     }
     .round-roast-dot:hover { background: var(--border); }
     .round-roast-dot.active { background: var(--uno-yellow); transform: scale(1.2); }
+
+    /* ---- Roast Speak Button ---- */
+    .roast-speak-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: var(--text-muted);
+      padding: 0.3rem;
+      transition: color 0.2s, transform 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .roast-speak-btn:hover {
+      color: var(--uno-yellow);
+      transform: scale(1.15);
+    }
+    .roast-speak-btn.speaking {
+      color: var(--uno-yellow);
+      animation: pulse-speak 0.8s ease infinite;
+    }
+    @keyframes pulse-speak {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
 
     .round-history h3 { font-size: 1rem; margin-bottom: .75rem; color: var(--text-muted); }
     .round-history-table {
@@ -666,6 +665,21 @@
       white-space: nowrap;
     }
 
+    /* ---- Bucket Overlay (Walk of Shame) ---- */
+    .shame-face-container {
+      position: relative;
+      display: inline-block;
+    }
+    .shame-face-container .bucket-overlay {
+      position: absolute;
+      top: -60%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2.2rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+
     /* ---- Games List ---- */
     .games-list {
       width: 100%; max-width: 480px; margin-top: 1rem;
@@ -727,6 +741,35 @@
     }
     .corte-badge { color: var(--uno-green); font-size: .75rem; font-weight: 600; }
     .corte-total-badge { background: rgba(0,166,81,.15); color: var(--uno-green); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+
+    /* ---- Setup: attending chip + guests ---- */
+    .preset-chip.attending {
+      border-color: var(--uno-green); background: rgba(0,166,81,.18);
+      box-shadow: 0 0 0 2px rgba(0,166,81,.25);
+    }
+    .preset-chip.host-chip::after {
+      content: '🏠'; position: absolute; top: -6px; right: -6px; font-size: .9rem;
+    }
+    .preset-chip { position: relative; }
+    .roster-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .host-select-row { margin-top: .9rem; display: flex; align-items: center; gap: .5rem; }
+    .host-select-row select { flex: 1; }
+    .guests-section { margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--border); }
+    .guests-section-label {
+      font-size: .75rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .btn-add-guest {
+      background: var(--surface-2); color: var(--text-muted);
+      border: 1px dashed var(--border); padding: .4rem .75rem; border-radius: 8px;
+      font-size: .8rem; cursor: pointer; margin-top: .5rem;
+    }
+    .btn-add-guest:hover { color: var(--text); border-color: var(--text-muted); }
+    .guest-remove {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 1rem; padding: .2rem .4rem;
+    }
+    .guest-remove:hover { color: var(--danger); }
 
     /* ---- Stats screen ---- */
     .stats-tabs {
@@ -1133,7 +1176,6 @@
           localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
         });
       } catch (e) {
-        // Fallback if persistent cache is unsupported (e.g. private tab, multi-tab conflict)
         const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
         db = getFirestore(app);
       }
@@ -1145,7 +1187,6 @@
       window.LDU = {
         db,
         async saveGame(entry) {
-          // entry is the localStorage-shape object; we flatten into a Firestore doc.
           const s = entry.state || {};
           const payload = {
             gameId: entry.id,
@@ -1191,7 +1232,6 @@
           await updateDoc(doc(db, 'games', gameId), { seasonId });
         },
         async seedPresets(presets) {
-          // presets: [{ slug, displayName, face, color }]
           for (const p of presets) {
             await setDoc(doc(db, 'players', p.slug), {
               slug: p.slug,
@@ -1611,17 +1651,45 @@ const PRESET_FACES = {
   'cobra': 'assets/faces/cobra.png'
 };
 
+function speakName(name, event) {
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(name);
+  utterance.lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  utterance.rate = 1.0;
+  speechSynthesis.speak(utterance);
+}
+
+function speakShame(name, event) {
+  speechSynthesis.cancel();
+  const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  // Sequence: Name → shame-bell.mp3 → Name
+  const utt1 = new SpeechSynthesisUtterance(name);
+  utt1.lang = lang;
+  utt1.rate = 0.9;
+  utt1.onend = () => {
+    const audio = new Audio('assets/shame-bell.mp3');
+    audio.onended = () => {
+      const utt2 = new SpeechSynthesisUtterance(name);
+      utt2.lang = lang;
+      utt2.rate = 0.9;
+      speechSynthesis.speak(utt2);
+    };
+    audio.play();
+  };
+  speechSynthesis.speak(utt1);
+}
+
 function getPlayerDot(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
-  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face">`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
   return `<div class="player-color" style="background:${player.color}"></div>`;
 }
 
 function getPlayerDotSm(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1rem;">${getAsadoEmoji(idx)}</span>`;
-  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face-sm">`;
+  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face-sm" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
   return `<div class="player-color" style="background:${player.color}"></div>`;
 }
 
@@ -1840,6 +1908,31 @@ function setRoundRoastSlide(index) {
   dots.forEach((d, i) => d.classList.toggle('active', i === index));
 }
 
+function speakRoastMessage() {
+  const slides = document.querySelectorAll('.round-roast-slide');
+  if (!slides.length) return;
+  speechSynthesis.cancel();
+  const lang = currentLang === 'es' ? 'es-AR' : 'en-US';
+  const phrases = Array.from(slides).map(s => s.textContent.trim()).filter(Boolean);
+  if (!phrases.length) return;
+  const btn = document.getElementById('roastSpeakBtn');
+  if (btn) btn.classList.add('speaking');
+  let idx = 0;
+  function speakNext() {
+    if (idx >= phrases.length) {
+      if (btn) btn.classList.remove('speaking');
+      return;
+    }
+    const utt = new SpeechSynthesisUtterance(phrases[idx++]);
+    utt.lang = lang;
+    utt.rate = 0.95;
+    utt.onend = () => setTimeout(speakNext, 300);
+    utt.onerror = () => { if (btn) btn.classList.remove('speaking'); };
+    speechSynthesis.speak(utt);
+  }
+  speakNext();
+}
+
 function updateRoundRoastCarousel(messages, startAutoAdvance) {
   if (roundRoastInterval) clearInterval(roundRoastInterval);
   roundRoastInterval = null;
@@ -1858,7 +1951,7 @@ function updateRoundRoastCarousel(messages, startAutoAdvance) {
   ).join('');
   dotsEl.innerHTML = messages.map((_, i) =>
     `<button type="button" class="round-roast-dot" aria-label="Slide ${i + 1}" onclick="setRoundRoastSlide(${i})"></button>`
-  ).join('');
+  ).join('') + `<button type="button" id="roastSpeakBtn" class="roast-speak-btn" onclick="speakRoastMessage()" aria-label="Read aloud" title="Read aloud">&#9654;</button>`;
 
   container.classList.add('visible');
   setRoundRoastSlide(0);
@@ -1901,11 +1994,17 @@ function renderWalkOfShame() {
   const rankEmoji = ['🥇', '🥈', '🥉'];
   list.innerHTML = shamers.map((p, i) => {
     const fullPlayer = state.players[p.idx];
-    const dot = getPlayerDot(fullPlayer || p, p.idx);
+    const dot = getPlayerDot(fullPlayer || p, p.idx).replace(
+      /onclick="speakName\(/,
+      'onclick="speakShame('
+    );
+    const dotHtml = i === 0
+      ? `<span class="shame-face-container">${dot}<img src="assets/Bucket.png" class="bucket-overlay" alt="bucket"></span>`
+      : dot;
     return `<div class="shame-row">
       <div class="shame-rank">${rankEmoji[i] || (i+1)}</div>
       <div class="shame-name">
-        ${dot}
+        ${dotHtml}
         ${p.name}
       </div>
       <div class="shame-badge">${p.losses} ${p.losses === 1 ? t('shame_round_lost') : t('shame_rounds_lost')}</div>
@@ -2744,7 +2843,6 @@ function saveCurrentGame() {
   var games = loadGames();
   var existing = games.find(function(g) { return g.id === state.gameId; });
 
-  // Compute winner info when game is over
   var winnerSlot = null;
   var winnerPlayerId = null;
   if (state.gameOver && state.players && state.players.length) {
@@ -2757,7 +2855,6 @@ function saveCurrentGame() {
     winnerPlayerId = winnerParticipant ? winnerParticipant.playerId : null;
   }
 
-  // Preserve first finalization timestamp across saves
   var priorFinishedAt = existing ? existing.finishedAt : null;
   var finishedAt = state.gameOver ? (priorFinishedAt || Date.now()) : null;
 
@@ -2789,10 +2886,8 @@ function saveCurrentGame() {
   if (idx >= 0) { games[idx] = entry; } else { games.push(entry); }
   saveGames(games);
 
-  // Dual-write to Firestore (fire-and-forget)
   if (window.LDU_READY && window.LDU && window.LDU.saveGame) {
     window.LDU.saveGame(entry).then(function() {
-      // If this save just finalized the game, attempt to compute the season
       if (state.gameOver && typeof maybeComputeSeason === 'function') {
         var wasFinalized = priorFinishedAt && existing && existing.finished;
         if (!wasFinalized) maybeComputeSeason();
@@ -2867,7 +2962,9 @@ function resumeGame(gameId) {
   state.gameOver = g.state.gameOver;
   state.gameId = g.state.gameId;
   state.fines = g.state.fines || [];
-  state.cortes = (g.state.cortes && g.state.cortes.length) ? g.state.cortes : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return false; }); });
+  state.cortes = (g.state.cortes && g.state.cortes.length)
+    ? g.state.cortes
+    : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return false; }); });
   state.participants = g.state.participants || [];
   state.absentees = g.state.absentees || [];
   state.hostId = g.state.hostId || null;
@@ -2890,7 +2987,6 @@ function deleteGame(gameId) {
   renderGamesList();
 }
 
-// Merge remote Firestore games into local list (one-way sync into localStorage)
 function syncRemoteGamesToLocal() {
   if (!window.LDU_READY || !window.LDU || !window.LDU.getAllGames) return Promise.resolve();
   return window.LDU.getAllGames().then(function(remoteGames) {
@@ -2932,7 +3028,6 @@ function syncRemoteGamesToLocal() {
 
 // ============ SEASONS & STATS HELPERS ============
 
-// Compute per-slot final score for a remote-shape game doc.
 function computeGameFinalScore(gameDoc, slot) {
   var rounds = gameDoc.rounds || [];
   var fines = gameDoc.fines || [];
@@ -2943,8 +3038,6 @@ function computeGameFinalScore(gameDoc, slot) {
   return base + f + c;
 }
 
-// Runs after a game is finalized. If the finished-games count is a multiple of 4,
-// creates a season doc for the most recent 4 games (idempotent).
 function maybeComputeSeason() {
   if (!window.LDU_READY || !window.LDU || !window.LDU.getAllFinishedGames) return Promise.resolve();
   return window.LDU.getAllFinishedGames().then(function(games) {
@@ -2954,12 +3047,11 @@ function maybeComputeSeason() {
       if (existing) return;
       var fourGames = games.slice(-4);
 
-      // Track which preset playerIds appeared in each of the 4 games.
-      var presence = {}; // slug -> number of games participated in
-      var perPlayerScores = {}; // slug -> total score across participated games
+      var presence = {};
+      var perPlayerScores = {};
       fourGames.forEach(function(g) {
         (g.participants || []).forEach(function(p) {
-          if (!p.playerId) return; // skip guests
+          if (!p.playerId) return;
           presence[p.playerId] = (presence[p.playerId] || 0) + 1;
           perPlayerScores[p.playerId] = (perPlayerScores[p.playerId] || 0) + computeGameFinalScore(g, p.slot);
         });
@@ -2978,14 +3070,11 @@ function maybeComputeSeason() {
       }
       var losers = participantIds.filter(function(id) { return id !== winnerPlayerId; });
 
-      var startedAt = fourGames[0].finishedAt || null;
-      var endedAt = fourGames[3].finishedAt || null;
-
       var seasonDoc = {
         seasonNumber: seasonNumber,
         gameIds: fourGames.map(function(g) { return g.gameId; }),
-        startedAt: startedAt,
-        endedAt: endedAt,
+        startedAt: fourGames[0].finishedAt || null,
+        endedAt: fourGames[3].finishedAt || null,
         participantIds: participantIds,
         perPlayerScores: perPlayerScores,
         winnerPlayerId: winnerPlayerId,
@@ -2993,7 +3082,6 @@ function maybeComputeSeason() {
       };
 
       return window.LDU.writeSeason(seasonDoc).then(function() {
-        // Stamp each game with its seasonId
         var updates = fourGames.map(function(g) { return window.LDU.updateGameSeason(g.gameId, seasonNumber); });
         return Promise.all(updates);
       });
@@ -3011,7 +3099,6 @@ function initStats() {
     _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
     populatePlayerDropdown();
     populateLeaderboardSort();
-    // Default tab
     switchStatsTab('player');
     var presetSlugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
     var defaultSlug = presetSlugs.find(function(s) { return _statsData.computed.byPlayer[s] && _statsData.computed.byPlayer[s].gamesPlayed > 0; }) || presetSlugs[0];
@@ -3033,7 +3120,6 @@ function renderStatsLoadingState() {
 }
 
 function loadStatsData() {
-  // Prefer Firestore. Fall back to whatever is in localStorage.
   var gamesPromise;
   if (window.LDU_READY && window.LDU && window.LDU.getAllFinishedGames) {
     gamesPromise = window.LDU.getAllFinishedGames().then(function(remoteGames) {
@@ -3057,7 +3143,6 @@ function loadStatsData() {
       });
     });
   } else {
-    // Fallback: localStorage finished games
     var local = loadGames().filter(function(g) { return g.finished; });
     local.sort(function(a, b) { return (a.finishedAt || a.timestamp) - (b.finishedAt || b.timestamp); });
     var mapped = local.map(function(g) {
@@ -3131,41 +3216,22 @@ function populateLeaderboardSort() {
   sel.innerHTML = opts.map(function(o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
 }
 
-// ---------- computeAllStats ----------
 function _emptyPlayerStats(slug) {
   return {
     slug: slug,
-    gamesPlayed: 0,
-    gamesWon: 0,
-    gamesLost: 0,
-    roundsPlayed: 0,
-    roundsWon: 0,
-    roundsLost: 0,
-    totalScore: 0,
-    scoreSumRound: 0,
-    highestRoundScore: 0,
-    lowestGameScore: null,
-    worstGameScore: 0,
-    absences: 0,
-    timesHosted: 0,
-    wonWhileHosting: 0,
-    perfectRounds: 0,
-    totalMultas: 0,
-    totalCortes: 0,
-    seasonsWon: 0,
-    seasonsLost: 0,
-    positionDist: {},
-    sumPosition: 0,
-    fastestWin: null,
-    longestGame: 0,
-    biggestComeback: 0,
-    closestLoss: null,
-    unfinished: 0,
-    netVsAvg: 0,
-    venueStats: {},
-    dayStats: {},
-    gameResults: [],      // chronological [{won, finishedAt, gameId}]
-    h2h: {}               // otherSlug -> {wins, losses, together}
+    gamesPlayed: 0, gamesWon: 0, gamesLost: 0,
+    roundsPlayed: 0, roundsWon: 0, roundsLost: 0,
+    totalScore: 0, scoreSumRound: 0,
+    highestRoundScore: 0, lowestGameScore: null, worstGameScore: 0,
+    absences: 0, timesHosted: 0, wonWhileHosting: 0,
+    perfectRounds: 0, totalMultas: 0, totalCortes: 0,
+    seasonsWon: 0, seasonsLost: 0,
+    positionDist: {}, sumPosition: 0,
+    fastestWin: null, longestGame: 0,
+    biggestComeback: 0, closestLoss: null,
+    unfinished: 0, netVsAvg: 0,
+    venueStats: {}, dayStats: {},
+    gameResults: [], h2h: {}
   };
 }
 
@@ -3174,7 +3240,6 @@ function computeAllStats(games, seasons) {
   var byPlayer = {};
   presetSlugs.forEach(function(s) { byPlayer[s] = _emptyPlayerStats(s); });
 
-  // Chronological order
   var sorted = games.slice().sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
 
   sorted.forEach(function(g) {
@@ -3182,14 +3247,11 @@ function computeAllStats(games, seasons) {
     var numPlayers = participants.length;
     if (!numPlayers) return;
 
-    // Final score per slot
     var finalScores = participants.map(function(_, slot) { return computeGameFinalScore(g, slot); });
-    // Positions: 1 = lowest final score
     var ordered = finalScores.map(function(v, i) { return { slot: i, score: v }; }).sort(function(a, b) { return a.score - b.score; });
     var positionBySlot = {};
     ordered.forEach(function(o, i) { positionBySlot[o.slot] = i + 1; });
 
-    // Round-level wins/losses per slot
     var numRounds = (g.rounds || []).length;
     var roundWinsBySlot = {};
     var roundLossesBySlot = {};
@@ -3203,18 +3265,11 @@ function computeAllStats(games, seasons) {
       });
     });
 
-    // Running totals for comeback calc
     var runningTotals = participants.map(function() { return 0; });
     var comebackBestBySlot = participants.map(function() { return 0; });
-    (g.rounds || []).forEach(function(round, ri) {
+    (g.rounds || []).forEach(function(round) {
       round.forEach(function(s, slot) { runningTotals[slot] += (s || 0); });
-      // After this round, for each slot, compute deficit vs leader
       participants.forEach(function(_, slot) {
-        var bestOpp = -Infinity;
-        participants.forEach(function(_, other) {
-          if (other !== slot && -runningTotals[other] > bestOpp) bestOpp = -runningTotals[other];
-        });
-        // Deficit = opponent_min_total - this_total? UNO: low = good. Deficit = this_total - opponent_best (lowest). If positive, we're behind.
         var oppMin = Infinity;
         participants.forEach(function(_, other) {
           if (other !== slot && runningTotals[other] < oppMin) oppMin = runningTotals[other];
@@ -3228,9 +3283,8 @@ function computeAllStats(games, seasons) {
     var finishedAt = g.finishedAt || 0;
     var dayOfWeek = finishedAt ? new Date(finishedAt).getDay() : -1;
 
-    // Per-participant updates
     participants.forEach(function(p, slot) {
-      if (!p.playerId || !byPlayer[p.playerId]) return; // skip guests
+      if (!p.playerId || !byPlayer[p.playerId]) return;
       var ps = byPlayer[p.playerId];
       ps.gamesPlayed++;
       ps.roundsPlayed += numRounds;
@@ -3238,7 +3292,6 @@ function computeAllStats(games, seasons) {
       ps.roundsWon += roundWinsBySlot[slot] || 0;
       ps.roundsLost += roundLossesBySlot[slot] || 0;
 
-      // Round-level aggregates
       (g.rounds || []).forEach(function(round) {
         var s = (round && round[slot]) || 0;
         ps.scoreSumRound += s;
@@ -3248,7 +3301,6 @@ function computeAllStats(games, seasons) {
       (g.fines || []).forEach(function(round) { ps.totalMultas += (round && round[slot]) || 0; });
       (g.cortes || []).forEach(function(round) { if (round && round[slot]) ps.totalCortes++; });
 
-      // Game-level aggregates
       if (ps.lowestGameScore === null || finalScores[slot] < ps.lowestGameScore) ps.lowestGameScore = finalScores[slot];
       if (finalScores[slot] > ps.worstGameScore) ps.worstGameScore = finalScores[slot];
       if (numRounds > ps.longestGame) ps.longestGame = numRounds;
@@ -3259,7 +3311,6 @@ function computeAllStats(games, seasons) {
       ps.positionDist[posKey] = (ps.positionDist[posKey] || 0) + 1;
 
       var isWin = (g.winnerPlayerId === p.playerId);
-      var isLoss = !isWin;
       if (isWin) {
         ps.gamesWon++;
         if (ps.fastestWin === null || numRounds < ps.fastestWin) ps.fastestWin = numRounds;
@@ -3274,13 +3325,11 @@ function computeAllStats(games, seasons) {
       }
       ps.gameResults.push({ won: isWin, finishedAt: finishedAt, gameId: g.gameId });
 
-      // Net vs group average (this player - avg of others)
       var othersTotal = 0, othersCount = 0;
       finalScores.forEach(function(fs, i) { if (i !== slot) { othersTotal += fs; othersCount++; } });
       var othersAvg = othersCount ? (othersTotal / othersCount) : 0;
       ps.netVsAvg += (finalScores[slot] - othersAvg);
 
-      // Per-venue
       if (g.venue) {
         var v = g.venue;
         if (!ps.venueStats[v]) ps.venueStats[v] = { games: 0, wins: 0 };
@@ -3288,20 +3337,17 @@ function computeAllStats(games, seasons) {
         if (isWin) ps.venueStats[v].wins++;
       }
 
-      // Day-of-week
       if (dayOfWeek >= 0) {
         if (!ps.dayStats[dayOfWeek]) ps.dayStats[dayOfWeek] = { games: 0, wins: 0 };
         ps.dayStats[dayOfWeek].games++;
         if (isWin) ps.dayStats[dayOfWeek].wins++;
       }
 
-      // Hosting
       if (g.hostId === p.playerId) {
         ps.timesHosted++;
         if (isWin) ps.wonWhileHosting++;
       }
 
-      // H2H vs other presets in same game
       participants.forEach(function(other, otherSlot) {
         if (otherSlot === slot) return;
         if (!other.playerId) return;
@@ -3312,13 +3358,11 @@ function computeAllStats(games, seasons) {
       });
     });
 
-    // Absences
     (g.absentees || []).forEach(function(absSlug) {
       if (byPlayer[absSlug]) byPlayer[absSlug].absences++;
     });
   });
 
-  // Seasons roll-up
   (seasons || []).forEach(function(s) {
     if (s.winnerPlayerId && byPlayer[s.winnerPlayerId]) byPlayer[s.winnerPlayerId].seasonsWon++;
     (s.losers || []).forEach(function(loserSlug) {
@@ -3326,7 +3370,6 @@ function computeAllStats(games, seasons) {
     });
   });
 
-  // Derived / streaks
   presetSlugs.forEach(function(slug) {
     var ps = byPlayer[slug];
     ps.avgScorePerGame = ps.gamesPlayed ? ps.totalScore / ps.gamesPlayed : 0;
@@ -3335,7 +3378,6 @@ function computeAllStats(games, seasons) {
     ps.winRate = ps.gamesPlayed ? ps.gamesWon / ps.gamesPlayed : 0;
     ps.homeWinRate = ps.timesHosted ? ps.wonWhileHosting / ps.timesHosted : 0;
 
-    // Streaks from gameResults (chronological)
     var gr = ps.gameResults;
     ps.longestWinStreak = 0; ps.longestLossStreak = 0;
     var cw = 0, cl = 0;
@@ -3343,21 +3385,17 @@ function computeAllStats(games, seasons) {
       if (r.won) { cw++; cl = 0; if (cw > ps.longestWinStreak) ps.longestWinStreak = cw; }
       else       { cl++; cw = 0; if (cl > ps.longestLossStreak) ps.longestLossStreak = cl; }
     });
-    // Current streaks (tail)
     ps.currentWinStreak = 0; ps.currentLossStreak = 0;
     for (var i = gr.length - 1; i >= 0; i--) {
       if (gr[i].won) { if (ps.currentLossStreak > 0) break; ps.currentWinStreak++; }
       else           { if (ps.currentWinStreak > 0) break; ps.currentLossStreak++; }
     }
-    // Games since last win
     ps.gamesSinceLastWin = null;
     for (var j = gr.length - 1, since = 0; j >= 0; j--) {
       if (gr[j].won) { ps.gamesSinceLastWin = since; break; }
       since++;
     }
-    if (ps.gamesSinceLastWin === null && gr.length === 0) ps.gamesSinceLastWin = null;
 
-    // Nemesis / victim
     ps.nemesis = null; ps.victim = null;
     var maxLosses = 0, maxWins = 0;
     Object.keys(ps.h2h).forEach(function(other) {
@@ -3366,7 +3404,6 @@ function computeAllStats(games, seasons) {
       if (rec.wins > maxWins) { maxWins = rec.wins; ps.victim = other; }
     });
 
-    // Best day of week
     ps.bestDay = null;
     var bestRate = -1;
     Object.keys(ps.dayStats).forEach(function(d) {
@@ -3378,7 +3415,6 @@ function computeAllStats(games, seasons) {
     });
   });
 
-  // Season streaks
   var seasonsChrono = (seasons || []).slice().sort(function(a, b) { return (a.seasonNumber || 0) - (b.seasonNumber || 0); });
   presetSlugs.forEach(function(slug) {
     var ps = byPlayer[slug];
@@ -3397,7 +3433,6 @@ function computeAllStats(games, seasons) {
   return { byPlayer: byPlayer, seasons: seasonsChrono };
 }
 
-// ---------- rendering ----------
 function _dayLabel(d) {
   if (d === null || typeof d !== 'number' || d < 0) return t('stat_never');
   var days = currentLang === 'es'
@@ -3506,7 +3541,7 @@ function renderLeaderboard(sortKey) {
     .filter(function(p) { return p.gamesPlayed > 0; })
     .sort(function(a, b) {
       if (sortKey === 'avgPosition' || sortKey === 'totalScore') {
-        return (a[sortKey] || 0) - (b[sortKey] || 0); // lower is better
+        return (a[sortKey] || 0) - (b[sortKey] || 0);
       }
       return (b[sortKey] || 0) - (a[sortKey] || 0);
     });
@@ -3607,7 +3642,6 @@ setLang(currentLang);
 initSetup();
 renderGamesList();
 
-// Firestore bootstrap: seed presets, pull remote games, then re-render home list.
 function lduBootstrap() {
   if (!window.LDU_READY || !window.LDU) return;
   var presets = PRESET_NAMES.map(function(name, i) {
