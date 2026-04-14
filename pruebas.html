@@ -730,6 +730,17 @@
     .fine-input-row input { width: 70px; text-align: center; font-size: .9rem; font-weight: 600; padding: .4rem .3rem; }
     .fine-badge { color: var(--uno-yellow); font-size: .75rem; font-weight: 600; }
     .fine-total-badge { background: rgba(255,180,0,.12); color: var(--uno-yellow); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+    .btn-corte {
+      background: var(--surface-2); color: var(--uno-green);
+      border: 1px solid var(--border);
+    }
+    .btn-corte:hover { background: rgba(0,166,81,.18); }
+    .btn-corte.active {
+      background: var(--uno-green); color: #0f0f1a; border-color: var(--uno-green);
+      box-shadow: 0 0 0 2px rgba(0,166,81,.25);
+    }
+    .corte-badge { color: var(--uno-green); font-size: .75rem; font-weight: 600; }
+    .corte-total-badge { background: rgba(0,166,81,.15); color: var(--uno-green); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
 
     /* ---- Edit limit inline ---- */
     .edit-limit-btn {
@@ -1032,6 +1043,9 @@ const STRINGS = {
     game_fine: 'Multa',
     game_fines: 'Multas',
     game_fines_label: 'multas',
+    game_corte: 'Corte',
+    game_cortes: 'Cortes',
+    game_cortes_label: 'cortes',
     setup_venue_label: 'Sede (opcional)',
     setup_venue_placeholder: 'Casa de PT, Bar El Tano...',
     results_edit_limit: '🎯 Cambiar límite',
@@ -1092,6 +1106,9 @@ const STRINGS = {
     game_fine: 'Fine',
     game_fines: 'Fines',
     game_fines_label: 'fines',
+    game_corte: 'Cut',
+    game_cortes: 'Cuts',
+    game_cortes_label: 'cuts',
     setup_venue_label: 'Venue (optional)',
     setup_venue_placeholder: 'PT\'s place, El Tano Bar...',
     results_edit_limit: '🎯 Change limit',
@@ -1190,6 +1207,7 @@ let state = {
   players: [],
   rounds: [],
   fines: [],
+  cortes: [],
   currentRound: 0,
   gameOver: false,
   gameId: null,
@@ -1407,6 +1425,7 @@ function startGame() {
   });
   state.rounds = [];
   state.fines = [];
+  state.cortes = [];
   state.currentRound = 0;
   state.gameOver = false;
   state.gameId = 'game_' + Date.now();
@@ -1689,6 +1708,7 @@ function renderRoundInputs() {
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0">
+        <button class="btn btn-small btn-corte${(state._pendingCortes && state._pendingCortes[i]) ? ' active' : ''}" data-idx="${i}" onclick="togglePendingCorte(${i})">✂️ ${t('game_corte')}</button>
         <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
       </div>
       <div class="fine-input-row" id="fineRow_${i}">
@@ -1704,16 +1724,32 @@ function toggleFineInput(idx) {
   if (row) row.classList.toggle('visible');
 }
 
+function togglePendingCorte(idx) {
+  if (!state._pendingCortes) state._pendingCortes = state.players.map(function() { return false; });
+  state._pendingCortes[idx] = !state._pendingCortes[idx];
+  var btn = document.querySelector('#roundInputs .btn-corte[data-idx="' + idx + '"]');
+  if (btn) btn.classList.toggle('active', state._pendingCortes[idx]);
+}
+
 function getTotalFines() {
   return state.players.map(function(_, pi) {
     return (state.fines || []).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
   });
 }
 
+function getTotalCortes() {
+  return state.players.map(function(_, pi) {
+    return (state.cortes || []).reduce(function(sum, roundCortes) {
+      return sum + ((roundCortes && roundCortes[pi]) ? -50 : 0);
+    }, 0);
+  });
+}
+
 function getFinalTotals() {
   var totals = getTotals();
   var totalFines = getTotalFines();
-  return totals.map(function(t, i) { return t + totalFines[i]; });
+  var totalCortes = getTotalCortes();
+  return totals.map(function(t, i) { return t + totalFines[i] + totalCortes[i]; });
 }
 
 function submitRound() {
@@ -1727,8 +1763,13 @@ function submitRound() {
   }
 
   var fines = state.players.map(function(_, i) { return Math.max(0, parseInt(document.getElementById('roundFine_'+i)?.value) || 0); });
+  var cortesThisRound = state.players.map(function(_, i) {
+    return !!(state._pendingCortes && state._pendingCortes[i]);
+  });
   state.rounds.push(scores);
   state.fines.push(fines);
+  state.cortes.push(cortesThisRound);
+  state._pendingCortes = null;
   state.currentRound = state.rounds.length;
   state.lastRoundRoastMessages = buildRoastMessages(scores);
   state.justSubmittedRound = true;
@@ -1762,7 +1803,11 @@ function renderRoundHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
@@ -1776,6 +1821,13 @@ function renderRoundHistory() {
   if (totalFinesH.some(function(f) { return f > 0; })) {
     html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
     totalFinesH.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td class="no-print"></td></tr>';
+  }
+
+  var totalCortesH = getTotalCortes();
+  if (totalCortesH.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesH.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
     html += '<td class="no-print"></td></tr>';
   }
 
@@ -1793,10 +1845,17 @@ function openEditModal(roundIdx) {
   let html = '';
   state.players.forEach((p, i) => {
     var fineVal = (state.fines[roundIdx] && state.fines[roundIdx][i]) || 0;
+    var corteVal = !!(state.cortes[roundIdx] && state.cortes[roundIdx][i]);
     html += `
       <div class="modal-input-row">
         <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
         <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+      </div>
+      <div class="modal-input-row" style="padding-left:1rem;">
+        <label style="color:var(--uno-green);font-size:.8rem;display:flex;align-items:center;gap:.4rem;cursor:pointer;">
+          <input type="checkbox" id="editCorte_${i}" ${corteVal ? 'checked' : ''} style="width:auto;margin:0;">
+          ✂️ ${t('game_corte')} (−50)
+        </label>
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
         <label style="color:var(--uno-yellow);font-size:.8rem;">⚠️ ${t('game_fine')}</label>
@@ -1848,9 +1907,11 @@ function saveEditMaxPoints() {
 function saveEditRound() {
   if (editingRound < 0) return;
   if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
+  if (!state.cortes[editingRound]) state.cortes[editingRound] = state.players.map(function() { return false; });
   state.players.forEach((_, i) => {
     state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
     state.fines[editingRound][i] = Math.max(0, parseInt(document.getElementById('editFine_'+i)?.value) || 0);
+    state.cortes[editingRound][i] = !!document.getElementById('editCorte_'+i)?.checked;
   });
   closeEditModal();
   saveCurrentGame();
@@ -1876,7 +1937,8 @@ function renderResults() {
   const finalTotals = getFinalTotals();
   const baseTotals = getTotals();
   const totalFines = getTotalFines();
-  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i]}))
+  const totalCortes = getTotalCortes();
+  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i], cortes: totalCortes[i]}))
     .sort((a, b) => a.total - b.total);
 
   document.getElementById('winnerName').textContent = standings[0].name;
@@ -1890,9 +1952,17 @@ function renderResults() {
   let html = '';
   standings.forEach((p, i) => {
     const dot = getPlayerDot(p, p.idx);
-    const scoreText = p.fines > 0
-      ? `${p.baseTotal} <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span> = ${p.total} ${t('game_pts')}`
-      : `${p.total} ${t('game_pts')}`;
+    const hasFines = p.fines > 0;
+    const hasCortes = p.cortes < 0;
+    let scoreText;
+    if (hasFines || hasCortes) {
+      let adjustments = '';
+      if (hasFines) adjustments += ` <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span>`;
+      if (hasCortes) adjustments += ` <span class="corte-badge">(${p.cortes} ${t('game_cortes_label')})</span>`;
+      scoreText = `${p.baseTotal}${adjustments} = ${p.total} ${t('game_pts')}`;
+    } else {
+      scoreText = `${p.total} ${t('game_pts')}`;
+    }
     html += `
       <div class="standing-row">
         <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
@@ -1937,7 +2007,11 @@ function renderResultsHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += '</tr>';
   });
@@ -1951,6 +2025,13 @@ function renderResultsHistory() {
   if (totalFinesR.some(function(f) { return f > 0; })) {
     html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
     totalFinesR.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '</tr>';
+  }
+
+  var totalCortesR = getTotalCortes();
+  if (totalCortesR.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesR.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
     html += '</tr>';
   }
 
@@ -1968,7 +2049,11 @@ function showEditableHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += `<td class="edit-cell" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
@@ -1985,6 +2070,13 @@ function showEditableHistory() {
     html += '<td></td></tr>';
   }
 
+  var totalCortesE = getTotalCortes();
+  if (totalCortesE.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesE.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
+    html += '<td></td></tr>';
+  }
+
   html += '</tbody>';
   table.innerHTML = html;
 }
@@ -1996,7 +2088,7 @@ function printResults() {
 function newGame() {
   state = {
     playerCount: 2, maxPoints: 500,
-    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+    players: [], rounds: [], fines: [], cortes: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
   };
   document.getElementById('playerCountDisplay').textContent = '2';
   showScreen('home');
@@ -2012,7 +2104,7 @@ function confirmQuit() {
     saveCurrentGame();
     state = {
       playerCount: 2, maxPoints: 500,
-      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+      players: [], rounds: [], fines: [], cortes: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
     };
     document.getElementById('playerCountDisplay').textContent = '2';
     showScreen('home');
@@ -2320,6 +2412,7 @@ function saveCurrentGame() {
       gameOver: state.gameOver,
       gameId: state.gameId,
       fines: state.fines || [],
+      cortes: state.cortes || [],
       venue: state.venue || ''
     },
     finished: !!state.gameOver
@@ -2395,6 +2488,9 @@ function resumeGame(gameId) {
   state.gameOver = g.state.gameOver;
   state.gameId = g.state.gameId;
   state.fines = g.state.fines || [];
+  state.cortes = (g.state.cortes && g.state.cortes.length)
+    ? g.state.cortes
+    : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return false; }); });
   state.venue = g.state.venue || '';
   if (g.finished) {
     showScreen('results');
