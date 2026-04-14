@@ -215,6 +215,33 @@
     }
     .preset-chip:hover { border-color: var(--uno-yellow); background: rgba(255,222,0,.12); }
     .preset-chip.used { opacity: .3; cursor: not-allowed; pointer-events: none; }
+    .preset-chip.attending {
+      border-color: var(--uno-green); background: rgba(0,166,81,.18);
+      box-shadow: 0 0 0 2px rgba(0,166,81,.25);
+    }
+    .preset-chip.host-chip::after {
+      content: '🏠'; position: absolute; top: -6px; right: -6px; font-size: .9rem;
+    }
+    .preset-chip { position: relative; }
+    .roster-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+    .host-select-row { margin-top: .9rem; display: flex; align-items: center; gap: .5rem; }
+    .host-select-row select { flex: 1; }
+    .guests-section { margin-top: 1rem; padding-top: .8rem; border-top: 1px dashed var(--border); }
+    .guests-section-label {
+      font-size: .75rem; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .btn-add-guest {
+      background: var(--surface-2); color: var(--text-muted);
+      border: 1px dashed var(--border); padding: .4rem .75rem; border-radius: 8px;
+      font-size: .8rem; cursor: pointer; margin-top: .5rem;
+    }
+    .btn-add-guest:hover { color: var(--text); border-color: var(--text-muted); }
+    .guest-remove {
+      background: none; border: none; color: var(--text-muted);
+      cursor: pointer; font-size: 1rem; padding: .2rem .4rem;
+    }
+    .guest-remove:hover { color: var(--danger); }
     .player-face {
       width: 1.5rem; height: 1.5rem; border-radius: 4px; object-fit: cover; flex-shrink: 0;
     }
@@ -689,6 +716,79 @@
     .fine-input-row input { width: 70px; text-align: center; font-size: .9rem; font-weight: 600; padding: .4rem .3rem; }
     .fine-badge { color: var(--uno-yellow); font-size: .75rem; font-weight: 600; }
     .fine-total-badge { background: rgba(255,180,0,.12); color: var(--uno-yellow); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+    .btn-corte {
+      background: var(--surface-2); color: var(--uno-green);
+      border: 1px solid var(--border);
+    }
+    .btn-corte:hover { background: rgba(0,166,81,.18); }
+    .btn-corte.active {
+      background: var(--uno-green); color: #0f0f1a; border-color: var(--uno-green);
+      box-shadow: 0 0 0 2px rgba(0,166,81,.25);
+    }
+    .corte-badge { color: var(--uno-green); font-size: .75rem; font-weight: 600; }
+    .corte-total-badge { background: rgba(0,166,81,.15); color: var(--uno-green); padding: .15rem .5rem; border-radius: 6px; font-size: .75rem; font-weight: 700; }
+
+    /* ---- Stats screen ---- */
+    .stats-tabs {
+      display: flex; gap: .35rem; margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border); padding-bottom: .25rem; flex-wrap: wrap;
+    }
+    .stats-tab-btn {
+      background: transparent; color: var(--text-muted); border: 1px solid transparent;
+      padding: .45rem .8rem; border-radius: 8px 8px 0 0; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600;
+      transition: all .2s;
+    }
+    .stats-tab-btn:hover { color: var(--text); background: var(--surface-2); }
+    .stats-tab-btn.active {
+      color: var(--uno-yellow); background: var(--surface-2);
+      border-color: var(--border); border-bottom-color: var(--surface-2);
+    }
+    .stats-tab-panel { display: none; }
+    .stats-tab-panel.active { display: block; }
+    .stats-hero {
+      display: flex; align-items: center; gap: .8rem;
+      padding: 1rem; background: var(--surface-2); border-radius: 12px;
+      margin-bottom: .8rem;
+    }
+    .stats-hero img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; }
+    .stats-hero-name { font-family: 'Fredoka One', cursive; font-size: 1.4rem; }
+    .stats-hero-meta { color: var(--text-muted); font-size: .85rem; }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: .5rem;
+    }
+    .stat-tile {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: .6rem .7rem; display: flex; flex-direction: column; gap: .2rem;
+    }
+    .stat-tile .stat-label {
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+      color: var(--text-muted); font-weight: 600;
+    }
+    .stat-tile .stat-value {
+      font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--text);
+    }
+    .stat-tile .stat-sub { font-size: .7rem; color: var(--text-muted); }
+    .stat-section-label {
+      font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--text-muted); font-weight: 700; margin: 1rem 0 .4rem;
+    }
+    .stats-table {
+      width: 100%; border-collapse: collapse; font-size: .85rem; background: var(--surface);
+    }
+    .stats-table th, .stats-table td {
+      padding: .5rem .6rem; text-align: left; border-bottom: 1px solid var(--border);
+    }
+    .stats-table th { background: var(--surface-2); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: .7rem; letter-spacing: .05em; }
+    .stats-table tr:hover td { background: var(--surface-2); }
+    .h2h-matrix { font-size: .75rem; }
+    .h2h-matrix td, .h2h-matrix th {
+      text-align: center; padding: .3rem .35rem; min-width: 44px;
+    }
+    .h2h-good { background: rgba(0,166,81,.2); }
+    .h2h-bad { background: rgba(237,28,36,.18); }
+    .h2h-diag { background: var(--surface-2); color: var(--text-muted); }
 
     /* ---- Edit limit inline ---- */
     .edit-limit-btn {
@@ -744,6 +844,7 @@
       <p class="logo-sub" data-i18n="home_sub"></p>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
+    <button class="btn btn-secondary" style="margin-top:.5rem;" onclick="showScreen('stats')" data-i18n="home_stats"></button>
     <div class="asado-toggle-row">
       <label class="asado-switch">
         <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
@@ -760,14 +861,20 @@
 
     <div class="card">
       <div class="input-group">
-        <label data-i18n="setup_players_label"></label>
-        <div class="number-selector">
-          <button class="btn btn-icon" onclick="changePlayerCount(-1)">-</button>
-          <div class="number-display" id="playerCountDisplay">2</div>
-          <button class="btn btn-icon" onclick="changePlayerCount(1)">+</button>
-        </div>
+        <label data-i18n="setup_roster_label"></label>
+        <div class="roster-grid" id="rosterGrid"></div>
       </div>
-      <div class="player-inputs" id="playerInputs"></div>
+
+      <div class="host-select-row">
+        <label for="hostSelect" style="font-size:.85rem;color:var(--text-muted);" data-i18n="setup_host_label"></label>
+        <select id="hostSelect" onchange="onHostChange()"></select>
+      </div>
+
+      <div class="guests-section">
+        <div class="guests-section-label" data-i18n="setup_guests_label"></div>
+        <div class="player-inputs" id="guestInputs"></div>
+        <button type="button" class="btn-add-guest" onclick="addGuestRow()" data-i18n="setup_add_guest"></button>
+      </div>
     </div>
 
     <div class="card">
@@ -902,6 +1009,50 @@
     </div>
   </div>
 
+  <!-- ============ STATS ============ -->
+  <div id="stats" class="screen">
+    <h2 style="font-size:1.6rem; margin-bottom:.25rem;" data-i18n="stats_title"></h2>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.6rem;" id="statsMeta"></p>
+
+    <div class="stats-tabs">
+      <button class="stats-tab-btn active" data-tab="player" onclick="switchStatsTab('player')" data-i18n="stats_tab_player"></button>
+      <button class="stats-tab-btn" data-tab="leaderboard" onclick="switchStatsTab('leaderboard')" data-i18n="stats_tab_leaderboard"></button>
+      <button class="stats-tab-btn" data-tab="seasons" onclick="switchStatsTab('seasons')" data-i18n="stats_tab_seasons"></button>
+      <button class="stats-tab-btn" data-tab="h2h" onclick="switchStatsTab('h2h')" data-i18n="stats_tab_h2h"></button>
+    </div>
+
+    <div id="statsTab_player" class="stats-tab-panel active">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_player_label"></label>
+        <select id="statsPlayerSelect" onchange="renderPlayerStats(this.value)"></select>
+      </div>
+      <div id="statsPlayerCard"></div>
+    </div>
+
+    <div id="statsTab_leaderboard" class="stats-tab-panel">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
+        <select id="leaderboardSort" onchange="renderLeaderboard(this.value)"></select>
+      </div>
+      <table class="stats-table" id="leaderboardTable"></table>
+    </div>
+
+    <div id="statsTab_seasons" class="stats-tab-panel">
+      <table class="stats-table" id="seasonsTable"></table>
+    </div>
+
+    <div id="statsTab_h2h" class="stats-tab-panel">
+      <div style="overflow-x:auto;">
+        <table class="stats-table h2h-matrix" id="h2hMatrix"></table>
+      </div>
+      <p style="color:var(--text-muted);font-size:.75rem;margin-top:.5rem;" data-i18n="stats_h2h_help"></p>
+    </div>
+
+    <div style="margin-top:1rem; text-align:center;">
+      <button class="btn btn-secondary" onclick="showScreen('home')" data-i18n="back_btn"></button>
+    </div>
+  </div>
+
   <!-- Copy toast -->
   <div class="copy-toast" id="copyToast"></div>
 
@@ -934,6 +1085,139 @@
     </div>
   </div>
 
+<!-- ============ FIREBASE FIRESTORE (module) ============ -->
+<!--
+  To enable cloud sync + stats, create a Firebase project (free tier)
+  and paste your web app config into firebaseConfig below.
+  Docs: https://firebase.google.com/docs/web/setup
+  Recommended Firestore rules (open, small friend group):
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /{document=**} { allow read, write: if true; }
+      }
+    }
+  Until a real config is pasted, the app falls back to localStorage-only.
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    initializeFirestore,
+    persistentLocalCache,
+    persistentMultipleTabManager,
+    collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
+    query, where, orderBy, serverTimestamp, Timestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // TODO: replace with your Firebase project's web config.
+  const firebaseConfig = {
+    apiKey: "REPLACE_ME",
+    authDomain: "REPLACE_ME.firebaseapp.com",
+    projectId: "REPLACE_ME",
+    storageBucket: "REPLACE_ME.appspot.com",
+    messagingSenderId: "REPLACE_ME",
+    appId: "REPLACE_ME"
+  };
+
+  const isConfigured = firebaseConfig.projectId && firebaseConfig.projectId !== "REPLACE_ME";
+  window.LDU_READY = false;
+
+  if (!isConfigured) {
+    console.info("[LDU] Firebase config not set — running in localStorage-only mode.");
+  } else {
+    try {
+      const app = initializeApp(firebaseConfig);
+      let db;
+      try {
+        db = initializeFirestore(app, {
+          localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+        });
+      } catch (e) {
+        // Fallback if persistent cache is unsupported (e.g. private tab, multi-tab conflict)
+        const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+        db = getFirestore(app);
+      }
+
+      const gamesCol = () => collection(db, 'games');
+      const seasonsCol = () => collection(db, 'seasons');
+      const playersCol = () => collection(db, 'players');
+
+      window.LDU = {
+        db,
+        async saveGame(entry) {
+          // entry is the localStorage-shape object; we flatten into a Firestore doc.
+          const s = entry.state || {};
+          const payload = {
+            gameId: entry.id,
+            createdAt: entry.timestamp ? Timestamp.fromMillis(entry.timestamp) : Timestamp.now(),
+            updatedAt: serverTimestamp(),
+            finishedAt: entry.finishedAt ? Timestamp.fromMillis(entry.finishedAt) : null,
+            finished: !!entry.finished,
+            maxPoints: s.maxPoints || 0,
+            venue: s.venue || '',
+            hostId: s.hostId || null,
+            participants: s.participants || [],
+            absentees: s.absentees || [],
+            rounds: s.rounds || [],
+            fines: s.fines || [],
+            cortes: s.cortes || [],
+            winnerSlot: (typeof entry.winnerSlot === 'number') ? entry.winnerSlot : null,
+            winnerPlayerId: entry.winnerPlayerId || null,
+            seasonId: entry.seasonId || null
+          };
+          await setDoc(doc(db, 'games', entry.id), payload, { merge: true });
+        },
+        async deleteGame(id) { await deleteDoc(doc(db, 'games', id)); },
+        async getAllGames() {
+          const snap = await getDocs(gamesCol());
+          return snap.docs.map(d => d.data());
+        },
+        async getAllFinishedGames() {
+          const snap = await getDocs(query(gamesCol(), where('finished', '==', true), orderBy('finishedAt', 'asc')));
+          return snap.docs.map(d => d.data());
+        },
+        async getSeasons() {
+          const snap = await getDocs(query(seasonsCol(), orderBy('seasonNumber', 'asc')));
+          return snap.docs.map(d => d.data());
+        },
+        async getSeason(n) {
+          const snap = await getDoc(doc(db, 'seasons', String(n)));
+          return snap.exists() ? snap.data() : null;
+        },
+        async writeSeason(seasonDoc) {
+          await setDoc(doc(db, 'seasons', String(seasonDoc.seasonNumber)), seasonDoc);
+        },
+        async updateGameSeason(gameId, seasonId) {
+          await updateDoc(doc(db, 'games', gameId), { seasonId });
+        },
+        async seedPresets(presets) {
+          // presets: [{ slug, displayName, face, color }]
+          for (const p of presets) {
+            await setDoc(doc(db, 'players', p.slug), {
+              slug: p.slug,
+              displayName: p.displayName,
+              face: p.face,
+              color: p.color,
+              isPreset: true
+            }, { merge: true });
+          }
+        },
+        async getPlayers() {
+          const snap = await getDocs(playersCol());
+          return snap.docs.map(d => d.data());
+        }
+      };
+
+      window.LDU_READY = true;
+      console.info("[LDU] Firestore ready.");
+      window.dispatchEvent(new Event('ldu-ready'));
+    } catch (e) {
+      console.error("[LDU] Firebase init failed:", e);
+      window.LDU_READY = false;
+    }
+  }
+</script>
+
 <script>
 // ============ I18N ============
 const STRINGS = {
@@ -942,6 +1226,79 @@ const STRINGS = {
     home_start: 'Arrancar partida nueva',
     setup_title: 'Partida nueva',
     setup_players_label: '¿Cuántos juegan?',
+    setup_roster_label: '¿Quiénes vinieron?',
+    setup_host_label: '🏠 Anfitrión:',
+    setup_host_none: 'Sin anfitrión',
+    setup_guests_label: 'Invitados (no cuentan pa\' stats)',
+    setup_add_guest: '+ Agregar invitado',
+    guest_placeholder: 'Nombre del invitado',
+    home_stats: '📊 Estadísticas',
+    stats_title: '📊 Estadísticas',
+    stats_tab_player: 'Jugador',
+    stats_tab_leaderboard: 'Ranking',
+    stats_tab_seasons: 'Temporadas',
+    stats_tab_h2h: 'Mano a mano',
+    stats_player_label: 'Jugador:',
+    stats_sort_label: 'Ordenar por:',
+    stats_h2h_help: 'Cada celda muestra victorias del jugador de la fila sobre el de la columna / partidas jugadas juntos.',
+    stats_no_data: 'Todavía no hay datos. Jugá algunas partidas 💪',
+    stats_meta: 'Solo se cuentan partidas guardadas en la base. Los invitados no suman estadísticas.',
+    stat_total_score: 'Puntaje total',
+    stat_rounds_won: 'Rondas ganadas',
+    stat_rounds_lost: 'Rondas perdidas',
+    stat_games_won: 'Partidas ganadas',
+    stat_games_lost: 'Partidas perdidas',
+    stat_games_played: 'Partidas jugadas',
+    stat_seasons_won: 'Temporadas ganadas',
+    stat_seasons_lost: 'Temporadas perdidas',
+    stat_absences: 'Faltas',
+    stat_times_hosted: 'Veces anfitrión',
+    stat_highest_round: 'Ronda más alta',
+    stat_lowest_game: 'Mejor partida (min)',
+    stat_current_win_streak: 'Racha de ganadas',
+    stat_longest_win_streak: 'Mejor racha ganadas',
+    stat_current_loss_streak: 'Racha de perdidas',
+    stat_longest_loss_streak: 'Peor racha perdidas',
+    stat_season_win_streak: 'Racha temporadas',
+    stat_longest_season_streak: 'Mejor racha temporadas',
+    stat_avg_round: 'Promedio x ronda',
+    stat_avg_game: 'Promedio x partida',
+    stat_avg_position: 'Posición promedio',
+    stat_perfect_rounds: 'Rondas en 0',
+    stat_total_multas: 'Multas pagadas',
+    stat_total_cortes: 'Cortes hechos',
+    stat_fastest_win: 'Victoria más rápida',
+    stat_longest_game: 'Partida más larga',
+    stat_biggest_comeback: 'Mayor remontada',
+    stat_closest_loss: 'Derrota más ajustada',
+    stat_nemesis: 'Némesis',
+    stat_victim: 'Víctima favorita',
+    stat_home_field: 'Win% en casa',
+    stat_games_since_win: 'Partidas sin ganar',
+    stat_net_points: 'Puntos netos vs prom.',
+    stat_worst_game: 'Peor partida',
+    stat_unfinished: 'Abandonadas',
+    stat_pos_dist: 'Posiciones finales',
+    stat_day_perf: 'Mejor día',
+    stat_rounds_played: 'Rondas jugadas',
+    stat_none: 'ninguna',
+    stat_never: 'nunca',
+    stat_rounds: 'rondas',
+    stat_pts: 'pts',
+    leaderboard_player: 'Jugador',
+    leaderboard_games: 'PJ',
+    leaderboard_wins: 'PG',
+    leaderboard_losses: 'PP',
+    leaderboard_seasons: 'Temp.',
+    leaderboard_score: 'Puntaje',
+    leaderboard_avg_pos: 'Pos. prom.',
+    leaderboard_hosted: 'Anfitrión',
+    leaderboard_winrate: 'Win%',
+    seasons_col_num: 'Temp.',
+    seasons_col_winner: 'Ganador',
+    seasons_col_score: 'Puntos ganador',
+    seasons_col_dates: 'Fechas',
+    seasons_col_games: 'Partidas',
     setup_points_label: '¿Hasta cuántos puntos?',
     setup_custom_placeholder: 'Ponele lo que quieras...',
     setup_start_btn: '¡Dale que va!',
@@ -991,6 +1348,9 @@ const STRINGS = {
     game_fine: 'Multa',
     game_fines: 'Multas',
     game_fines_label: 'multas',
+    game_corte: 'Corte',
+    game_cortes: 'Cortes',
+    game_cortes_label: 'cortes',
     setup_venue_label: 'Sede (opcional)',
     setup_venue_placeholder: 'Casa de PT, Bar El Tano...',
     results_edit_limit: '🎯 Cambiar límite',
@@ -1002,6 +1362,79 @@ const STRINGS = {
     home_start: 'Start New Game',
     setup_title: 'New Game',
     setup_players_label: 'Number of Players',
+    setup_roster_label: 'Who showed up?',
+    setup_host_label: '🏠 Host:',
+    setup_host_none: 'No host',
+    setup_guests_label: 'Guests (don\'t count toward stats)',
+    setup_add_guest: '+ Add guest',
+    guest_placeholder: 'Guest name',
+    home_stats: '📊 Stats',
+    stats_title: '📊 Stats',
+    stats_tab_player: 'Player',
+    stats_tab_leaderboard: 'Leaderboard',
+    stats_tab_seasons: 'Seasons',
+    stats_tab_h2h: 'Head-to-head',
+    stats_player_label: 'Player:',
+    stats_sort_label: 'Sort by:',
+    stats_h2h_help: 'Each cell shows row-player wins over column-player / games played together.',
+    stats_no_data: 'No data yet. Play some games 💪',
+    stats_meta: 'Only games saved to the database count. Guests do not accumulate stats.',
+    stat_total_score: 'Total score',
+    stat_rounds_won: 'Rounds won',
+    stat_rounds_lost: 'Rounds lost',
+    stat_games_won: 'Games won',
+    stat_games_lost: 'Games lost',
+    stat_games_played: 'Games played',
+    stat_seasons_won: 'Seasons won',
+    stat_seasons_lost: 'Seasons lost',
+    stat_absences: 'Absences',
+    stat_times_hosted: 'Times hosted',
+    stat_highest_round: 'Highest round',
+    stat_lowest_game: 'Lowest game',
+    stat_current_win_streak: 'Current win streak',
+    stat_longest_win_streak: 'Longest win streak',
+    stat_current_loss_streak: 'Current loss streak',
+    stat_longest_loss_streak: 'Longest loss streak',
+    stat_season_win_streak: 'Season win streak',
+    stat_longest_season_streak: 'Longest season streak',
+    stat_avg_round: 'Avg per round',
+    stat_avg_game: 'Avg per game',
+    stat_avg_position: 'Avg position',
+    stat_perfect_rounds: 'Zero-point rounds',
+    stat_total_multas: 'Fines paid',
+    stat_total_cortes: 'Cuts made',
+    stat_fastest_win: 'Fastest win',
+    stat_longest_game: 'Longest game',
+    stat_biggest_comeback: 'Biggest comeback',
+    stat_closest_loss: 'Closest loss',
+    stat_nemesis: 'Nemesis',
+    stat_victim: 'Favorite victim',
+    stat_home_field: 'Home win%',
+    stat_games_since_win: 'Games since last win',
+    stat_net_points: 'Net vs group avg',
+    stat_worst_game: 'Worst game',
+    stat_unfinished: 'Abandoned',
+    stat_pos_dist: 'Finish positions',
+    stat_day_perf: 'Best day',
+    stat_rounds_played: 'Rounds played',
+    stat_none: 'none',
+    stat_never: 'never',
+    stat_rounds: 'rounds',
+    stat_pts: 'pts',
+    leaderboard_player: 'Player',
+    leaderboard_games: 'GP',
+    leaderboard_wins: 'W',
+    leaderboard_losses: 'L',
+    leaderboard_seasons: 'Sns.',
+    leaderboard_score: 'Score',
+    leaderboard_avg_pos: 'Avg pos.',
+    leaderboard_hosted: 'Hosted',
+    leaderboard_winrate: 'Win%',
+    seasons_col_num: 'Season',
+    seasons_col_winner: 'Winner',
+    seasons_col_score: 'Winning score',
+    seasons_col_dates: 'Dates',
+    seasons_col_games: 'Games',
     setup_points_label: 'Points to Play',
     setup_custom_placeholder: 'Custom...',
     setup_start_btn: 'Start Game',
@@ -1051,6 +1484,9 @@ const STRINGS = {
     game_fine: 'Fine',
     game_fines: 'Fines',
     game_fines_label: 'fines',
+    game_corte: 'Cut',
+    game_cortes: 'Cuts',
+    game_cortes_label: 'cuts',
     setup_venue_label: 'Venue (optional)',
     setup_venue_placeholder: 'PT\'s place, El Tano Bar...',
     results_edit_limit: '🎯 Change limit',
@@ -1137,7 +1573,7 @@ function setLang(lang) {
   });
 
   // Re-render dynamic content if a game screen is active
-  if (document.getElementById('setup').classList.contains('active')) renderPlayerInputs();
+  if (document.getElementById('setup').classList.contains('active')) initSetup();
   if (document.getElementById('game').classList.contains('active')) renderGame();
   if (document.getElementById('results').classList.contains('active')) renderResults();
 }
@@ -1149,6 +1585,10 @@ let state = {
   players: [],
   rounds: [],
   fines: [],
+  cortes: [],
+  participants: [],
+  absentees: [],
+  hostId: null,
   currentRound: 0,
   gameOver: false,
   gameId: null,
@@ -1203,103 +1643,101 @@ function showScreen(id) {
   if (id === 'setup') initSetup();
   if (id === 'game') renderGame();
   if (id === 'results') renderResults();
+  if (id === 'stats') initStats();
 }
 
 // ============ SETUP ============
+function slugify(name) { return String(name || '').trim().toLowerCase(); }
+function getPresetSlug(name) {
+  const s = slugify(name);
+  return PRESET_NAMES.some(p => p.toLowerCase() === s) ? s : null;
+}
+
 function initSetup() {
-  renderPlayerInputs();
+  if (!state._setupAttending) state._setupAttending = {};
+  if (typeof state._setupHost === 'undefined') state._setupHost = '';
+  if (!Array.isArray(state._setupGuests)) state._setupGuests = [];
+  renderAttendanceRoster();
+  renderHostDropdown();
+  renderGuestInputs();
   validateSetup();
 }
 
-function changePlayerCount(delta) {
-  state.playerCount = Math.max(2, Math.min(13, state.playerCount + delta));
-  document.getElementById('playerCountDisplay').textContent = state.playerCount;
-  renderPlayerInputs();
-}
-
-function renderPlayerInputs() {
-  const container = document.getElementById('playerInputs');
-  const existing = container.querySelectorAll('input');
-  const oldValues = Array.from(existing).map(i => i.value);
-  const isAsado = document.body.classList.contains('asado');
-  const usedNames = oldValues.map(v => v.trim().toLowerCase()).filter(Boolean);
-
-  let html = '<div class="preset-names">';
-  html += `<div class="preset-names-label" data-i18n="preset_names_label">${t('preset_names_label')}</div>`;
+function renderAttendanceRoster() {
+  const container = document.getElementById('rosterGrid');
+  if (!container) return;
+  const hostSlug = state._setupHost || '';
+  let html = '';
   PRESET_NAMES.forEach(name => {
-    const used = usedNames.includes(name.toLowerCase());
-    const face = PRESET_FACES[name.toLowerCase()];
-    html += `<span class="preset-chip ${used ? 'used' : ''}" onclick="fillPresetName('${name}')">
+    const slug = name.toLowerCase();
+    const attending = !!state._setupAttending[slug];
+    const isHost = attending && hostSlug === slug;
+    const face = PRESET_FACES[slug];
+    html += `<span class="preset-chip ${attending ? 'attending' : ''} ${isHost ? 'host-chip' : ''}" onclick="toggleAttending('${slug}')">
       <img src="${face}" alt="${name}">
       <span class="chip-name">${name}</span>
     </span>`;
   });
-  html += '</div>';
-
-  for (let i = 0; i < state.playerCount; i++) {
-    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
-    const val = oldValues[i] || '';
-    const face = PRESET_FACES[val.trim().toLowerCase()];
-    let dot;
-    if (isAsado) {
-      dot = `<span style="font-size:1.1rem;">${getAsadoEmoji(i)}</span>`;
-    } else if (face) {
-      dot = `<img src="${face}" alt="${val}" class="player-face">`;
-    } else {
-      dot = `<div class="player-color" style="background:${color}"></div>`;
-    }
-    html += `
-      <div class="player-input-row">
-        ${dot}
-        <input type="text" placeholder="${t('player_placeholder')} ${i + 1}" value="${val}" maxlength="20" oninput="validateSetup(); updatePresetChips()">
-      </div>`;
-  }
   container.innerHTML = html;
+}
+
+function toggleAttending(slug) {
+  state._setupAttending[slug] = !state._setupAttending[slug];
+  if (!state._setupAttending[slug] && state._setupHost === slug) state._setupHost = '';
+  renderAttendanceRoster();
+  renderHostDropdown();
   validateSetup();
 }
 
-function fillPresetName(name) {
-  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
-  for (const inp of inputs) {
-    if (!inp.value.trim()) {
-      inp.value = name;
-      validateSetup();
-      updatePresetChips();
-      return;
-    }
-  }
+function renderHostDropdown() {
+  const sel = document.getElementById('hostSelect');
+  if (!sel) return;
+  const attending = PRESET_NAMES.filter(n => state._setupAttending[n.toLowerCase()]);
+  let html = `<option value="">${t('setup_host_none')}</option>`;
+  attending.forEach(n => {
+    const s = n.toLowerCase();
+    html += `<option value="${s}" ${state._setupHost === s ? 'selected' : ''}>${n}</option>`;
+  });
+  sel.innerHTML = html;
 }
 
-function updatePresetChips() {
-  const inputs = document.querySelectorAll('#playerInputs input[type="text"]');
-  const usedNames = Array.from(inputs).map(i => i.value.trim().toLowerCase()).filter(Boolean);
-  document.querySelectorAll('.preset-chip').forEach(chip => {
-    const nameEl = chip.querySelector('.chip-name');
-    const isUsed = nameEl && usedNames.includes(nameEl.textContent.trim().toLowerCase());
-    chip.classList.toggle('used', isUsed);
+function onHostChange() {
+  const sel = document.getElementById('hostSelect');
+  state._setupHost = sel ? (sel.value || '') : '';
+  renderAttendanceRoster();
+}
+
+function renderGuestInputs() {
+  const container = document.getElementById('guestInputs');
+  if (!container) return;
+  let html = '';
+  state._setupGuests.forEach((val, i) => {
+    const color = PLAYER_COLORS[(PRESET_NAMES.length + i) % PLAYER_COLORS.length];
+    const safe = String(val || '').replace(/"/g, '&quot;');
+    html += `<div class="player-input-row">
+      <div class="player-color" style="background:${color}"></div>
+      <input type="text" value="${safe}" maxlength="20" placeholder="${t('guest_placeholder')}" oninput="updateGuestName(${i}, this.value)">
+      <button type="button" class="guest-remove" onclick="removeGuestRow(${i})" title="×">×</button>
+    </div>`;
   });
-  const isAsado = document.body.classList.contains('asado');
-  inputs.forEach((inp, i) => {
-    const row = inp.closest('.player-input-row');
-    if (!row) return;
-    const dotEl = row.firstElementChild;
-    const val = inp.value.trim().toLowerCase();
-    const face = PRESET_FACES[val];
-    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
-    let newDot;
-    if (isAsado) return;
-    if (face) {
-      newDot = document.createElement('img');
-      newDot.src = face;
-      newDot.alt = val;
-      newDot.className = 'player-face';
-    } else {
-      newDot = document.createElement('div');
-      newDot.className = 'player-color';
-      newDot.style.background = color;
-    }
-    if (dotEl) row.replaceChild(newDot, dotEl);
-  });
+  container.innerHTML = html;
+}
+
+function addGuestRow() {
+  state._setupGuests.push('');
+  renderGuestInputs();
+  validateSetup();
+}
+
+function removeGuestRow(idx) {
+  state._setupGuests.splice(idx, 1);
+  renderGuestInputs();
+  validateSetup();
+}
+
+function updateGuestName(idx, val) {
+  state._setupGuests[idx] = val;
+  validateSetup();
 }
 
 function selectPoints(btn, val) {
@@ -1320,28 +1758,53 @@ function onCustomPoints() {
 }
 
 function validateSetup() {
-  const inputs = document.querySelectorAll('#playerInputs input');
-  const allNamed = Array.from(inputs).every(i => i.value.trim().length > 0);
+  const attendingCount = Object.values(state._setupAttending || {}).filter(Boolean).length;
+  const guestCount = (state._setupGuests || []).filter(g => String(g || '').trim()).length;
+  const totalPlayers = attendingCount + guestCount;
   const hasPoints = state.maxPoints >= 50;
-  document.getElementById('startGameBtn').disabled = !(allNamed && hasPoints);
+  const okPlayers = totalPlayers >= 2 && totalPlayers <= 13;
+  const btn = document.getElementById('startGameBtn');
+  if (btn) btn.disabled = !(okPlayers && hasPoints);
 }
 
 function startGame() {
-  const inputs = document.querySelectorAll('#playerInputs input');
-  state.players = Array.from(inputs).map((inp, i) => {
-    const name = inp.value.trim() || `${t('player_placeholder')} ${i+1}`;
-    return {
-      name: name,
-      color: PLAYER_COLORS[i % PLAYER_COLORS.length],
-      face: PRESET_FACES[name.toLowerCase()] || null
-    };
+  const attending = PRESET_NAMES.filter(n => state._setupAttending && state._setupAttending[n.toLowerCase()]);
+  const guestNames = (state._setupGuests || []).map(g => String(g || '').trim()).filter(Boolean);
+
+  const players = [];
+  const participants = [];
+
+  attending.forEach((name, i) => {
+    const slug = name.toLowerCase();
+    const color = PLAYER_COLORS[i % PLAYER_COLORS.length];
+    const face = PRESET_FACES[slug] || null;
+    players.push({ name, color, face });
+    participants.push({ slot: players.length - 1, playerId: slug, name, color, face, isGuest: false });
   });
+
+  guestNames.forEach((name, i) => {
+    const color = PLAYER_COLORS[(attending.length + i) % PLAYER_COLORS.length];
+    players.push({ name, color, face: null });
+    participants.push({ slot: players.length - 1, playerId: null, name, color, face: null, isGuest: true });
+  });
+
+  state.players = players;
+  state.participants = participants;
+  state.absentees = PRESET_NAMES.map(n => n.toLowerCase()).filter(s => !(state._setupAttending && state._setupAttending[s]));
+  state.hostId = state._setupHost || null;
+  state.playerCount = players.length;
   state.rounds = [];
   state.fines = [];
+  state.cortes = [];
   state.currentRound = 0;
   state.gameOver = false;
   state.gameId = 'game_' + Date.now();
   state.venue = (document.getElementById('venueInput').value || '').trim();
+
+  delete state._setupAttending;
+  delete state._setupHost;
+  delete state._setupGuests;
+
   saveCurrentGame();
   showScreen('game');
 }
@@ -1589,6 +2052,7 @@ function renderRoundInputs() {
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0">
+        <button class="btn btn-small btn-corte${(state._pendingCortes && state._pendingCortes[i]) ? ' active' : ''}" data-idx="${i}" onclick="togglePendingCorte(${i})">✂️ ${t('game_corte')}</button>
         <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
       </div>
       <div class="fine-input-row" id="fineRow_${i}">
@@ -1604,16 +2068,32 @@ function toggleFineInput(idx) {
   if (row) row.classList.toggle('visible');
 }
 
+function togglePendingCorte(idx) {
+  if (!state._pendingCortes) state._pendingCortes = state.players.map(function() { return false; });
+  state._pendingCortes[idx] = !state._pendingCortes[idx];
+  var btn = document.querySelector('#roundInputs .btn-corte[data-idx="' + idx + '"]');
+  if (btn) btn.classList.toggle('active', state._pendingCortes[idx]);
+}
+
 function getTotalFines() {
   return state.players.map(function(_, pi) {
     return (state.fines || []).reduce(function(sum, fineRound) { return sum + ((fineRound && fineRound[pi]) || 0); }, 0);
   });
 }
 
+function getTotalCortes() {
+  return state.players.map(function(_, pi) {
+    return (state.cortes || []).reduce(function(sum, roundCortes) {
+      return sum + ((roundCortes && roundCortes[pi]) ? -50 : 0);
+    }, 0);
+  });
+}
+
 function getFinalTotals() {
   var totals = getTotals();
   var totalFines = getTotalFines();
-  return totals.map(function(t, i) { return t + totalFines[i]; });
+  var totalCortes = getTotalCortes();
+  return totals.map(function(t, i) { return t + totalFines[i] + totalCortes[i]; });
 }
 
 function submitRound() {
@@ -1627,8 +2107,13 @@ function submitRound() {
   }
 
   var fines = state.players.map(function(_, i) { return Math.max(0, parseInt(document.getElementById('roundFine_'+i)?.value) || 0); });
+  var cortesThisRound = state.players.map(function(_, i) {
+    return !!(state._pendingCortes && state._pendingCortes[i]);
+  });
   state.rounds.push(scores);
   state.fines.push(fines);
+  state.cortes.push(cortesThisRound);
+  state._pendingCortes = null;
   state.currentRound = state.rounds.length;
   state.lastRoundRoastMessages = buildRoastMessages(scores);
   state.justSubmittedRound = true;
@@ -1662,7 +2147,11 @@ function renderRoundHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += `<td class="edit-cell no-print" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
@@ -1676,6 +2165,13 @@ function renderRoundHistory() {
   if (totalFinesH.some(function(f) { return f > 0; })) {
     html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
     totalFinesH.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '<td class="no-print"></td></tr>';
+  }
+
+  var totalCortesH = getTotalCortes();
+  if (totalCortesH.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesH.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
     html += '<td class="no-print"></td></tr>';
   }
 
@@ -1693,10 +2189,17 @@ function openEditModal(roundIdx) {
   let html = '';
   state.players.forEach((p, i) => {
     var fineVal = (state.fines[roundIdx] && state.fines[roundIdx][i]) || 0;
+    var corteVal = !!(state.cortes[roundIdx] && state.cortes[roundIdx][i]);
     html += `
       <div class="modal-input-row">
         <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
         <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+      </div>
+      <div class="modal-input-row" style="padding-left:1rem;">
+        <label style="color:var(--uno-green);font-size:.8rem;display:flex;align-items:center;gap:.4rem;cursor:pointer;">
+          <input type="checkbox" id="editCorte_${i}" ${corteVal ? 'checked' : ''} style="width:auto;margin:0;">
+          ✂️ ${t('game_corte')} (−50)
+        </label>
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
         <label style="color:var(--uno-yellow);font-size:.8rem;">⚠️ ${t('game_fine')}</label>
@@ -1748,9 +2251,11 @@ function saveEditMaxPoints() {
 function saveEditRound() {
   if (editingRound < 0) return;
   if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
+  if (!state.cortes[editingRound]) state.cortes[editingRound] = state.players.map(function() { return false; });
   state.players.forEach((_, i) => {
     state.rounds[editingRound][i] = parseInt(document.getElementById(`editScore_${i}`).value) || 0;
     state.fines[editingRound][i] = Math.max(0, parseInt(document.getElementById('editFine_'+i)?.value) || 0);
+    state.cortes[editingRound][i] = !!document.getElementById('editCorte_'+i)?.checked;
   });
   closeEditModal();
   saveCurrentGame();
@@ -1776,7 +2281,8 @@ function renderResults() {
   const finalTotals = getFinalTotals();
   const baseTotals = getTotals();
   const totalFines = getTotalFines();
-  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i]}))
+  const totalCortes = getTotalCortes();
+  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i], cortes: totalCortes[i]}))
     .sort((a, b) => a.total - b.total);
 
   document.getElementById('winnerName').textContent = standings[0].name;
@@ -1790,9 +2296,17 @@ function renderResults() {
   let html = '';
   standings.forEach((p, i) => {
     const dot = getPlayerDot(p, p.idx);
-    const scoreText = p.fines > 0
-      ? `${p.baseTotal} <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span> = ${p.total} ${t('game_pts')}`
-      : `${p.total} ${t('game_pts')}`;
+    const hasFines = p.fines > 0;
+    const hasCortes = p.cortes < 0;
+    let scoreText;
+    if (hasFines || hasCortes) {
+      let adjustments = '';
+      if (hasFines) adjustments += ` <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span>`;
+      if (hasCortes) adjustments += ` <span class="corte-badge">(${p.cortes} ${t('game_cortes_label')})</span>`;
+      scoreText = `${p.baseTotal}${adjustments} = ${p.total} ${t('game_pts')}`;
+    } else {
+      scoreText = `${p.total} ${t('game_pts')}`;
+    }
     html += `
       <div class="standing-row">
         <div class="standing-position ${medals[i] || ''}">${i + 1}</div>
@@ -1837,7 +2351,11 @@ function renderResultsHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += '</tr>';
   });
@@ -1851,6 +2369,13 @@ function renderResultsHistory() {
   if (totalFinesR.some(function(f) { return f > 0; })) {
     html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
     totalFinesR.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
+    html += '</tr>';
+  }
+
+  var totalCortesR = getTotalCortes();
+  if (totalCortesR.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesR.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
     html += '</tr>';
   }
 
@@ -1868,7 +2393,11 @@ function showEditableHistory() {
     html += `<tr><td>R${ri + 1}</td>`;
     round.forEach((s, pi) => {
       var f = (state.fines[ri] && state.fines[ri][pi]) || 0;
-      html += '<td>' + s + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '') + '</td>';
+      var c = !!(state.cortes[ri] && state.cortes[ri][pi]);
+      html += '<td>' + s
+        + (c ? ' <span class="corte-badge">(−50)</span>' : '')
+        + (f > 0 ? ' <span class="fine-badge">(+' + f + ')</span>' : '')
+        + '</td>';
     });
     html += `<td class="edit-cell" onclick="openEditModal(${ri})">${t('game_edit')}</td></tr>`;
   });
@@ -1885,6 +2414,13 @@ function showEditableHistory() {
     html += '<td></td></tr>';
   }
 
+  var totalCortesE = getTotalCortes();
+  if (totalCortesE.some(function(c) { return c < 0; })) {
+    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    totalCortesE.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
+    html += '<td></td></tr>';
+  }
+
   html += '</tbody>';
   table.innerHTML = html;
 }
@@ -1896,9 +2432,8 @@ function printResults() {
 function newGame() {
   state = {
     playerCount: 2, maxPoints: 500,
-    players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+    players: [], rounds: [], fines: [], cortes: [], participants: [], absentees: [], hostId: null, currentRound: 0, gameOver: false, gameId: null, venue: ''
   };
-  document.getElementById('playerCountDisplay').textContent = '2';
   showScreen('home');
 }
 
@@ -1912,9 +2447,8 @@ function confirmQuit() {
     saveCurrentGame();
     state = {
       playerCount: 2, maxPoints: 500,
-      players: [], rounds: [], fines: [], currentRound: 0, gameOver: false, gameId: null, venue: ''
+      players: [], rounds: [], fines: [], cortes: [], participants: [], absentees: [], hostId: null, currentRound: 0, gameOver: false, gameId: null, venue: ''
     };
-    document.getElementById('playerCountDisplay').textContent = '2';
     showScreen('home');
   }
 }
@@ -2208,9 +2742,32 @@ function saveGames(games) {
 function saveCurrentGame() {
   if (!state.gameId) return;
   var games = loadGames();
+  var existing = games.find(function(g) { return g.id === state.gameId; });
+
+  // Compute winner info when game is over
+  var winnerSlot = null;
+  var winnerPlayerId = null;
+  if (state.gameOver && state.players && state.players.length) {
+    var finalTotals = getFinalTotals();
+    winnerSlot = 0;
+    for (var i = 1; i < finalTotals.length; i++) {
+      if (finalTotals[i] < finalTotals[winnerSlot]) winnerSlot = i;
+    }
+    var winnerParticipant = (state.participants || [])[winnerSlot];
+    winnerPlayerId = winnerParticipant ? winnerParticipant.playerId : null;
+  }
+
+  // Preserve first finalization timestamp across saves
+  var priorFinishedAt = existing ? existing.finishedAt : null;
+  var finishedAt = state.gameOver ? (priorFinishedAt || Date.now()) : null;
+
   var entry = {
     id: state.gameId,
     timestamp: parseInt(state.gameId.replace('game_', ''), 10) || Date.now(),
+    finishedAt: finishedAt,
+    winnerSlot: winnerSlot,
+    winnerPlayerId: winnerPlayerId,
+    seasonId: existing ? (existing.seasonId || null) : null,
     state: {
       playerCount: state.playerCount,
       maxPoints: state.maxPoints,
@@ -2220,6 +2777,10 @@ function saveCurrentGame() {
       gameOver: state.gameOver,
       gameId: state.gameId,
       fines: state.fines || [],
+      cortes: state.cortes || [],
+      participants: state.participants || [],
+      absentees: state.absentees || [],
+      hostId: state.hostId || null,
       venue: state.venue || ''
     },
     finished: !!state.gameOver
@@ -2227,6 +2788,17 @@ function saveCurrentGame() {
   var idx = games.findIndex(function(g) { return g.id === state.gameId; });
   if (idx >= 0) { games[idx] = entry; } else { games.push(entry); }
   saveGames(games);
+
+  // Dual-write to Firestore (fire-and-forget)
+  if (window.LDU_READY && window.LDU && window.LDU.saveGame) {
+    window.LDU.saveGame(entry).then(function() {
+      // If this save just finalized the game, attempt to compute the season
+      if (state.gameOver && typeof maybeComputeSeason === 'function') {
+        var wasFinalized = priorFinishedAt && existing && existing.finished;
+        if (!wasFinalized) maybeComputeSeason();
+      }
+    }).catch(function(err) { console.warn('[LDU] saveGame failed:', err); });
+  }
 }
 
 function formatTimestamp(ts) {
@@ -2295,6 +2867,10 @@ function resumeGame(gameId) {
   state.gameOver = g.state.gameOver;
   state.gameId = g.state.gameId;
   state.fines = g.state.fines || [];
+  state.cortes = (g.state.cortes && g.state.cortes.length) ? g.state.cortes : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return false; }); });
+  state.participants = g.state.participants || [];
+  state.absentees = g.state.absentees || [];
+  state.hostId = g.state.hostId || null;
   state.venue = g.state.venue || '';
   if (g.finished) {
     showScreen('results');
@@ -2308,7 +2884,718 @@ function deleteGame(gameId) {
   var games = loadGames();
   games = games.filter(function(g) { return g.id !== gameId; });
   saveGames(games);
+  if (window.LDU_READY && window.LDU && window.LDU.deleteGame) {
+    window.LDU.deleteGame(gameId).catch(function(err) { console.warn('[LDU] deleteGame failed:', err); });
+  }
   renderGamesList();
+}
+
+// Merge remote Firestore games into local list (one-way sync into localStorage)
+function syncRemoteGamesToLocal() {
+  if (!window.LDU_READY || !window.LDU || !window.LDU.getAllGames) return Promise.resolve();
+  return window.LDU.getAllGames().then(function(remoteGames) {
+    if (!remoteGames || !remoteGames.length) return;
+    var local = loadGames();
+    var byId = {};
+    local.forEach(function(g) { byId[g.id] = g; });
+    remoteGames.forEach(function(r) {
+      var entry = {
+        id: r.gameId,
+        timestamp: r.createdAt && r.createdAt.toMillis ? r.createdAt.toMillis() : Date.now(),
+        finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : null,
+        winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
+        winnerPlayerId: r.winnerPlayerId || null,
+        seasonId: r.seasonId || null,
+        state: {
+          playerCount: (r.participants || []).length,
+          maxPoints: r.maxPoints || 0,
+          players: (r.participants || []).map(function(p) { return { name: p.name, color: p.color, face: p.face }; }),
+          rounds: r.rounds || [],
+          currentRound: (r.rounds || []).length,
+          gameOver: !!r.finished,
+          gameId: r.gameId,
+          fines: r.fines || [],
+          cortes: r.cortes || [],
+          participants: r.participants || [],
+          absentees: r.absentees || [],
+          hostId: r.hostId || null,
+          venue: r.venue || ''
+        },
+        finished: !!r.finished
+      };
+      byId[entry.id] = entry;
+    });
+    var merged = Object.values(byId);
+    saveGames(merged);
+  }).catch(function(err) { console.warn('[LDU] syncRemoteGamesToLocal failed:', err); });
+}
+
+// ============ SEASONS & STATS HELPERS ============
+
+// Compute per-slot final score for a remote-shape game doc.
+function computeGameFinalScore(gameDoc, slot) {
+  var rounds = gameDoc.rounds || [];
+  var fines = gameDoc.fines || [];
+  var cortes = gameDoc.cortes || [];
+  var base = rounds.reduce(function(sum, r) { return sum + ((r && r[slot]) || 0); }, 0);
+  var f = fines.reduce(function(sum, r) { return sum + ((r && r[slot]) || 0); }, 0);
+  var c = cortes.reduce(function(sum, r) { return sum + ((r && r[slot]) ? -50 : 0); }, 0);
+  return base + f + c;
+}
+
+// Runs after a game is finalized. If the finished-games count is a multiple of 4,
+// creates a season doc for the most recent 4 games (idempotent).
+function maybeComputeSeason() {
+  if (!window.LDU_READY || !window.LDU || !window.LDU.getAllFinishedGames) return Promise.resolve();
+  return window.LDU.getAllFinishedGames().then(function(games) {
+    if (!games || !games.length || (games.length % 4 !== 0)) return;
+    var seasonNumber = games.length / 4;
+    return window.LDU.getSeason(seasonNumber).then(function(existing) {
+      if (existing) return;
+      var fourGames = games.slice(-4);
+
+      // Track which preset playerIds appeared in each of the 4 games.
+      var presence = {}; // slug -> number of games participated in
+      var perPlayerScores = {}; // slug -> total score across participated games
+      fourGames.forEach(function(g) {
+        (g.participants || []).forEach(function(p) {
+          if (!p.playerId) return; // skip guests
+          presence[p.playerId] = (presence[p.playerId] || 0) + 1;
+          perPlayerScores[p.playerId] = (perPlayerScores[p.playerId] || 0) + computeGameFinalScore(g, p.slot);
+        });
+      });
+
+      var participantIds = Object.keys(presence);
+      var eligible = participantIds.filter(function(id) { return presence[id] === 4; });
+      var winnerPlayerId = null;
+      if (eligible.length) {
+        winnerPlayerId = eligible.reduce(function(best, id) {
+          if (best === null) return id;
+          if (perPlayerScores[id] < perPlayerScores[best]) return id;
+          if (perPlayerScores[id] === perPlayerScores[best] && id < best) return id;
+          return best;
+        }, null);
+      }
+      var losers = participantIds.filter(function(id) { return id !== winnerPlayerId; });
+
+      var startedAt = fourGames[0].finishedAt || null;
+      var endedAt = fourGames[3].finishedAt || null;
+
+      var seasonDoc = {
+        seasonNumber: seasonNumber,
+        gameIds: fourGames.map(function(g) { return g.gameId; }),
+        startedAt: startedAt,
+        endedAt: endedAt,
+        participantIds: participantIds,
+        perPlayerScores: perPlayerScores,
+        winnerPlayerId: winnerPlayerId,
+        losers: losers
+      };
+
+      return window.LDU.writeSeason(seasonDoc).then(function() {
+        // Stamp each game with its seasonId
+        var updates = fourGames.map(function(g) { return window.LDU.updateGameSeason(g.gameId, seasonNumber); });
+        return Promise.all(updates);
+      });
+    });
+  }).catch(function(err) { console.warn('[LDU] maybeComputeSeason failed:', err); });
+}
+
+// ============ STATS ============
+var _statsData = { games: [], seasons: [], computed: null, loaded: false };
+
+function initStats() {
+  document.getElementById('statsMeta').textContent = t('stats_meta');
+  renderStatsLoadingState();
+  loadStatsData().then(function() {
+    _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
+    populatePlayerDropdown();
+    populateLeaderboardSort();
+    // Default tab
+    switchStatsTab('player');
+    var presetSlugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
+    var defaultSlug = presetSlugs.find(function(s) { return _statsData.computed.byPlayer[s] && _statsData.computed.byPlayer[s].gamesPlayed > 0; }) || presetSlugs[0];
+    var sel = document.getElementById('statsPlayerSelect');
+    if (sel) sel.value = defaultSlug;
+    renderPlayerStats(defaultSlug);
+    renderLeaderboard('gamesWon');
+    renderSeasonsTable();
+    renderH2HMatrix();
+  });
+}
+
+function renderStatsLoadingState() {
+  var card = document.getElementById('statsPlayerCard');
+  if (card) card.innerHTML = '<div style="color:var(--text-muted);padding:1rem;text-align:center;">…</div>';
+  document.getElementById('leaderboardTable').innerHTML = '';
+  document.getElementById('seasonsTable').innerHTML = '';
+  document.getElementById('h2hMatrix').innerHTML = '';
+}
+
+function loadStatsData() {
+  // Prefer Firestore. Fall back to whatever is in localStorage.
+  var gamesPromise;
+  if (window.LDU_READY && window.LDU && window.LDU.getAllFinishedGames) {
+    gamesPromise = window.LDU.getAllFinishedGames().then(function(remoteGames) {
+      return (remoteGames || []).map(function(r) {
+        return {
+          gameId: r.gameId,
+          finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : (r.finishedAt || 0),
+          maxPoints: r.maxPoints || 0,
+          venue: r.venue || '',
+          hostId: r.hostId || null,
+          participants: r.participants || [],
+          absentees: r.absentees || [],
+          rounds: r.rounds || [],
+          fines: r.fines || [],
+          cortes: r.cortes || [],
+          winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
+          winnerPlayerId: r.winnerPlayerId || null,
+          seasonId: r.seasonId || null,
+          finished: true
+        };
+      });
+    });
+  } else {
+    // Fallback: localStorage finished games
+    var local = loadGames().filter(function(g) { return g.finished; });
+    local.sort(function(a, b) { return (a.finishedAt || a.timestamp) - (b.finishedAt || b.timestamp); });
+    var mapped = local.map(function(g) {
+      var s = g.state || {};
+      return {
+        gameId: g.id,
+        finishedAt: g.finishedAt || g.timestamp || 0,
+        maxPoints: s.maxPoints || 0,
+        venue: s.venue || '',
+        hostId: s.hostId || null,
+        participants: s.participants || [],
+        absentees: s.absentees || [],
+        rounds: s.rounds || [],
+        fines: s.fines || [],
+        cortes: s.cortes || [],
+        winnerSlot: (typeof g.winnerSlot === 'number') ? g.winnerSlot : null,
+        winnerPlayerId: g.winnerPlayerId || null,
+        seasonId: g.seasonId || null,
+        finished: true
+      };
+    });
+    gamesPromise = Promise.resolve(mapped);
+  }
+
+  var seasonsPromise = (window.LDU_READY && window.LDU && window.LDU.getSeasons)
+    ? window.LDU.getSeasons().catch(function() { return []; })
+    : Promise.resolve([]);
+
+  return Promise.all([gamesPromise, seasonsPromise]).then(function(results) {
+    _statsData.games = results[0] || [];
+    _statsData.seasons = results[1] || [];
+    _statsData.loaded = true;
+  });
+}
+
+function switchStatsTab(tab) {
+  document.querySelectorAll('.stats-tab-btn').forEach(function(b) {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.stats-tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'statsTab_' + tab);
+  });
+}
+
+function populatePlayerDropdown() {
+  var sel = document.getElementById('statsPlayerSelect');
+  if (!sel) return;
+  var byPlayer = _statsData.computed.byPlayer;
+  sel.innerHTML = PRESET_NAMES.map(function(name) {
+    var slug = name.toLowerCase();
+    var gp = (byPlayer[slug] && byPlayer[slug].gamesPlayed) || 0;
+    return '<option value="' + slug + '">' + name + ' (' + gp + ' PJ)</option>';
+  }).join('');
+}
+
+function populateLeaderboardSort() {
+  var sel = document.getElementById('leaderboardSort');
+  if (!sel) return;
+  var opts = [
+    ['gamesWon',    t('leaderboard_wins')],
+    ['gamesPlayed', t('leaderboard_games')],
+    ['gamesLost',   t('leaderboard_losses')],
+    ['winRate',     t('leaderboard_winrate')],
+    ['seasonsWon',  t('leaderboard_seasons')],
+    ['totalScore',  t('leaderboard_score')],
+    ['avgPosition', t('leaderboard_avg_pos')],
+    ['timesHosted', t('leaderboard_hosted')],
+    ['totalCortes', t('stat_total_cortes')],
+    ['totalMultas', t('stat_total_multas')]
+  ];
+  sel.innerHTML = opts.map(function(o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
+}
+
+// ---------- computeAllStats ----------
+function _emptyPlayerStats(slug) {
+  return {
+    slug: slug,
+    gamesPlayed: 0,
+    gamesWon: 0,
+    gamesLost: 0,
+    roundsPlayed: 0,
+    roundsWon: 0,
+    roundsLost: 0,
+    totalScore: 0,
+    scoreSumRound: 0,
+    highestRoundScore: 0,
+    lowestGameScore: null,
+    worstGameScore: 0,
+    absences: 0,
+    timesHosted: 0,
+    wonWhileHosting: 0,
+    perfectRounds: 0,
+    totalMultas: 0,
+    totalCortes: 0,
+    seasonsWon: 0,
+    seasonsLost: 0,
+    positionDist: {},
+    sumPosition: 0,
+    fastestWin: null,
+    longestGame: 0,
+    biggestComeback: 0,
+    closestLoss: null,
+    unfinished: 0,
+    netVsAvg: 0,
+    venueStats: {},
+    dayStats: {},
+    gameResults: [],      // chronological [{won, finishedAt, gameId}]
+    h2h: {}               // otherSlug -> {wins, losses, together}
+  };
+}
+
+function computeAllStats(games, seasons) {
+  var presetSlugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
+  var byPlayer = {};
+  presetSlugs.forEach(function(s) { byPlayer[s] = _emptyPlayerStats(s); });
+
+  // Chronological order
+  var sorted = games.slice().sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
+
+  sorted.forEach(function(g) {
+    var participants = g.participants || [];
+    var numPlayers = participants.length;
+    if (!numPlayers) return;
+
+    // Final score per slot
+    var finalScores = participants.map(function(_, slot) { return computeGameFinalScore(g, slot); });
+    // Positions: 1 = lowest final score
+    var ordered = finalScores.map(function(v, i) { return { slot: i, score: v }; }).sort(function(a, b) { return a.score - b.score; });
+    var positionBySlot = {};
+    ordered.forEach(function(o, i) { positionBySlot[o.slot] = i + 1; });
+
+    // Round-level wins/losses per slot
+    var numRounds = (g.rounds || []).length;
+    var roundWinsBySlot = {};
+    var roundLossesBySlot = {};
+    (g.rounds || []).forEach(function(round) {
+      if (!round || !round.length) return;
+      var minVal = Math.min.apply(null, round);
+      var maxVal = Math.max.apply(null, round);
+      round.forEach(function(s, slot) {
+        if (s === minVal) roundWinsBySlot[slot] = (roundWinsBySlot[slot] || 0) + 1;
+        if (s === maxVal && maxVal > 0) roundLossesBySlot[slot] = (roundLossesBySlot[slot] || 0) + 1;
+      });
+    });
+
+    // Running totals for comeback calc
+    var runningTotals = participants.map(function() { return 0; });
+    var comebackBestBySlot = participants.map(function() { return 0; });
+    (g.rounds || []).forEach(function(round, ri) {
+      round.forEach(function(s, slot) { runningTotals[slot] += (s || 0); });
+      // After this round, for each slot, compute deficit vs leader
+      participants.forEach(function(_, slot) {
+        var bestOpp = -Infinity;
+        participants.forEach(function(_, other) {
+          if (other !== slot && -runningTotals[other] > bestOpp) bestOpp = -runningTotals[other];
+        });
+        // Deficit = opponent_min_total - this_total? UNO: low = good. Deficit = this_total - opponent_best (lowest). If positive, we're behind.
+        var oppMin = Infinity;
+        participants.forEach(function(_, other) {
+          if (other !== slot && runningTotals[other] < oppMin) oppMin = runningTotals[other];
+        });
+        if (oppMin === Infinity) return;
+        var deficit = runningTotals[slot] - oppMin;
+        if (deficit > comebackBestBySlot[slot]) comebackBestBySlot[slot] = deficit;
+      });
+    });
+
+    var finishedAt = g.finishedAt || 0;
+    var dayOfWeek = finishedAt ? new Date(finishedAt).getDay() : -1;
+
+    // Per-participant updates
+    participants.forEach(function(p, slot) {
+      if (!p.playerId || !byPlayer[p.playerId]) return; // skip guests
+      var ps = byPlayer[p.playerId];
+      ps.gamesPlayed++;
+      ps.roundsPlayed += numRounds;
+      ps.totalScore += finalScores[slot];
+      ps.roundsWon += roundWinsBySlot[slot] || 0;
+      ps.roundsLost += roundLossesBySlot[slot] || 0;
+
+      // Round-level aggregates
+      (g.rounds || []).forEach(function(round) {
+        var s = (round && round[slot]) || 0;
+        ps.scoreSumRound += s;
+        if (s > ps.highestRoundScore) ps.highestRoundScore = s;
+        if (s === 0) ps.perfectRounds++;
+      });
+      (g.fines || []).forEach(function(round) { ps.totalMultas += (round && round[slot]) || 0; });
+      (g.cortes || []).forEach(function(round) { if (round && round[slot]) ps.totalCortes++; });
+
+      // Game-level aggregates
+      if (ps.lowestGameScore === null || finalScores[slot] < ps.lowestGameScore) ps.lowestGameScore = finalScores[slot];
+      if (finalScores[slot] > ps.worstGameScore) ps.worstGameScore = finalScores[slot];
+      if (numRounds > ps.longestGame) ps.longestGame = numRounds;
+
+      var pos = positionBySlot[slot];
+      ps.sumPosition += pos;
+      var posKey = (pos === numPlayers) ? 'last' : String(pos);
+      ps.positionDist[posKey] = (ps.positionDist[posKey] || 0) + 1;
+
+      var isWin = (g.winnerPlayerId === p.playerId);
+      var isLoss = !isWin;
+      if (isWin) {
+        ps.gamesWon++;
+        if (ps.fastestWin === null || numRounds < ps.fastestWin) ps.fastestWin = numRounds;
+        if (comebackBestBySlot[slot] > ps.biggestComeback) ps.biggestComeback = comebackBestBySlot[slot];
+      } else {
+        ps.gamesLost++;
+        if (pos === 2) {
+          var winnerScore = ordered[0].score;
+          var diff = finalScores[slot] - winnerScore;
+          if (ps.closestLoss === null || diff < ps.closestLoss) ps.closestLoss = diff;
+        }
+      }
+      ps.gameResults.push({ won: isWin, finishedAt: finishedAt, gameId: g.gameId });
+
+      // Net vs group average (this player - avg of others)
+      var othersTotal = 0, othersCount = 0;
+      finalScores.forEach(function(fs, i) { if (i !== slot) { othersTotal += fs; othersCount++; } });
+      var othersAvg = othersCount ? (othersTotal / othersCount) : 0;
+      ps.netVsAvg += (finalScores[slot] - othersAvg);
+
+      // Per-venue
+      if (g.venue) {
+        var v = g.venue;
+        if (!ps.venueStats[v]) ps.venueStats[v] = { games: 0, wins: 0 };
+        ps.venueStats[v].games++;
+        if (isWin) ps.venueStats[v].wins++;
+      }
+
+      // Day-of-week
+      if (dayOfWeek >= 0) {
+        if (!ps.dayStats[dayOfWeek]) ps.dayStats[dayOfWeek] = { games: 0, wins: 0 };
+        ps.dayStats[dayOfWeek].games++;
+        if (isWin) ps.dayStats[dayOfWeek].wins++;
+      }
+
+      // Hosting
+      if (g.hostId === p.playerId) {
+        ps.timesHosted++;
+        if (isWin) ps.wonWhileHosting++;
+      }
+
+      // H2H vs other presets in same game
+      participants.forEach(function(other, otherSlot) {
+        if (otherSlot === slot) return;
+        if (!other.playerId) return;
+        if (!ps.h2h[other.playerId]) ps.h2h[other.playerId] = { wins: 0, losses: 0, together: 0 };
+        ps.h2h[other.playerId].together++;
+        if (positionBySlot[slot] < positionBySlot[otherSlot]) ps.h2h[other.playerId].wins++;
+        else if (positionBySlot[slot] > positionBySlot[otherSlot]) ps.h2h[other.playerId].losses++;
+      });
+    });
+
+    // Absences
+    (g.absentees || []).forEach(function(absSlug) {
+      if (byPlayer[absSlug]) byPlayer[absSlug].absences++;
+    });
+  });
+
+  // Seasons roll-up
+  (seasons || []).forEach(function(s) {
+    if (s.winnerPlayerId && byPlayer[s.winnerPlayerId]) byPlayer[s.winnerPlayerId].seasonsWon++;
+    (s.losers || []).forEach(function(loserSlug) {
+      if (byPlayer[loserSlug]) byPlayer[loserSlug].seasonsLost++;
+    });
+  });
+
+  // Derived / streaks
+  presetSlugs.forEach(function(slug) {
+    var ps = byPlayer[slug];
+    ps.avgScorePerGame = ps.gamesPlayed ? ps.totalScore / ps.gamesPlayed : 0;
+    ps.avgScorePerRound = ps.roundsPlayed ? ps.scoreSumRound / ps.roundsPlayed : 0;
+    ps.avgPosition = ps.gamesPlayed ? ps.sumPosition / ps.gamesPlayed : 0;
+    ps.winRate = ps.gamesPlayed ? ps.gamesWon / ps.gamesPlayed : 0;
+    ps.homeWinRate = ps.timesHosted ? ps.wonWhileHosting / ps.timesHosted : 0;
+
+    // Streaks from gameResults (chronological)
+    var gr = ps.gameResults;
+    ps.longestWinStreak = 0; ps.longestLossStreak = 0;
+    var cw = 0, cl = 0;
+    gr.forEach(function(r) {
+      if (r.won) { cw++; cl = 0; if (cw > ps.longestWinStreak) ps.longestWinStreak = cw; }
+      else       { cl++; cw = 0; if (cl > ps.longestLossStreak) ps.longestLossStreak = cl; }
+    });
+    // Current streaks (tail)
+    ps.currentWinStreak = 0; ps.currentLossStreak = 0;
+    for (var i = gr.length - 1; i >= 0; i--) {
+      if (gr[i].won) { if (ps.currentLossStreak > 0) break; ps.currentWinStreak++; }
+      else           { if (ps.currentWinStreak > 0) break; ps.currentLossStreak++; }
+    }
+    // Games since last win
+    ps.gamesSinceLastWin = null;
+    for (var j = gr.length - 1, since = 0; j >= 0; j--) {
+      if (gr[j].won) { ps.gamesSinceLastWin = since; break; }
+      since++;
+    }
+    if (ps.gamesSinceLastWin === null && gr.length === 0) ps.gamesSinceLastWin = null;
+
+    // Nemesis / victim
+    ps.nemesis = null; ps.victim = null;
+    var maxLosses = 0, maxWins = 0;
+    Object.keys(ps.h2h).forEach(function(other) {
+      var rec = ps.h2h[other];
+      if (rec.losses > maxLosses) { maxLosses = rec.losses; ps.nemesis = other; }
+      if (rec.wins > maxWins) { maxWins = rec.wins; ps.victim = other; }
+    });
+
+    // Best day of week
+    ps.bestDay = null;
+    var bestRate = -1;
+    Object.keys(ps.dayStats).forEach(function(d) {
+      var ds = ps.dayStats[d];
+      if (ds.games >= 2) {
+        var r = ds.wins / ds.games;
+        if (r > bestRate) { bestRate = r; ps.bestDay = parseInt(d, 10); }
+      }
+    });
+  });
+
+  // Season streaks
+  var seasonsChrono = (seasons || []).slice().sort(function(a, b) { return (a.seasonNumber || 0) - (b.seasonNumber || 0); });
+  presetSlugs.forEach(function(slug) {
+    var ps = byPlayer[slug];
+    ps.longestSeasonWinStreak = 0;
+    ps.currentSeasonWinStreak = 0;
+    var streak = 0;
+    seasonsChrono.forEach(function(s) {
+      var played = (s.participantIds || []).indexOf(slug) >= 0;
+      if (!played) { streak = 0; return; }
+      if (s.winnerPlayerId === slug) { streak++; if (streak > ps.longestSeasonWinStreak) ps.longestSeasonWinStreak = streak; }
+      else { streak = 0; }
+    });
+    ps.currentSeasonWinStreak = streak;
+  });
+
+  return { byPlayer: byPlayer, seasons: seasonsChrono };
+}
+
+// ---------- rendering ----------
+function _dayLabel(d) {
+  if (d === null || typeof d !== 'number' || d < 0) return t('stat_never');
+  var days = currentLang === 'es'
+    ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return days[d];
+}
+
+function _tile(label, value, sub) {
+  var subHtml = sub ? '<div class="stat-sub">' + sub + '</div>' : '';
+  return '<div class="stat-tile"><div class="stat-label">' + label + '</div>'
+       + '<div class="stat-value">' + value + '</div>' + subHtml + '</div>';
+}
+
+function _presetName(slug) {
+  var idx = PRESET_NAMES.findIndex(function(n) { return n.toLowerCase() === slug; });
+  return idx >= 0 ? PRESET_NAMES[idx] : slug;
+}
+
+function renderPlayerStats(slug) {
+  var container = document.getElementById('statsPlayerCard');
+  if (!container || !_statsData.computed) return;
+  var ps = _statsData.computed.byPlayer[slug];
+  if (!ps) { container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</div>'; return; }
+  if (!ps.gamesPlayed) {
+    container.innerHTML = '<div class="stats-hero"><img src="' + (PRESET_FACES[slug] || '') + '"><div><div class="stats-hero-name">' + _presetName(slug) + '</div><div class="stats-hero-meta">' + t('stats_no_data') + '</div></div></div>';
+    return;
+  }
+
+  var html = '';
+  html += '<div class="stats-hero">';
+  if (PRESET_FACES[slug]) html += '<img src="' + PRESET_FACES[slug] + '" alt="' + _presetName(slug) + '">';
+  html += '<div>';
+  html += '<div class="stats-hero-name">' + _presetName(slug) + '</div>';
+  html += '<div class="stats-hero-meta">' + ps.gamesWon + ' ' + t('leaderboard_wins') + ' · ' + ps.gamesLost + ' ' + t('leaderboard_losses') + ' · ' + (ps.winRate * 100).toFixed(0) + '% ' + t('leaderboard_winrate') + '</div>';
+  html += '</div></div>';
+
+  html += '<div class="stat-section-label">Core</div>';
+  html += '<div class="stats-grid">';
+  html += _tile(t('stat_total_score'), ps.totalScore);
+  html += _tile(t('stat_games_played'), ps.gamesPlayed);
+  html += _tile(t('stat_games_won'), ps.gamesWon);
+  html += _tile(t('stat_games_lost'), ps.gamesLost);
+  html += _tile(t('stat_rounds_won'), ps.roundsWon);
+  html += _tile(t('stat_rounds_lost'), ps.roundsLost);
+  html += _tile(t('stat_seasons_won'), ps.seasonsWon);
+  html += _tile(t('stat_seasons_lost'), ps.seasonsLost);
+  html += _tile(t('stat_absences'), ps.absences);
+  html += _tile(t('stat_times_hosted'), ps.timesHosted);
+  html += _tile(t('stat_highest_round'), ps.highestRoundScore, t('stat_pts'));
+  html += _tile(t('stat_lowest_game'), ps.lowestGameScore === null ? '—' : ps.lowestGameScore, t('stat_pts'));
+  html += '</div>';
+
+  html += '<div class="stat-section-label">Streaks & averages</div>';
+  html += '<div class="stats-grid">';
+  html += _tile(t('stat_current_win_streak'), ps.currentWinStreak);
+  html += _tile(t('stat_longest_win_streak'), ps.longestWinStreak);
+  html += _tile(t('stat_current_loss_streak'), ps.currentLossStreak);
+  html += _tile(t('stat_longest_loss_streak'), ps.longestLossStreak);
+  html += _tile(t('stat_season_win_streak'), ps.currentSeasonWinStreak);
+  html += _tile(t('stat_longest_season_streak'), ps.longestSeasonWinStreak);
+  html += _tile(t('stat_avg_round'), ps.avgScorePerRound.toFixed(1));
+  html += _tile(t('stat_avg_game'), ps.avgScorePerGame.toFixed(1));
+  html += _tile(t('stat_avg_position'), ps.avgPosition.toFixed(2));
+  html += _tile(t('stat_games_since_win'), ps.gamesSinceLastWin === null ? t('stat_never') : ps.gamesSinceLastWin);
+  html += _tile(t('stat_net_points'), (ps.netVsAvg >= 0 ? '+' : '') + ps.netVsAvg.toFixed(0));
+  html += _tile(t('stat_rounds_played'), ps.roundsPlayed);
+  html += '</div>';
+
+  html += '<div class="stat-section-label">Penalties & perks</div>';
+  html += '<div class="stats-grid">';
+  html += _tile(t('stat_total_multas'), ps.totalMultas);
+  html += _tile(t('stat_total_cortes'), ps.totalCortes);
+  html += _tile(t('stat_perfect_rounds'), ps.perfectRounds);
+  html += _tile(t('stat_home_field'), ps.timesHosted ? (ps.homeWinRate * 100).toFixed(0) + '%' : '—', ps.timesHosted ? (ps.wonWhileHosting + '/' + ps.timesHosted) : '');
+  html += '</div>';
+
+  html += '<div class="stat-section-label">Extremes</div>';
+  html += '<div class="stats-grid">';
+  html += _tile(t('stat_fastest_win'), ps.fastestWin === null ? '—' : ps.fastestWin, ps.fastestWin === null ? '' : t('stat_rounds'));
+  html += _tile(t('stat_longest_game'), ps.longestGame || '—', t('stat_rounds'));
+  html += _tile(t('stat_biggest_comeback'), ps.biggestComeback || '—', ps.biggestComeback ? t('stat_pts') : '');
+  html += _tile(t('stat_closest_loss'), ps.closestLoss === null ? '—' : ps.closestLoss, ps.closestLoss === null ? '' : t('stat_pts'));
+  html += _tile(t('stat_worst_game'), ps.worstGameScore || '—', ps.worstGameScore ? t('stat_pts') : '');
+  html += _tile(t('stat_nemesis'), ps.nemesis ? _presetName(ps.nemesis) : t('stat_none'), ps.nemesis ? (ps.h2h[ps.nemesis].losses + '-' + ps.h2h[ps.nemesis].wins) : '');
+  html += _tile(t('stat_victim'), ps.victim ? _presetName(ps.victim) : t('stat_none'), ps.victim ? (ps.h2h[ps.victim].wins + '-' + ps.h2h[ps.victim].losses) : '');
+  html += _tile(t('stat_day_perf'), ps.bestDay === null ? '—' : _dayLabel(ps.bestDay));
+  html += '</div>';
+
+  html += '<div class="stat-section-label">' + t('stat_pos_dist') + '</div>';
+  html += '<div class="stats-grid">';
+  Object.keys(ps.positionDist).sort().forEach(function(k) {
+    var label = (k === 'last') ? '🪦 ' + t('stat_pos_dist') : '#' + k;
+    html += _tile(label, ps.positionDist[k]);
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderLeaderboard(sortKey) {
+  sortKey = sortKey || 'gamesWon';
+  var table = document.getElementById('leaderboardTable');
+  if (!table || !_statsData.computed) return;
+  var rows = Object.values(_statsData.computed.byPlayer)
+    .filter(function(p) { return p.gamesPlayed > 0; })
+    .sort(function(a, b) {
+      if (sortKey === 'avgPosition' || sortKey === 'totalScore') {
+        return (a[sortKey] || 0) - (b[sortKey] || 0); // lower is better
+      }
+      return (b[sortKey] || 0) - (a[sortKey] || 0);
+    });
+  if (!rows.length) { table.innerHTML = '<tbody><tr><td style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</td></tr></tbody>'; return; }
+
+  var html = '<thead><tr>'
+    + '<th>#</th>'
+    + '<th>' + t('leaderboard_player') + '</th>'
+    + '<th>' + t('leaderboard_games') + '</th>'
+    + '<th>' + t('leaderboard_wins') + '</th>'
+    + '<th>' + t('leaderboard_losses') + '</th>'
+    + '<th>' + t('leaderboard_winrate') + '</th>'
+    + '<th>' + t('leaderboard_seasons') + '</th>'
+    + '<th>' + t('leaderboard_avg_pos') + '</th>'
+    + '<th>' + t('leaderboard_hosted') + '</th>'
+    + '<th>' + t('leaderboard_score') + '</th>'
+    + '</tr></thead><tbody>';
+  rows.forEach(function(p, i) {
+    var face = PRESET_FACES[p.slug];
+    var faceImg = face ? '<img src="' + face + '" class="player-face-sm" style="vertical-align:middle;margin-right:.35rem;">' : '';
+    html += '<tr>'
+      + '<td>' + (i + 1) + '</td>'
+      + '<td>' + faceImg + _presetName(p.slug) + '</td>'
+      + '<td>' + p.gamesPlayed + '</td>'
+      + '<td>' + p.gamesWon + '</td>'
+      + '<td>' + p.gamesLost + '</td>'
+      + '<td>' + (p.winRate * 100).toFixed(0) + '%</td>'
+      + '<td>' + p.seasonsWon + '</td>'
+      + '<td>' + (p.avgPosition ? p.avgPosition.toFixed(2) : '—') + '</td>'
+      + '<td>' + p.timesHosted + '</td>'
+      + '<td>' + p.totalScore + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function renderSeasonsTable() {
+  var table = document.getElementById('seasonsTable');
+  if (!table || !_statsData.computed) return;
+  var seasons = _statsData.computed.seasons.slice().reverse();
+  if (!seasons.length) { table.innerHTML = '<tbody><tr><td style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</td></tr></tbody>'; return; }
+  var html = '<thead><tr>'
+    + '<th>' + t('seasons_col_num') + '</th>'
+    + '<th>' + t('seasons_col_winner') + '</th>'
+    + '<th>' + t('seasons_col_score') + '</th>'
+    + '<th>' + t('seasons_col_dates') + '</th>'
+    + '<th>' + t('seasons_col_games') + '</th>'
+    + '</tr></thead><tbody>';
+  seasons.forEach(function(s) {
+    var winner = s.winnerPlayerId ? _presetName(s.winnerPlayerId) : '—';
+    var winnerScore = s.winnerPlayerId ? s.perPlayerScores[s.winnerPlayerId] : '—';
+    var startedAt = s.startedAt && s.startedAt.toMillis ? s.startedAt.toMillis() : s.startedAt;
+    var endedAt = s.endedAt && s.endedAt.toMillis ? s.endedAt.toMillis() : s.endedAt;
+    var dates = (startedAt && endedAt) ? (formatTimestamp(startedAt) + ' → ' + formatTimestamp(endedAt)) : '—';
+    html += '<tr>'
+      + '<td>#' + s.seasonNumber + '</td>'
+      + '<td>🏆 ' + winner + '</td>'
+      + '<td>' + winnerScore + '</td>'
+      + '<td style="font-size:.8rem;color:var(--text-muted);">' + dates + '</td>'
+      + '<td>' + ((s.gameIds || []).length) + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function renderH2HMatrix() {
+  var table = document.getElementById('h2hMatrix');
+  if (!table || !_statsData.computed) return;
+  var slugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
+  var byPlayer = _statsData.computed.byPlayer;
+  var html = '<thead><tr><th></th>';
+  slugs.forEach(function(s) { html += '<th title="' + _presetName(s) + '">' + _presetName(s).slice(0, 3) + '</th>'; });
+  html += '</tr></thead><tbody>';
+  slugs.forEach(function(rowSlug) {
+    html += '<tr><th>' + _presetName(rowSlug) + '</th>';
+    slugs.forEach(function(colSlug) {
+      if (rowSlug === colSlug) { html += '<td class="h2h-diag">—</td>'; return; }
+      var rec = byPlayer[rowSlug].h2h[colSlug];
+      if (!rec || !rec.together) { html += '<td style="color:var(--text-muted);">·</td>'; return; }
+      var rate = rec.wins / rec.together;
+      var cls = rate > 0.5 ? 'h2h-good' : (rate < 0.5 ? 'h2h-bad' : '');
+      html += '<td class="' + cls + '" title="' + rec.wins + '-' + rec.losses + ' (' + rec.together + ')">' + rec.wins + '/' + rec.together + '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
 }
 
 // ============ INIT ============
@@ -2319,6 +3606,28 @@ if (asadoMode) applyAsadoMode();
 setLang(currentLang);
 initSetup();
 renderGamesList();
+
+// Firestore bootstrap: seed presets, pull remote games, then re-render home list.
+function lduBootstrap() {
+  if (!window.LDU_READY || !window.LDU) return;
+  var presets = PRESET_NAMES.map(function(name, i) {
+    var slug = name.toLowerCase();
+    return {
+      slug: slug,
+      displayName: name,
+      face: PRESET_FACES[slug] || null,
+      color: PLAYER_COLORS[i % PLAYER_COLORS.length]
+    };
+  });
+  window.LDU.seedPresets(presets).catch(function(err) { console.warn('[LDU] seedPresets failed:', err); });
+  syncRemoteGamesToLocal().then(function() { renderGamesList(); });
+}
+
+if (window.LDU_READY) {
+  lduBootstrap();
+} else {
+  window.addEventListener('ldu-ready', lduBootstrap, { once: true });
+}
 </script>
 </body>
 </html>
