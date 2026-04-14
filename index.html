@@ -1214,8 +1214,16 @@
           return snap.docs.map(d => d.data());
         },
         async getAllFinishedGames() {
-          const snap = await getDocs(query(gamesCol(), where('finished', '==', true), orderBy('finishedAt', 'asc')));
-          return snap.docs.map(d => d.data());
+          // Client-side filter+sort to avoid requiring a composite Firestore index.
+          const snap = await getDocs(gamesCol());
+          return snap.docs
+            .map(d => d.data())
+            .filter(g => g.finished === true && g.finishedAt)
+            .sort((a, b) => {
+              const am = a.finishedAt && a.finishedAt.toMillis ? a.finishedAt.toMillis() : (a.finishedAt || 0);
+              const bm = b.finishedAt && b.finishedAt.toMillis ? b.finishedAt.toMillis() : (b.finishedAt || 0);
+              return am - bm;
+            });
         },
         async getSeasons() {
           const snap = await getDocs(query(seasonsCol(), orderBy('seasonNumber', 'asc')));
