@@ -625,6 +625,14 @@
     .share-photo-box .btn-small { margin-top: .5rem; }
     .photo-upload-wrap { margin: .5rem 0; }
     .photo-upload-wrap input[type="file"] { font-size: .85rem; color: var(--text); }
+    .share-upload-label { display:block; font-size:.85rem; margin-bottom:.5rem; color: var(--text-muted); }
+    .share-upload-buttons { display:flex; flex-wrap:wrap; gap:.5rem; }
+    .share-upload-btn { cursor:pointer; display:inline-flex; align-items:center; gap:.4rem; }
+    .share-photo-box-wide { max-width: 100%; width: 100%; }
+    .share-photo-box-wide img {
+      width: 100%; max-width: 540px; margin: 0 auto;
+      border-radius: 12px; border: 2px solid var(--border); display: block;
+    }
 
     /* ---- Walk of Shame ---- */
     .walk-of-shame {
@@ -1038,14 +1046,23 @@
       <h4 data-i18n="share_title"></h4>
       <div class="share-actions">
         <div class="photo-upload-wrap">
-          <label style="display:block; font-size:.85rem; margin-bottom:.35rem;" data-i18n="share_upload_photo"></label>
-          <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)">
+          <label class="share-upload-label" data-i18n="share_upload_photo"></label>
+          <div class="share-upload-buttons">
+            <label for="sharePhotoInput" class="btn btn-secondary btn-small share-upload-btn">
+              <span>🖼️</span> <span data-i18n="share_select_file"></span>
+            </label>
+            <input type="file" id="sharePhotoInput" accept="image/*" onchange="onSharePhotoChange(event)" hidden>
+            <label for="sharePhotoCameraInput" class="btn btn-secondary btn-small share-upload-btn">
+              <span>📷</span> <span data-i18n="share_take_photo"></span>
+            </label>
+            <input type="file" id="sharePhotoCameraInput" accept="image/*" capture="environment" onchange="onSharePhotoChange(event)" hidden>
+          </div>
         </div>
         <div class="share-photo-row" id="sharePhotoRow" style="display:none;">
-          <div class="share-photo-box">
-            <img id="sharePhotoOriginal" alt="Original" />
+          <div class="share-photo-box share-photo-box-wide">
+            <img id="sharePhotoOriginal" alt="Composite" />
             <div class="share-photo-label" data-i18n="share_original"></div>
-            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_original"></button>
+            <button type="button" class="btn btn-small btn-secondary" onclick="downloadShareImage('original')" data-i18n="share_download_image"></button>
           </div>
         </div>
       </div>
@@ -1188,6 +1205,8 @@
         db,
         async saveGame(entry) {
           const s = entry.state || {};
+          // Firestore rejects nested arrays, so wrap each inner row as { v: [...] }.
+          const wrap2d = (arr) => (arr || []).map((r) => ({ v: r || [] }));
           const payload = {
             gameId: entry.id,
             createdAt: entry.timestamp ? Timestamp.fromMillis(entry.timestamp) : Timestamp.now(),
@@ -1199,9 +1218,9 @@
             hostId: s.hostId || null,
             participants: s.participants || [],
             absentees: s.absentees || [],
-            rounds: s.rounds || [],
-            fines: s.fines || [],
-            cortes: s.cortes || [],
+            rounds: wrap2d(s.rounds),
+            fines: wrap2d(s.fines),
+            cortes: wrap2d(s.cortes),
             winnerSlot: (typeof entry.winnerSlot === 'number') ? entry.winnerSlot : null,
             winnerPlayerId: entry.winnerPlayerId || null,
             seasonId: entry.seasonId || null
@@ -1371,6 +1390,10 @@ const STRINGS = {
     share_copied: '¡Copiado al portapapeles!',
     share_title: 'Compartir resultados',
     share_upload_photo: 'Subir foto con puntajes',
+    share_select_file: 'Subir archivo',
+    share_take_photo: 'Sacar foto',
+    share_download_image: 'Descargar imagen',
+    share_loser_label: 'Perdedor',
     share_original: 'Original',
     share_cartoon: 'Cartoon con puntajes',
     share_download_original: 'Descargar original',
@@ -1507,6 +1530,10 @@ const STRINGS = {
     share_copied: 'Copied to clipboard!',
     share_title: 'Share results',
     share_upload_photo: 'Upload photo with scores',
+    share_select_file: 'Choose file',
+    share_take_photo: 'Take photo',
+    share_download_image: 'Download image',
+    share_loser_label: 'Loser',
     share_original: 'Original',
     share_cartoon: 'Cartoon with scores',
     share_download_original: 'Download original',
@@ -2608,8 +2635,14 @@ let loserPoemRotation = 0;
 function buildShareText() {
   const finalTotals = getFinalTotals();
   const totalFinesC = getTotalFines();
-  const standings = state.players.map((p, i) => ({ ...p, total: finalTotals[i], fines: totalFinesC[i], idx: i }))
-    .sort((a, b) => a.total - b.total);
+  const totalCortesC = getTotalCortes();
+  const standings = state.players.map((p, i) => ({
+    ...p,
+    total: finalTotals[i],
+    fines: totalFinesC[i],
+    cortes: totalCortesC[i],
+    idx: i
+  })).sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
   var headerParts = [isAsado ? '🎩 *Lunes de UNO* 🎩 - EDICION ASADO' : '🎩 *Lunes de UNO* 🎩'];
   if (state.venue) headerParts.push('Lugar: ' + state.venue);
@@ -2620,17 +2653,20 @@ function buildShareText() {
   standings.forEach((p, i) => {
     const quip = i === 0 ? posQuips[0] : i === standings.length - 1 ? posQuips[4] : (posQuips[Math.min(i, 4)]);
     const fineStr = p.fines > 0 ? ` (+${p.fines} ${t('game_fines_label')})` : '';
-    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr} - ${quip}`);
+    const corteStr = p.cortes < 0 ? ` (${p.cortes} ${t('game_cortes_label')})` : '';
+    lines.push(`${i + 1}. ${p.name}: ${p.total} pts${fineStr}${corteStr} - ${quip}`);
   });
   lines.push('');
   lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
 
-  // Meal assignments
+  // Meal assignments — the loser pays everything
   var n = standings.length;
-  var mealLines = [];
-  mealLines.push('Cena: ' + standings[n-1].name + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'));
-  if (n >= 2) mealLines.push('Postre: ' + standings[n-2].name + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'));
-  if (n >= 3) mealLines.push('Picada: ' + standings[n-3].name + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'));
+  var loserName = standings[n - 1].name;
+  var mealLines = [
+    'Cena: ' + loserName + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'),
+    'Postre: ' + loserName + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'),
+    'Picada: ' + loserName + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'),
+  ];
   lines.push('');
   lines = lines.concat(mealLines);
 
@@ -2717,19 +2753,228 @@ function showCopyToast() {
 // ============ SHARE: Photo with scores ============
 let sharePhotoState = { originalDataUrl: null };
 
-function drawScoresOnCanvas(canvas, img) {
-  const ctx = canvas.getContext('2d');
-  const maxW = 400, maxH = 300;
-  let w = img.width, h = img.height;
-  if (w > maxW || h > maxH) { const r = Math.min(maxW/w, maxH/h); w = Math.round(w*r); h = Math.round(h*r); }
-  canvas.width = w; canvas.height = h;
-  ctx.drawImage(img, 0, 0, w, h);
+// ---- Composite share image ----
+function wrapTextLines(ctx, text, maxWidth) {
+  const words = String(text || '').split(' ');
+  const lines = [];
+  let cur = '';
+  for (const w of words) {
+    const test = cur ? cur + ' ' + w : w;
+    if (ctx.measureText(test).width > maxWidth && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = test;
+    }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+function loadFaceImage(src) {
+  return new Promise(function(resolve) {
+    if (!src) { resolve(null); return; }
+    var im = new Image();
+    im.onload = function() { resolve(im); };
+    im.onerror = function() { resolve(null); };
+    im.src = src;
+  });
+}
+
+function drawAvatar(ctx, faceImg, playerIdx, x, y, size) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  if (faceImg) {
+    ctx.drawImage(faceImg, x, y, size, size);
+  } else {
+    var colors = (typeof PLAYER_COLORS !== 'undefined' && PLAYER_COLORS.length)
+      ? PLAYER_COLORS
+      : ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#1abc9c','#e67e22','#34495e'];
+    ctx.fillStyle = colors[playerIdx % colors.length];
+    ctx.fillRect(x, y, size, size);
+  }
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function renderShareComposite(img, faces) {
+  const W = 1080;
+  const photoH = Math.round(img.height * (W / img.width));
+  const TOP_H = 280;
+  const BOTTOM_BASE = 320;
+  const POEM_LINE_H = 28;
+  const PAD = 40;
+
   const totals = getTotals();
-  const standings = state.players.map((p,i)=>({...p,total:totals[i]})).sort((a,b)=>a.total-b.total);
-  ctx.font = 'bold 14px Inter, sans-serif'; ctx.fillStyle = 'rgba(0,0,0,0.7)';
-  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2;
-  let ty = 24;
-  standings.forEach((p,i)=>{ const txt = (i+1)+'. '+p.name+' — '+p.total+' pts'; ctx.strokeText(txt,10,ty); ctx.fillText(txt,10,ty); ty+=22; });
+  const totalFinesC = getTotalFines();
+  const totalCortesC = getTotalCortes();
+  const players = state.players.map((p, i) => ({
+    name: p.name,
+    face: faces ? faces[i] : null,
+    playerIdx: i,
+    total: totals[i],
+    fines: totalFinesC[i],
+    cortes: totalCortesC[i],
+  })).sort((a, b) => a.total - b.total);
+
+  const winner = players[0];
+  const loser = players[players.length - 1];
+  const middle = players.slice(1, players.length - 1);
+
+  const poem = buildLoserPoem(loser.name, currentLang);
+
+  const ts = state.gameId ? (parseInt(String(state.gameId).replace('game_', ''), 10) || Date.now()) : Date.now();
+  const dateStr = formatTimestamp(ts);
+  const venueStr = state.venue ? ('📍 ' + state.venue) : '';
+
+  // Pre-wrap poem to know final canvas height
+  const tmp = document.createElement('canvas').getContext('2d');
+  tmp.font = 'italic 22px Inter, sans-serif';
+  let totalPoemLines = 0;
+  const wrappedPoem = poem.map(function(line) {
+    const wrapped = wrapTextLines(tmp, line, W - PAD * 2);
+    totalPoemLines += wrapped.length;
+    return wrapped;
+  });
+  const BOTTOM_H = BOTTOM_BASE + Math.max(0, totalPoemLines - 4) * POEM_LINE_H;
+
+  const H = TOP_H + photoH + BOTTOM_H;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const COL_BG = '#181a1f';
+  const COL_BG2 = '#22252c';
+  const COL_TEXT = '#f5f5f7';
+  const COL_MUTED = '#a0a3aa';
+  const COL_BORDER = '#2d313a';
+  const COL_YELLOW = '#ffde00';
+  const COL_GREEN = '#2ecc71';
+
+  // --- TOP: winner card + middle players ---
+  ctx.fillStyle = COL_BG;
+  ctx.fillRect(0, 0, W, TOP_H);
+
+  const WINNER_FACE_SIZE = 120;
+  const WINNER_FACE_X = PAD;
+  const WINNER_FACE_Y = 50;
+  const WINNER_TEXT_X = WINNER_FACE_X + WINNER_FACE_SIZE + 24;
+
+  drawAvatar(ctx, winner.face, winner.playerIdx, WINNER_FACE_X, WINNER_FACE_Y, WINNER_FACE_SIZE);
+
+  ctx.textBaseline = 'top';
+  ctx.font = "bold 56px 'Fredoka One', Inter, sans-serif";
+  ctx.fillStyle = COL_YELLOW;
+  ctx.fillText('🏆 ' + winner.name, WINNER_TEXT_X, 52);
+
+  ctx.font = '600 40px Inter, sans-serif';
+  ctx.fillStyle = COL_TEXT;
+  const winnerScore = winner.total + ' pts';
+  ctx.fillText(winnerScore, WINNER_TEXT_X, 122);
+
+  let wx = WINNER_TEXT_X + ctx.measureText(winnerScore).width + 16;
+  ctx.font = '500 22px Inter, sans-serif';
+  if (winner.fines > 0) {
+    ctx.fillStyle = COL_YELLOW;
+    const s = '(+' + winner.fines + ' ' + t('game_fines_label') + ')';
+    ctx.fillText(s, wx, 134);
+    wx += ctx.measureText(s).width + 10;
+  }
+  if (winner.cortes < 0) {
+    ctx.fillStyle = COL_GREEN;
+    const s = '(' + winner.cortes + ' ' + t('game_cortes_label') + ')';
+    ctx.fillText(s, wx, 134);
+  }
+
+  // Middle players, right-aligned with small avatar
+  const RU_FACE_SIZE = 36;
+  ctx.font = '500 20px Inter, sans-serif';
+  ctx.fillStyle = COL_MUTED;
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'top';
+  let my = 54;
+  middle.forEach(function(p, i) {
+    const pos = i + 2;
+    let line = pos + '. ' + p.name + ' — ' + p.total + ' pts';
+    if (p.fines > 0) line += ' (+' + p.fines + ' ' + t('game_fines_label') + ')';
+    if (p.cortes < 0) line += ' (' + p.cortes + ' ' + t('game_cortes_label') + ')';
+    const textWidth = ctx.measureText(line).width;
+    const faceX = W - PAD - textWidth - RU_FACE_SIZE - 12;
+    drawAvatar(ctx, p.face, p.playerIdx, faceX, my - 8, RU_FACE_SIZE);
+    ctx.fillStyle = COL_MUTED;
+    ctx.fillText(line, W - PAD, my);
+    my += 46;
+  });
+  ctx.textAlign = 'left';
+
+  ctx.fillStyle = COL_BORDER;
+  ctx.fillRect(0, TOP_H - 2, W, 2);
+
+  // --- PHOTO ---
+  ctx.drawImage(img, 0, TOP_H, W, photoH);
+
+  // --- BOTTOM: meta + loser + poem ---
+  const by0 = TOP_H + photoH;
+  ctx.fillStyle = COL_BG2;
+  ctx.fillRect(0, by0, W, BOTTOM_H);
+
+  ctx.font = '500 22px Inter, sans-serif';
+  ctx.fillStyle = COL_MUTED;
+  const metaY = by0 + 28;
+  if (venueStr) ctx.fillText(venueStr, PAD, metaY);
+  const dW = ctx.measureText(dateStr).width;
+  ctx.fillText(dateStr, W - PAD - dW, metaY);
+
+  const LOSER_FACE_SIZE = 90;
+  const LOSER_FACE_X = PAD;
+  const LOSER_FACE_Y = by0 + 80;
+  const LOSER_TEXT_X = LOSER_FACE_X + LOSER_FACE_SIZE + 20;
+
+  drawAvatar(ctx, loser.face, loser.playerIdx, LOSER_FACE_X, LOSER_FACE_Y, LOSER_FACE_SIZE);
+
+  ctx.font = '600 18px Inter, sans-serif';
+  ctx.fillStyle = COL_MUTED;
+  ctx.fillText(t('share_loser_label').toUpperCase(), LOSER_TEXT_X, by0 + 80);
+
+  ctx.font = "bold 36px 'Fredoka One', Inter, sans-serif";
+  ctx.fillStyle = COL_GREEN;
+  ctx.fillText('💀 ' + loser.name + ' — ' + loser.total + ' pts', LOSER_TEXT_X, by0 + 106);
+
+  let ly = by0 + 152;
+  let lx = LOSER_TEXT_X;
+  ctx.font = '500 20px Inter, sans-serif';
+  if (loser.fines > 0) {
+    ctx.fillStyle = COL_YELLOW;
+    const s = '(+' + loser.fines + ' ' + t('game_fines_label') + ')';
+    ctx.fillText(s, lx, ly);
+    lx += ctx.measureText(s).width + 10;
+  }
+  if (loser.cortes < 0) {
+    ctx.fillStyle = COL_GREEN;
+    const s = '(' + loser.cortes + ' ' + t('game_cortes_label') + ')';
+    ctx.fillText(s, lx, ly);
+  }
+
+  ctx.font = 'italic 22px Inter, sans-serif';
+  ctx.fillStyle = COL_TEXT;
+  let py = by0 + 210;
+  wrappedPoem.forEach(function(group) {
+    group.forEach(function(ln) {
+      ctx.fillText(ln, PAD, py);
+      py += POEM_LINE_H;
+    });
+  });
+
+  return canvas;
 }
 
 function onSharePhotoChange(ev) {
@@ -2743,11 +2988,13 @@ function onSharePhotoChange(ev) {
   reader.onload = function() {
     var img = new Image();
     img.onload = function() {
-      var c1 = document.createElement('canvas');
-      drawScoresOnCanvas(c1, img);
-      sharePhotoState.originalDataUrl = c1.toDataURL('image/png');
-      elO.src = sharePhotoState.originalDataUrl;
-      row.style.display = 'flex'; ev.target.value = '';
+      Promise.all(state.players.map(function(p) { return loadFaceImage(p.face); })).then(function(faces) {
+        var canvas = renderShareComposite(img, faces);
+        sharePhotoState.originalDataUrl = canvas.toDataURL('image/png');
+        elO.src = sharePhotoState.originalDataUrl;
+        row.style.display = 'flex';
+        ev.target.value = '';
+      });
     };
     img.src = reader.result;
   };
@@ -2995,6 +3242,17 @@ function deleteGame(gameId) {
   renderGamesList();
 }
 
+// Firestore wraps rows as { v: [...] }; unwrap back to a plain 2-D array.
+// Pass-through for plain rows so pre-wrap docs still load.
+function unwrap2d(arr) {
+  if (!Array.isArray(arr)) return [];
+  return arr.map(function(row) {
+    if (row && Array.isArray(row.v)) return row.v;
+    if (Array.isArray(row)) return row;
+    return [];
+  });
+}
+
 function syncRemoteGamesToLocal() {
   if (!window.LDU_READY || !window.LDU || !window.LDU.getAllGames) return Promise.resolve();
   return window.LDU.getAllGames().then(function(remoteGames) {
@@ -3003,6 +3261,9 @@ function syncRemoteGamesToLocal() {
     var byId = {};
     local.forEach(function(g) { byId[g.id] = g; });
     remoteGames.forEach(function(r) {
+      var rRounds = unwrap2d(r.rounds);
+      var rFines = unwrap2d(r.fines);
+      var rCortes = unwrap2d(r.cortes);
       var entry = {
         id: r.gameId,
         timestamp: r.createdAt && r.createdAt.toMillis ? r.createdAt.toMillis() : Date.now(),
@@ -3014,12 +3275,12 @@ function syncRemoteGamesToLocal() {
           playerCount: (r.participants || []).length,
           maxPoints: r.maxPoints || 0,
           players: (r.participants || []).map(function(p) { return { name: p.name, color: p.color, face: p.face }; }),
-          rounds: r.rounds || [],
-          currentRound: (r.rounds || []).length,
+          rounds: rRounds,
+          currentRound: rRounds.length,
           gameOver: !!r.finished,
           gameId: r.gameId,
-          fines: r.fines || [],
-          cortes: r.cortes || [],
+          fines: rFines,
+          cortes: rCortes,
           participants: r.participants || [],
           absentees: r.absentees || [],
           hostId: r.hostId || null,
@@ -3053,7 +3314,17 @@ function maybeComputeSeason() {
     var seasonNumber = games.length / 4;
     return window.LDU.getSeason(seasonNumber).then(function(existing) {
       if (existing) return;
-      var fourGames = games.slice(-4);
+      // Normalize remote docs (wrapped arrays) into plain shape for scoring.
+      var fourGames = games.slice(-4).map(function(g) {
+        return {
+          gameId: g.gameId,
+          finishedAt: g.finishedAt,
+          participants: g.participants || [],
+          rounds: unwrap2d(g.rounds),
+          fines: unwrap2d(g.fines),
+          cortes: unwrap2d(g.cortes)
+        };
+      });
 
       var presence = {};
       var perPlayerScores = {};
@@ -3140,9 +3411,9 @@ function loadStatsData() {
           hostId: r.hostId || null,
           participants: r.participants || [],
           absentees: r.absentees || [],
-          rounds: r.rounds || [],
-          fines: r.fines || [],
-          cortes: r.cortes || [],
+          rounds: unwrap2d(r.rounds),
+          fines: unwrap2d(r.fines),
+          cortes: unwrap2d(r.cortes),
           winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
           winnerPlayerId: r.winnerPlayerId || null,
           seasonId: r.seasonId || null,
