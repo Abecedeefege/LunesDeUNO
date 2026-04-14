@@ -2016,10 +2016,12 @@ function renderResults() {
   var mealHtml = '';
   var n = standings.length;
   if (n >= 1) {
-    var mealItems = [];
-    mealItems.push(`🍽️ <b>${standings[n-1].name}</b> paga la <b>cena</b>`);
-    if (n >= 2) mealItems.push(`🍮 <b>${standings[n-2].name}</b> paga el <b>postre</b>`);
-    if (n >= 3) mealItems.push(`🧀 <b>${standings[n-3].name}</b> paga la <b>picada</b>`);
+    var loserName = standings[n-1].name;
+    var mealItems = [
+      `🍽️ <b>${loserName}</b> paga la <b>cena</b>`,
+      `🍮 <b>${loserName}</b> paga el <b>postre</b>`,
+      `🧀 <b>${loserName}</b> paga la <b>picada</b>`,
+    ];
     mealHtml = `<div id="mealAssignments" style="width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-top:.5rem;">
       <div style="font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:.6rem;color:var(--text-muted);">🍴 Quién paga qué</div>
       ${mealItems.map(function(item) { return '<div style="padding:.35rem 0;font-size:.95rem;border-bottom:1px solid var(--border);">' + item + '</div>'; }).join('')}
@@ -2218,12 +2220,14 @@ function buildShareText() {
   lines.push('');
   lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
 
-  // Meal assignments
+  // Meal assignments — only the loser pays everything
   var n = standings.length;
-  var mealLines = [];
-  mealLines.push('Cena: ' + standings[n-1].name + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'));
-  if (n >= 2) mealLines.push('Postre: ' + standings[n-2].name + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'));
-  if (n >= 3) mealLines.push('Picada: ' + standings[n-3].name + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'));
+  var loserName = standings[n-1].name;
+  var mealLines = [
+    'Cena: ' + loserName + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'),
+    'Postre: ' + loserName + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'),
+    'Picada: ' + loserName + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'),
+  ];
   lines.push('');
   lines = lines.concat(mealLines);
 
@@ -2327,11 +2331,44 @@ function wrapTextLines(ctx, text, maxWidth) {
   return lines;
 }
 
-function renderShareComposite(img) {
+function loadFaceImage(src) {
+  return new Promise(function(resolve) {
+    if (!src) { resolve(null); return; }
+    var im = new Image();
+    im.onload = function() { resolve(im); };
+    im.onerror = function() { resolve(null); };
+    im.src = src;
+  });
+}
+
+function drawAvatar(ctx, faceImg, playerIdx, x, y, size) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  if (faceImg) {
+    ctx.drawImage(faceImg, x, y, size, size);
+  } else {
+    var colors = (typeof PLAYER_COLORS !== 'undefined' && PLAYER_COLORS.length)
+      ? PLAYER_COLORS
+      : ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#1abc9c','#e67e22','#34495e'];
+    ctx.fillStyle = colors[playerIdx % colors.length];
+    ctx.fillRect(x, y, size, size);
+  }
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function renderShareComposite(img, faces) {
   const W = 1080;
   const photoH = Math.round(img.height * (W / img.width));
-  const TOP_H = 240;
-  const BOTTOM_BASE = 260;
+  const TOP_H = 280;
+  const BOTTOM_BASE = 320;
   const POEM_LINE_H = 28;
   const PAD = 40;
 
@@ -2340,6 +2377,8 @@ function renderShareComposite(img) {
   const totalCortesC = getTotalCortes();
   const players = state.players.map((p, i) => ({
     name: p.name,
+    face: faces ? faces[i] : null,
+    playerIdx: i,
     total: totals[i],
     fines: totalFinesC[i],
     cortes: totalCortesC[i],
@@ -2384,41 +2423,54 @@ function renderShareComposite(img) {
   ctx.fillStyle = COL_BG;
   ctx.fillRect(0, 0, W, TOP_H);
 
-  ctx.textBaseline = 'top';
-  ctx.font = "bold 64px 'Fredoka One', Inter, sans-serif";
-  ctx.fillStyle = COL_YELLOW;
-  ctx.fillText(`🏆 ${winner.name}`, PAD, 40);
+  const WINNER_FACE_SIZE = 120;
+  const WINNER_FACE_X = PAD;
+  const WINNER_FACE_Y = 50;
+  const WINNER_TEXT_X = WINNER_FACE_X + WINNER_FACE_SIZE + 24;
 
-  ctx.font = "600 42px Inter, sans-serif";
+  drawAvatar(ctx, winner.face, winner.playerIdx, WINNER_FACE_X, WINNER_FACE_Y, WINNER_FACE_SIZE);
+
+  ctx.textBaseline = 'top';
+  ctx.font = "bold 56px 'Fredoka One', Inter, sans-serif";
+  ctx.fillStyle = COL_YELLOW;
+  ctx.fillText(`🏆 ${winner.name}`, WINNER_TEXT_X, 52);
+
+  ctx.font = "600 40px Inter, sans-serif";
   ctx.fillStyle = COL_TEXT;
   const winnerScore = `${winner.total} pts`;
-  ctx.fillText(winnerScore, PAD, 112);
+  ctx.fillText(winnerScore, WINNER_TEXT_X, 122);
 
-  let wx = PAD + ctx.measureText(winnerScore).width + 16;
+  let wx = WINNER_TEXT_X + ctx.measureText(winnerScore).width + 16;
   ctx.font = "500 22px Inter, sans-serif";
   if (winner.fines > 0) {
     ctx.fillStyle = COL_YELLOW;
     const s = `(+${winner.fines} ${t('game_fines_label')})`;
-    ctx.fillText(s, wx, 124);
+    ctx.fillText(s, wx, 134);
     wx += ctx.measureText(s).width + 10;
   }
   if (winner.cortes < 0) {
     ctx.fillStyle = COL_GREEN;
     const s = `(${winner.cortes} ${t('game_cortes_label')})`;
-    ctx.fillText(s, wx, 124);
+    ctx.fillText(s, wx, 134);
   }
 
+  const RU_FACE_SIZE = 36;
   ctx.font = "500 20px Inter, sans-serif";
   ctx.fillStyle = COL_MUTED;
   ctx.textAlign = 'right';
-  let my = 44;
+  ctx.textBaseline = 'top';
+  let my = 54;
   middle.forEach((p, i) => {
     const pos = i + 2;
     let line = `${pos}. ${p.name} — ${p.total} pts`;
     if (p.fines > 0) line += ` (+${p.fines} ${t('game_fines_label')})`;
     if (p.cortes < 0) line += ` (${p.cortes} ${t('game_cortes_label')})`;
+    const textWidth = ctx.measureText(line).width;
+    const faceX = W - PAD - textWidth - RU_FACE_SIZE - 12;
+    drawAvatar(ctx, p.face, p.playerIdx, faceX, my - 8, RU_FACE_SIZE);
+    ctx.fillStyle = COL_MUTED;
     ctx.fillText(line, W - PAD, my);
-    my += 28;
+    my += 46;
   });
   ctx.textAlign = 'left';
 
@@ -2442,17 +2494,24 @@ function renderShareComposite(img) {
   const dW = ctx.measureText(dateStr).width;
   ctx.fillText(dateStr, W - PAD - dW, metaY);
 
+  const LOSER_FACE_SIZE = 90;
+  const LOSER_FACE_X = PAD;
+  const LOSER_FACE_Y = by0 + 80;
+  const LOSER_TEXT_X = LOSER_FACE_X + LOSER_FACE_SIZE + 20;
+
+  drawAvatar(ctx, loser.face, loser.playerIdx, LOSER_FACE_X, LOSER_FACE_Y, LOSER_FACE_SIZE);
+
   ctx.font = "600 18px Inter, sans-serif";
   ctx.fillStyle = COL_MUTED;
-  ctx.fillText(t('share_loser_label').toUpperCase(), PAD, by0 + 70);
+  ctx.fillText(t('share_loser_label').toUpperCase(), LOSER_TEXT_X, by0 + 80);
 
-  ctx.font = "bold 40px 'Fredoka One', Inter, sans-serif";
+  ctx.font = "bold 36px 'Fredoka One', Inter, sans-serif";
   ctx.fillStyle = COL_GREEN;
-  ctx.fillText(`💀 ${loser.name} — ${loser.total} pts`, PAD, by0 + 96);
+  ctx.fillText(`💀 ${loser.name} — ${loser.total} pts`, LOSER_TEXT_X, by0 + 106);
 
-  let ly = by0 + 144;
+  let ly = by0 + 152;
   ctx.font = "500 20px Inter, sans-serif";
-  let lx = PAD;
+  let lx = LOSER_TEXT_X;
   if (loser.fines > 0) {
     ctx.fillStyle = COL_YELLOW;
     const s = `(+${loser.fines} ${t('game_fines_label')})`;
@@ -2467,7 +2526,7 @@ function renderShareComposite(img) {
 
   ctx.font = "italic 22px Inter, sans-serif";
   ctx.fillStyle = COL_TEXT;
-  let py = by0 + 176;
+  let py = by0 + 210;
   wrappedPoem.forEach(group => {
     group.forEach(ln => {
       ctx.fillText(ln, PAD, py);
@@ -2489,11 +2548,13 @@ function onSharePhotoChange(ev) {
   reader.onload = function () {
     const img = new Image();
     img.onload = function () {
-      const canvas = renderShareComposite(img);
-      sharePhotoState.originalDataUrl = canvas.toDataURL('image/png');
-      elO.src = sharePhotoState.originalDataUrl;
-      row.style.display = 'flex';
-      ev.target.value = '';
+      Promise.all(state.players.map(function(p) { return loadFaceImage(p.face); })).then(function(faces) {
+        const canvas = renderShareComposite(img, faces);
+        sharePhotoState.originalDataUrl = canvas.toDataURL('image/png');
+        elO.src = sharePhotoState.originalDataUrl;
+        row.style.display = 'flex';
+        ev.target.value = '';
+      });
     };
     img.src = reader.result;
   };
