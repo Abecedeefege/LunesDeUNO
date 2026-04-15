@@ -1,0 +1,4 @@
+# Local audit artefacts — may contain personal device fingerprints,
+# IPs, GPU/ISP info etc. Never commit to a public repo.
+audit-report.pdf
+audit-report*.pdf
