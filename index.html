@@ -1889,8 +1889,10 @@ function renderAttendanceRoster() {
     const attending = !!state._setupAttending[slug];
     const isHost = attending && hostSlug === slug;
     const face = PRESET_FACES[slug];
+    const faceImg = `<img src="${face}" alt="${name}">`;
+    const wrapped = _withSeasonStar(faceImg, slug, 'lg');
     html += `<span class="preset-chip ${attending ? 'attending' : ''} ${isHost ? 'host-chip' : ''}" onclick="toggleAttending('${slug}')">
-      <img src="${face}" alt="${name}">
+      ${wrapped}
       <span class="chip-name">${name}</span>
     </span>`;
   });
@@ -2892,7 +2894,7 @@ function loadFaceImage(src) {
   });
 }
 
-function drawAvatar(ctx, faceImg, playerIdx, x, y, size) {
+function drawAvatar(ctx, faceImg, playerIdx, x, y, size, slug) {
   ctx.save();
   ctx.beginPath();
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
@@ -2913,6 +2915,34 @@ function drawAvatar(ctx, faceImg, playerIdx, x, y, size) {
   ctx.beginPath();
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
   ctx.stroke();
+
+  // Season-winner star badge above the avatar
+  if (slug && typeof _isSeasonWinner === 'function' && _isSeasonWinner(slug)) {
+    var starFont = Math.max(10, Math.round(size * 0.28));
+    var padX = Math.max(3, Math.round(size * 0.06));
+    var padY = Math.max(2, Math.round(size * 0.04));
+    ctx.save();
+    ctx.font = 'bold ' + starFont + "px 'Inter', sans-serif";
+    ctx.textBaseline = 'top';
+    ctx.textAlign = 'left';
+    var star = '\u2726';
+    var starW = ctx.measureText(star).width;
+    var rectW = Math.ceil(starW) + padX * 2;
+    var rectH = starFont + padY * 2;
+    var rectX = x + size / 2 - rectW / 2;
+    var rectY = y - rectH - Math.max(2, Math.round(size * 0.04));
+    ctx.fillStyle = '#0f0f1a';
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(rectX, rectY, rectW, rectH, Math.min(6, rectH / 3));
+      ctx.fill();
+    } else {
+      ctx.fillRect(rectX, rectY, rectW, rectH);
+    }
+    ctx.fillStyle = '#ffd400';
+    ctx.fillText(star, rectX + padX, rectY + padY);
+    ctx.restore();
+  }
 }
 
 function renderShareComposite(img, faces) {
@@ -2930,6 +2960,7 @@ function renderShareComposite(img, faces) {
     name: p.name,
     face: faces ? faces[i] : null,
     playerIdx: i,
+    slug: (typeof _playerSlug === 'function') ? _playerSlug(p) : (p.name || '').toLowerCase(),
     total: totals[i],
     fines: totalFinesC[i],
     cortes: totalCortesC[i],
@@ -2980,7 +3011,7 @@ function renderShareComposite(img, faces) {
   const WINNER_FACE_Y = 50;
   const WINNER_TEXT_X = WINNER_FACE_X + WINNER_FACE_SIZE + 24;
 
-  drawAvatar(ctx, winner.face, winner.playerIdx, WINNER_FACE_X, WINNER_FACE_Y, WINNER_FACE_SIZE);
+  drawAvatar(ctx, winner.face, winner.playerIdx, WINNER_FACE_X, WINNER_FACE_Y, WINNER_FACE_SIZE, winner.slug);
 
   ctx.textBaseline = 'top';
   ctx.font = "bold 56px 'Fredoka One', Inter, sans-serif";
@@ -3020,7 +3051,7 @@ function renderShareComposite(img, faces) {
     if (p.cortes < 0) line += ' (' + p.cortes + ' ' + t('game_cortes_label') + ')';
     const textWidth = ctx.measureText(line).width;
     const faceX = W - PAD - textWidth - RU_FACE_SIZE - 12;
-    drawAvatar(ctx, p.face, p.playerIdx, faceX, my - 8, RU_FACE_SIZE);
+    drawAvatar(ctx, p.face, p.playerIdx, faceX, my - 8, RU_FACE_SIZE, p.slug);
     ctx.fillStyle = COL_MUTED;
     ctx.fillText(line, W - PAD, my);
     my += 46;
@@ -3050,7 +3081,7 @@ function renderShareComposite(img, faces) {
   const LOSER_FACE_Y = by0 + 80;
   const LOSER_TEXT_X = LOSER_FACE_X + LOSER_FACE_SIZE + 20;
 
-  drawAvatar(ctx, loser.face, loser.playerIdx, LOSER_FACE_X, LOSER_FACE_Y, LOSER_FACE_SIZE);
+  drawAvatar(ctx, loser.face, loser.playerIdx, LOSER_FACE_X, LOSER_FACE_Y, LOSER_FACE_SIZE, loser.slug);
 
   ctx.font = '600 18px Inter, sans-serif';
   ctx.fillStyle = COL_MUTED;
@@ -4002,7 +4033,8 @@ function renderPlayerStats(slug) {
   var ps = _statsData.computed.byPlayer[slug];
   if (!ps) { container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</div>'; return; }
   if (!ps.gamesPlayed) {
-    container.innerHTML = '<div class="stats-hero"><img src="' + (PRESET_FACES[slug] || '') + '"><div><div class="stats-hero-name">' + _presetName(slug) + '</div><div class="stats-hero-meta">' + t('stats_no_data') + '</div></div></div>';
+    var emptyFace = PRESET_FACES[slug] ? '<img src="' + PRESET_FACES[slug] + '">' : '';
+    container.innerHTML = '<div class="stats-hero">' + _withSeasonStar(emptyFace, slug, 'lg') + '<div><div class="stats-hero-name">' + _presetName(slug) + '</div><div class="stats-hero-meta">' + t('stats_no_data') + '</div></div></div>';
     return;
   }
 
@@ -4319,7 +4351,25 @@ function lduBootstrap() {
   });
   window.LDU.seedPresets(presets).catch(function(err) { console.warn('[LDU] seedPresets failed:', err); });
   syncRemoteGamesToLocal().then(function() { renderGamesList(); });
-  loadSeasonWinners().then(function() { renderGamesList(); });
+  loadSeasonWinners().then(function() {
+    renderGamesList();
+    var setupEl = document.getElementById('setup');
+    if (setupEl && setupEl.classList.contains('active') && typeof renderAttendanceRoster === 'function') {
+      renderAttendanceRoster();
+    }
+    var gameEl = document.getElementById('game');
+    if (gameEl && gameEl.classList.contains('active') && typeof renderGame === 'function') {
+      try { renderGame(); } catch(e) {}
+    }
+    var resultsEl = document.getElementById('results');
+    if (resultsEl && resultsEl.classList.contains('active') && typeof renderResults === 'function') {
+      try { renderResults(); } catch(e) {}
+    }
+    var statsEl = document.getElementById('stats');
+    if (statsEl && statsEl.classList.contains('active') && typeof initStats === 'function') {
+      try { initStats(); } catch(e) {}
+    }
+  });
 }
 
 if (window.LDU_READY) {
