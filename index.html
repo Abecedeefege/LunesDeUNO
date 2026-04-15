@@ -3447,13 +3447,15 @@ function maybeComputeSeason() {
       });
 
       fourGames.forEach(function(g) {
-        // Compute this game's loser score = max final score among participants.
-        var maxFinal = -Infinity;
+        // Loser-base = highest rounds-only total (the slot that crossed
+        // maxPoints). Absentees get that base score as their penalty —
+        // explicitly NOT the loser's fines/cortes.
+        var maxBase = -Infinity;
         (g.participants || []).forEach(function(p) {
-          var fs = computeGameFinalScore(g, p.slot);
-          if (fs > maxFinal) maxFinal = fs;
+          var base = (g.rounds || []).reduce(function(sum, r) { return sum + ((r && r[p.slot]) || 0); }, 0);
+          if (base > maxBase) maxBase = base;
         });
-        var loserPenalty = (maxFinal === -Infinity) ? 0 : maxFinal;
+        var loserPenalty = (maxBase === -Infinity) ? 0 : maxBase;
 
         (g.participants || []).forEach(function(p) {
           if (!p.playerId) return;
@@ -3778,14 +3780,21 @@ function computeAllStats(games, seasons) {
       });
     });
 
-    // Absentees are penalized with the loser's final score (= loser's raw +
-    // fines + cortes). This keeps season totals fair for missed games.
-    var loserSlot = ordered.length ? ordered[ordered.length - 1].slot : -1;
-    var loserPenalty = loserSlot >= 0 ? finalScores[loserSlot] : 0;
+    // Absentees are penalized with the loser's BASE game score only (rounds
+    // only, no fines, no cortes). The loser is whoever crossed maxPoints,
+    // i.e. the slot with the highest base-score total.
+    var baseScores = participants.map(function(_, slot) {
+      return (g.rounds || []).reduce(function(sum, r) { return sum + ((r && r[slot]) || 0); }, 0);
+    });
+    var loserSlot = -1;
+    var loserBase = 0;
+    baseScores.forEach(function(v, i) {
+      if (loserSlot < 0 || v > loserBase) { loserSlot = i; loserBase = v; }
+    });
     (g.absentees || []).forEach(function(absSlug) {
       if (byPlayer[absSlug]) {
         byPlayer[absSlug].absences++;
-        byPlayer[absSlug].totalScore += loserPenalty;
+        byPlayer[absSlug].totalScore += loserBase;
       }
     });
   });
@@ -4025,12 +4034,13 @@ function _computeOngoingSeason(games, finishedSeasons) {
   var allSlugs = {};
 
   tail.forEach(function(g) {
-    var maxFinal = -Infinity;
+    // Absentee penalty = loser's BASE score (rounds only, no fines/cortes).
+    var maxBase = -Infinity;
     (g.participants || []).forEach(function(p) {
-      var fs = computeGameFinalScore(g, p.slot);
-      if (fs > maxFinal) maxFinal = fs;
+      var base = (g.rounds || []).reduce(function(sum, r) { return sum + ((r && r[p.slot]) || 0); }, 0);
+      if (base > maxBase) maxBase = base;
     });
-    var loserPenalty = (maxFinal === -Infinity) ? 0 : maxFinal;
+    var loserPenalty = (maxBase === -Infinity) ? 0 : maxBase;
     (g.participants || []).forEach(function(p) {
       if (!p.playerId) return;
       presence[p.playerId] = (presence[p.playerId] || 0) + 1;
