@@ -1,0 +1,2642 @@
+{
+  "_meta": {
+    "project": "lunesdeuno",
+    "fetchedAt": 1776286460581,
+    "fetchedAtIso": "2026-04-15T20:54:20Z"
+  },
+  "collections": {
+    "games": {
+      "count": 6,
+      "documents": [
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s1g1",
+          "fields": {
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "maxPoints": {
+              "integerValue": "422"
+            },
+            "updatedAt": {
+              "timestampValue": "2026-04-15T19:53:42.191Z"
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "tano"
+                  },
+                  {
+                    "stringValue": "naso"
+                  }
+                ]
+              }
+            },
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "pt"
+                        },
+                        "slot": {
+                          "integerValue": "0"
+                        },
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "PT"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/pt.png"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "mac"
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        },
+                        "name": {
+                          "stringValue": "Mac"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mac.png"
+                        },
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "playerId": {
+                          "stringValue": "mata"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mata.png"
+                        },
+                        "name": {
+                          "stringValue": "Mata"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#00A651"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#0072BC"
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        },
+                        "slot": {
+                          "integerValue": "3"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/nachi.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Nachi"
+                        },
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "slot": {
+                          "integerValue": "4"
+                        },
+                        "playerId": {
+                          "stringValue": "nachi"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "name": {
+                          "stringValue": "Carucha"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/carucha.png"
+                        },
+                        "color": {
+                          "stringValue": "#A855F7"
+                        },
+                        "playerId": {
+                          "stringValue": "carucha"
+                        },
+                        "slot": {
+                          "integerValue": "5"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "color": {
+                          "stringValue": "#EC4899"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        },
+                        "slot": {
+                          "integerValue": "6"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#14B8A6"
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        },
+                        "slot": {
+                          "integerValue": "7"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "finishedAt": {
+              "timestampValue": "2026-03-02T22:00:00Z"
+            },
+            "winnerPlayerId": {
+              "stringValue": "gordo"
+            },
+            "winnerSlot": {
+              "integerValue": "6"
+            },
+            "seasonId": {
+              "integerValue": "1"
+            },
+            "hostId": {
+              "stringValue": "carucha"
+            },
+            "finished": {
+              "booleanValue": true
+            },
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "269"
+                              },
+                              {
+                                "integerValue": "422"
+                              },
+                              {
+                                "integerValue": "286"
+                              },
+                              {
+                                "integerValue": "310"
+                              },
+                              {
+                                "integerValue": "361"
+                              },
+                              {
+                                "integerValue": "370"
+                              },
+                              {
+                                "integerValue": "245"
+                              },
+                              {
+                                "integerValue": "295"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "gameId": {
+              "stringValue": "game_s1g1"
+            },
+            "createdAt": {
+              "timestampValue": "2026-04-15T19:53:39.741Z"
+            }
+          },
+          "createTime": "2026-04-15T19:00:44.959742Z",
+          "updateTime": "2026-04-15T19:53:42.226104Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s1g2",
+          "fields": {
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "10"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "0"
+                        },
+                        "playerId": {
+                          "stringValue": "pt"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/pt.png"
+                        },
+                        "name": {
+                          "stringValue": "PT"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/mac.png"
+                        },
+                        "name": {
+                          "stringValue": "Mac"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        },
+                        "playerId": {
+                          "stringValue": "mac"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        },
+                        "color": {
+                          "stringValue": "#00A651"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "3"
+                        },
+                        "playerId": {
+                          "stringValue": "carucha"
+                        },
+                        "color": {
+                          "stringValue": "#0072BC"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/carucha.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Carucha"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Naso"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/naso.png"
+                        },
+                        "playerId": {
+                          "stringValue": "naso"
+                        },
+                        "slot": {
+                          "integerValue": "4"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "5"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        },
+                        "color": {
+                          "stringValue": "#A855F7"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "6"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        },
+                        "color": {
+                          "stringValue": "#EC4899"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "updatedAt": {
+              "timestampValue": "2026-03-09T22:00:00Z"
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "tano"
+                  },
+                  {
+                    "stringValue": "mata"
+                  },
+                  {
+                    "stringValue": "nachi"
+                  }
+                ]
+              }
+            },
+            "maxPoints": {
+              "integerValue": "439"
+            },
+            "createdAt": {
+              "timestampValue": "2026-03-09T22:00:00Z"
+            },
+            "gameId": {
+              "stringValue": "game_s1g2"
+            },
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "258"
+                              },
+                              {
+                                "integerValue": "193"
+                              },
+                              {
+                                "integerValue": "322"
+                              },
+                              {
+                                "integerValue": "168"
+                              },
+                              {
+                                "integerValue": "439"
+                              },
+                              {
+                                "integerValue": "163"
+                              },
+                              {
+                                "integerValue": "229"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "hostId": {
+              "stringValue": "gael"
+            },
+            "finished": {
+              "booleanValue": true
+            },
+            "finishedAt": {
+              "timestampValue": "2026-03-09T22:00:00Z"
+            },
+            "winnerPlayerId": {
+              "stringValue": "gordo"
+            },
+            "winnerSlot": {
+              "integerValue": "5"
+            },
+            "seasonId": {
+              "integerValue": "1"
+            }
+          },
+          "createTime": "2026-04-15T19:00:45.220521Z",
+          "updateTime": "2026-04-15T19:00:45.220521Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s1g3",
+          "fields": {
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "221"
+                              },
+                              {
+                                "integerValue": "242"
+                              },
+                              {
+                                "integerValue": "190"
+                              },
+                              {
+                                "integerValue": "62"
+                              },
+                              {
+                                "integerValue": "228"
+                              },
+                              {
+                                "integerValue": "229"
+                              },
+                              {
+                                "integerValue": "407"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "createdAt": {
+              "timestampValue": "2026-04-15T19:55:45.849Z"
+            },
+            "gameId": {
+              "stringValue": "game_s1g3"
+            },
+            "seasonId": {
+              "integerValue": "1"
+            },
+            "winnerPlayerId": {
+              "stringValue": "negro"
+            },
+            "winnerSlot": {
+              "integerValue": "3"
+            },
+            "finishedAt": {
+              "timestampValue": "2026-03-16T22:00:00Z"
+            },
+            "finished": {
+              "booleanValue": true
+            },
+            "hostId": {
+              "stringValue": "naso"
+            },
+            "maxPoints": {
+              "integerValue": "407"
+            },
+            "updatedAt": {
+              "timestampValue": "2026-04-15T19:55:48.392Z"
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "carucha"
+                  },
+                  {
+                    "stringValue": "mata"
+                  },
+                  {
+                    "stringValue": "nachi"
+                  },
+                  {
+                    "stringValue": "tano"
+                  }
+                ]
+              }
+            },
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "PT"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/pt.png"
+                        },
+                        "playerId": {
+                          "stringValue": "pt"
+                        },
+                        "slot": {
+                          "integerValue": "0"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Mac"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mac.png"
+                        },
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        },
+                        "playerId": {
+                          "stringValue": "mac"
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#00A651"
+                        },
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "3"
+                        },
+                        "playerId": {
+                          "stringValue": "negro"
+                        },
+                        "color": {
+                          "stringValue": "#0072BC"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/negro.png"
+                        },
+                        "name": {
+                          "stringValue": "Negro"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "4"
+                        },
+                        "playerId": {
+                          "stringValue": "naso"
+                        },
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/naso.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Naso"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#A855F7"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "slot": {
+                          "integerValue": "5"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#EC4899"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "slot": {
+                          "integerValue": "6"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "20"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "70"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "createTime": "2026-04-15T19:00:45.898017Z",
+          "updateTime": "2026-04-15T19:55:48.425801Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s1g4",
+          "fields": {
+            "finished": {
+              "booleanValue": true
+            },
+            "hostId": {
+              "stringValue": "gordo"
+            },
+            "winnerPlayerId": {
+              "stringValue": "cobra"
+            },
+            "winnerSlot": {
+              "integerValue": "7"
+            },
+            "finishedAt": {
+              "timestampValue": "2026-03-23T22:00:00Z"
+            },
+            "seasonId": {
+              "integerValue": "1"
+            },
+            "createdAt": {
+              "timestampValue": "2026-04-15T19:55:56.799Z"
+            },
+            "gameId": {
+              "stringValue": "game_s1g4"
+            },
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "455"
+                              },
+                              {
+                                "integerValue": "441"
+                              },
+                              {
+                                "integerValue": "517"
+                              },
+                              {
+                                "integerValue": "569"
+                              },
+                              {
+                                "integerValue": "364"
+                              },
+                              {
+                                "integerValue": "600"
+                              },
+                              {
+                                "integerValue": "394"
+                              },
+                              {
+                                "integerValue": "348"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "10"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "10"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "10"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "pt"
+                        },
+                        "slot": {
+                          "integerValue": "0"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "PT"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/pt.png"
+                        },
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "mac"
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        },
+                        "name": {
+                          "stringValue": "Mac"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mac.png"
+                        },
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "mata"
+                        },
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "color": {
+                          "stringValue": "#00A651"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Mata"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mata.png"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "3"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        },
+                        "color": {
+                          "stringValue": "#0072BC"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/carucha.png"
+                        },
+                        "name": {
+                          "stringValue": "Carucha"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "slot": {
+                          "integerValue": "4"
+                        },
+                        "playerId": {
+                          "stringValue": "carucha"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#A855F7"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/naso.png"
+                        },
+                        "name": {
+                          "stringValue": "Naso"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "slot": {
+                          "integerValue": "5"
+                        },
+                        "playerId": {
+                          "stringValue": "naso"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "color": {
+                          "stringValue": "#EC4899"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        },
+                        "slot": {
+                          "integerValue": "6"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#14B8A6"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        },
+                        "slot": {
+                          "integerValue": "7"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "maxPoints": {
+              "integerValue": "600"
+            },
+            "updatedAt": {
+              "timestampValue": "2026-04-15T19:55:58.629Z"
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "tano"
+                  },
+                  {
+                    "stringValue": "nachi"
+                  }
+                ]
+              }
+            }
+          },
+          "createTime": "2026-04-15T19:00:46.129401Z",
+          "updateTime": "2026-04-15T19:55:58.660588Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s2g1",
+          "fields": {
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Mata"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mata.png"
+                        },
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        },
+                        "playerId": {
+                          "stringValue": "mata"
+                        },
+                        "slot": {
+                          "integerValue": "0"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#00A651"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/nachi.png"
+                        },
+                        "name": {
+                          "stringValue": "Nachi"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "playerId": {
+                          "stringValue": "nachi"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "3"
+                        },
+                        "playerId": {
+                          "stringValue": "carucha"
+                        },
+                        "color": {
+                          "stringValue": "#0072BC"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/carucha.png"
+                        },
+                        "name": {
+                          "stringValue": "Carucha"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Negro"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/negro.png"
+                        },
+                        "playerId": {
+                          "stringValue": "negro"
+                        },
+                        "slot": {
+                          "integerValue": "4"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "playerId": {
+                          "stringValue": "tano"
+                        },
+                        "slot": {
+                          "integerValue": "5"
+                        },
+                        "name": {
+                          "stringValue": "Tano"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/tano.png"
+                        },
+                        "color": {
+                          "stringValue": "#A855F7"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "6"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#EC4899"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#14B8A6"
+                        },
+                        "slot": {
+                          "integerValue": "7"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "1"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "mac"
+                  },
+                  {
+                    "stringValue": "naso"
+                  },
+                  {
+                    "stringValue": "pt"
+                  }
+                ]
+              }
+            },
+            "updatedAt": {
+              "timestampValue": "2026-04-15T20:07:10.817Z"
+            },
+            "maxPoints": {
+              "integerValue": "417"
+            },
+            "hostId": {
+              "stringValue": "carucha"
+            },
+            "finished": {
+              "booleanValue": true
+            },
+            "finishedAt": {
+              "timestampValue": "2026-04-06T22:00:00Z"
+            },
+            "winnerPlayerId": {
+              "stringValue": "carucha"
+            },
+            "winnerSlot": {
+              "integerValue": "3"
+            },
+            "seasonId": {
+              "integerValue": "2"
+            },
+            "gameId": {
+              "stringValue": "game_s2g1"
+            },
+            "createdAt": {
+              "timestampValue": "2026-04-15T20:07:08.157Z"
+            },
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "200"
+                              },
+                              {
+                                "integerValue": "331"
+                              },
+                              {
+                                "integerValue": "248"
+                              },
+                              {
+                                "integerValue": "158"
+                              },
+                              {
+                                "integerValue": "312"
+                              },
+                              {
+                                "integerValue": "328"
+                              },
+                              {
+                                "integerValue": "292"
+                              },
+                              {
+                                "integerValue": "417"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "createTime": "2026-04-15T19:00:46.830969Z",
+          "updateTime": "2026-04-15T20:07:10.856325Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/games/game_s2g2",
+          "fields": {
+            "hostId": {
+              "stringValue": "carucha"
+            },
+            "finished": {
+              "booleanValue": true
+            },
+            "seasonId": {
+              "integerValue": "2"
+            },
+            "finishedAt": {
+              "timestampValue": "2026-04-13T22:00:00Z"
+            },
+            "winnerSlot": {
+              "integerValue": "4"
+            },
+            "winnerPlayerId": {
+              "stringValue": "carucha"
+            },
+            "createdAt": {
+              "timestampValue": "2026-04-15T20:09:54.877Z"
+            },
+            "gameId": {
+              "stringValue": "game_s2g2"
+            },
+            "venue": {
+              "stringValue": ""
+            },
+            "rounds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "200"
+                              },
+                              {
+                                "integerValue": "403"
+                              },
+                              {
+                                "integerValue": "321"
+                              },
+                              {
+                                "integerValue": "230"
+                              },
+                              {
+                                "integerValue": "176"
+                              },
+                              {
+                                "integerValue": "186"
+                              },
+                              {
+                                "integerValue": "188"
+                              },
+                              {
+                                "integerValue": "353"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "participants": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "0"
+                        },
+                        "playerId": {
+                          "stringValue": "pt"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/pt.png"
+                        },
+                        "name": {
+                          "stringValue": "PT"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#ED1C24"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#FFDE00"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mac.png"
+                        },
+                        "name": {
+                          "stringValue": "Mac"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "slot": {
+                          "integerValue": "1"
+                        },
+                        "playerId": {
+                          "stringValue": "mac"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#00A651"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/mata.png"
+                        },
+                        "name": {
+                          "stringValue": "Mata"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "slot": {
+                          "integerValue": "2"
+                        },
+                        "playerId": {
+                          "stringValue": "mata"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "3"
+                        },
+                        "playerId": {
+                          "stringValue": "gael"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gael.png"
+                        },
+                        "name": {
+                          "stringValue": "Gael"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "color": {
+                          "stringValue": "#0072BC"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "face": {
+                          "stringValue": "assets/faces/carucha.png"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "name": {
+                          "stringValue": "Carucha"
+                        },
+                        "color": {
+                          "stringValue": "#FF6B35"
+                        },
+                        "slot": {
+                          "integerValue": "4"
+                        },
+                        "playerId": {
+                          "stringValue": "carucha"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "color": {
+                          "stringValue": "#A855F7"
+                        },
+                        "name": {
+                          "stringValue": "Naso"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/naso.png"
+                        },
+                        "playerId": {
+                          "stringValue": "naso"
+                        },
+                        "slot": {
+                          "integerValue": "5"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "name": {
+                          "stringValue": "Gordo"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/gordo.png"
+                        },
+                        "color": {
+                          "stringValue": "#EC4899"
+                        },
+                        "playerId": {
+                          "stringValue": "gordo"
+                        },
+                        "slot": {
+                          "integerValue": "6"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "slot": {
+                          "integerValue": "7"
+                        },
+                        "playerId": {
+                          "stringValue": "cobra"
+                        },
+                        "color": {
+                          "stringValue": "#14B8A6"
+                        },
+                        "face": {
+                          "stringValue": "assets/faces/cobra.png"
+                        },
+                        "name": {
+                          "stringValue": "Cobra"
+                        },
+                        "isGuest": {
+                          "booleanValue": false
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "fines": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "10"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "maxPoints": {
+              "integerValue": "403"
+            },
+            "updatedAt": {
+              "timestampValue": "2026-04-15T20:09:57.257Z"
+            },
+            "absentees": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "nachi"
+                  },
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "tano"
+                  }
+                ]
+              }
+            },
+            "cortes": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "mapValue": {
+                      "fields": {
+                        "v": {
+                          "arrayValue": {
+                            "values": [
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "0"
+                              },
+                              {
+                                "integerValue": "1"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "createTime": "2026-04-15T19:00:47.780733Z",
+          "updateTime": "2026-04-15T20:09:57.299032Z"
+        }
+      ]
+    },
+    "seasons": {
+      "count": 1,
+      "documents": [
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/seasons/1",
+          "fields": {
+            "seasonNumber": {
+              "integerValue": "1"
+            },
+            "losers": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "carucha"
+                  },
+                  {
+                    "stringValue": "cobra"
+                  },
+                  {
+                    "stringValue": "gael"
+                  },
+                  {
+                    "stringValue": "mac"
+                  },
+                  {
+                    "stringValue": "mata"
+                  },
+                  {
+                    "stringValue": "nachi"
+                  },
+                  {
+                    "stringValue": "naso"
+                  },
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "pt"
+                  },
+                  {
+                    "stringValue": "tano"
+                  }
+                ]
+              }
+            },
+            "perPlayerScores": {
+              "mapValue": {
+                "fields": {
+                  "mac": {
+                    "integerValue": "1318"
+                  },
+                  "pt": {
+                    "integerValue": "1213"
+                  },
+                  "gael": {
+                    "integerValue": "1401"
+                  },
+                  "tano": {
+                    "integerValue": "1868"
+                  },
+                  "negro": {
+                    "integerValue": "1593"
+                  },
+                  "gordo": {
+                    "integerValue": "1031"
+                  },
+                  "cobra": {
+                    "integerValue": "1279"
+                  },
+                  "nachi": {
+                    "integerValue": "1807"
+                  },
+                  "mata": {
+                    "integerValue": "1649"
+                  },
+                  "carucha": {
+                    "integerValue": "1309"
+                  },
+                  "naso": {
+                    "integerValue": "1709"
+                  }
+                }
+              }
+            },
+            "endedAt": {
+              "timestampValue": "2026-03-23T22:00:00Z"
+            },
+            "participantIds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "carucha"
+                  },
+                  {
+                    "stringValue": "cobra"
+                  },
+                  {
+                    "stringValue": "gael"
+                  },
+                  {
+                    "stringValue": "gordo"
+                  },
+                  {
+                    "stringValue": "mac"
+                  },
+                  {
+                    "stringValue": "mata"
+                  },
+                  {
+                    "stringValue": "nachi"
+                  },
+                  {
+                    "stringValue": "naso"
+                  },
+                  {
+                    "stringValue": "negro"
+                  },
+                  {
+                    "stringValue": "pt"
+                  },
+                  {
+                    "stringValue": "tano"
+                  }
+                ]
+              }
+            },
+            "winnerPlayerId": {
+              "stringValue": "gordo"
+            },
+            "loserPlayerId": {
+              "stringValue": "tano"
+            },
+            "gameIds": {
+              "arrayValue": {
+                "values": [
+                  {
+                    "stringValue": "game_s1g1"
+                  },
+                  {
+                    "stringValue": "game_s1g2"
+                  },
+                  {
+                    "stringValue": "game_s1g3"
+                  },
+                  {
+                    "stringValue": "game_s1g4"
+                  }
+                ]
+              }
+            },
+            "startedAt": {
+              "timestampValue": "2026-03-02T22:00:00Z"
+            }
+          },
+          "createTime": "2026-04-15T19:00:48.011506Z",
+          "updateTime": "2026-04-15T20:07:33.094282Z"
+        }
+      ]
+    },
+    "players": {
+      "count": 11,
+      "documents": [
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/carucha",
+          "fields": {
+            "isPreset": {
+              "booleanValue": true
+            },
+            "slug": {
+              "stringValue": "carucha"
+            },
+            "color": {
+              "stringValue": "#A855F7"
+            },
+            "face": {
+              "stringValue": "assets/faces/carucha.png"
+            },
+            "displayName": {
+              "stringValue": "Carucha"
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.176138Z",
+          "updateTime": "2026-04-14T21:47:44.176138Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/cobra",
+          "fields": {
+            "face": {
+              "stringValue": "assets/faces/cobra.png"
+            },
+            "displayName": {
+              "stringValue": "Cobra"
+            },
+            "isPreset": {
+              "booleanValue": true
+            },
+            "color": {
+              "stringValue": "#84CC16"
+            },
+            "slug": {
+              "stringValue": "cobra"
+            }
+          },
+          "createTime": "2026-04-14T21:47:45.061702Z",
+          "updateTime": "2026-04-14T21:47:45.061702Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/gael",
+          "fields": {
+            "face": {
+              "stringValue": "assets/faces/gael.png"
+            },
+            "displayName": {
+              "stringValue": "Gael"
+            },
+            "isPreset": {
+              "booleanValue": true
+            },
+            "color": {
+              "stringValue": "#0072BC"
+            },
+            "slug": {
+              "stringValue": "gael"
+            }
+          },
+          "createTime": "2026-04-14T21:47:43.853325Z",
+          "updateTime": "2026-04-14T21:47:43.853325Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/gordo",
+          "fields": {
+            "face": {
+              "stringValue": "assets/faces/gordo.png"
+            },
+            "displayName": {
+              "stringValue": "Gordo"
+            },
+            "isPreset": {
+              "booleanValue": true
+            },
+            "slug": {
+              "stringValue": "gordo"
+            },
+            "color": {
+              "stringValue": "#6366F1"
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.893593Z",
+          "updateTime": "2026-04-14T21:47:44.893593Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/mac",
+          "fields": {
+            "face": {
+              "stringValue": "assets/faces/mac.png"
+            },
+            "displayName": {
+              "stringValue": "Mac"
+            },
+            "isPreset": {
+              "booleanValue": true
+            },
+            "slug": {
+              "stringValue": "mac"
+            },
+            "color": {
+              "stringValue": "#FFDE00"
+            }
+          },
+          "createTime": "2026-04-14T21:47:43.468092Z",
+          "updateTime": "2026-04-14T21:47:43.468092Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/mata",
+          "fields": {
+            "displayName": {
+              "stringValue": "Mata"
+            },
+            "face": {
+              "stringValue": "assets/faces/mata.png"
+            },
+            "slug": {
+              "stringValue": "mata"
+            },
+            "color": {
+              "stringValue": "#00A651"
+            },
+            "isPreset": {
+              "booleanValue": true
+            }
+          },
+          "createTime": "2026-04-14T21:47:43.687171Z",
+          "updateTime": "2026-04-14T21:47:43.687171Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/nachi",
+          "fields": {
+            "face": {
+              "stringValue": "assets/faces/nachi.png"
+            },
+            "displayName": {
+              "stringValue": "Nachi"
+            },
+            "isPreset": {
+              "booleanValue": true
+            },
+            "color": {
+              "stringValue": "#FF6B35"
+            },
+            "slug": {
+              "stringValue": "nachi"
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.018018Z",
+          "updateTime": "2026-04-14T21:47:44.018018Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/naso",
+          "fields": {
+            "displayName": {
+              "stringValue": "Naso"
+            },
+            "face": {
+              "stringValue": "assets/faces/naso.png"
+            },
+            "color": {
+              "stringValue": "#14B8A6"
+            },
+            "slug": {
+              "stringValue": "naso"
+            },
+            "isPreset": {
+              "booleanValue": true
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.571181Z",
+          "updateTime": "2026-04-14T21:47:44.571181Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/negro",
+          "fields": {
+            "displayName": {
+              "stringValue": "Negro"
+            },
+            "face": {
+              "stringValue": "assets/faces/negro.png"
+            },
+            "slug": {
+              "stringValue": "negro"
+            },
+            "color": {
+              "stringValue": "#EC4899"
+            },
+            "isPreset": {
+              "booleanValue": true
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.333704Z",
+          "updateTime": "2026-04-14T21:47:44.333704Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/pt",
+          "fields": {
+            "isPreset": {
+              "booleanValue": true
+            },
+            "slug": {
+              "stringValue": "pt"
+            },
+            "color": {
+              "stringValue": "#ED1C24"
+            },
+            "face": {
+              "stringValue": "assets/faces/pt.png"
+            },
+            "displayName": {
+              "stringValue": "PT"
+            }
+          },
+          "createTime": "2026-04-14T21:47:43.084171Z",
+          "updateTime": "2026-04-14T21:47:43.084171Z"
+        },
+        {
+          "name": "projects/lunesdeuno/databases/(default)/documents/players/tano",
+          "fields": {
+            "isPreset": {
+              "booleanValue": true
+            },
+            "color": {
+              "stringValue": "#F97316"
+            },
+            "slug": {
+              "stringValue": "tano"
+            },
+            "face": {
+              "stringValue": "assets/faces/tano.png"
+            },
+            "displayName": {
+              "stringValue": "Tano"
+            }
+          },
+          "createTime": "2026-04-14T21:47:44.733626Z",
+          "updateTime": "2026-04-14T21:47:44.733626Z"
+        }
+      ]
+    },
+    "presets": {
+      "count": 0,
+      "documents": []
+    },
+    "meta": {
+      "count": 0,
+      "documents": []
+    }
+  }
+}
