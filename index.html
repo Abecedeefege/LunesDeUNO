@@ -718,6 +718,18 @@
     .game-item-actions {
       display: flex; flex-direction: row; gap: .5rem;
     }
+    .game-card-season {
+      font-weight: 700; font-size: .95rem; color: var(--text);
+    }
+    .game-card-row {
+      display: flex; align-items: center; gap: .4rem;
+      font-size: .85rem; color: var(--text);
+    }
+    .game-card-row.game-card-loser { color: var(--text-muted); }
+    .game-card-row img.player-face-sm { width: 1.1rem; height: 1.1rem; }
+    .game-card-inprogress {
+      font-weight: 600; font-size: .9rem; color: var(--uno-yellow);
+    }
 
     /* ---- Fines ---- */
     .btn-fine {
@@ -806,21 +818,21 @@
     .stats-hero-name { font-family: 'Fredoka One', cursive; font-size: 1.4rem; }
     .stats-hero-meta { color: var(--text-muted); font-size: .85rem; }
     .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: .5rem;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+      gap: .4rem;
     }
     .stat-tile {
       background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-      padding: .6rem .7rem; display: flex; flex-direction: column; gap: .2rem;
+      padding: .5rem .55rem; display: flex; flex-direction: column; gap: .15rem;
     }
     .stat-tile .stat-label {
-      font-size: .7rem; text-transform: uppercase; letter-spacing: .05em;
+      font-size: .62rem; text-transform: uppercase; letter-spacing: .04em;
       color: var(--text-muted); font-weight: 600;
     }
     .stat-tile .stat-value {
-      font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--text);
+      font-family: 'Fredoka One', cursive; font-size: 1.15rem; color: var(--text);
     }
-    .stat-tile .stat-sub { font-size: .7rem; color: var(--text-muted); }
+    .stat-tile .stat-sub { font-size: .65rem; color: var(--text-muted); }
     .stat-section-label {
       font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
       color: var(--text-muted); font-weight: 700; margin: 1rem 0 .4rem;
@@ -1364,8 +1376,11 @@ const STRINGS = {
     seasons_col_num: 'Temp.',
     seasons_col_winner: 'Ganador',
     seasons_col_score: 'Puntos ganador',
+    seasons_col_loser: 'Perdedor',
+    seasons_col_loser_score: 'Puntos perdedor',
     seasons_col_dates: 'Fechas',
     seasons_col_games: 'Partidas',
+    seasons_in_progress: 'En curso',
     setup_points_label: '¿Hasta cuántos puntos?',
     setup_custom_placeholder: 'Ponele lo que quieras...',
     setup_start_btn: '¡Dale que va!',
@@ -1416,6 +1431,11 @@ const STRINGS = {
     games_confirm_delete: '¿Eliminar este partido?',
     games_limit: 'Límite',
     games_won: 'ganó',
+    games_temporada: 'Temporada',
+    games_partido: 'Partido',
+    games_lost_with: 'perdió con',
+    games_pts: 'puntos',
+    games_inprogress: 'En curso',
     game_fine: 'Multa',
     game_fines: 'Multas',
     game_fines_label: 'multas',
@@ -1427,6 +1447,9 @@ const STRINGS = {
     results_edit_limit: '🎯 Cambiar límite',
     edit_limit_title: 'Cambiar límite de puntos',
     edit_limit_label: 'Nuevo límite (mín. 50)',
+    meals_title: 'Quién paga qué',
+    meals_postre: 'postre',
+    meals_picada: 'picada',
   },
   en: {
     home_sub: 'Score Tracker',
@@ -1504,8 +1527,11 @@ const STRINGS = {
     seasons_col_num: 'Season',
     seasons_col_winner: 'Winner',
     seasons_col_score: 'Winning score',
+    seasons_col_loser: 'Loser',
+    seasons_col_loser_score: 'Losing score',
     seasons_col_dates: 'Dates',
     seasons_col_games: 'Games',
+    seasons_in_progress: 'In progress',
     setup_points_label: 'Points to Play',
     setup_custom_placeholder: 'Custom...',
     setup_start_btn: 'Start Game',
@@ -1556,6 +1582,11 @@ const STRINGS = {
     games_confirm_delete: 'Delete this game?',
     games_limit: 'Limit',
     games_won: 'won',
+    games_temporada: 'Season',
+    games_partido: 'Game',
+    games_lost_with: 'lost with',
+    games_pts: 'points',
+    games_inprogress: 'In progress',
     game_fine: 'Fine',
     game_fines: 'Fines',
     game_fines_label: 'fines',
@@ -1567,6 +1598,9 @@ const STRINGS = {
     results_edit_limit: '🎯 Change limit',
     edit_limit_title: 'Change point limit',
     edit_limit_label: 'New limit (min. 50)',
+    meals_title: 'Who pays',
+    meals_postre: 'dessert',
+    meals_picada: 'snacks',
   }
 };
 
@@ -2152,9 +2186,7 @@ function renderScoreboard(totals) {
     var posInRanking = sorted.indexOf(p);
     var mealBadge = '';
     var n = sorted.length;
-    if (posInRanking === n - 1) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la cena">🍽️</span>';
-    else if (posInRanking === n - 2 && n >= 2) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga el postre">🍮</span>';
-    else if (posInRanking === n - 3 && n >= 3) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga la picada">🧀</span>';
+    if (posInRanking === n - 1 && n >= 1) mealBadge = '<span style="font-size:.7rem;margin-left:.4rem;" title="Paga postre o picada">🍮🧀</span>';
 
     html += `<tr class="${isLowest && state.rounds.length > 0 ? 'winner-row' : ''}">
       <td><div class="player-name-cell">
@@ -2455,17 +2487,20 @@ function renderResults() {
   });
   container.innerHTML = html;
 
-  // Meal assignments
+  // Meal assignments — loser pays postre o picada
   var mealHtml = '';
   var n = standings.length;
   if (n >= 1) {
-    var mealItems = [];
-    mealItems.push(`🍽️ <b>${standings[n-1].name}</b> paga la <b>cena</b>`);
-    if (n >= 2) mealItems.push(`🍮 <b>${standings[n-2].name}</b> paga el <b>postre</b>`);
-    if (n >= 3) mealItems.push(`🧀 <b>${standings[n-3].name}</b> paga la <b>picada</b>`);
+    var loser = standings[n - 1];
+    var loserDot = getPlayerDot(loser, loser.idx);
+    var payVerb = currentLang === 'es' ? 'paga el' : 'pays for';
+    var payOr = currentLang === 'es' ? 'o' : 'or';
     mealHtml = `<div id="mealAssignments" style="width:100%;max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-top:.5rem;">
-      <div style="font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:.6rem;color:var(--text-muted);">🍴 Quién paga qué</div>
-      ${mealItems.map(function(item) { return '<div style="padding:.35rem 0;font-size:.95rem;border-bottom:1px solid var(--border);">' + item + '</div>'; }).join('')}
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;margin-bottom:.6rem;color:var(--text-muted);">🍴 ${t('meals_title')}</div>
+      <div style="padding:.35rem 0;font-size:1rem;display:flex;align-items:center;gap:.5rem;">
+        ${loserDot}
+        <span><b>${loser.name}</b> ${payVerb} 🍮<b>${t('meals_postre')}</b> ${payOr} 🧀<b>${t('meals_picada')}</b></span>
+      </div>
     </div>`;
   }
   var existingMeal = document.getElementById('mealAssignments');
@@ -2644,7 +2679,7 @@ function buildShareText() {
     idx: i
   })).sort((a, b) => a.total - b.total);
   const isAsado = document.body.classList.contains('asado');
-  var headerParts = [isAsado ? '🎩 *Lunes de UNO* 🎩 - EDICION ASADO' : '🎩 *Lunes de UNO* 🎩'];
+  var headerParts = [isAsado ? '🏆 *Lunes de UNO* 🏆 - EDICION ASADO' : '🏆 *Lunes de UNO* 🏆'];
   if (state.venue) headerParts.push('Lugar: ' + state.venue);
   const posQuips = currentLang === 'es'
     ? ['¡CRACK!', 'zafó', 'meh', 'ojo...', 'F']
@@ -2659,16 +2694,13 @@ function buildShareText() {
   lines.push('');
   lines.push(`Resumen: ${state.rounds.length} ${currentLang === 'es' ? 'rondas' : 'rounds'} - ${currentLang === 'es' ? 'limite' : 'limit'} ${state.maxPoints}`);
 
-  // Meal assignments — the loser pays everything
+  // Meal assignments — loser pays postre o picada
   var n = standings.length;
   var loserName = standings[n - 1].name;
-  var mealLines = [
-    'Cena: ' + loserName + (currentLang === 'es' ? ' paga la cena' : ' pays for dinner'),
-    'Postre: ' + loserName + (currentLang === 'es' ? ' paga el postre' : ' pays for dessert'),
-    'Picada: ' + loserName + (currentLang === 'es' ? ' paga la picada' : ' pays for snacks'),
-  ];
+  var payVerb = currentLang === 'es' ? 'paga el' : 'pays for';
+  var payOr = currentLang === 'es' ? 'o' : 'or';
   lines.push('');
-  lines = lines.concat(mealLines);
+  lines.push('🍴 ' + loserName + ' ' + payVerb + ' 🍮' + t('meals_postre') + ' ' + payOr + ' 🧀' + t('meals_picada'));
 
   const lastPlace = standings[standings.length - 1];
   lines.push('');
@@ -2808,7 +2840,7 @@ function renderShareComposite(img, faces) {
   const W = 1080;
   const photoH = Math.round(img.height * (W / img.width));
   const TOP_H = 280;
-  const BOTTOM_BASE = 320;
+  const BOTTOM_BASE = 360;
   const POEM_LINE_H = 28;
   const PAD = 40;
 
@@ -2964,9 +2996,17 @@ function renderShareComposite(img, faces) {
     ctx.fillText(s, lx, ly);
   }
 
+  // Meal line: loser pays postre o picada
+  ctx.font = "600 22px Inter, sans-serif";
+  ctx.fillStyle = COL_TEXT;
+  const payVerbPic = currentLang === 'es' ? 'paga el' : 'pays for';
+  const payOrPic = currentLang === 'es' ? 'o' : 'or';
+  const mealText = '🍴 ' + loser.name + ' ' + payVerbPic + ' 🍮' + t('meals_postre') + ' ' + payOrPic + ' 🧀' + t('meals_picada');
+  ctx.fillText(mealText, PAD, by0 + 200);
+
   ctx.font = 'italic 22px Inter, sans-serif';
   ctx.fillStyle = COL_TEXT;
-  let py = by0 + 210;
+  let py = by0 + 250;
   wrappedPoem.forEach(function(group) {
     group.forEach(function(ln) {
       ctx.fillText(ln, PAD, py);
@@ -3164,42 +3204,110 @@ function formatTimestamp(ts) {
   return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()] + ', ' + hh + ':' + mm;
 }
 
+function formatDate(ts) {
+  var d = new Date(ts);
+  var days = currentLang === 'es'
+    ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+    : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = currentLang === 'es'
+    ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function _gameCardFace(player, idx) {
+  if (!player) return '';
+  if (player.face) {
+    return '<img src="' + player.face + '" alt="' + (player.name || '') + '" class="player-face-sm">';
+  }
+  var color = player.color || (PLAYER_COLORS[idx % PLAYER_COLORS.length]);
+  return '<div class="player-color" style="background:' + color + '"></div>';
+}
+
+function _gameFinalTotals(s) {
+  var rounds = s.rounds || [];
+  var fines = s.fines || [];
+  var cortes = s.cortes || [];
+  var n = (s.players || []).length;
+  var totals = [];
+  for (var i = 0; i < n; i++) {
+    var base = rounds.reduce(function(sum, r) { return sum + ((r && r[i]) || 0); }, 0);
+    var f = fines.reduce(function(sum, r) { return sum + ((r && r[i]) || 0); }, 0);
+    var c = cortes.reduce(function(sum, r) { return sum + ((r && r[i]) ? -50 : 0); }, 0);
+    totals.push(base + f + c);
+  }
+  return totals;
+}
+
 function renderGamesList() {
   var container = document.getElementById('gamesList');
   var games = loadGames();
   if (games.length === 0) { container.innerHTML = ''; return; }
-  games.sort(function(a, b) { return b.timestamp - a.timestamp; });
+
+  // Build game-within-season numbering using chronological order.
+  var finishedChrono = games
+    .filter(function(g) { return g.finished; })
+    .slice()
+    .sort(function(a, b) {
+      return (a.finishedAt || a.timestamp || 0) - (b.finishedAt || b.timestamp || 0);
+    });
+  var gameMeta = {}; // id -> { seasonNumber, indexInSeason }
+  finishedChrono.forEach(function(g, i) {
+    var seasonNumber = Math.floor(i / 4) + 1;
+    var indexInSeason = (i % 4) + 1;
+    gameMeta[g.id] = { seasonNumber: seasonNumber, indexInSeason: indexInSeason };
+  });
+
+  games.sort(function(a, b) { return (b.finishedAt || b.timestamp || 0) - (a.finishedAt || a.timestamp || 0); });
   var html = '<div class="games-list"><h3>' + t('games_title') + '</h3>';
   games.forEach(function(g) {
-    var s = g.state;
-    var names = s.players.map(function(p) { return p.name; });
-    var totals = s.players.map(function(_, pi) {
-      return s.rounds.reduce(function(sum, round) { return sum + (round[pi] || 0); }, 0);
-    });
-    var scoresStr = totals.join('-');
-    var title;
-    var venueStr = s.venue ? ' · 📍 ' + s.venue : '';
-    if (g.finished) {
-      var minIdx = 0;
-      totals.forEach(function(t, i) { if (t < totals[minIdx]) minIdx = i; });
-      title = '🏆 ' + names[minIdx] + ' ' + t('games_won') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
-    } else {
-      title = '📋 ' + names.join(', ') + ' | ' + scoresStr + ' | ' + t('games_limit') + ': ' + s.maxPoints + venueStr;
-    }
+    var s = g.state || {};
+    var players = s.players || [];
     var btnLabel = g.finished ? t('games_view') : t('games_resume');
-    var btnAction = g.finished
-      ? 'resumeGame(\'' + g.id + '\')'
-      : 'resumeGame(\'' + g.id + '\')';
-    html += '<div class="game-item">' +
-      '<div class="game-item-info">' +
-        '<div class="game-item-title">' + title + '</div>' +
-        '<div class="game-item-meta">' + formatTimestamp(g.timestamp) + '</div>' +
-      '</div>' +
-      '<div class="game-item-actions">' +
-        '<button class="btn btn-secondary btn-small" onclick="' + btnAction + '">' + btnLabel + '</button>' +
-        '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>' +
-      '</div>' +
-    '</div>';
+    var btnAction = 'resumeGame(\'' + g.id + '\')';
+    var dateStr = formatDate(g.finishedAt || g.timestamp);
+    var venueStr = s.venue ? ' · 📍 ' + s.venue : '';
+
+    var body;
+    if (g.finished && players.length) {
+      var totals = _gameFinalTotals(s);
+      var minIdx = 0, maxIdx = 0;
+      totals.forEach(function(v, i) {
+        if (v < totals[minIdx]) minIdx = i;
+        if (v > totals[maxIdx]) maxIdx = i;
+      });
+      var meta = gameMeta[g.id];
+      var header = meta
+        ? (t('games_temporada') + ' ' + meta.seasonNumber + ' - ' + t('games_partido') + ' ' + meta.indexInSeason)
+        : t('games_partido');
+      var winner = players[minIdx];
+      var loser = players[maxIdx];
+      body = ''
+        + '<div class="game-card-season">' + header + '</div>'
+        + '<div class="game-card-row">'
+          + _gameCardFace(winner, minIdx)
+          + '<span><b>' + (winner && winner.name ? winner.name : '—') + '</b> ' + t('games_won') + '</span>'
+        + '</div>'
+        + '<div class="game-card-row game-card-loser">'
+          + _gameCardFace(loser, maxIdx)
+          + '<span><b>' + (loser && loser.name ? loser.name : '—') + '</b> ' + t('games_lost_with') + ' ' + totals[maxIdx] + ' ' + t('games_pts') + '</span>'
+        + '</div>'
+        + '<div class="game-item-meta">' + dateStr + venueStr + '</div>';
+    } else {
+      var names = players.map(function(p) { return p.name; });
+      body = ''
+        + '<div class="game-card-inprogress">📋 ' + t('games_inprogress') + '</div>'
+        + '<div class="game-card-row"><span>' + names.join(', ') + '</span></div>'
+        + '<div class="game-item-meta">' + dateStr + venueStr + '</div>';
+    }
+
+    html += '<div class="game-item">'
+      + '<div class="game-item-info">' + body + '</div>'
+      + '<div class="game-item-actions">'
+        + '<button class="btn btn-secondary btn-small" onclick="' + btnAction + '">' + btnLabel + '</button>'
+        + '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>'
+      + '</div>'
+    + '</div>';
   });
   html += '</div>';
   container.innerHTML = html;
@@ -3328,15 +3436,38 @@ function maybeComputeSeason() {
 
       var presence = {};
       var perPlayerScores = {};
+      // Collect any absentee across the 4 games so they appear in the season
+      // and receive the per-game loser-score penalty.
+      var allSlugs = {};
       fourGames.forEach(function(g) {
+        (g.participants || []).forEach(function(p) {
+          if (p.playerId) allSlugs[p.playerId] = true;
+        });
+        (g.absentees || []).forEach(function(slug) { if (slug) allSlugs[slug] = true; });
+      });
+
+      fourGames.forEach(function(g) {
+        // Compute this game's loser score = max final score among participants.
+        var maxFinal = -Infinity;
+        (g.participants || []).forEach(function(p) {
+          var fs = computeGameFinalScore(g, p.slot);
+          if (fs > maxFinal) maxFinal = fs;
+        });
+        var loserPenalty = (maxFinal === -Infinity) ? 0 : maxFinal;
+
         (g.participants || []).forEach(function(p) {
           if (!p.playerId) return;
           presence[p.playerId] = (presence[p.playerId] || 0) + 1;
           perPlayerScores[p.playerId] = (perPlayerScores[p.playerId] || 0) + computeGameFinalScore(g, p.slot);
         });
+        (g.absentees || []).forEach(function(slug) {
+          if (!slug) return;
+          perPlayerScores[slug] = (perPlayerScores[slug] || 0) + loserPenalty;
+        });
       });
 
-      var participantIds = Object.keys(presence);
+      var participantIds = Object.keys(allSlugs);
+      // Eligible for the season crown = played all 4 games (no absences).
       var eligible = participantIds.filter(function(id) { return presence[id] === 4; });
       var winnerPlayerId = null;
       if (eligible.length) {
@@ -3345,6 +3476,15 @@ function maybeComputeSeason() {
           if (perPlayerScores[id] < perPlayerScores[best]) return id;
           if (perPlayerScores[id] === perPlayerScores[best] && id < best) return id;
           return best;
+        }, null);
+      }
+      // Season loser = highest perPlayerScores across everyone (absences count).
+      var loserPlayerId = null;
+      if (participantIds.length) {
+        loserPlayerId = participantIds.reduce(function(worst, id) {
+          if (worst === null) return id;
+          if ((perPlayerScores[id] || 0) > (perPlayerScores[worst] || 0)) return id;
+          return worst;
         }, null);
       }
       var losers = participantIds.filter(function(id) { return id !== winnerPlayerId; });
@@ -3357,6 +3497,7 @@ function maybeComputeSeason() {
         participantIds: participantIds,
         perPlayerScores: perPlayerScores,
         winnerPlayerId: winnerPlayerId,
+        loserPlayerId: loserPlayerId,
         losers: losers
       };
 
@@ -3637,8 +3778,15 @@ function computeAllStats(games, seasons) {
       });
     });
 
+    // Absentees are penalized with the loser's final score (= loser's raw +
+    // fines + cortes). This keeps season totals fair for missed games.
+    var loserSlot = ordered.length ? ordered[ordered.length - 1].slot : -1;
+    var loserPenalty = loserSlot >= 0 ? finalScores[loserSlot] : 0;
     (g.absentees || []).forEach(function(absSlug) {
-      if (byPlayer[absSlug]) byPlayer[absSlug].absences++;
+      if (byPlayer[absSlug]) {
+        byPlayer[absSlug].absences++;
+        byPlayer[absSlug].totalScore += loserPenalty;
+      }
     });
   });
 
@@ -3858,30 +4006,117 @@ function renderLeaderboard(sortKey) {
   table.innerHTML = html;
 }
 
+function _computeOngoingSeason(games, finishedSeasons) {
+  // Returns a synthetic season-like object for the games that belong to a
+  // season still in progress (< 4 finished games since the last full season),
+  // or null when the tail aligns with a full season.
+  var finished = (games || [])
+    .filter(function(g) { return g && g.finished; })
+    .slice()
+    .sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
+  if (!finished.length) return null;
+  var completedCount = (finishedSeasons || []).length * 4;
+  var tail = finished.slice(completedCount);
+  if (!tail.length) return null;
+
+  var seasonNumber = (finishedSeasons || []).length + 1;
+  var presence = {};
+  var perPlayerScores = {};
+  var allSlugs = {};
+
+  tail.forEach(function(g) {
+    var maxFinal = -Infinity;
+    (g.participants || []).forEach(function(p) {
+      var fs = computeGameFinalScore(g, p.slot);
+      if (fs > maxFinal) maxFinal = fs;
+    });
+    var loserPenalty = (maxFinal === -Infinity) ? 0 : maxFinal;
+    (g.participants || []).forEach(function(p) {
+      if (!p.playerId) return;
+      presence[p.playerId] = (presence[p.playerId] || 0) + 1;
+      perPlayerScores[p.playerId] = (perPlayerScores[p.playerId] || 0) + computeGameFinalScore(g, p.slot);
+      allSlugs[p.playerId] = true;
+    });
+    (g.absentees || []).forEach(function(slug) {
+      if (!slug) return;
+      perPlayerScores[slug] = (perPlayerScores[slug] || 0) + loserPenalty;
+      allSlugs[slug] = true;
+    });
+  });
+
+  var participantIds = Object.keys(allSlugs);
+  var eligible = participantIds.filter(function(id) { return presence[id] === tail.length; });
+  var leaderPlayerId = null;
+  if (eligible.length) {
+    leaderPlayerId = eligible.reduce(function(best, id) {
+      if (best === null) return id;
+      if (perPlayerScores[id] < perPlayerScores[best]) return id;
+      if (perPlayerScores[id] === perPlayerScores[best] && id < best) return id;
+      return best;
+    }, null);
+  }
+  var loserPlayerId = null;
+  if (participantIds.length) {
+    loserPlayerId = participantIds.reduce(function(worst, id) {
+      if (worst === null) return id;
+      if ((perPlayerScores[id] || 0) > (perPlayerScores[worst] || 0)) return id;
+      return worst;
+    }, null);
+  }
+
+  return {
+    seasonNumber: seasonNumber,
+    gameIds: tail.map(function(g) { return g.gameId; }),
+    startedAt: tail[0].finishedAt || null,
+    endedAt: tail[tail.length - 1].finishedAt || null,
+    participantIds: participantIds,
+    perPlayerScores: perPlayerScores,
+    winnerPlayerId: leaderPlayerId,
+    loserPlayerId: loserPlayerId,
+    inProgress: true
+  };
+}
+
 function renderSeasonsTable() {
   var table = document.getElementById('seasonsTable');
   if (!table || !_statsData.computed) return;
-  var seasons = _statsData.computed.seasons.slice().reverse();
+  var finishedSeasons = _statsData.computed.seasons.slice();
+  var ongoing = _computeOngoingSeason(_statsData.games, finishedSeasons);
+  var seasons = finishedSeasons.slice().reverse();
+  if (ongoing) seasons.unshift(ongoing);
   if (!seasons.length) { table.innerHTML = '<tbody><tr><td style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</td></tr></tbody>'; return; }
   var html = '<thead><tr>'
     + '<th>' + t('seasons_col_num') + '</th>'
     + '<th>' + t('seasons_col_winner') + '</th>'
     + '<th>' + t('seasons_col_score') + '</th>'
+    + '<th>' + t('seasons_col_loser') + '</th>'
+    + '<th>' + t('seasons_col_loser_score') + '</th>'
     + '<th>' + t('seasons_col_dates') + '</th>'
     + '<th>' + t('seasons_col_games') + '</th>'
     + '</tr></thead><tbody>';
   seasons.forEach(function(s) {
+    var scores = s.perPlayerScores || {};
     var winner = s.winnerPlayerId ? _presetName(s.winnerPlayerId) : '—';
-    var winnerScore = s.winnerPlayerId ? s.perPlayerScores[s.winnerPlayerId] : '—';
+    var winnerScore = s.winnerPlayerId && scores[s.winnerPlayerId] != null ? scores[s.winnerPlayerId] : '—';
+    var loser = s.loserPlayerId ? _presetName(s.loserPlayerId) : '—';
+    var loserScore = s.loserPlayerId && scores[s.loserPlayerId] != null ? scores[s.loserPlayerId] : '—';
     var startedAt = s.startedAt && s.startedAt.toMillis ? s.startedAt.toMillis() : s.startedAt;
     var endedAt = s.endedAt && s.endedAt.toMillis ? s.endedAt.toMillis() : s.endedAt;
     var dates = (startedAt && endedAt) ? (formatTimestamp(startedAt) + ' → ' + formatTimestamp(endedAt)) : '—';
+    var numLabel = '#' + s.seasonNumber + (s.inProgress ? ' ⏳' : '');
+    var winnerLabel = s.inProgress
+      ? ('⭐ ' + winner)
+      : ('🏆 ' + winner);
+    var loserLabel = '💀 ' + loser;
+    var gamesCount = (s.gameIds || []).length + (s.inProgress ? '/4' : '');
     html += '<tr>'
-      + '<td>#' + s.seasonNumber + '</td>'
-      + '<td>🏆 ' + winner + '</td>'
+      + '<td>' + numLabel + '</td>'
+      + '<td>' + winnerLabel + '</td>'
       + '<td>' + winnerScore + '</td>'
+      + '<td>' + loserLabel + '</td>'
+      + '<td>' + loserScore + '</td>'
       + '<td style="font-size:.8rem;color:var(--text-muted);">' + dates + '</td>'
-      + '<td>' + ((s.gameIds || []).length) + '</td>'
+      + '<td>' + gamesCount + '</td>'
       + '</tr>';
   });
   html += '</tbody>';
