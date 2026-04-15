@@ -221,6 +221,27 @@
     .player-face-sm {
       width: 1.2rem; height: 1.2rem; border-radius: 3px; object-fit: cover; vertical-align: middle;
     }
+    /* Season-winner badge: small rectangle with a ★ sits just above the face. */
+    .face-wrap {
+      position: relative; display: inline-block; vertical-align: middle;
+      line-height: 0;
+    }
+    .face-wrap .season-star-badge {
+      position: absolute;
+      left: 50%;
+      top: -0.55rem;
+      transform: translateX(-50%);
+      background: #0f0f1a;
+      color: #ffd400;
+      font-size: .55rem;
+      line-height: 1;
+      padding: 1px 4px;
+      border-radius: 3px;
+      pointer-events: none;
+      z-index: 1;
+      font-family: 'Inter', sans-serif;
+    }
+    .face-wrap.face-wrap-lg .season-star-badge { top: -0.7rem; font-size: .7rem; padding: 2px 5px; }
 
     .points-presets {
       display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
@@ -1089,6 +1110,7 @@
     <div class="stats-tabs">
       <button class="stats-tab-btn active" data-tab="player" onclick="switchStatsTab('player')" data-i18n="stats_tab_player"></button>
       <button class="stats-tab-btn" data-tab="leaderboard" onclick="switchStatsTab('leaderboard')" data-i18n="stats_tab_leaderboard"></button>
+      <button class="stats-tab-btn" data-tab="leaderboardSeason" onclick="switchStatsTab('leaderboardSeason')" data-i18n="stats_tab_leaderboard_season"></button>
       <button class="stats-tab-btn" data-tab="seasons" onclick="switchStatsTab('seasons')" data-i18n="stats_tab_seasons"></button>
       <button class="stats-tab-btn" data-tab="h2h" onclick="switchStatsTab('h2h')" data-i18n="stats_tab_h2h"></button>
     </div>
@@ -1104,9 +1126,17 @@
     <div id="statsTab_leaderboard" class="stats-tab-panel">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
-        <select id="leaderboardSort" onchange="renderLeaderboard(this.value)"></select>
+        <select id="leaderboardSort" onchange="renderLeaderboard(this.value, 'annual')"></select>
       </div>
       <table class="stats-table" id="leaderboardTable"></table>
+    </div>
+
+    <div id="statsTab_leaderboardSeason" class="stats-tab-panel">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
+        <select id="leaderboardSortSeason" onchange="renderLeaderboard(this.value, 'season')"></select>
+      </div>
+      <table class="stats-table" id="leaderboardTableSeason"></table>
     </div>
 
     <div id="statsTab_seasons" class="stats-tab-panel">
@@ -1314,7 +1344,8 @@ const STRINGS = {
     home_stats: '📊 Estadísticas',
     stats_title: '📊 Estadísticas',
     stats_tab_player: 'Jugador',
-    stats_tab_leaderboard: 'Ranking',
+    stats_tab_leaderboard: 'Ranking anual',
+    stats_tab_leaderboard_season: 'Ranking temporada',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
     stats_player_label: 'Jugador:',
@@ -1373,6 +1404,10 @@ const STRINGS = {
     leaderboard_avg_pos: 'Pos. prom.',
     leaderboard_hosted: 'Anfitrión',
     leaderboard_winrate: 'Win%',
+    leaderboard_absences: 'Faltas',
+    leaderboard_best_game: 'Mejor puntaje',
+    leaderboard_worst_game: 'Peor puntaje',
+    leaderboard_no_season: 'No hay partidos de la temporada en curso todavía.',
     seasons_col_num: 'Temp.',
     seasons_col_winner: 'Ganador',
     seasons_col_score: 'Puntos ganador',
@@ -1465,7 +1500,8 @@ const STRINGS = {
     home_stats: '📊 Stats',
     stats_title: '📊 Stats',
     stats_tab_player: 'Player',
-    stats_tab_leaderboard: 'Leaderboard',
+    stats_tab_leaderboard: 'Annual ranking',
+    stats_tab_leaderboard_season: 'Season ranking',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
     stats_player_label: 'Player:',
@@ -1524,6 +1560,10 @@ const STRINGS = {
     leaderboard_avg_pos: 'Avg pos.',
     leaderboard_hosted: 'Hosted',
     leaderboard_winrate: 'Win%',
+    leaderboard_absences: 'Absences',
+    leaderboard_best_game: 'Best game',
+    leaderboard_worst_game: 'Worst game',
+    leaderboard_no_season: 'No games yet this season.',
     seasons_col_num: 'Season',
     seasons_col_winner: 'Winner',
     seasons_col_score: 'Winning score',
@@ -1748,18 +1788,57 @@ function speakShame(name, event) {
   speechSynthesis.speak(utt1);
 }
 
+// Set of player slugs that have won at least one season. Populated by
+// loadSeasonWinners() on boot; re-populated whenever stats load.
+var SEASON_WINNERS = new Set();
+
+function _playerSlug(player) {
+  if (!player) return '';
+  if (player.playerId) return player.playerId;
+  if (player.slug) return player.slug;
+  if (player.face) {
+    var m = /\/([^\/]+)\.(?:png|jpg|jpeg|webp|svg)$/i.exec(player.face);
+    if (m) return m[1].toLowerCase();
+  }
+  return (player.name || '').toLowerCase();
+}
+
+function _isSeasonWinner(slug) {
+  return !!slug && SEASON_WINNERS.has(slug);
+}
+
+function _withSeasonStar(inner, slug, size) {
+  if (!_isSeasonWinner(slug)) return inner;
+  var cls = size === 'lg' ? 'face-wrap face-wrap-lg' : 'face-wrap';
+  return '<span class="' + cls + '">' + inner + '<span class="season-star-badge" title="Season winner">\u2726</span></span>';
+}
+
+function loadSeasonWinners() {
+  if (!window.LDU_READY || !window.LDU || !window.LDU.getSeasons) return Promise.resolve();
+  return window.LDU.getSeasons().then(function(seasons) {
+    SEASON_WINNERS = new Set();
+    (seasons || []).forEach(function(s) {
+      if (s && s.winnerPlayerId) SEASON_WINNERS.add(s.winnerPlayerId);
+    });
+  }).catch(function() { /* silently tolerate offline */ });
+}
+
 function getPlayerDot(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1.1rem;">${getAsadoEmoji(idx)}</span>`;
-  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
-  return `<div class="player-color" style="background:${player.color}"></div>`;
+  var inner;
+  if (player.face) inner = `<img src="${player.face}" alt="${player.name}" class="player-face" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
+  else inner = `<div class="player-color" style="background:${player.color}"></div>`;
+  return _withSeasonStar(inner, _playerSlug(player), 'lg');
 }
 
 function getPlayerDotSm(player, idx) {
   const isAsado = document.body.classList.contains('asado');
   if (isAsado) return `<span style="font-size:1rem;">${getAsadoEmoji(idx)}</span>`;
-  if (player.face) return `<img src="${player.face}" alt="${player.name}" class="player-face-sm" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
-  return `<div class="player-color" style="background:${player.color}"></div>`;
+  var inner;
+  if (player.face) inner = `<img src="${player.face}" alt="${player.name}" class="player-face-sm" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
+  else inner = `<div class="player-color" style="background:${player.color}"></div>`;
+  return _withSeasonStar(inner, _playerSlug(player), 'sm');
 }
 
 const PLAYER_COLORS = [
@@ -3217,11 +3296,14 @@ function formatDate(ts) {
 
 function _gameCardFace(player, idx) {
   if (!player) return '';
+  var inner;
   if (player.face) {
-    return '<img src="' + player.face + '" alt="' + (player.name || '') + '" class="player-face-sm">';
+    inner = '<img src="' + player.face + '" alt="' + (player.name || '') + '" class="player-face-sm">';
+  } else {
+    var color = player.color || (PLAYER_COLORS[idx % PLAYER_COLORS.length]);
+    inner = '<div class="player-color" style="background:' + color + '"></div>';
   }
-  var color = player.color || (PLAYER_COLORS[idx % PLAYER_COLORS.length]);
-  return '<div class="player-color" style="background:' + color + '"></div>';
+  return _withSeasonStar(inner, _playerSlug(player), 'sm');
 }
 
 function _gameFinalTotals(s) {
@@ -3519,6 +3601,15 @@ function initStats() {
   renderStatsLoadingState();
   loadStatsData().then(function() {
     _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
+    // Build a season-scoped stats snapshot for Ranking Temporada using only
+    // the games that belong to the in-progress season.
+    var ongoingGames = _ongoingSeasonGames(_statsData.games, _statsData.seasons);
+    _statsData.computedSeason = computeAllStats(ongoingGames, []);
+    // Refresh season-winner set (also used for face badges site-wide).
+    SEASON_WINNERS = new Set();
+    (_statsData.seasons || []).forEach(function(s) {
+      if (s && s.winnerPlayerId) SEASON_WINNERS.add(s.winnerPlayerId);
+    });
     populatePlayerDropdown();
     populateLeaderboardSort();
     switchStatsTab('player');
@@ -3527,16 +3618,28 @@ function initStats() {
     var sel = document.getElementById('statsPlayerSelect');
     if (sel) sel.value = defaultSlug;
     renderPlayerStats(defaultSlug);
-    renderLeaderboard('gamesWon');
+    renderLeaderboard('gamesWon', 'annual');
+    renderLeaderboard('gamesWon', 'season');
     renderSeasonsTable();
     renderH2HMatrix();
   });
+}
+
+function _ongoingSeasonGames(games, finishedSeasons) {
+  var finished = (games || [])
+    .filter(function(g) { return g && g.finished; })
+    .slice()
+    .sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
+  var skip = (finishedSeasons || []).length * 4;
+  return finished.slice(skip);
 }
 
 function renderStatsLoadingState() {
   var card = document.getElementById('statsPlayerCard');
   if (card) card.innerHTML = '<div style="color:var(--text-muted);padding:1rem;text-align:center;">…</div>';
   document.getElementById('leaderboardTable').innerHTML = '';
+  var tSeason = document.getElementById('leaderboardTableSeason');
+  if (tSeason) tSeason.innerHTML = '';
   document.getElementById('seasonsTable').innerHTML = '';
   document.getElementById('h2hMatrix').innerHTML = '';
 }
@@ -3621,8 +3724,6 @@ function populatePlayerDropdown() {
 }
 
 function populateLeaderboardSort() {
-  var sel = document.getElementById('leaderboardSort');
-  if (!sel) return;
   var opts = [
     ['gamesWon',    t('leaderboard_wins')],
     ['gamesPlayed', t('leaderboard_games')],
@@ -3632,10 +3733,17 @@ function populateLeaderboardSort() {
     ['totalScore',  t('leaderboard_score')],
     ['avgPosition', t('leaderboard_avg_pos')],
     ['timesHosted', t('leaderboard_hosted')],
+    ['absences',    t('leaderboard_absences')],
+    ['lowestGameScore', t('leaderboard_best_game')],
+    ['worstGameScore',  t('leaderboard_worst_game')],
     ['totalCortes', t('stat_total_cortes')],
     ['totalMultas', t('stat_total_multas')]
   ];
-  sel.innerHTML = opts.map(function(o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
+  var html = opts.map(function(o) { return '<option value="' + o[0] + '">' + o[1] + '</option>'; }).join('');
+  var sel = document.getElementById('leaderboardSort');
+  if (sel) sel.innerHTML = html;
+  var sel2 = document.getElementById('leaderboardSortSeason');
+  if (sel2) sel2.innerHTML = html;
 }
 
 function _emptyPlayerStats(slug) {
@@ -3900,7 +4008,10 @@ function renderPlayerStats(slug) {
 
   var html = '';
   html += '<div class="stats-hero">';
-  if (PRESET_FACES[slug]) html += '<img src="' + PRESET_FACES[slug] + '" alt="' + _presetName(slug) + '">';
+  if (PRESET_FACES[slug]) {
+    var heroImg = '<img src="' + PRESET_FACES[slug] + '" alt="' + _presetName(slug) + '">';
+    html += _withSeasonStar(heroImg, slug, 'lg');
+  }
   html += '<div>';
   html += '<div class="stats-hero-name">' + _presetName(slug) + '</div>';
   html += '<div class="stats-hero-meta">' + ps.gamesWon + ' ' + t('leaderboard_wins') + ' · ' + ps.gamesLost + ' ' + t('leaderboard_losses') + ' · ' + (ps.winRate * 100).toFixed(0) + '% ' + t('leaderboard_winrate') + '</div>';
@@ -3969,19 +4080,33 @@ function renderPlayerStats(slug) {
   container.innerHTML = html;
 }
 
-function renderLeaderboard(sortKey) {
+function renderLeaderboard(sortKey, scope) {
   sortKey = sortKey || 'gamesWon';
-  var table = document.getElementById('leaderboardTable');
-  if (!table || !_statsData.computed) return;
-  var rows = Object.values(_statsData.computed.byPlayer)
-    .filter(function(p) { return p.gamesPlayed > 0; })
+  scope = scope || 'annual';
+  var isSeason = scope === 'season';
+  var tableId = isSeason ? 'leaderboardTableSeason' : 'leaderboardTable';
+  var table = document.getElementById(tableId);
+  if (!table) return;
+  var computed = isSeason ? _statsData.computedSeason : _statsData.computed;
+  if (!computed) return;
+
+  var rows = Object.values(computed.byPlayer)
+    .filter(function(p) { return p.gamesPlayed > 0 || (isSeason && p.absences > 0); })
     .sort(function(a, b) {
-      if (sortKey === 'avgPosition' || sortKey === 'totalScore') {
-        return (a[sortKey] || 0) - (b[sortKey] || 0);
+      // "lower is better" for these keys.
+      if (sortKey === 'avgPosition' || sortKey === 'totalScore' || sortKey === 'lowestGameScore') {
+        var av = (a[sortKey] == null) ? Infinity : a[sortKey];
+        var bv = (b[sortKey] == null) ? Infinity : b[sortKey];
+        return av - bv;
       }
       return (b[sortKey] || 0) - (a[sortKey] || 0);
     });
-  if (!rows.length) { table.innerHTML = '<tbody><tr><td style="color:var(--text-muted);text-align:center;padding:1rem;">' + t('stats_no_data') + '</td></tr></tbody>'; return; }
+
+  if (!rows.length) {
+    var msg = isSeason ? t('leaderboard_no_season') : t('stats_no_data');
+    table.innerHTML = '<tbody><tr><td style="color:var(--text-muted);text-align:center;padding:1rem;">' + msg + '</td></tr></tbody>';
+    return;
+  }
 
   var html = '<thead><tr>'
     + '<th>#</th>'
@@ -3993,21 +4118,30 @@ function renderLeaderboard(sortKey) {
     + '<th>' + t('leaderboard_seasons') + '</th>'
     + '<th>' + t('leaderboard_avg_pos') + '</th>'
     + '<th>' + t('leaderboard_hosted') + '</th>'
+    + '<th>' + t('leaderboard_absences') + '</th>'
+    + '<th>' + t('leaderboard_best_game') + '</th>'
+    + '<th>' + t('leaderboard_worst_game') + '</th>'
     + '<th>' + t('leaderboard_score') + '</th>'
     + '</tr></thead><tbody>';
   rows.forEach(function(p, i) {
     var face = PRESET_FACES[p.slug];
-    var faceImg = face ? '<img src="' + face + '" class="player-face-sm" style="vertical-align:middle;margin-right:.35rem;">' : '';
+    var faceInner = face
+      ? '<img src="' + face + '" class="player-face-sm" style="vertical-align:middle;margin-right:.35rem;">'
+      : '';
+    var faceImg = _withSeasonStar(faceInner, p.slug, 'sm');
     html += '<tr>'
       + '<td>' + (i + 1) + '</td>'
       + '<td>' + faceImg + _presetName(p.slug) + '</td>'
       + '<td>' + p.gamesPlayed + '</td>'
       + '<td>' + p.gamesWon + '</td>'
       + '<td>' + p.gamesLost + '</td>'
-      + '<td>' + (p.winRate * 100).toFixed(0) + '%</td>'
+      + '<td>' + (p.gamesPlayed ? (p.winRate * 100).toFixed(0) + '%' : '—') + '</td>'
       + '<td>' + p.seasonsWon + '</td>'
       + '<td>' + (p.avgPosition ? p.avgPosition.toFixed(2) : '—') + '</td>'
       + '<td>' + p.timesHosted + '</td>'
+      + '<td>' + p.absences + '</td>'
+      + '<td>' + (p.lowestGameScore == null ? '—' : p.lowestGameScore) + '</td>'
+      + '<td>' + (p.worstGameScore || '—') + '</td>'
       + '<td>' + p.totalScore + '</td>'
       + '</tr>';
   });
@@ -4114,10 +4248,16 @@ function renderSeasonsTable() {
     var endedAt = s.endedAt && s.endedAt.toMillis ? s.endedAt.toMillis() : s.endedAt;
     var dates = (startedAt && endedAt) ? (formatTimestamp(startedAt) + ' → ' + formatTimestamp(endedAt)) : '—';
     var numLabel = '#' + s.seasonNumber + (s.inProgress ? ' ⏳' : '');
-    var winnerLabel = s.inProgress
-      ? ('⭐ ' + winner)
-      : ('🏆 ' + winner);
-    var loserLabel = '💀 ' + loser;
+    var winnerFaceInner = s.winnerPlayerId && PRESET_FACES[s.winnerPlayerId]
+      ? '<img src="' + PRESET_FACES[s.winnerPlayerId] + '" class="player-face-sm" style="vertical-align:middle;margin-right:.25rem;">'
+      : '';
+    var winnerFace = _withSeasonStar(winnerFaceInner, s.winnerPlayerId, 'sm');
+    var loserFaceInner = s.loserPlayerId && PRESET_FACES[s.loserPlayerId]
+      ? '<img src="' + PRESET_FACES[s.loserPlayerId] + '" class="player-face-sm" style="vertical-align:middle;margin-right:.25rem;">'
+      : '';
+    var loserFace = _withSeasonStar(loserFaceInner, s.loserPlayerId, 'sm');
+    var winnerLabel = (s.inProgress ? '⭐ ' : '🏆 ') + winnerFace + winner;
+    var loserLabel = '💀 ' + loserFace + loser;
     var gamesCount = (s.gameIds || []).length + (s.inProgress ? '/4' : '');
     html += '<tr>'
       + '<td>' + numLabel + '</td>'
@@ -4179,6 +4319,7 @@ function lduBootstrap() {
   });
   window.LDU.seedPresets(presets).catch(function(err) { console.warn('[LDU] seedPresets failed:', err); });
   syncRemoteGamesToLocal().then(function() { renderGamesList(); });
+  loadSeasonWinners().then(function() { renderGamesList(); });
 }
 
 if (window.LDU_READY) {
