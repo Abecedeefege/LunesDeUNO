@@ -214,30 +214,22 @@
   <section class="intro">
     <h1>Propuestas: compartir burlas desde Stats</h1>
     <p>
-      Desde cualquier módulo de la pantalla de estadísticas, generar una imagen/video/sticker
-      para cargar a los amigos a los que ya les ganaste. <strong>Toda la data viene de tu localStorage real</strong>
-      (<code>lunesdeuno_games</code>) — nada inventado. Elegí tu jugador, el rival (o "Random") y el tono del roast.
+      Galería de shares pre-armados con <strong>datos reales de Firestore</strong>
+      (collection <code>games</code>). Cada propuesta elige su propio ejemplo más jugoso
+      — no hay que configurar nada. Solo elegí el tono del roast.
     </p>
   </section>
 
   <div id="dataBanner" style="display:none; margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid var(--danger); background: rgba(255,77,106,.08); color: var(--text);">
-    <strong style="color: var(--danger);">⚠ No se encontraron partidas finalizadas en localStorage.</strong>
-    <div style="margin-top: .4rem; color: var(--text-muted); font-size: .9rem;">
-      Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a> y jugá al menos una partida finalizada.
+    <strong style="color: var(--danger);">⚠ <span id="dataBannerTitle">Firestore aún no devolvió partidas finalizadas.</span></strong>
+    <div style="margin-top: .4rem; color: var(--text-muted); font-size: .9rem;" id="dataBannerMsg">
+      Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a>, jugá una partida y sincronizá con la nube.
       Esta página <strong>no inventa datos</strong>: todos los previews se generan con stats reales.
     </div>
   </div>
 
   <section class="controls">
-    <div class="control-card">
-      <label for="youSelect">Tu jugador (el que roastea)</label>
-      <select id="youSelect"></select>
-    </div>
-    <div class="control-card">
-      <label for="rivalSelect">Rival a humillar</label>
-      <select id="rivalSelect"></select>
-    </div>
-    <div class="control-card">
+    <div class="control-card" style="flex: 1 1 100%;">
       <label>Tono del roast</label>
       <div class="tone-toggle">
         <button class="tone-btn" data-tone="algodon">🍭 Algodón</button>
@@ -251,7 +243,7 @@
   <section class="module-section" id="mod-jugador">
     <div class="module-header">
       <span class="badge">Módulo 1</span>
-      <h2 id="title-jugador">Tus pijeos a <span class="rival-name">—</span></h2>
+      <h2 id="title-jugador">Jugador &middot; stats personales</h2>
     </div>
     <div class="ideas-grid" id="grid-jugador">
       <!-- IDEAS:JUGADOR:START -->
@@ -322,7 +314,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
 // ===== ROSTER REAL (idéntico a index.html PRESET_NAMES) =====
 // NO incluye Bucket — Bucket no es un jugador del grupo.
 const PRESET_NAMES = ['PT','Mac','Mata','Gael','Nachi','Carucha','Negro','Naso','Tano','Gordo','Cobra'];
@@ -330,16 +325,36 @@ const PRESET_IDS = PRESET_NAMES.map(n => n.toLowerCase()); // playerId (slug)
 const NAME_BY_ID = Object.fromEntries(PRESET_NAMES.map(n => [n.toLowerCase(), n]));
 const FACE_PATH = id => `assets/faces/${id}.png`;
 
-// ===== CARGA DE DATOS REALES =====
-// Mismo storage que usa index.html (ver línea 3637).
-function loadRealGames() {
-  try {
-    const raw = localStorage.getItem('lunesdeuno_games');
-    if (!raw) return [];
-    const all = JSON.parse(raw);
-    if (!Array.isArray(all)) return [];
-    return all.filter(g => g && g.finished && g.winnerPlayerId && g.state && Array.isArray(g.state.participants));
-  } catch (e) { return []; }
+// ===== FIREBASE (mismo projectId que index.html) =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM",
+  authDomain: "lunesdeuno.firebaseapp.com",
+  projectId: "lunesdeuno",
+  storageBucket: "lunesdeuno.firebasestorage.app",
+  messagingSenderId: "694296428363",
+  appId: "1:694296428363:web:fb8cc52a4a5c58e24372ce",
+  measurementId: "G-BL6BEJ39C1"
+};
+const _fbApp = initializeApp(firebaseConfig);
+const _db = getFirestore(_fbApp);
+
+// ===== CARGA DE DATOS REALES DESDE FIRESTORE =====
+// Fuente canónica: collection `games`. Filtro cliente para evitar índice compuesto.
+async function loadRealGames() {
+  const snap = await getDocs(collection(_db, 'games'));
+  const toMs = t => (t && typeof t.toMillis === 'function') ? t.toMillis() : (typeof t === 'number' ? t : 0);
+  return snap.docs
+    .map(d => d.data())
+    .filter(g => g && g.finished === true && g.winnerPlayerId && Array.isArray(g.participants))
+    .map(g => ({
+      id: g.gameId,
+      finished: true,
+      finishedAt: toMs(g.finishedAt),
+      timestamp: toMs(g.createdAt),
+      winnerPlayerId: g.winnerPlayerId,
+      state: { participants: g.participants }
+    }))
+    .sort((a,b) => (a.finishedAt||0) - (b.finishedAt||0));
 }
 
 // Calcula stats reales por jugador a partir de games terminados.
@@ -420,40 +435,25 @@ function currentH2HStreak(youStats, rivalId) {
 }
 
 // ===== ESTADO GLOBAL =====
-const RAW_GAMES = loadRealGames();
-const ALL_STATS = computeAllStats(RAW_GAMES);
-const PLAYERS_WITH_DATA = Object.keys(ALL_STATS); // ids con al menos 1 partida
+// Se popula en init() después de await loadRealGames()
+let RAW_GAMES = [];
+let ALL_STATS = {};
+let PLAYERS_WITH_DATA = [];
 
-// STATE.you y STATE.rival almacenan el DISPLAY NAME (ej: 'Carucha', 'Cobra').
-// Los helpers *Id() convierten a slug (lowercase) para lookups en ALL_STATS.
-const DEFAULT_YOU = 'Carucha';
-const DEFAULT_RIVAL = 'Gael';
+// STATE.you / STATE.rival ya NO son selecciones del usuario — cada idea las setea
+// contextualmente vía withPicked() para que las draw functions existentes sigan funcionando.
 let STATE = {
-  you: (PLAYERS_WITH_DATA.includes(DEFAULT_YOU.toLowerCase()) ? DEFAULT_YOU
-        : (PLAYERS_WITH_DATA[0] ? (NAME_BY_ID[PLAYERS_WITH_DATA[0]] || DEFAULT_YOU) : DEFAULT_YOU)),
-  rival: (PLAYERS_WITH_DATA.includes(DEFAULT_RIVAL.toLowerCase()) ? DEFAULT_RIVAL : DEFAULT_RIVAL),
+  you: '—',
+  rival: '—',
   _resolvedRival: null,
   tone: 'picante',                      // 'algodon' | 'picante' | 'nachi'
   copyIndex: {}
 };
 
 function youId() { return String(STATE.you || '').toLowerCase(); }
-function rivalId() {
-  if (STATE.rival && STATE.rival !== 'random') return String(STATE.rival).toLowerCase();
-  return STATE._resolvedRival ? STATE._resolvedRival.toLowerCase() : null;
-}
+function rivalId() { return String(STATE.rival || '').toLowerCase(); }
 function youName() { return STATE.you || '—'; }
-function rivalName() { return (STATE.rival && STATE.rival !== 'random') ? STATE.rival : (STATE._resolvedRival || '—'); }
-
-function resolveRandomRival() {
-  const me = ALL_STATS[youId()];
-  if (!me) return null;
-  const defeatedIds = Object.keys(me.defeatedCount || {});
-  const poolIds = defeatedIds.length ? defeatedIds : PLAYERS_WITH_DATA.filter(id => id !== youId());
-  if (!poolIds.length) return null;
-  const pickedId = poolIds[Math.floor(Math.random() * poolIds.length)];
-  return NAME_BY_ID[pickedId] || pickedId;
-}
+function rivalName() { return STATE.rival || '—'; }
 
 // ===== STATS ACCESSORS (reemplazan DUMMY_STATS / dummyH2H) =====
 // statsFor('carucha') o statsFor() devuelve stats del jugador activo.
@@ -494,6 +494,67 @@ function rivalDefeatedList() {
   return Object.keys(map)
     .map(id => ({ id, name: NAME_BY_ID[id] || id, count: map[id] }))
     .sort((a,b) => b.count - a.count);
+}
+
+// ===== PICK SYSTEM =====
+// Cada idea puede definir pick(ctx) que elige su protagonista/rival desde datos REALES.
+// Si no define pick, se usa defaultPick: top del ranking + su víctima más castigada.
+const PICKED_CACHE = {};
+
+function pickCtx() {
+  return {
+    ALL_STATS,
+    PLAYERS_WITH_DATA,
+    NAME_BY_ID,
+    annualRanking,
+    rivalDefeatedListFor: (rid) => {
+      if (!rid || !ALL_STATS[rid]) return [];
+      const map = ALL_STATS[rid].defeatedCount || {};
+      return Object.keys(map).map(id => ({ id, name: NAME_BY_ID[id] || id, count: map[id] })).sort((a,b) => b.count - a.count);
+    }
+  };
+}
+
+function defaultPick(ctx) {
+  const rk = ctx.annualRanking();
+  if (rk.length < 1) return null;
+  const protag = rk[0];
+  const stats = ctx.ALL_STATS[protag.id];
+  const victims = Object.entries(stats?.defeatedCount || {}).sort((a,b) => b[1] - a[1]);
+  let rival;
+  if (victims.length) {
+    rival = { id: victims[0][0], name: ctx.NAME_BY_ID[victims[0][0]] || victims[0][0] };
+  } else if (rk.length > 1) {
+    const r = rk[rk.length - 1];
+    rival = { id: r.id, name: r.name };
+  } else {
+    rival = { id: protag.id, name: protag.name };
+  }
+  return { protagonist: { id: protag.id, name: protag.name }, rival, facts: {} };
+}
+
+function getPicked(idea) {
+  if (PICKED_CACHE[idea.id] !== undefined) return PICKED_CACHE[idea.id];
+  const ctx = pickCtx();
+  let picked = null;
+  try {
+    picked = idea.pick ? idea.pick(ctx) : defaultPick(ctx);
+    if (!picked) picked = defaultPick(ctx);
+  } catch (e) { picked = defaultPick(ctx); }
+  PICKED_CACHE[idea.id] = picked;
+  return picked;
+}
+
+// Ejecuta fn(picked) con STATE.you/rival seteados al pair elegido por pick(idea).
+// Así las draw functions existentes que leen STATE.you/STATE.rival siguen funcionando.
+function withPicked(idea, fn) {
+  const picked = getPicked(idea);
+  if (!picked) return fn(null);
+  const prev = { you: STATE.you, rival: STATE.rival, _resolvedRival: STATE._resolvedRival };
+  STATE.you = picked.protagonist?.name || '—';
+  STATE.rival = picked.rival?.name || '—';
+  STATE._resolvedRival = null;
+  try { return fn(picked); } finally { Object.assign(STATE, prev); }
 }
 
 const IDEAS = []; // filled by each module section
@@ -574,22 +635,29 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 
 // ===== COPY SYSTEM (3 tonos: algodon, picante, nachi) =====
 function getCopy(idea) {
-  const tone = STATE.tone;
-  const arr = (idea.copies && idea.copies[tone])
-    || (idea.copies && idea.copies.picante)   // fallback defensivo
-    || [''];
-  const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
-  const stats = idea.computeFacts ? idea.computeFacts() : {};
-  let text = arr[idx]
-    .replaceAll('{you}', youName())
-    .replaceAll('{rival}', rivalName());
-  Object.keys(stats).forEach(k => { text = text.replaceAll('{' + k + '}', String(stats[k])); });
-  return text;
+  return withPicked(idea, (picked) => {
+    const tone = STATE.tone;
+    const arr = (idea.copies && idea.copies[tone])
+      || (idea.copies && idea.copies.picante)   // fallback defensivo
+      || [''];
+    const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
+    const facts = Object.assign({},
+      idea.computeFacts ? idea.computeFacts() : {},
+      (picked && picked.facts) || {}
+    );
+    let text = arr[idx]
+      .replaceAll('{you}', youName())
+      .replaceAll('{protagonist}', youName())
+      .replaceAll('{rival}', rivalName());
+    Object.keys(facts).forEach(k => { text = text.replaceAll('{' + k + '}', String(facts[k])); });
+    return text;
+  });
 }
 function rotateCopy(ideaId) {
   STATE.copyIndex[ideaId] = (STATE.copyIndex[ideaId] || 0) + 1;
   refreshIdea(ideaId);
 }
+window.rotateCopy = rotateCopy;
 
 // ===== RENDER CARDS =====
 function refreshIdea(ideaId) {
@@ -599,7 +667,7 @@ function refreshIdea(ideaId) {
   if (!card) return;
   card.querySelector('.idea-copy').textContent = getCopy(idea);
   const canvas = card.querySelector('canvas');
-  idea.draw(canvas, { preview: true }).catch(console.error);
+  withPicked(idea, () => idea.draw(canvas, { preview: true }).catch(console.error));
 }
 
 function refreshAll() {
@@ -627,13 +695,14 @@ function renderIdeaCard(idea) {
   grid.appendChild(el);
   // first draw
   const canvas = el.querySelector('canvas');
-  idea.draw(canvas, { preview: true }).catch(console.error);
+  withPicked(idea, () => idea.draw(canvas, { preview: true }).catch(console.error));
 }
 
 function registerIdea(idea) {
   IDEAS.push(idea);
   renderIdeaCard(idea);
 }
+window.registerIdea = registerIdea;
 
 // ===== SHARE =====
 function showToast(msg) {
@@ -647,75 +716,35 @@ function showToast(msg) {
 async function generateAndShare(ideaId) {
   const idea = IDEAS.find(i => i.id === ideaId);
   if (!idea) return;
-  // render full-size (1080x1350)
-  const canvas = document.createElement('canvas');
-  canvas.width = 1080; canvas.height = 1350;
-  await idea.draw(canvas, { preview: false });
+  const picked = getPicked(idea);
+  await withPicked(idea, async () => {
+    // render full-size (1080x1350)
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080; canvas.height = 1350;
+    await idea.draw(canvas, { preview: false });
 
-  const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-  const file = new File([blob], `burla-${ideaId}-${rivalId()||'rival'}.png`, { type: 'image/png' });
-  const text = getCopy(idea);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const rivalSlug = (picked && picked.rival && picked.rival.id) || 'rival';
+    const file = new File([blob], `burla-${ideaId}-${rivalSlug}.png`, { type: 'image/png' });
+    const text = getCopy(idea);
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], text, title: 'Lunes de UNO' });
-      return;
-    } catch (e) { /* fallback */ }
-  }
-  // fallback: download + open WhatsApp
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = file.name; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n(imagen descargada, adjuntala al chat 📎)')}`;
-  window.open(waUrl, '_blank');
-  showToast('Imagen descargada + WhatsApp abierto');
-}
-
-// ===== POBLAR SELECTS (display names · siempre todo el roster) =====
-function buildRivalOptions(currentYouName) {
-  // Random primero, luego los demás (excluyendo 'you')
-  let html = `<option value="random">🎲 Random (cualquiera al que ya le ganaste)</option>`;
-  PRESET_NAMES.forEach(name => {
-    if (name === currentYouName) return;
-    html += `<option value="${name}">${name}</option>`;
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], text, title: 'Lunes de UNO' });
+        return;
+      } catch (e) { /* fallback */ }
+    }
+    // fallback: download + open WhatsApp
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n(imagen descargada, adjuntala al chat 📎)')}`;
+    window.open(waUrl, '_blank');
+    showToast('Imagen descargada + WhatsApp abierto');
   });
-  return html;
 }
-
-function populateRosters() {
-  const you = document.getElementById('youSelect');
-  const rv  = document.getElementById('rivalSelect');
-
-  you.innerHTML = PRESET_NAMES.map(name =>
-    `<option value="${name}" ${name===STATE.you?'selected':''}>${name}</option>`
-  ).join('');
-
-  rv.innerHTML = buildRivalOptions(STATE.you);
-  // marcar seleccionado
-  Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
-
-  you.addEventListener('change', e => {
-    STATE.you = e.target.value;
-    rv.innerHTML = buildRivalOptions(STATE.you);
-    // si el rival anterior es ahora 'you', caer a random
-    if (STATE.rival === STATE.you) STATE.rival = 'random';
-    Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
-    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-    syncModuleTitle();
-    refreshAll();
-  });
-  rv.addEventListener('change', e => {
-    STATE.rival = e.target.value;
-    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-    syncModuleTitle();
-    refreshAll();
-  });
-
-  // Resolución inicial (por si default es 'random', aunque ahora es 'Gael')
-  if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-  syncModuleTitle();
-}
+window.generateAndShare = generateAndShare;
 
 function setupToneToggle() {
   document.querySelectorAll('.tone-btn').forEach(btn => {
@@ -727,17 +756,12 @@ function setupToneToggle() {
   });
 }
 
-// Sincroniza el título del módulo 1 con el rival actual
-function syncModuleTitle() {
-  const el = document.querySelector('#title-jugador .rival-name');
-  if (el) el.textContent = rivalName();
-}
-
-// Muestra/esconde banner "no hay datos"
-function setupDataBanner() {
+function showDataBanner(title, msg) {
   const b = document.getElementById('dataBanner');
   if (!b) return;
-  if (!RAW_GAMES.length) b.style.display = '';
+  if (title) document.getElementById('dataBannerTitle').textContent = title;
+  if (msg) document.getElementById('dataBannerMsg').innerHTML = msg;
+  b.style.display = '';
 }
 
 // ===== HELPERS PARA DRAW FUNCTIONS =====
@@ -756,12 +780,31 @@ function footer(ctx, w, h) {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-  setupDataBanner();
-  populateRosters();
+async function init() {
   setupToneToggle();
-  if (window._initIdeas) window._initIdeas();
-});
+  try {
+    RAW_GAMES = await loadRealGames();
+  } catch (e) {
+    console.error('Firestore load failed', e);
+    showDataBanner('No pude conectar con Firestore.',
+      `Detalle: <code>${(e && e.message) || e}</code>. Revisá que las reglas de Firestore permitan lectura.`);
+    RAW_GAMES = [];
+  }
+  ALL_STATS = computeAllStats(RAW_GAMES);
+  PLAYERS_WITH_DATA = Object.keys(ALL_STATS);
+  if (!RAW_GAMES.length) {
+    showDataBanner('Firestore aún no devolvió partidas finalizadas.',
+      'Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a>, jugá una partida y sincronizá. Esta galería <strong>no inventa datos</strong>.');
+    return; // no renderizar ideas sin datos
+  }
+  if (window._modJugador) window._modJugador();
+  if (window._modAnual) window._modAnual();
+  if (window._modTemporada) window._modTemporada();
+  if (window._modTemporadas) window._modTemporadas();
+  if (window._modH2H) window._modH2H();
+  if (window._modBonus) window._modBonus();
+}
+document.addEventListener('DOMContentLoaded', () => { init(); });
 
 // ===== MODULE IDEAS WILL BE APPENDED BELOW =====
 // DRAWS:JUGADOR:START
@@ -2486,14 +2529,6 @@ window._modBonus = function() {
 };
 // DRAWS:BONUS:END
 
-window._initIdeas = function() {
-  if (window._modJugador) window._modJugador();
-  if (window._modAnual) window._modAnual();
-  if (window._modTemporada) window._modTemporada();
-  if (window._modTemporadas) window._modTemporadas();
-  if (window._modH2H) window._modH2H();
-  if (window._modBonus) window._modBonus();
-};
 </script>
 
 </body>
