@@ -86,24 +86,6 @@
       padding: .6rem .8rem; border-radius: 10px;
       font-family: inherit; font-size: .95rem;
     }
-    .tone-toggle {
-      display: flex; gap: .4rem;
-    }
-    .tone-btn {
-      flex: 1; padding: .55rem; border-radius: 10px;
-      background: var(--surface-2); border: 1px solid var(--border);
-      color: var(--text); cursor: pointer; font-weight: 600;
-      font-family: inherit; font-size: .85rem;
-    }
-    .tone-btn.active {
-      background: var(--uno-red); border-color: var(--uno-red);
-      color: #fff; box-shadow: 0 4px 16px rgba(237,28,36,.35);
-    }
-    .tone-btn.active[data-tone="tranqui"] {
-      background: var(--uno-blue); border-color: var(--uno-blue);
-      box-shadow: 0 4px 16px rgba(0,114,188,.35);
-    }
-
     .module-section { margin-top: 2.5rem; }
     .module-header {
       display: flex; align-items: center; gap: .75rem;
@@ -228,17 +210,6 @@
     </div>
   </div>
 
-  <section class="controls">
-    <div class="control-card" style="flex: 1 1 100%;">
-      <label>Tono del roast</label>
-      <div class="tone-toggle">
-        <button class="tone-btn" data-tone="algodon">🍭 Algodón</button>
-        <button class="tone-btn active" data-tone="picante">🌶️ Picante</button>
-        <button class="tone-btn" data-tone="nachi">💢 Nachi</button>
-      </div>
-    </div>
-  </section>
-
   <!-- ========== MODULO: JUGADOR ========== -->
   <section class="module-section" id="mod-jugador">
     <div class="module-header">
@@ -296,17 +267,6 @@
     <div class="ideas-grid" id="grid-h2h">
       <!-- IDEAS:H2H:START -->
       <!-- IDEAS:H2H:END -->
-    </div>
-  </section>
-
-  <section class="bonus-section" id="mod-bonus">
-    <h2>Bonus transversales</h2>
-    <p style="color: var(--text-muted); margin-bottom: 1rem;">
-      Features que aplicarían a todos los shares, no a uno específico.
-    </p>
-    <div class="ideas-grid" id="grid-bonus">
-      <!-- IDEAS:BONUS:START -->
-      <!-- IDEAS:BONUS:END -->
     </div>
   </section>
 
@@ -446,7 +406,6 @@ let STATE = {
   you: '—',
   rival: '—',
   _resolvedRival: null,
-  tone: 'picante',                      // 'algodon' | 'picante' | 'nachi'
   copyIndex: {}
 };
 
@@ -633,13 +592,10 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   return y;
 }
 
-// ===== COPY SYSTEM (3 tonos: algodon, picante, nachi) =====
+// ===== COPY SYSTEM (solo nachi — tono único, agresivo) =====
 function getCopy(idea) {
   return withPicked(idea, (picked) => {
-    const tone = STATE.tone;
-    const arr = (idea.copies && idea.copies[tone])
-      || (idea.copies && idea.copies.picante)   // fallback defensivo
-      || [''];
+    const arr = (idea.copies && idea.copies.nachi) || [''];
     const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
     const facts = Object.assign({},
       idea.computeFacts ? idea.computeFacts() : {},
@@ -746,16 +702,6 @@ async function generateAndShare(ideaId) {
 }
 window.generateAndShare = generateAndShare;
 
-function setupToneToggle() {
-  document.querySelectorAll('.tone-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      STATE.tone = btn.dataset.tone;
-      document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === STATE.tone));
-      refreshAll();
-    });
-  });
-}
-
 function showDataBanner(title, msg) {
   const b = document.getElementById('dataBanner');
   if (!b) return;
@@ -781,7 +727,6 @@ function footer(ctx, w, h) {
 
 // ===== INIT =====
 async function init() {
-  setupToneToggle();
   try {
     RAW_GAMES = await loadRealGames();
   } catch (e) {
@@ -802,7 +747,6 @@ async function init() {
   if (window._modTemporada) window._modTemporada();
   if (window._modTemporadas) window._modTemporadas();
   if (window._modH2H) window._modH2H();
-  if (window._modBonus) window._modBonus();
 }
 document.addEventListener('DOMContentLoaded', () => { init(); });
 
@@ -829,21 +773,13 @@ window._modJugador = function() {
         facts: { victimas: victims.length, topVictim: victims[0]?.name || '—' }
       };
     },
-    title: 'Mi Paredón',
-    desc: 'Grid con las caras de los rivales a los que {rival} ya le ganó. Sin inventos: si venció a 3, aparecen 3.',
+    title: 'Le Ganó a TODOS',
+    desc: 'Jugador con más rivales únicos vencidos (paredón de víctimas). Si venció a todo el roster, el cartel lo grita.',
     computeFacts: function() {
       const list = rivalDefeatedList();
       return { victimas: list.length, topVictim: list[0]?.name || '—' };
     },
     copies: {
-      algodon: [
-        '{rival} también tiene su paredoncito 🖼️ {victimas} víctimas — bien ahí.',
-        'Mirá: {rival} le ganó a {victimas} personas. ¡Aplausos!'
-      ],
-      picante: [
-        '{rival}, tu paredón da pena: {victimas} caras nomás.',
-        'Acá el "muro" de {rival}. Spoiler: entra cualquiera.'
-      ],
       nachi: [
         '{rival} tiene {victimas} víctimas y encima se las cree. Payaso.',
         'Tu paredón no asusta ni a {topVictim}. Sos un muerto, {rival}.'
@@ -853,15 +789,28 @@ window._modJugador = function() {
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
       gradBG(ctx, w, h, '#0f0f1a', '#2e0e1a');
+      const list = rivalDefeatedList();
+      const totalOthers = Math.max(0, Object.keys(ALL_STATS || {}).length - 1);
+      const allBeaten = totalOthers > 0 && list.length >= totalOthers;
       ctx.fillStyle = '#FFDE00';
       ctx.font = `800 ${w*0.07}px Fredoka One`;
       ctx.textAlign = 'center';
-      ctx.fillText('PAREDÓN DE ' + rivalName().toUpperCase(), w/2, h*0.10);
-      ctx.fillStyle = 'rgba(255,255,255,.6)';
-      ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('caras que ya venció — 100% datos reales', w/2, h*0.145);
+      if (allBeaten) {
+        ctx.fillText(rivalName().toUpperCase(), w/2, h*0.09);
+        ctx.fillStyle = '#ff4060';
+        ctx.font = `900 ${w*0.095}px Fredoka One`;
+        ctx.fillText('LE GANÓ', w/2, h*0.175);
+        ctx.fillText('A TODOS', w/2, h*0.255);
+        ctx.fillStyle = 'rgba(255,255,255,.6)';
+        ctx.font = `500 ${w*0.025}px Inter`;
+        ctx.fillText(`${list.length}/${totalOthers} rivales del grupo — 100% datos reales`, w/2, h*0.30);
+      } else {
+        ctx.fillText('PAREDÓN DE ' + rivalName().toUpperCase(), w/2, h*0.10);
+        ctx.fillStyle = 'rgba(255,255,255,.6)';
+        ctx.font = `500 ${w*0.025}px Inter`;
+        ctx.fillText('caras que ya venció — 100% datos reales', w/2, h*0.145);
+      }
 
-      const list = rivalDefeatedList();
       if (!list.length) {
         ctx.fillStyle = '#ff4060';
         ctx.font = `700 ${w*0.045}px Fredoka One`;
@@ -879,8 +828,8 @@ window._modJugador = function() {
       const cols = items.length <= 4 ? items.length : (items.length <= 6 ? 3 : 4);
       const rows = Math.ceil(items.length / cols);
       const cellW = (w*0.88) / cols;
-      const cellH = (h*0.60) / rows;
-      const startX = w*0.06, startY = h*0.22;
+      const cellH = ((allBeaten ? 0.54 : 0.60) * h) / rows;
+      const startX = w*0.06, startY = allBeaten ? h*0.34 : h*0.22;
       const faceR = Math.min(cellW, cellH) * 0.30;
 
       for (let i = 0; i < items.length; i++) {
@@ -935,61 +884,56 @@ window._modJugador = function() {
         facts: {}
       };
     },
-    title: 'Racha vs este rival',
-    desc: 'Tu racha actual de victorias o derrotas solo en partidas donde estuvieron ambos.',
+    title: 'Racha Activa Más Larga',
+    desc: 'Jugador con más victorias consecutivas ahora mismo, según orden cronológico en Firestore. El rival que aparece es su víctima más castigada.',
     computeFacts: function() {
-      const yStats = ALL_STATS[youId()];
-      const streak = currentH2HStreak(yStats, rivalId());
-      const h = h2hFor();
-      return { streak: Math.abs(streak), rachaDir: streak >= 0 ? 'victorias' : 'derrotas', wins: h.wins, losses: h.losses, games: h.games };
+      const pStats = ALL_STATS[youId()] || { currentStreak: 0, W: 0, L: 0, gamesPlayed: 0 };
+      const streak = pStats.currentStreak || 0;
+      return { streak: Math.abs(streak), wins: pStats.W, losses: pStats.L, games: pStats.gamesPlayed };
     },
     copies: {
-      algodon: [
-        '🔥 {streak} {rachaDir} seguidas con {rival}. ¡Seguí así!',
-        'Vamos {wins}-{losses} contra {rival} en {games} partidas 💪'
-      ],
-      picante: [
-        '{streak} {rachaDir} seguidas contra {rival}. La data no miente.',
-        'H2H real: {wins}-{losses}. {rival}, no es chicana, es data real.'
-      ],
       nachi: [
-        '{streak} {rachaDir} seguidas, {rival}. Sos mi perra.',
-        'Te gané {wins} veces de {games}. Pedí licencia de UNO, impresentable.'
+        '{protagonist} lleva {streak} victorias seguidas. {rival}, sos la última víctima de la fila.',
+        '{streak} W en fila para {protagonist}. {rival} encabeza la lista de perros.'
       ]
     },
     draw: async function(canvas, opts) {
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
       gradBG(ctx, w, h, '#3a0000', '#0f0f1a');
-      const yStats = ALL_STATS[youId()];
-      const streak = currentH2HStreak(yStats, rivalId());
-      const h2h = h2hFor();
-      const positive = streak >= 0;
-      ctx.fillStyle = positive ? '#FFDE00' : '#ff4060';
-      ctx.font = `900 ${w*0.10}px Fredoka One`;
+      const pStats = ALL_STATS[youId()] || { currentStreak: 0, W: 0, L: 0, gamesPlayed: 0 };
+      const streak = pStats.currentStreak || 0;
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `900 ${w*0.07}px Fredoka One`;
       ctx.textAlign = 'center';
-      if (h2h.games === 0) {
-        ctx.fillText('SIN PARTIDAS', w/2, h*0.38);
-        ctx.fillText('VS ' + rivalName().toUpperCase(), w/2, h*0.50);
+      ctx.fillText('RACHA ACTIVA DE ' + youName().toUpperCase(), w/2, h*0.10);
+      ctx.fillStyle = 'rgba(255,255,255,.65)';
+      ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText('victorias seguidas — orden cronológico Firestore', w/2, h*0.145);
+      if (streak <= 0) {
+        ctx.fillStyle = '#ff4060';
+        ctx.font = `900 ${w*0.08}px Fredoka One`;
+        ctx.fillText('SIN RACHA', w/2, h*0.45);
+        ctx.fillText('ACTIVA', w/2, h*0.55);
         ctx.fillStyle = 'rgba(255,255,255,.55)';
         ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText('jueguen al menos una partida juntos', w/2, h*0.62);
+        ctx.fillText('(última partida no fue victoria)', w/2, h*0.63);
         footer(ctx, w, h); return;
       }
       ctx.font = `${w*0.18}px serif`;
-      ctx.fillText(positive ? '🔥' : '💀', w/2, h*0.30);
-      ctx.fillStyle = positive ? '#FFDE00' : '#ff4060';
+      ctx.fillText('🔥', w/2, h*0.30);
+      ctx.fillStyle = '#FFDE00';
       ctx.font = `900 ${w*0.30}px Fredoka One`;
-      ctx.fillText(String(Math.abs(streak)), w/2, h*0.58);
+      ctx.fillText(String(streak), w/2, h*0.58);
       ctx.fillStyle = '#fff';
       ctx.font = `800 ${w*0.055}px Fredoka One`;
-      ctx.fillText(positive ? 'VICTORIAS SEGUIDAS' : 'DERROTAS SEGUIDAS', w/2, h*0.70);
+      ctx.fillText('VICTORIAS SEGUIDAS', w/2, h*0.70);
       ctx.fillStyle = 'rgba(255,255,255,.75)';
-      ctx.font = `600 ${w*0.035}px Inter`;
-      ctx.fillText('contra ' + rivalName(), w/2, h*0.77);
+      ctx.font = `600 ${w*0.032}px Inter`;
+      ctx.fillText('última víctima destacada: ' + rivalName(), w/2, h*0.77);
       ctx.fillStyle = '#FFDE00';
-      ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText(`H2H total: ${h2h.wins} — ${h2h.losses}  ·  ${h2h.games} partidas`, w/2, h*0.87);
+      ctx.font = `700 ${w*0.032}px Fredoka One`;
+      ctx.fillText(`Total 2026: ${pStats.W}W — ${pStats.L}L · ${pStats.gamesPlayed} partidas`, w/2, h*0.87);
       footer(ctx, w, h);
     }
   });
@@ -1014,18 +958,10 @@ window._modJugador = function() {
         facts: {}
       };
     },
-    title: 'Certificado de Dominancia',
-    desc: 'Diploma falso con el marcador H2H real.',
+    title: 'Certificado de Dominancia H2H',
+    desc: 'Dupla con H2H más desbalanceado (mín. 3 partidas, máximo gap wins − losses). Diploma con el marcador real.',
     computeFacts: function() { const h = h2hFor(); return { wins: h.wins, losses: h.losses, games: h.games }; },
     copies: {
-      algodon: [
-        'Certificado oficial: {you} {wins}-{losses} a {rival} 🏅',
-        'Reconocimiento enmarcado: {you} lidera por {wins} a {losses}.'
-      ],
-      picante: [
-        'Firmado y sellado: {rival} es mi propiedad intelectual. {wins}-{losses}.',
-        'Certificado notarial de palizas: {wins}-{losses} contra {rival}.'
-      ],
       nachi: [
         '{rival}, acá tu certificado de inútil: {wins}-{losses}. Colgalo en el baño.',
         'Papel oficial: {rival} es un desecho. {wins}-{losses} lo demuestra.'
@@ -1096,8 +1032,8 @@ window._modJugador = function() {
         facts: { dominados: best.count, top1: best.top[0].name, top2: best.top[1]?.name || '—', top3: best.top[2]?.name || '—' }
       };
     },
-    title: 'Top 3 de víctimas',
-    desc: 'Los 3 jugadores a los que más veces les ganaste. Orden y números reales.',
+    title: 'Highlights del Verdugo',
+    desc: 'Jugador con más rivales dominados sin perder (wins ≥ 2, losses = 0). Muestra sus 3 víctimas más frecuentes.',
     computeFacts: function() {
       const me = ALL_STATS[youId()];
       if (!me) return { top1: '—' };
@@ -1108,14 +1044,6 @@ window._modJugador = function() {
       };
     },
     copies: {
-      algodon: [
-        'Mis 3 oponentes más frecuentes y cómo me fue 🏆 top 1: {top1}',
-        'Ranking afectuoso de víctimas. Lidera {top1}.'
-      ],
-      picante: [
-        'Top víctimas reales. En la cima: {top1}. Total de palizas: {total}.',
-        'Los 3 a los que más los cociné. {top1} podio absoluto.'
-      ],
       nachi: [
         'Top 3 perros que tengo: {top1} al frente. {total} palizas totales.',
         'Mi colección de tarados: {top1} presidente del club.'
@@ -1175,22 +1103,14 @@ window._modJugador = function() {
       const rival = victims[0] || { id: one.id, name: one.name };
       return { protagonist: { id: one.id, name: one.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
     },
-    title: 'Mi temporada en 1 carta',
-    desc: 'Stats reales de {you} como carta UNO: partidas totales, W-L y % real.',
+    title: 'Carta UNO del #1',
+    desc: 'Carta UNO con las stats reales del jugador #1 del ranking anual (winRate): W, L y % de victorias.',
     computeFacts: function() {
       const s = statsFor(youId());
       const pct = (s.W+s.L) > 0 ? Math.round((s.W/(s.W+s.L))*100) : 0;
       return { W: s.W, L: s.L, games: s.gamesPlayed, pct };
     },
     copies: {
-      algodon: [
-        'Mi card oficial 🎴 {W}-{L} ({pct}%) en {games} partidas.',
-        '{games} partidas, {W} victorias. A seguir 👊'
-      ],
-      picante: [
-        '{W}-{L} · {pct}%. Esa es la realidad de {you}, {rival}.',
-        'Carta UNO real: {W} palizas tiradas en {games} partidas.'
-      ],
       nachi: [
         '{W}-{L} ({pct}%). {rival}, vos no llegás ni en pedo a estos números.',
         'Acá mi carta, {rival}. {pct}% de winrate. Vos sos el +4 del ridículo.'
@@ -1260,8 +1180,8 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'Podio con Sombra',
-    desc: 'Podio 1-2-3 del ranking anual real; abajo los del fondo "también jugaron".',
+    title: 'Podio Anual 2026 (por winRate)',
+    desc: 'Top 3 del ranking anual, ordenados por winRate = victorias / partidas jugadas en 2026.',
     computeFacts: function() {
       const r = annualRanking();
       return {
@@ -1272,14 +1192,6 @@ window._modAnual = function() {
       };
     },
     copies: {
-      algodon: [
-        'Podio 2026: {p1} · {p2} · {p3}. {rival} en el puesto {rivalPos}, a seguir 💪',
-        'Ranking real: 1°{p1}, 2°{p2}, 3°{p3}. {rival} #{rivalPos} de {total}.'
-      ],
-      picante: [
-        'Podio 2026 — {p1} arriba, {rival} mirando desde el #{rivalPos}.',
-        '{p1} se lleva el año. {rival} terminó #{rivalPos}, tampoco es noticia.'
-      ],
       nachi: [
         '{rival} terminó #{rivalPos} de {total}. Patético. {p1} lo tiene de mascota.',
         'El podio no tiene lugar para perdedores como {rival}. #{rivalPos}, mongo.'
@@ -1339,21 +1251,13 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'Ranking de Patéticos',
-    desc: 'El ranking al revés: los 3 con menor % de victorias del año.',
+    title: 'Top Perdedores 2026 (por winRate)',
+    desc: 'Los 3 jugadores con peor winRate del año (ranking invertido).',
     computeFacts: function() {
       const r = annualRanking().slice().reverse();
       return { last: r[0]?.name || '—', last2: r[1]?.name || '—', last3: r[2]?.name || '—' };
     },
     copies: {
-      algodon: [
-        'Los que tienen más por mejorar: {last}, {last2}, {last3}. ¡Vamos chicos!',
-        'Podio invertido: {last} primero. Práctica y paciencia.'
-      ],
-      picante: [
-        'Top perdedores 2026: {last} lidera el podio al revés 👑💩',
-        '{last} 1° del ranking patético. Data real, no es chicana.'
-      ],
       nachi: [
         'Top inútiles 2026: {last}, {last2}, {last3}. Dejen UNO y pidan disculpas.',
         '{last} es basura pura. Ni para sostener cartas sirve.'
@@ -1412,21 +1316,13 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'Factura Anual',
-    desc: 'Comprobante fiscal con las partidas H2H reales entre ustedes.',
+    title: 'Factura Anual H2H',
+    desc: 'Pareja del año con más palizas acumuladas (máx h2h.wins de un jugador sobre otro). Factura oficial emitida al cliente rival.',
     computeFacts: function() {
       const hh = h2hFor();
       return { wins: hh.wins, losses: hh.losses, games: hh.games };
     },
     copies: {
-      algodon: [
-        'Resumen anual {rival}: {wins}-{losses} en {games} partidas. Buen año 🧾',
-        'Factura simbólica 2026 — saldo {wins} a {losses} a favor de {you}.'
-      ],
-      picante: [
-        'Te paso la factura del año, {rival}: {losses} palizas pagás en asado.',
-        'Total contra {rival}: {wins} W a {losses} L. Anotalo en la libreta.'
-      ],
       nachi: [
         'Factura oficial, {rival}: {losses} derrotas. Pagás con tu dignidad, basura.',
         '{rival} debe {losses} asados. No pagás, no venís más, ratita.'
@@ -1449,10 +1345,10 @@ window._modAnual = function() {
       ctx.fillText(`PROVEEDOR: ${youName()}`, w*0.1, h*0.28);
       const hh = h2hFor();
       const items = [
-        ['Palizas recibidas (H2H)', String(hh.losses)],
-        ['Victorias morales (H2H)', String(hh.wins)],
+        [`Palizas dadas a ${rivalName()}`, String(hh.wins)],
+        [`Derrotas propias vs ${rivalName()}`, String(hh.losses)],
         ['Partidas jugadas juntos', String(hh.games)],
-        ['Asados pendientes', String(Math.max(1, hh.losses))],
+        ['Asados pendientes', String(Math.max(1, hh.wins))],
         ['Llanto emocional', 'incluido']
       ];
       items.forEach((it, i) => {
@@ -1466,7 +1362,7 @@ window._modAnual = function() {
       ctx.font = `700 ${w*0.045}px Inter`;
       ctx.textAlign = 'left'; ctx.fillText('TOTAL', w*0.1, h*0.78);
       ctx.textAlign = 'right'; ctx.fillStyle = '#c2110c';
-      ctx.fillText(hh.losses > 0 ? 'IMPAGABLE' : 'EMPATE MORAL', w*0.9, h*0.78);
+      ctx.fillText(hh.wins > 0 ? 'IMPAGABLE' : 'EMPATE MORAL', w*0.9, h*0.78);
       for (let i = 0; i < 50; i++) {
         const bw = Math.random() > 0.5 ? 4 : 2;
         ctx.fillStyle = '#000';
@@ -1477,80 +1373,7 @@ window._modAnual = function() {
     }
   });
 
-  // ---------- 4) GAP SHAMING (anual real) ----------
-  registerIdea({
-    id: 'gap-shame', module: 'anual',
-    pick: function(ctx) {
-      const rk = ctx.annualRanking();
-      if (rk.length < 2) return null;
-      return {
-        protagonist: { id: rk[0].id, name: rk[0].name },
-        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
-        facts: {}
-      };
-    },
-    title: 'Gap Shaming',
-    desc: 'Barra comparativa con las victorias anuales reales de ambos.',
-    computeFacts: function() {
-      const y = statsFor(youId()), r = statsFor(rivalId());
-      return { yW: y.W, rW: r.W, yL: y.L, rL: r.L, gap: y.W - r.W };
-    },
-    copies: {
-      algodon: [
-        'Yo {yW} W, {rival} {rW} W. Hay margen para crecer 📊',
-        'Números del año: {yW} vs {rW}. A seguir mejorando.'
-      ],
-      picante: [
-        '{yW} vs {rW}. La diferencia es de {gap} y se nota, {rival}.',
-        'Yo {yW}, vos {rW}. No es opinión, es la data.'
-      ],
-      nachi: [
-        '{yW} victorias contra {rW} de {rival}. Sos un tapón.',
-        '{gap} de diferencia y encima te creés jugador. Ridículo, {rival}.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0a0a14', '#1a1a2e');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('DIFERENCIA 2026', w/2, h*0.1);
-      const y = statsFor(youId()), r = statsFor(rivalId());
-      const yW = y.W, rW = r.W;
-      const maxW = Math.max(yW, rW, 1);
-      try {
-        const imgY = await loadFace(youId());
-        drawFaceCircle(ctx, imgY, w*0.12, h*0.30, w*0.065);
-      } catch(e){}
-      ctx.fillStyle = '#4dff91'; ctx.textAlign = 'left';
-      roundRect(ctx, w*0.22, h*0.26, Math.max(w*0.04, (w*0.70)*(yW/maxW)), h*0.08, 8); ctx.fill();
-      ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.045}px Fredoka One`;
-      ctx.fillText(`${yW} W`, w*0.25, h*0.32);
-      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.028}px Inter`;
-      ctx.fillText(youName(), w*0.22, h*0.24);
-
-      try {
-        const imgR = await loadFace(rivalId());
-        drawFaceCircle(ctx, imgR, w*0.12, h*0.50, w*0.065);
-      } catch(e){}
-      ctx.fillStyle = '#ff4060';
-      roundRect(ctx, w*0.22, h*0.46, Math.max(w*0.04, (w*0.70)*(rW/maxW)), h*0.08, 8); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText(`${rW} W`, w*0.24, h*0.52);
-      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.028}px Inter`;
-      ctx.fillText(rivalName(), w*0.22, h*0.44);
-
-      const gap = yW - rW;
-      ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('DIFERENCIA', w/2, h*0.70);
-      ctx.fillStyle = '#FFDE00'; ctx.font = `800 ${w*0.12}px Fredoka One`;
-      ctx.fillText(String(Math.abs(gap)), w/2, h*0.82);
-      ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `500 ${w*0.026}px Inter`;
-      ctx.fillText(gap >= 0 ? 'victorias a favor' : 'victorias en contra', w/2, h*0.88);
-      footer(ctx, w, h);
-    }
-  });
-
-  // ---------- 5) NFT DE PATÉTICO (posición real) ----------
+  // ---------- 4) NFT DE PATÉTICO (posición real) ----------
   registerIdea({
     id: 'nft', module: 'anual',
     pick: function(ctx) {
@@ -1564,22 +1387,14 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'NFT de Patético',
-    desc: 'Mock de NFT con cara pixelada del rival y su puesto real del año.',
+    title: 'NFT del Último (ranking anual)',
+    desc: 'Último puesto del ranking anual 2026 por winRate. NFT falso con cara pixelada y puesto real.',
     computeFacts: function() {
       const r = annualRanking();
       const pos = (r.findIndex(x => x.id === rivalId()) + 1) || '—';
       return { rivalPos: pos, total: r.length };
     },
     copies: {
-      algodon: [
-        'NFT conmemorativo para {rival} — puesto #{rivalPos} de {total} 🪙',
-        'Coleccionable: {rival} estuvo en el ranking #{rivalPos}. Único e irrepetible.'
-      ],
-      picante: [
-        'Te minteé un NFT, {rival}. Colección "Puesto #{rivalPos}" 1/1.',
-        'Token único: {rival} #{rivalPos} de {total}. Valor: 0 ETH, 0 dignidad.'
-      ],
       nachi: [
         '{rival} #{rivalPos}, minteado como NFT de verguenza. Pieza de museo del ridículo.',
         '"Certified Patético" edición {rival}: puesto #{rivalPos}. Pagarías por no tenerlo.'
@@ -1651,8 +1466,8 @@ window._modTemporada = function() {
         facts: {}
       };
     },
-    title: 'Predicción para la próxima',
-    desc: 'Modelo simple que proyecta el próximo resultado a partir de tu racha real contra el rival.',
+    title: 'Racha H2H Más Larga Activa',
+    desc: 'Pareja con mayor cantidad de partidas seguidas ganadas por el mismo jugador dentro del H2H. Proyección del próximo resultado.',
     computeFacts: function() {
       const ys = ALL_STATS[youId()];
       const s = currentH2HStreak(ys, rivalId());
@@ -1662,14 +1477,6 @@ window._modTemporada = function() {
       return { streak: Math.abs(s), direction: s >= 0 ? 'victoria' : 'derrota', confidence: conf, games: h.games, wins: h.wins, losses: h.losses };
     },
     copies: {
-      algodon: [
-        'Tendencia H2H: {direction} probable el próximo lunes. Confianza {confidence}% 🤖',
-        'Modelo dice: seguís con {direction}. Basado en {games} partidas reales.'
-      ],
-      picante: [
-        'Spoiler, {rival}: {wins}-{losses} en {games}. Te toca perder de nuevo.',
-        'Confianza {confidence}%: {rival} pierde otra vez. La data manda.'
-      ],
       nachi: [
         '{rival} va a perder otra. Confianza {confidence}%. Perdedor crónico.',
         'Te auguro otra paliza, {rival}. {wins}-{losses} no es casualidad, sos un infradotado.'
@@ -1731,21 +1538,13 @@ window._modTemporada = function() {
         facts: {}
       };
     },
-    title: 'MVP vs LVP',
-    desc: 'Carta dividida con el líder real del ranking vs el último, según datos.',
+    title: 'MVP vs LVP (winRate anual)',
+    desc: 'Primero y último del ranking anual 2026 por winRate: el mejor contra el peor, con sus números reales.',
     computeFacts: function() {
       const r = annualRanking();
       return { mvp: r[0]?.name || '—', lvp: r[r.length-1]?.name || '—' };
     },
     copies: {
-      algodon: [
-        'Temporada cerrada: MVP {mvp}, LVP {lvp} 🏆💩',
-        'Dos caras del año: {mvp} brilla, {lvp} mejora pronto.'
-      ],
-      picante: [
-        'MVP: {mvp}. LVP: {lvp}. La data no pide disculpas.',
-        'Hay un ganador ({mvp}) y un {lvp}. No hay puntos medios.'
-      ],
       nachi: [
         '{mvp} rompe. {lvp} es fauna. Temporada confirmada.',
         'Mientras {mvp} arrasa, {lvp} chupa cartas como si fuera mamadera.'
@@ -1806,21 +1605,13 @@ window._modTemporada = function() {
         facts: {}
       };
     },
-    title: 'Mapa de Dominio',
-    desc: 'Heatmap con las partidas H2H reales entre ambos: verde ganaste, rojo perdiste.',
+    title: 'Mapa de Dominio (pareja con más H2H)',
+    desc: 'Pareja con más partidas H2H registradas. Verde = victoria del protagonista, rojo = derrota, en orden cronológico real.',
     computeFacts: function() {
       const hh = h2hFor();
       return { wins: hh.wins, losses: hh.losses, games: hh.games };
     },
     copies: {
-      algodon: [
-        'Mapa vs {rival}: {wins} verdes, {losses} rojos en {games} partidas 🟢',
-        'Así se repartió la historia: {wins} a {losses}. ¡Seguí!'
-      ],
-      picante: [
-        'Heatmap vs {rival}: {wins} verdes y {losses} rojos. Visual no miente.',
-        'Historia pintada: {wins} a {losses}. {rival} necesita más verde.'
-      ],
       nachi: [
         '{rival}, tu mapa contra mí es un charco rojo. {wins}-{losses}, patético.',
         'Mapa de dominio: yo te pinté {wins} veces, vos me manchaste {losses}. Papafrita.'
@@ -1848,7 +1639,7 @@ window._modTemporada = function() {
       const startY = h*0.22;
       for (let k = 0; k < seq.length; k++) {
         const r = Math.floor(k/cols), c = k%cols;
-        ctx.fillStyle = seq[k] === 'W' ? '#00a651' : '#ff4060';
+        ctx.fillStyle = seq[k] === true ? '#00a651' : (seq[k] === false ? '#ff4060' : '#555');
         roundRect(ctx, pad + c*cellW + 4, startY + r*cellH + 4, cellW-8, cellH-8, 6); ctx.fill();
       }
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'center';
@@ -1859,79 +1650,6 @@ window._modTemporada = function() {
     }
   });
 
-  // ---------- 4) ESCALERA (W acumuladas reales) ----------
-  registerIdea({
-    id: 'escalera', module: 'temporada',
-    pick: function(ctx) {
-      const rk = ctx.annualRanking();
-      if (rk.length < 2) return null;
-      return {
-        protagonist: { id: rk[0].id, name: rk[0].name },
-        rival: { id: rk[1].id, name: rk[1].name },
-        facts: {}
-      };
-    },
-    title: 'Escalera de la temporada',
-    desc: 'Curvas de victorias acumuladas reales: tuyas vs las del rival.',
-    computeFacts: function() {
-      const y = statsFor(youId()), r = statsFor(rivalId());
-      return { yW: y.W, rW: r.W };
-    },
-    copies: {
-      algodon: [
-        'Evolución temporada: {you} acumuló {yW} W, {rival} {rW} W 📈',
-        'Dos curvas, un año. {yW} vs {rW}. ¡Sigan jugando!'
-      ],
-      picante: [
-        'Mi curva vs la tuya, {rival}. {yW} contra {rW}, eso no sube solo.',
-        'Gráfica de la temporada: yo arriba ({yW}), {rival} abajo ({rW}).'
-      ],
-      nachi: [
-        '{yW} victorias contra {rW}. {rival}, tu línea es una lápida.',
-        'Mi curva llega al techo. La tuya, {rival}, ni arranca. Inútil.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0f0f1a', '#1a1a3e');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('EVOLUCIÓN TEMPORADA', w/2, h*0.1);
-      const ys = ALL_STATS[youId()], rs = ALL_STATS[rivalId()];
-      const yRes = (ys?.gameResults || []).slice();
-      const rRes = (rs?.gameResults || []).slice();
-      const buildCum = arr => {
-        const out = [0]; let acc = 0;
-        arr.forEach(x => { if (x === 'W') acc++; out.push(acc); });
-        return out;
-      };
-      const yCum = buildCum(yRes), rCum = buildCum(rRes);
-      const ox = w*0.12, oy = h*0.78, gw = w*0.80, gh = h*0.55;
-      ctx.strokeStyle = '#3a3a5c'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(ox, oy-gh); ctx.lineTo(ox, oy); ctx.lineTo(ox+gw, oy); ctx.stroke();
-      const maxY = Math.max(yCum[yCum.length-1] || 0, rCum[rCum.length-1] || 0, 1);
-      const nPoints = Math.max(yCum.length, rCum.length, 2);
-      const drawLine = (cum, color) => {
-        ctx.strokeStyle = color; ctx.lineWidth = 5; ctx.beginPath();
-        for (let i = 0; i < nPoints; i++) {
-          const val = cum[i] !== undefined ? cum[i] : cum[cum.length-1] || 0;
-          const x = ox + (gw/(nPoints-1))*i;
-          const y = oy - gh*(val/maxY);
-          if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-        }
-        ctx.stroke();
-      };
-      drawLine(yCum, '#4dff91');
-      drawLine(rCum, '#ff4060');
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#4dff91'; ctx.font = `700 ${w*0.035}px Inter`;
-      ctx.fillRect(w*0.12, h*0.88, w*0.03, h*0.015);
-      ctx.fillText(`${youName()} (${yCum[yCum.length-1]||0}W)`, w*0.17, h*0.895);
-      ctx.fillStyle = '#ff4060';
-      ctx.fillRect(w*0.52, h*0.88, w*0.03, h*0.015);
-      ctx.fillText(`${rivalName()} (${rCum[rCum.length-1]||0}W)`, w*0.57, h*0.895);
-      footer(ctx, w, h);
-    }
-  });
 };
 // DRAWS:TEMPORADA:END
 
@@ -1950,21 +1668,13 @@ window._modTemporadas = function() {
         facts: {}
       };
     },
-    title: 'Hall of Shame Eterno',
-    desc: 'Las 3 placas de bronce van para los 3 jugadores con peor winRate histórico.',
+    title: 'Hall of Shame Histórico',
+    desc: 'Los 3 jugadores con peor winRate en toda la historia de Firestore (todas las temporadas). Placas de bronce oficiales.',
     computeFacts: function() {
       const r = annualRanking().slice().reverse();
       return { s1: r[0]?.name || '—', s2: r[1]?.name || '—', s3: r[2]?.name || '—' };
     },
     copies: {
-      algodon: [
-        'Homenaje eterno: {s1}, {s2} y {s3}. ¡Próximo lunes revancha!',
-        'Hall of Shame: {s1} encabeza. Hay tiempo para salir del muro.'
-      ],
-      picante: [
-        'Placas oficiales: {s1}, {s2} y {s3}. Bronceados para siempre.',
-        'Hall of Shame confirmado por la data: {s1}, {s2}, {s3}. Impecable.'
-      ],
       nachi: [
         '{s1}, {s2} y {s3}: sos peor que un 4+ robado. Placa eterna.',
         'Museo del fracaso: {s1} lidera. Pagarías entrada por no verte.'
@@ -2020,21 +1730,13 @@ window._modTemporadas = function() {
         facts: {}
       };
     },
-    title: 'Libro de Historia',
-    desc: 'Página tipo Wikipedia con los hitos reales del rival según las partidas registradas.',
+    title: 'Timeline del Horror',
+    desc: 'Jugador con la racha de derrotas más larga ahora mismo (currentStreak negativo máximo). Libro de historia de sus miserias.',
     computeFacts: function() {
       const rs = ALL_STATS[rivalId()];
       return { total: rs?.gamesPlayed || 0, wins: rs?.W || 0, losses: rs?.L || 0 };
     },
     copies: {
-      algodon: [
-        'Historia breve de {rival}: {wins}W-{losses}L en {total} partidas 📖',
-        'Capítulo {rival}: jugó {total}, ganó {wins}. Historia viva.'
-      ],
-      picante: [
-        'Wikipedia oficial de {rival}: {wins} victorias en {total}. Enciclopedia aburrida.',
-        'Libro de {rival}: {losses} derrotas registradas. Tapa dura.'
-      ],
       nachi: [
         '{rival} — resumen: {losses} derrotas, chiste andante. Biografía impresentable.',
         'Historia de {rival}: {wins} W de pura casualidad. Merecería borrarse.'
@@ -2050,8 +1752,9 @@ window._modTemporadas = function() {
       ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(w*0.18, h*0.20); ctx.lineTo(w*0.18, h*0.85); ctx.stroke();
       const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, W: 0, L: 0, gameResults: [], currentStreak: 0 };
-      const lastWinIdx = rs.gameResults.lastIndexOf('W');
-      const gamesSinceWin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
+      let lastWinIdx = -1;
+      for (let i = rs.gameResults.length - 1; i >= 0; i--) { if (rs.gameResults[i].won) { lastWinIdx = i; break; } }
+      const gamesSinceWin = lastWinIdx === -1 ? rs.gameResults.length : (rs.gameResults.length - 1 - lastWinIdx);
       const events = [
         ['Total', `Jugó ${rs.gamesPlayed} partidas.`],
         ['Victorias', `${rs.W} W acumuladas.`],
@@ -2093,24 +1796,17 @@ window._modTemporadas = function() {
         facts: {}
       };
     },
-    title: 'Arqueología del Perdedor',
-    desc: 'Cuántas partidas pasaron desde la última vez que el rival ganó (datos reales).',
+    title: 'Arqueología de Victorias',
+    desc: 'Jugador con más partidas consecutivas sin ganar (desde su última W registrada en Firestore).',
     computeFacts: function() {
       const rs = ALL_STATS[rivalId()];
       if (!rs) return { sincewin: 0, total: 0 };
-      const lastWinIdx = rs.gameResults.lastIndexOf('W');
-      const sincewin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
+      let lastWinIdx = -1;
+      for (let i = rs.gameResults.length - 1; i >= 0; i--) { if (rs.gameResults[i].won) { lastWinIdx = i; break; } }
+      const sincewin = lastWinIdx === -1 ? rs.gameResults.length : (rs.gameResults.length - 1 - lastWinIdx);
       return { sincewin, total: rs.gamesPlayed, lastWinIdx };
     },
     copies: {
-      algodon: [
-        'Van {sincewin} partidas sin ganar, {rival}. ¡La próxima es!',
-        'Racha sin W: {sincewin}. Vamos {rival}, a cortar esa seca.'
-      ],
-      picante: [
-        '{sincewin} partidas sin ganar, {rival}. Excavamos con paleta, ya no aparece.',
-        'Arqueología confirma: hace {sincewin} partidas que {rival} no huele victoria.'
-      ],
       nachi: [
         '{rival} lleva {sincewin} partidas de pura mierda. Museo viviente.',
         'Van {sincewin} sin W. {rival}, pedí jubilación de UNO, sos patrimonio perdido.'
@@ -2130,8 +1826,9 @@ window._modTemporadas = function() {
         drawFaceCircle(ctx, img, w/2, h*0.35, w*0.09);
       } catch(e){}
       const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, gameResults: [] };
-      const lastWinIdx = rs.gameResults.lastIndexOf('W');
-      const sincewin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
+      let lastWinIdx = -1;
+      for (let i = rs.gameResults.length - 1; i >= 0; i--) { if (rs.gameResults[i].won) { lastWinIdx = i; break; } }
+      const sincewin = lastWinIdx === -1 ? rs.gameResults.length : (rs.gameResults.length - 1 - lastWinIdx);
       ctx.fillStyle = '#FFDE00'; ctx.font = `800 ${w*0.16}px Fredoka One`;
       ctx.fillText(String(sincewin), w/2, h*0.60);
       ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.032}px Inter`;
@@ -2148,73 +1845,6 @@ window._modTemporadas = function() {
     }
   });
 
-  // ---------- 4) DÉCADAS (winRate histórico real) ----------
-  registerIdea({
-    id: 'decadas', module: 'temporadas',
-    pick: function(ctx) {
-      const rk = ctx.annualRanking();
-      if (rk.length < 2) return null;
-      return {
-        protagonist: { id: rk[0].id, name: rk[0].name },
-        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
-        facts: {}
-      };
-    },
-    title: 'Promedio Histórico',
-    desc: 'WinRate acumulado real de ambos y comparativa barra a barra.',
-    computeFacts: function() {
-      const y = statsFor(youId()), r = statsFor(rivalId());
-      const yPct = y.gamesPlayed ? Math.round((y.W / y.gamesPlayed) * 100) : 0;
-      const rPct = r.gamesPlayed ? Math.round((r.W / r.gamesPlayed) * 100) : 0;
-      return { yPct, rPct, yW: y.W, rW: r.W, yG: y.gamesPlayed, rG: r.gamesPlayed };
-    },
-    copies: {
-      algodon: [
-        'Histórico: {you} {yPct}% vs {rival} {rPct}%. ¡Seguir así!',
-        'Récord acumulado: {yPct}% contra {rPct}%. Cada uno a lo suyo.'
-      ],
-      picante: [
-        'Histórico {yPct}% vs {rPct}%. {rival}, la matemática no perdona.',
-        '{yPct} a {rPct}. {rival}, es un abismo estadístico.'
-      ],
-      nachi: [
-        '{yPct}% yo vs {rPct}% de {rival}. Sos un fraude aritmético.',
-        '{rPct}% de winrate, {rival}. Alérgico a ganar, payaso.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0f0f1a', '#1a1a3e');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('RÉCORD HISTÓRICO', w/2, h*0.10);
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText('WinRate acumulado de toda la historia', w/2, h*0.15);
-      const y = statsFor(youId()), r = statsFor(rivalId());
-      const yPct = y.gamesPlayed ? Math.round((y.W / y.gamesPlayed) * 100) : 0;
-      const rPct = r.gamesPlayed ? Math.round((r.W / r.gamesPlayed) * 100) : 0;
-      ctx.fillStyle = '#4dff91'; ctx.font = `800 ${w*0.14}px Fredoka One`;
-      ctx.fillText(yPct + '%', w/2, h*0.33);
-      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.033}px Inter`;
-      ctx.fillText(`${youName()} — ${y.W}W en ${y.gamesPlayed} partidas`, w/2, h*0.40);
-      ctx.strokeStyle = '#3a3a5c'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(w*0.15, h*0.48); ctx.lineTo(w*0.85, h*0.48); ctx.stroke();
-      // dos barras comparativas
-      const barY = h*0.60, maxH = h*0.20;
-      const maxPct = Math.max(yPct, rPct, 1);
-      const yH = maxH * (yPct / maxPct);
-      const rH = maxH * (rPct / maxPct);
-      ctx.fillStyle = '#4dff91';
-      ctx.fillRect(w*0.28, barY + maxH - yH, w*0.14, yH);
-      ctx.fillStyle = '#ff4060';
-      ctx.fillRect(w*0.58, barY + maxH - rH, w*0.14, rH);
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.03}px Inter`; ctx.textAlign = 'center';
-      ctx.fillText(youName(), w*0.35, barY + maxH + h*0.04);
-      ctx.fillText(rivalName(), w*0.65, barY + maxH + h*0.04);
-      ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText(`${rivalName()}: ${rPct}% — ${r.W}W en ${r.gamesPlayed} partidas`, w/2, h*0.94);
-      footer(ctx, w, h);
-    }
-  });
 };
 // DRAWS:TEMPORADAS:END
 
@@ -2222,8 +1852,8 @@ window._modTemporadas = function() {
 window._modH2H = function() {
   registerIdea({
     id: 'te-cocino', module: 'h2h',
-    title: 'Te Cocino',
-    desc: 'H2H más lopsided del grupo (mín 5 partidas): cara vs cara, marcador grande con llamita.',
+    title: 'El Que Te Cocina (H2H lopsided)',
+    desc: 'H2H más desbalanceado del grupo con mín. 5 partidas juntos (máx gap wins − losses). Cara a cara con marcador grande.',
     pick: function(ctx) {
       let best = null, bestDiff = 0;
       for (const pid of ctx.PLAYERS_WITH_DATA) {
@@ -2243,8 +1873,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['{protagonist} y {rival} tienen historia 💛 {wins}–{losses} en H2H.', 'Rivalidad linda entre {protagonist} y {rival} — {wins} a {losses}.'],
-      picante: ['Te tengo de hijo, {rival}. {wins} a {losses} no miente.', '{rival}, venís a comer y te llevás derrota. Contra {protagonist} vas {losses}–{wins}.'],
       nachi: ['{rival}, {wins}–{losses} contra {protagonist}. Dejá de jugar, estás haciendo el ridículo.', '¿Sabés lo que es {wins} a {losses}, {rival}? El ADN de un perdedor crónico. {protagonist} te cocinó para siempre.']
     },
     draw: async function(canvas, opts) {
@@ -2276,115 +1904,9 @@ window._modH2H = function() {
   });
 
   registerIdea({
-    id: 'campanita', module: 'h2h',
-    title: 'Campanita de la Vergüenza',
-    desc: 'Jugador con racha W más larga + su rival más castigado. Shame bell al compartir.',
-    pick: function(ctx) {
-      let top = null, topStreak = 0;
-      for (const pid of ctx.PLAYERS_WITH_DATA) {
-        const ps = ctx.ALL_STATS[pid];
-        if ((ps.currentStreak || 0) > topStreak) { topStreak = ps.currentStreak; top = ps; }
-      }
-      if (!top) {
-        const rk = ctx.annualRanking();
-        if (!rk.length) return null;
-        top = ctx.ALL_STATS[rk[0].id];
-      }
-      const victims = ctx.rivalDefeatedListFor(top.id);
-      const rival = victims[0] || ctx.annualRanking().slice().reverse()[0];
-      if (!rival) return null;
-      return {
-        protagonist: { id: top.id, name: top.name || ctx.NAME_BY_ID[top.id] || top.id },
-        rival: { id: rival.id, name: rival.name }
-      };
-    },
-    copies: {
-      algodon: ['🔔 Suena la campanita para {rival}. Con cariño.', 'Ceremonia con campanita — {protagonist} te saluda, {rival}.'],
-      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.', 'Tus derrotas contra {protagonist} merecen una ceremonia, {rival}.'],
-      nachi: ['🔔🔔🔔 {rival}, ya deberían pegarte la campana con velcro. {protagonist} te rompe todos los lunes.', 'Vení {rival}, tocate la campana. {protagonist} ya ni pregunta.']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#2a0f05', '#0f0f1a');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.07}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('CAMPANITA DE', w/2, h*0.10);
-      ctx.fillText('LA VERGÜENZA', w/2, h*0.17);
-      ctx.font = `${w*0.35}px serif`;
-      ctx.fillText('🔔', w/2, h*0.55);
-      try {
-        const img = await loadFace(STATE.rival);
-        drawFaceCircle(ctx, img, w/2, h*0.74, w*0.09);
-      } catch(e){}
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.045}px Fredoka One`;
-      ctx.fillText(STATE.rival, w/2, h*0.87);
-      ctx.fillStyle = '#ff4060'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('🎵 toca al compartir', w/2, h*0.92);
-      footer(ctx, w, h);
-    }
-  });
-
-  registerIdea({
-    id: 'apodo', module: 'h2h',
-    title: 'Apodo Automático',
-    desc: 'Apodo para el jugador con peor winRate del año.',
-    pick: function(ctx) {
-      const rk = ctx.annualRanking();
-      if (rk.length < 2) return null;
-      const protag = rk[0];
-      const rival = rk[rk.length - 1];
-      const h = ctx.ALL_STATS[protag.id]?.h2h?.[rival.id] || { wins: 0, losses: 0 };
-      const apodos = ['El Invitado de Piedra','El Señor Cero-Uno','Don Empate Nunca','El Rey del Fondo','Capitán Derrota','El 11 Por Ciento'];
-      const apodo = apodos[((h.wins||0) + (h.losses||0)) % apodos.length];
-      return {
-        protagonist: { id: protag.id, name: protag.name },
-        rival: { id: rival.id, name: rival.name },
-        facts: { wins: h.wins, losses: h.losses, apodo }
-      };
-    },
-    copies: {
-      algodon: ['Nuevo apodo cariñoso para {rival}: "{apodo}" 💛', 'Nickname oficial del grupo para {rival}: "{apodo}".'],
-      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.', 'Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
-      nachi: ['{rival}, desde hoy sos "{apodo}". Ganada a pulso.', 'Te bautizamos "{apodo}", {rival}. {protagonist} hasta te firma el DNI.']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0a0a2e', '#0f0f1a');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('NUEVO APODO OFICIAL', w/2, h*0.11);
-      try {
-        const img = await loadFace(STATE.rival);
-        drawFaceCircle(ctx, img, w/2, h*0.30, w*0.13);
-      } catch(e){}
-      const h2h = dummyH2H(STATE.you, STATE.rival);
-      const apodos = [
-        'El Invitado de Piedra',
-        'El Señor Cero-Uno',
-        'Don Empate Nunca',
-        'El Rey del Fondo',
-        'Capitán Derrota',
-        'El 11 Por Ciento'
-      ];
-      const apodo = apodos[(h2h.you + h2h.rival) % apodos.length];
-      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.035}px Inter`;
-      ctx.fillText(STATE.rival + ', a partir de ahora:', w/2, h*0.50);
-      // apodo card
-      roundRect(ctx, w*0.08, h*0.55, w*0.84, h*0.18, 18);
-      ctx.fillStyle = '#ED1C24'; ctx.fill();
-      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 5; ctx.stroke();
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.065}px Fredoka One`;
-      ctx.fillText('"' + apodo + '"', w/2, h*0.66);
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText(`basado en H2H ${h2h.you}-${h2h.rival} · oficial e irreversible`, w/2, h*0.82);
-      footer(ctx, w, h);
-      // stash apodo in copy vars for share text
-      IDEAS.find(i => i.id === 'apodo')._lastApodo = apodo;
-    }
-  });
-
-  registerIdea({
     id: 'memes', module: 'h2h',
-    title: 'Meme Templates',
-    desc: 'Reutiliza el pair del H2H más lopsided (mismo de Te Cocino).',
+    title: 'Meme Drake Oficial',
+    desc: 'Mismo pair que "El Que Te Cocina": H2H más lopsided del grupo. Plantilla Drake con el marcador real.',
     pick: function(ctx) {
       let best = null, bestDiff = 0;
       for (const pid of ctx.PLAYERS_WITH_DATA) {
@@ -2404,8 +1926,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Meme dedicado a {rival} 💛 con onda.', 'Plantilla lista para {rival} — rol estelar, cero bardo.'],
-      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra {protagonist}.', 'Meme oficial de {rival}: confirmado en el grupo.'],
       nachi: ['Plantilla de {rival}: {protagonist} lo tiene {wins}–{losses}. Hasta Drake se ríe.', '{rival}, sos meme stock del grupo. Ni merece caption.']
     },
     draw: async function(canvas, opts) {
@@ -2436,8 +1956,8 @@ window._modH2H = function() {
 
   registerIdea({
     id: 'recibo', module: 'h2h',
-    title: 'Recibo Oficial',
-    desc: 'Pareja con más palizas acumuladas (máx h2h.wins). Ticket con QR falso.',
+    title: 'Recibo Oficial (más palizas H2H)',
+    desc: 'Pareja con más palizas acumuladas (máx h2h.wins entre todos los jugadores). Ticket impreso con QR falso.',
     pick: function(ctx) {
       let best = null, bestWins = 0;
       for (const pid of ctx.PLAYERS_WITH_DATA) {
@@ -2455,8 +1975,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Recibo oficial de {protagonist} vs {rival} 🧾 ({wins}–{losses}).', 'Factura histórica entre {protagonist} y {rival}.'],
-      picante: ['Guardá el recibo {rival}: {wins} × paliza de {protagonist}. Total: tu dignidad.', 'Factura emitida a {rival}. Adjuntá al chat del grupo.'],
       nachi: ['{rival}, el recibo dice {wins}–{losses}. Pagá con dignidad, ya no te queda otra.', 'Acá está la factura {rival}: {wins} palizas de {protagonist}. No aceptamos notas de crédito.']
     },
     draw: async function(canvas, opts) {
@@ -2518,7 +2036,7 @@ window._modH2H = function() {
   registerIdea({
     id: 'convocatoria', module: 'h2h',
     title: 'Convocatoria Judicial',
-    desc: 'Citación falsa al rival más castigado por el #1 del ranking.',
+    desc: 'Víctima más castigada por el #1 del ranking anual (winRate). Citación falsa con sello oficial.',
     pick: function(ctx) {
       const rk = ctx.annualRanking();
       if (!rk.length) return null;
@@ -2532,8 +2050,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Invitación formal 📜 para {rival} — próximo lunes con {protagonist}.', 'Convocatoria cariñosa: te esperamos, {rival}.'],
-      picante: ['Te cito {rival}. Comparecencia obligatoria ante {protagonist}.', 'Judicial: {rival} debe presentarse este lunes a recibir paliza de {protagonist}.'],
       nachi: ['{rival}, citación obligatoria. {protagonist} te espera en la mesa.', 'Convocatoria judicial: {rival}, a recibir paliza de {protagonist}. Sin excusas ni revancha.']
     },
     draw: async function(canvas, opts) {
@@ -2587,8 +2103,8 @@ window._modH2H = function() {
 
   registerIdea({
     id: 'top-victimas', module: 'h2h',
-    title: 'Mi Top 3 Víctimas',
-    desc: 'Podio con los 3 rivales reales más dominados por el jugador con más víctimas.',
+    title: 'Top 3 Víctimas del Jugador',
+    desc: 'Jugador con 3+ rivales dominados (h2h.wins>h2h.losses), mostrando sus 3 víctimas más castigadas en podio.',
     pick: function(ctx) {
       let best = null, bestN = 0, bestList = [];
       for (const pid of ctx.PLAYERS_WITH_DATA) {
@@ -2615,8 +2131,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Top 3 rivales frecuentes de {protagonist} 🏆 {rival} en el podio.', 'Los contrincantes históricos de {protagonist} — con cariño.'],
-      picante: ['Top 3 víctimas de {protagonist}: {rival} en el podio.', 'Los que colecciona {protagonist}: {rival} lidera la lista 🥇'],
       nachi: ['{protagonist} tiene víctimas en serie. {rival} es la predilecta.', 'Top 3 palizas de {protagonist}: {rival} y compañía. Ninguno levanta la cabeza.']
     },
     draw: async function(canvas, opts) {
@@ -2655,7 +2169,7 @@ window._modH2H = function() {
   registerIdea({
     id: 'modo-asado', module: 'h2h',
     title: 'Modo Asado Flame',
-    desc: 'Mismo pair que Campanita (jugador más en racha + su víctima preferida). Paleta cálida y brasas.',
+    desc: 'Jugador con mayor racha de victorias activa + su víctima preferida (top 1 defeatedCount). Paleta cálida con brasas.',
     pick: function(ctx) {
       let top = null, topStreak = 0;
       for (const pid of ctx.PLAYERS_WITH_DATA) {
@@ -2676,8 +2190,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Sábado de parrilla y UNO con {rival} 🍖 {protagonist} invita.', 'Modo asado 🔥 versión brasas — {rival} y {protagonist} en la mesa.'],
-      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.', 'Parrilla prendida. {rival} al fuego contra {protagonist}.'],
       nachi: ['{rival}, al fuego. {protagonist} ya limpió la parrilla para vos.', 'Asado: hoy se cocina {rival}. {protagonist} como siempre, dueño de la pinza.']
     },
     draw: async function(canvas, opts) {
@@ -2713,8 +2225,8 @@ window._modH2H = function() {
 
   registerIdea({
     id: 'stickers', module: 'h2h',
-    title: 'Sticker Pack',
-    desc: 'Rival con más derrotas totales del grupo. 6 stickers ready para WhatsApp.',
+    title: 'Sticker Pack del Perdedor',
+    desc: 'Jugador con más derrotas totales del grupo (L absolutas). 6 stickers ready para WhatsApp.',
     pick: function(ctx) {
       const rk = ctx.annualRanking();
       if (!rk.length) return null;
@@ -2730,8 +2242,6 @@ window._modH2H = function() {
       };
     },
     copies: {
-      algodon: ['Pack de stickers de {rival} 📦 subilo al grupo.', 'Stickers frescos de {rival} — el más generoso con las derrotas.'],
-      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.', '6 stickers ready para el grupo. {rival} en cada uno.'],
       nachi: ['{rival}, armamos stickers con tus derrotas. 6 de entrada, hay más.', 'Stickers de {rival}: edición coleccionable "el que siempre pierde".']
     },
     draw: async function(canvas, opts) {
@@ -2765,182 +2275,6 @@ window._modH2H = function() {
   });
 };
 // DRAWS:H2H:END
-
-// DRAWS:BONUS:START
-window._modBonus = function() {
-  registerIdea({
-    id: 'wa-preview', module: 'bonus',
-    title: 'Preview de WhatsApp',
-    desc: 'Simula cómo se va a ver el mensaje en el chat del rival antes de mandarlo.',
-    copies: {
-      algodon: ['Mirá cómo va a llegar el mensaje a {rival} ✨', 'Chequeá el preview antes de compartir con {rival}.'],
-      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.', 'Preview antes de arruinarle el día a {rival}.'],
-      nachi: ['{rival} lo va a abrir y cerrar el celu tres veces. Mandalo.', 'Preview listo. {rival} no tiene escape: esto va al grupo igual.']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#0b141a'; ctx.fillRect(0,0,w,h);
-      // wa header
-      ctx.fillStyle = '#202c33'; ctx.fillRect(0, 0, w, h*0.1);
-      try {
-        const img = await loadFace(STATE.rival);
-        drawFaceCircle(ctx, img, w*0.1, h*0.05, w*0.035);
-      } catch(e){}
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.032}px Inter`; ctx.textAlign = 'left';
-      ctx.fillText(STATE.rival, w*0.16, h*0.045);
-      ctx.fillStyle = '#8696a0'; ctx.font = `500 ${w*0.022}px Inter`;
-      ctx.fillText('en línea', w*0.16, h*0.075);
-      // outgoing bubble (green)
-      const bx = w*0.35, by = h*0.25, bw = w*0.58, bh = h*0.18;
-      ctx.fillStyle = '#005c4b';
-      roundRect(ctx, bx, by, bw, bh, 12); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.03}px Inter`;
-      wrapText(ctx, `${STATE.rival}, el ranking habló.`, bx+w*0.02, by+h*0.04, bw-w*0.04, h*0.04);
-      wrapText(ctx, 'Mirá la imagen 👇', bx+w*0.02, by+h*0.10, bw-w*0.04, h*0.04);
-      ctx.fillStyle = '#8696a0'; ctx.font = `500 ${w*0.018}px Inter`; ctx.textAlign = 'right';
-      ctx.fillText('22:45 ✓✓', bx+bw-w*0.02, by+bh-h*0.015);
-      // image attachment bubble
-      const ax = w*0.35, ay = h*0.48, awd = w*0.58, ahh = h*0.35;
-      ctx.fillStyle = '#005c4b';
-      roundRect(ctx, ax, ay, awd, ahh, 12); ctx.fill();
-      // fake share preview inside
-      ctx.fillStyle = '#ED1C24';
-      roundRect(ctx, ax+w*0.02, ay+h*0.02, awd-w*0.04, ahh-h*0.06, 8); ctx.fill();
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.045}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('TE COCINO', ax+awd/2, ay+ahh*0.3);
-      ctx.fillStyle = '#fff'; ctx.font = `800 ${w*0.075}px Fredoka One`;
-      ctx.fillText('9 — 1', ax+awd/2, ay+ahh*0.70);
-      ctx.fillStyle = '#8696a0'; ctx.textAlign = 'right'; ctx.font = `500 ${w*0.018}px Inter`;
-      ctx.fillText('22:45 ✓✓', ax+awd-w*0.02, ay+ahh-h*0.015);
-    }
-  });
-
-  registerIdea({
-    id: 'tono-selector', module: 'bonus',
-    title: 'Selector de Tono (feature)',
-    desc: 'El mismo share, tres intensidades: algodón, picante y nachi. (Probá el toggle arriba de la página)',
-    copies: {
-      algodon: ['🍬 Algodón ON: abracito a {rival} con el ranking abajo.', 'Versión dulce para {rival} — con respeto y caramelito.'],
-      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.', 'Picante ON: {rival} no va a querer abrir WhatsApp.'],
-      nachi: ['🔥 Nachi ON: {rival}, sos el chiste del grupo. Fin.', 'Modo nachi activado. {rival}, ni respondas.']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0f0f1a', '#2e2e50');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('2 TONOS · 1 SHARE', w/2, h*0.09);
-      // picante panel
-      ctx.fillStyle = '#ff4060';
-      roundRect(ctx, w*0.08, h*0.17, w*0.84, h*0.30, 16); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'left';
-      ctx.fillText('🌶️ PICANTE', w*0.12, h*0.23);
-      ctx.font = `500 italic ${w*0.028}px Inter`;
-      wrapText(ctx, `"${STATE.rival}, estás más abajo que la moral de un domingo."`, w*0.12, h*0.29, w*0.76, h*0.045);
-      // tranqui panel
-      ctx.fillStyle = '#0072BC';
-      roundRect(ctx, w*0.08, h*0.52, w*0.84, h*0.30, 16); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`;
-      ctx.fillText('😌 TRANQUI', w*0.12, h*0.58);
-      ctx.font = `500 italic ${w*0.028}px Inter`;
-      wrapText(ctx, `"${STATE.rival}, a entrenar un poco, dale 😉"`, w*0.12, h*0.64, w*0.76, h*0.045);
-      ctx.fillStyle = '#FFDE00'; ctx.textAlign = 'center';
-      ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText('elegí el bardo según el grupo', w/2, h*0.90);
-      footer(ctx, w, h);
-    }
-  });
-
-  registerIdea({
-    id: 'editor-copy', module: 'bonus',
-    title: 'Editor rápido del copy',
-    desc: 'Feature: campo para retocar la frase antes de mandar (mockup visual).',
-    copies: {
-      algodon: ['Editá antes de compartir ✍️ con {rival}.', 'Personalizá el mensaje para {rival} con tu toque.'],
-      picante: ['Retocá el bardo antes de mandarlo a {rival}.', 'Ajuste fino del roast y lo tirás exacto a {rival}.'],
-      nachi: ['Ajustá el puñal antes de clavarlo, {rival} no se lo espera.', 'Editor ON: afilá el roast para {rival}. Que duela parejo.']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#0f0f1a', '#1a1a2e');
-      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('EDITOR DE ROAST', w/2, h*0.11);
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('texto editable antes de compartir', w/2, h*0.16);
-      // input mock
-      ctx.fillStyle = '#242442';
-      roundRect(ctx, w*0.08, h*0.24, w*0.84, h*0.32, 14); ctx.fill();
-      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.032}px Inter`; ctx.textAlign = 'left';
-      wrapText(ctx, `${STATE.rival}, el H2H no miente: 9 a 1. Si querés revancha, traéte asado y perdón.|`, w*0.12, h*0.32, w*0.76, h*0.055);
-      // chips
-      ctx.fillStyle = '#ED1C24';
-      roundRect(ctx, w*0.10, h*0.62, w*0.22, h*0.06, 14); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.025}px Inter`; ctx.textAlign = 'center';
-      ctx.fillText('+ 🔥 picante', w*0.21, h*0.658);
-      ctx.fillStyle = '#0072BC';
-      roundRect(ctx, w*0.34, h*0.62, w*0.22, h*0.06, 14); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.fillText('+ emoji', w*0.45, h*0.658);
-      ctx.fillStyle = '#4dff91';
-      roundRect(ctx, w*0.58, h*0.62, w*0.28, h*0.06, 14); ctx.fill();
-      ctx.fillStyle = '#000'; ctx.fillText('+ H2H auto', w*0.72, h*0.658);
-      // share btn mock
-      ctx.fillStyle = '#25D366';
-      roundRect(ctx, w*0.10, h*0.78, w*0.80, h*0.08, 14); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.035}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('✅ Compartir a WhatsApp', w/2, h*0.83);
-      footer(ctx, w, h);
-    }
-  });
-
-  registerIdea({
-    id: 'streak-video', module: 'bonus',
-    title: 'Video corto con audio',
-    desc: 'Feature: exporta un video de 3s con el shame bell + animación de la cara del rival.',
-    copies: {
-      algodon: ['Clip de 3s para {rival} 🎬 con su musiquita.', 'Formato video para variar del PNG — {rival} estelar.'],
-      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.', '3 segundos de gloria con campanita de la vergüenza 🔔 para {rival}.'],
-      nachi: ['{rival}, te dedicamos 3 segundos con campanita. Loop infinito.', 'Video con audio: {rival} en bucle eterno de vergüenza 🔔🔔']
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
-      // video frame mock
-      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 4;
-      ctx.strokeRect(w*0.05, h*0.08, w*0.90, h*0.65);
-      // rival face
-      try {
-        const img = await loadFace(STATE.rival);
-        drawFaceCircle(ctx, img, w/2, h*0.40, w*0.13);
-      } catch(e){}
-      ctx.font = `${w*0.18}px serif`; ctx.textAlign = 'center';
-      ctx.fillText('🔔', w/2, h*0.60);
-      // play button overlay
-      ctx.fillStyle = 'rgba(0,0,0,.55)';
-      ctx.beginPath(); ctx.arc(w/2, h*0.40, w*0.08, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.beginPath();
-      ctx.moveTo(w*0.50-w*0.03, h*0.36);
-      ctx.lineTo(w*0.50+w*0.04, h*0.40);
-      ctx.lineTo(w*0.50-w*0.03, h*0.44);
-      ctx.closePath(); ctx.fill();
-      // timeline
-      ctx.fillStyle = '#242442';
-      ctx.fillRect(w*0.1, h*0.78, w*0.80, h*0.015);
-      ctx.fillStyle = '#FFDE00';
-      ctx.fillRect(w*0.1, h*0.78, w*0.35, h*0.015);
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.022}px Inter`; ctx.textAlign = 'left';
-      ctx.fillText('0:01', w*0.1, h*0.82);
-      ctx.textAlign = 'right';
-      ctx.fillText('0:03', w*0.9, h*0.82);
-      ctx.fillStyle = '#FFDE00'; ctx.textAlign = 'center';
-      ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText('🎬 VIDEO + AUDIO', w/2, h*0.89);
-      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('usa shame-bell.mp3 existente', w/2, h*0.94);
-    }
-  });
-};
-// DRAWS:BONUS:END
 
 </script>
 
