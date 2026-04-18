@@ -214,16 +214,23 @@
   <section class="intro">
     <h1>Propuestas: compartir burlas desde Stats</h1>
     <p>
-      Desde cualquier módulo de la pantalla de estadísticas, poder generar una imagen/video/sticker
-      para cargar a los amigos que ya fueron vencidos. Todo el roster, stats y marcadores son
-      <strong>datos dummy</strong> — es solo para ver cómo se verían los shares. Cambiá el rival,
-      el tono, y probá cada propuesta con los botones.
+      Desde cualquier módulo de la pantalla de estadísticas, generar una imagen/video/sticker
+      para cargar a los amigos a los que ya les ganaste. <strong>Toda la data viene de tu localStorage real</strong>
+      (<code>lunesdeuno_games</code>) — nada inventado. Elegí tu jugador, el rival (o "Random") y el tono del roast.
     </p>
   </section>
 
+  <div id="dataBanner" style="display:none; margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid var(--danger); background: rgba(255,77,106,.08); color: var(--text);">
+    <strong style="color: var(--danger);">⚠ No se encontraron partidas finalizadas en localStorage.</strong>
+    <div style="margin-top: .4rem; color: var(--text-muted); font-size: .9rem;">
+      Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a> y jugá al menos una partida finalizada.
+      Esta página <strong>no inventa datos</strong>: todos los previews se generan con stats reales.
+    </div>
+  </div>
+
   <section class="controls">
     <div class="control-card">
-      <label for="youSelect">Tu jugador (el ganador)</label>
+      <label for="youSelect">Tu jugador (el que roastea)</label>
       <select id="youSelect"></select>
     </div>
     <div class="control-card">
@@ -233,8 +240,9 @@
     <div class="control-card">
       <label>Tono del roast</label>
       <div class="tone-toggle">
-        <button class="tone-btn" data-tone="tranqui">😌 Tranqui</button>
+        <button class="tone-btn" data-tone="algodon">🍭 Algodón</button>
         <button class="tone-btn active" data-tone="picante">🌶️ Picante</button>
+        <button class="tone-btn" data-tone="nachi">💢 Nachi</button>
       </div>
     </div>
   </section>
@@ -243,7 +251,7 @@
   <section class="module-section" id="mod-jugador">
     <div class="module-header">
       <span class="badge">Módulo 1</span>
-      <h2>Jugador (mis stats)</h2>
+      <h2 id="title-jugador">Tus pijeos a <span class="rival-name">—</span></h2>
     </div>
     <div class="ideas-grid" id="grid-jugador">
       <!-- IDEAS:JUGADOR:START -->
@@ -315,53 +323,213 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== DATOS DUMMY =====
-const FACES = ['Bucket','Carucha','Cobra','Gael','Gordo','Mac','Mata','Nachi','Naso','Negro','PT','Tano'];
-const FACE_PATH = n => `assets/${n}.png`;
+// ===== ROSTER REAL (idéntico a index.html PRESET_NAMES) =====
+// NO incluye Bucket — Bucket no es un jugador del grupo.
+const PRESET_NAMES = ['PT','Mac','Mata','Gael','Nachi','Carucha','Negro','Naso','Tano','Gordo','Cobra'];
+const PRESET_IDS = PRESET_NAMES.map(n => n.toLowerCase()); // playerId (slug)
+const NAME_BY_ID = Object.fromEntries(PRESET_NAMES.map(n => [n.toLowerCase(), n]));
+const FACE_PATH = id => `assets/faces/${id}.png`;
 
-const DUMMY_STATS = {
-  'Bucket':  { W: 12, L: 18, streak: -2 },
-  'Carucha': { W: 23, L: 7,  streak: 5  },
-  'Cobra':   { W: 4,  L: 19, streak: -6 },
-  'Gael':    { W: 17, L: 14, streak: 1  },
-  'Gordo':   { W: 6,  L: 15, streak: -3 },
-  'Mac':     { W: 19, L: 11, streak: 2  },
-  'Mata':    { W: 9,  L: 13, streak: -1 },
-  'Nachi':   { W: 14, L: 12, streak: 0  },
-  'Naso':    { W: 8,  L: 17, streak: -4 },
-  'Negro':   { W: 21, L: 9,  streak: 4  },
-  'PT':      { W: 11, L: 10, streak: 1  },
-  'Tano':    { W: 7,  L: 16, streak: -2 }
-};
+// ===== CARGA DE DATOS REALES =====
+// Mismo storage que usa index.html (ver línea 3637).
+function loadRealGames() {
+  try {
+    const raw = localStorage.getItem('lunesdeuno_games');
+    if (!raw) return [];
+    const all = JSON.parse(raw);
+    if (!Array.isArray(all)) return [];
+    return all.filter(g => g && g.finished && g.winnerPlayerId && g.state && Array.isArray(g.state.participants));
+  } catch (e) { return []; }
+}
 
-// H2H dummy: [winnerWs vs loserWs] relative to a given pair
-function dummyH2H(you, rival) {
-  const a = (you.charCodeAt(0) + rival.charCodeAt(1)) % 7 + 6;
-  const b = Math.max(0, (rival.charCodeAt(0) * 3) % 5);
-  return { you: a, rival: b, games: a + b };
+// Calcula stats reales por jugador a partir de games terminados.
+function computeAllStats(games) {
+  const byPlayer = {}; // id -> stats
+  const init = id => {
+    if (!byPlayer[id]) byPlayer[id] = {
+      id,
+      name: NAME_BY_ID[id] || id,
+      W: 0, L: 0, gamesPlayed: 0,
+      h2h: {},                // rid -> { wins, losses, together, sequence: [true/false...] }
+      defeatedCount: {},      // rid -> cuántas veces este jugador venció a rid
+      defeatedBy: {},         // rid -> cuántas veces rid lo venció
+      gameResults: []         // { won, finishedAt, gameId, opponents: [id] }
+    };
+  };
+  games
+    .slice()
+    .sort((a,b) => (a.finishedAt||0) - (b.finishedAt||0))
+    .forEach(g => {
+      const parts = g.state.participants || [];
+      const playerIds = parts.map(p => p.playerId).filter(Boolean);
+      playerIds.forEach(init);
+      const winner = g.winnerPlayerId;
+      if (!byPlayer[winner]) init(winner);
+
+      parts.forEach(p => {
+        if (!p.playerId) return;
+        const me = byPlayer[p.playerId];
+        me.gamesPlayed++;
+        const won = p.playerId === winner;
+        if (won) me.W++; else me.L++;
+        me.gameResults.push({ won, finishedAt: g.finishedAt || g.timestamp, gameId: g.id, opponents: playerIds.filter(x => x !== p.playerId) });
+
+        parts.forEach(other => {
+          if (!other.playerId || other.playerId === p.playerId) return;
+          const oid = other.playerId;
+          if (!me.h2h[oid]) me.h2h[oid] = { wins: 0, losses: 0, together: 0, sequence: [] };
+          me.h2h[oid].together++;
+          const iWon = won;
+          const theyWon = (oid === winner);
+          if (iWon) { me.h2h[oid].wins++; me.defeatedCount[oid] = (me.defeatedCount[oid]||0) + 1; me.h2h[oid].sequence.push(true); }
+          else if (theyWon) { me.h2h[oid].losses++; me.defeatedBy[oid] = (me.defeatedBy[oid]||0) + 1; me.h2h[oid].sequence.push(false); }
+          else { me.h2h[oid].sequence.push(null); } // ninguno ganó (ambos perdieron)
+        });
+      });
+    });
+
+  // Current overall streak (trailing): + si es racha de victorias, - si es de derrotas, 0 si sin partidas o si la última es "null"
+  Object.values(byPlayer).forEach(ps => {
+    ps.currentStreak = 0;
+    for (let i = ps.gameResults.length - 1; i >= 0; i--) {
+      const w = ps.gameResults[i].won;
+      if (i === ps.gameResults.length - 1) { ps.currentStreak = w ? 1 : -1; }
+      else {
+        if ((ps.currentStreak > 0 && w) || (ps.currentStreak < 0 && !w)) ps.currentStreak += (w ? 1 : -1);
+        else break;
+      }
+    }
+  });
+  return byPlayer;
+}
+
+// Racha actual (trailing) en partidas jugadas contra un rival específico (solo cuenta {iWin, theyWin}, ignora null).
+function currentH2HStreak(youStats, rivalId) {
+  const seq = (youStats?.h2h?.[rivalId]?.sequence) || [];
+  const trimmed = seq.filter(v => v !== null);
+  let s = 0;
+  for (let i = trimmed.length - 1; i >= 0; i--) {
+    const w = trimmed[i];
+    if (i === trimmed.length - 1) s = w ? 1 : -1;
+    else {
+      if ((s > 0 && w) || (s < 0 && !w)) s += (w ? 1 : -1);
+      else break;
+    }
+  }
+  return s;
 }
 
 // ===== ESTADO GLOBAL =====
+const RAW_GAMES = loadRealGames();
+const ALL_STATS = computeAllStats(RAW_GAMES);
+const PLAYERS_WITH_DATA = Object.keys(ALL_STATS); // ids con al menos 1 partida
+
+// STATE.you y STATE.rival almacenan el DISPLAY NAME (ej: 'Carucha', 'Cobra').
+// Los helpers *Id() convierten a slug (lowercase) para lookups en ALL_STATS.
+const DEFAULT_YOU = 'Carucha';
+const DEFAULT_RIVAL = 'Gael';
 let STATE = {
-  you: 'Carucha',
-  rival: 'Cobra',
-  tone: 'picante',
-  copyIndex: {} // ideaId -> index
+  you: (PLAYERS_WITH_DATA.includes(DEFAULT_YOU.toLowerCase()) ? DEFAULT_YOU
+        : (PLAYERS_WITH_DATA[0] ? (NAME_BY_ID[PLAYERS_WITH_DATA[0]] || DEFAULT_YOU) : DEFAULT_YOU)),
+  rival: (PLAYERS_WITH_DATA.includes(DEFAULT_RIVAL.toLowerCase()) ? DEFAULT_RIVAL : DEFAULT_RIVAL),
+  _resolvedRival: null,
+  tone: 'picante',                      // 'algodon' | 'picante' | 'nachi'
+  copyIndex: {}
 };
+
+function youId() { return String(STATE.you || '').toLowerCase(); }
+function rivalId() {
+  if (STATE.rival && STATE.rival !== 'random') return String(STATE.rival).toLowerCase();
+  return STATE._resolvedRival ? STATE._resolvedRival.toLowerCase() : null;
+}
+function youName() { return STATE.you || '—'; }
+function rivalName() { return (STATE.rival && STATE.rival !== 'random') ? STATE.rival : (STATE._resolvedRival || '—'); }
+
+function resolveRandomRival() {
+  const me = ALL_STATS[youId()];
+  if (!me) return null;
+  const defeatedIds = Object.keys(me.defeatedCount || {});
+  const poolIds = defeatedIds.length ? defeatedIds : PLAYERS_WITH_DATA.filter(id => id !== youId());
+  if (!poolIds.length) return null;
+  const pickedId = poolIds[Math.floor(Math.random() * poolIds.length)];
+  return NAME_BY_ID[pickedId] || pickedId;
+}
+
+// ===== STATS ACCESSORS (reemplazan DUMMY_STATS / dummyH2H) =====
+// statsFor('carucha') o statsFor() devuelve stats del jugador activo.
+function statsFor(id) {
+  if (!id) id = youId();
+  const ps = ALL_STATS[id];
+  return {
+    id: id,
+    name: NAME_BY_ID[id] || '—',
+    W: ps ? ps.W : 0,
+    L: ps ? ps.L : 0,
+    gamesPlayed: ps ? ps.gamesPlayed : 0,
+    streak: ps ? ps.currentStreak : 0
+  };
+}
+
+// H2H real: cuántas veces {youId} le ganó a {rivalId} y viceversa.
+function h2hFor(yId, rId) {
+  if (!yId) yId = youId();
+  if (!rId) rId = rivalId();
+  const h = ALL_STATS[yId]?.h2h?.[rId] || { wins: 0, losses: 0, together: 0, sequence: [] };
+  return { wins: h.wins, losses: h.losses, games: h.together, sequence: h.sequence };
+}
+
+// Ranking anual real (por winRate, min 1 partida). Devuelve [{id, name, W, L, gamesPlayed, winRate}]
+function annualRanking() {
+  return Object.values(ALL_STATS)
+    .filter(ps => ps.gamesPlayed > 0)
+    .map(ps => ({ id: ps.id, name: ps.name, W: ps.W, L: ps.L, gamesPlayed: ps.gamesPlayed, winRate: ps.W / ps.gamesPlayed }))
+    .sort((a,b) => b.winRate - a.winRate || b.W - a.W);
+}
+
+// Jugadores que VENCIÓ el rival (ordenados por cantidad) — para "Mi Paredón".
+function rivalDefeatedList() {
+  const rid = rivalId();
+  if (!rid || !ALL_STATS[rid]) return [];
+  const map = ALL_STATS[rid].defeatedCount || {};
+  return Object.keys(map)
+    .map(id => ({ id, name: NAME_BY_ID[id] || id, count: map[id] }))
+    .sort((a,b) => b.count - a.count);
+}
 
 const IDEAS = []; // filled by each module section
 
 // ===== UTILIDADES COMPARTIDAS =====
 const imageCache = {};
 function loadFace(name) {
-  if (imageCache[name]) return Promise.resolve(imageCache[name]);
+  const id = String(name || '').toLowerCase();
+  if (!id) return Promise.reject(new Error('no-face'));
+  if (imageCache[id]) return Promise.resolve(imageCache[id]);
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => { imageCache[name] = img; resolve(img); };
+    img.onload = () => { imageCache[id] = img; resolve(img); };
     img.onerror = reject;
-    img.src = FACE_PATH(name);
+    img.src = FACE_PATH(id);
   });
+}
+
+// ===== COMPAT SHIMS para el código de draws ya escrito =====
+// Permite que las draw functions existentes que usaban DUMMY_STATS[name] y
+// dummyH2H(you, rival) sigan funcionando, ahora con DATOS REALES.
+const DUMMY_STATS = new Proxy({}, {
+  get(_, key) {
+    if (typeof key !== 'string') return undefined;
+    const id = key.toLowerCase();
+    const ps = ALL_STATS[id];
+    if (!ps) return { W: 0, L: 0, streak: 0 };
+    return { W: ps.W, L: ps.L, streak: ps.currentStreak };
+  }
+});
+function dummyH2H(yAny, rAny) {
+  const y = String(yAny || '').toLowerCase();
+  const r = String(rAny || '').toLowerCase();
+  const h = ALL_STATS[y]?.h2h?.[r] || { wins: 0, losses: 0, together: 0 };
+  return { you: h.wins, rival: h.losses, games: h.together };
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -404,11 +572,19 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   return y;
 }
 
-// ===== COPY SYSTEM =====
+// ===== COPY SYSTEM (3 tonos: algodon, picante, nachi) =====
 function getCopy(idea) {
-  const arr = idea.copies[STATE.tone];
+  const tone = STATE.tone;
+  const arr = (idea.copies && idea.copies[tone])
+    || (idea.copies && idea.copies.picante)   // fallback defensivo
+    || [''];
   const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
-  return arr[idx].replaceAll('{you}', STATE.you).replaceAll('{rival}', STATE.rival);
+  const stats = idea.computeFacts ? idea.computeFacts() : {};
+  let text = arr[idx]
+    .replaceAll('{you}', youName())
+    .replaceAll('{rival}', rivalName());
+  Object.keys(stats).forEach(k => { text = text.replaceAll('{' + k + '}', String(stats[k])); });
+  return text;
 }
 function rotateCopy(ideaId) {
   STATE.copyIndex[ideaId] = (STATE.copyIndex[ideaId] || 0) + 1;
@@ -477,7 +653,7 @@ async function generateAndShare(ideaId) {
   await idea.draw(canvas, { preview: false });
 
   const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-  const file = new File([blob], `burla-${ideaId}-${STATE.rival}.png`, { type: 'image/png' });
+  const file = new File([blob], `burla-${ideaId}-${rivalId()||'rival'}.png`, { type: 'image/png' });
   const text = getCopy(idea);
 
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -496,16 +672,49 @@ async function generateAndShare(ideaId) {
   showToast('Imagen descargada + WhatsApp abierto');
 }
 
-// ===== POBLAR SELECTS =====
+// ===== POBLAR SELECTS (display names · siempre todo el roster) =====
+function buildRivalOptions(currentYouName) {
+  // Random primero, luego los demás (excluyendo 'you')
+  let html = `<option value="random">🎲 Random (cualquiera al que ya le ganaste)</option>`;
+  PRESET_NAMES.forEach(name => {
+    if (name === currentYouName) return;
+    html += `<option value="${name}">${name}</option>`;
+  });
+  return html;
+}
+
 function populateRosters() {
   const you = document.getElementById('youSelect');
-  const rv = document.getElementById('rivalSelect');
-  FACES.forEach(f => {
-    you.innerHTML += `<option value="${f}" ${f===STATE.you?'selected':''}>${f}</option>`;
-    rv.innerHTML += `<option value="${f}" ${f===STATE.rival?'selected':''}>${f}</option>`;
+  const rv  = document.getElementById('rivalSelect');
+
+  you.innerHTML = PRESET_NAMES.map(name =>
+    `<option value="${name}" ${name===STATE.you?'selected':''}>${name}</option>`
+  ).join('');
+
+  rv.innerHTML = buildRivalOptions(STATE.you);
+  // marcar seleccionado
+  Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
+
+  you.addEventListener('change', e => {
+    STATE.you = e.target.value;
+    rv.innerHTML = buildRivalOptions(STATE.you);
+    // si el rival anterior es ahora 'you', caer a random
+    if (STATE.rival === STATE.you) STATE.rival = 'random';
+    Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
+    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
+    syncModuleTitle();
+    refreshAll();
   });
-  you.addEventListener('change', e => { STATE.you = e.target.value; refreshAll(); });
-  rv.addEventListener('change', e => { STATE.rival = e.target.value; refreshAll(); });
+  rv.addEventListener('change', e => {
+    STATE.rival = e.target.value;
+    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
+    syncModuleTitle();
+    refreshAll();
+  });
+
+  // Resolución inicial (por si default es 'random', aunque ahora es 'Gael')
+  if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
+  syncModuleTitle();
 }
 
 function setupToneToggle() {
@@ -516,6 +725,19 @@ function setupToneToggle() {
       refreshAll();
     });
   });
+}
+
+// Sincroniza el título del módulo 1 con el rival actual
+function syncModuleTitle() {
+  const el = document.querySelector('#title-jugador .rival-name');
+  if (el) el.textContent = rivalName();
+}
+
+// Muestra/esconde banner "no hay datos"
+function setupDataBanner() {
+  const b = document.getElementById('dataBanner');
+  if (!b) return;
+  if (!RAW_GAMES.length) b.style.display = '';
 }
 
 // ===== HELPERS PARA DRAW FUNCTIONS =====
@@ -535,9 +757,9 @@ function footer(ctx, w, h) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
+  setupDataBanner();
   populateRosters();
   setupToneToggle();
-  // Ideas are registered from module blocks below
   if (window._initIdeas) window._initIdeas();
 });
 
