@@ -1443,13 +1443,33 @@ window._modAnual = function() {
 
 // DRAWS:TEMPORADA:START
 window._modTemporada = function() {
+
+  // ---------- 1) PREDICCIÓN (basada en racha H2H real) ----------
   registerIdea({
     id: 'prediccion', module: 'temporada',
     title: 'Predicción para la próxima',
-    desc: 'IA falsa que proyecta cuánto va a seguir perdiendo el rival.',
+    desc: 'Modelo simple que proyecta el próximo resultado a partir de tu racha real contra el rival.',
+    computeFacts: function() {
+      const ys = ALL_STATS[youId()];
+      const s = currentH2HStreak(ys, rivalId());
+      const h = h2hFor();
+      const base = h.games === 0 ? 50 : Math.round((h.wins / h.games) * 100);
+      const conf = Math.min(99, Math.max(40, base + (s > 0 ? 10 : -10)));
+      return { streak: Math.abs(s), direction: s >= 0 ? 'victoria' : 'derrota', confidence: conf, games: h.games, wins: h.wins, losses: h.losses };
+    },
     copies: {
-      picante: ['La IA del asado habló: {rival} pierde las próximas 4 también.','Estadísticamente imposible que {rival} gane. Confirmadísimo.'],
-      tranqui: ['🤖 Predicción temporada: {rival} necesita racha 📉','Las stats dicen que el próximo lunes {you} gana de nuevo.']
+      algodon: [
+        'Tendencia H2H: {direction} probable el próximo lunes. Confianza {confidence}% 🤖',
+        'Modelo dice: seguís con {direction}. Basado en {games} partidas reales.'
+      ],
+      picante: [
+        'Spoiler, {rival}: {wins}-{losses} en {games}. Te toca perder de nuevo.',
+        'Confianza {confidence}%: {rival} pierde otra vez. La data manda.'
+      ],
+      nachi: [
+        '{rival} va a perder otra. Confianza {confidence}%. Perdedor crónico.',
+        'Te auguro otra paliza, {rival}. {wins}-{losses} no es casualidad, sos un infradotado.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1457,83 +1477,126 @@ window._modTemporada = function() {
       ctx.fillStyle = '#00ffe1'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('🤖 PREDICCIÓN IA', w/2, h*0.1);
       ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.03}px Inter`;
-      ctx.fillText('Modelo entrenado con asados + stats', w/2, h*0.145);
+      ctx.fillText('Modelo entrenado con tus partidas reales', w/2, h*0.145);
       try {
-        const img = await loadFace(STATE.rival);
+        const img = await loadFace(rivalId());
         drawFaceCircle(ctx, img, w/2, h*0.30, w*0.11);
       } catch(e){}
       ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.045}px Fredoka One`;
-      ctx.fillText(STATE.rival, w/2, h*0.44);
+      ctx.fillText(rivalName(), w/2, h*0.44);
+      const ys = ALL_STATS[youId()];
+      const s = currentH2HStreak(ys, rivalId());
+      const hh = h2hFor();
+      if (hh.games === 0) {
+        ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+        ctx.fillText('SIN DATOS SUFICIENTES', w/2, h*0.62);
+        ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.028}px Inter`;
+        ctx.fillText('jueguen al menos una partida juntos', w/2, h*0.70);
+        footer(ctx, w, h); return;
+      }
+      const direction = s >= 0 ? 'VICTORIA' : 'DERROTA';
+      const color = s >= 0 ? '#4dff91' : '#ff4060';
       ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.032}px Inter`;
-      ctx.fillText('Próximas 4 semanas:', w/2, h*0.52);
-      ctx.fillStyle = '#ff4060'; ctx.font = `800 ${w*0.08}px Fredoka One`;
-      ctx.fillText('DERROTA · DERROTA', w/2, h*0.62);
-      ctx.fillText('DERROTA · DERROTA', w/2, h*0.72);
+      ctx.fillText('Predicción próximo lunes:', w/2, h*0.56);
+      ctx.fillStyle = color; ctx.font = `800 ${w*0.10}px Fredoka One`;
+      ctx.fillText(direction, w/2, h*0.68);
+      ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `500 ${w*0.028}px Inter`;
+      ctx.fillText(`H2H real: ${hh.wins}-${hh.losses} en ${hh.games} partidas`, w/2, h*0.76);
+      const base = Math.round((hh.wins / hh.games) * 100);
+      const conf = Math.min(99, Math.max(40, base + (s > 0 ? 10 : -10)));
       ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.03}px Inter`;
       ctx.fillText('Confianza del modelo:', w/2, h*0.82);
       roundRect(ctx, w*0.15, h*0.85, w*0.70, h*0.03, 6); ctx.fillStyle = '#242442'; ctx.fill();
       ctx.fillStyle = '#4dff91';
-      roundRect(ctx, w*0.15, h*0.85, w*0.70*0.99, h*0.03, 6); ctx.fill();
+      roundRect(ctx, w*0.15, h*0.85, w*0.70*(conf/100), h*0.03, 6); ctx.fill();
       ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.032}px Fredoka One`;
-      ctx.fillText('99%', w/2, h*0.91);
+      ctx.fillText(conf + '%', w/2, h*0.91);
       footer(ctx, w, h);
     }
   });
 
+  // ---------- 2) MVP vs LVP (del ranking real) ----------
   registerIdea({
     id: 'mvp-lvp', module: 'temporada',
     title: 'MVP vs LVP',
-    desc: 'Carta dividida: tu cara con trofeo / rival con emoji 💩.',
+    desc: 'Carta dividida con el líder real del ranking vs el último, según datos.',
+    computeFacts: function() {
+      const r = annualRanking();
+      return { mvp: r[0]?.name || '—', lvp: r[r.length-1]?.name || '—' };
+    },
     copies: {
-      picante: ['MVP: yo. LVP: {rival}. Es matemático.','Hay un ganador y un {rival}. No tiene comparación.'],
-      tranqui: ['Temporada cerrada: MVP {you}, LVP {rival} 🏆💩','El temporada en dos caras 😅']
+      algodon: [
+        'Temporada cerrada: MVP {mvp}, LVP {lvp} 🏆💩',
+        'Dos caras del año: {mvp} brilla, {lvp} mejora pronto.'
+      ],
+      picante: [
+        'MVP: {mvp}. LVP: {lvp}. La data no pide disculpas.',
+        'Hay un ganador ({mvp}) y un {lvp}. No hay puntos medios.'
+      ],
+      nachi: [
+        '{mvp} rompe. {lvp} es fauna. Temporada confirmada.',
+        'Mientras {mvp} arrasa, {lvp} chupa cartas como si fuera mamadera.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      // left green MVP
+      const r = annualRanking();
+      const mvp = r[0] || { id: youId(), name: youName() };
+      const lvp = r[r.length-1] || { id: rivalId(), name: rivalName() };
       const grL = ctx.createLinearGradient(0,0,w/2,0);
       grL.addColorStop(0,'#003d1a'); grL.addColorStop(1,'#00a651');
       ctx.fillStyle = grL; ctx.fillRect(0,0,w/2,h);
-      // right red LVP
       const grR = ctx.createLinearGradient(w/2,0,w,0);
       grR.addColorStop(0,'#5a0a0a'); grR.addColorStop(1,'#1a0a0a');
       ctx.fillStyle = grR; ctx.fillRect(w/2,0,w/2,h);
-      // dividing line
       ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 4;
       ctx.beginPath(); ctx.moveTo(w/2,0); ctx.lineTo(w/2,h); ctx.stroke();
-      // MVP
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('MVP', w*0.25, h*0.12);
-      try {
-        const img = await loadFace(STATE.you);
-        drawFaceCircle(ctx, img, w*0.25, h*0.40, w*0.12);
-      } catch(e){}
+      try { drawFaceCircle(ctx, await loadFace(mvp.id), w*0.25, h*0.40, w*0.12); } catch(e){}
       ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`;
-      ctx.fillText(STATE.you, w*0.25, h*0.60);
-      ctx.font = `${w*0.15}px serif`;
-      ctx.fillText('🏆', w*0.25, h*0.82);
-      // LVP
+      ctx.fillText(mvp.name, w*0.25, h*0.60);
+      if (mvp.W !== undefined) {
+        ctx.fillStyle = 'rgba(255,222,0,.85)'; ctx.font = `600 ${w*0.026}px Inter`;
+        ctx.fillText(`${mvp.W}W · ${mvp.L}L`, w*0.25, h*0.66);
+      }
+      ctx.font = `${w*0.15}px serif`; ctx.fillText('🏆', w*0.25, h*0.85);
       ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.06}px Fredoka One`;
       ctx.fillText('LVP', w*0.75, h*0.12);
-      try {
-        const img = await loadFace(STATE.rival);
-        drawFaceCircle(ctx, img, w*0.75, h*0.40, w*0.12);
-      } catch(e){}
+      try { drawFaceCircle(ctx, await loadFace(lvp.id), w*0.75, h*0.40, w*0.12); } catch(e){}
       ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`;
-      ctx.fillText(STATE.rival, w*0.75, h*0.60);
-      ctx.font = `${w*0.15}px serif`;
-      ctx.fillText('💩', w*0.75, h*0.82);
+      ctx.fillText(lvp.name, w*0.75, h*0.60);
+      if (lvp.W !== undefined) {
+        ctx.fillStyle = 'rgba(255,77,96,.85)'; ctx.font = `600 ${w*0.026}px Inter`;
+        ctx.fillText(`${lvp.W}W · ${lvp.L}L`, w*0.75, h*0.66);
+      }
+      ctx.font = `${w*0.15}px serif`; ctx.fillText('💩', w*0.75, h*0.85);
       footer(ctx, w, h);
     }
   });
 
+  // ---------- 3) HEATMAP (partidas H2H reales) ----------
   registerIdea({
     id: 'heatmap', module: 'temporada',
     title: 'Mapa de Dominio',
-    desc: 'Heatmap semanal: verde cuando ganás, rojo cuando perdés. Spoiler: todo verde.',
+    desc: 'Heatmap con las partidas H2H reales entre ambos: verde ganaste, rojo perdiste.',
+    computeFacts: function() {
+      const hh = h2hFor();
+      return { wins: hh.wins, losses: hh.losses, games: hh.games };
+    },
     copies: {
-      picante: ['Mi mapa de la temporada vs {rival}. Buscá el rojo. Spoiler: no hay.','{rival} ausente toda la temporada, confirmamos.'],
-      tranqui: ['Dominio temporal verde completo vs {rival} 🟢','Racha temporada: todo a favor.']
+      algodon: [
+        'Mapa vs {rival}: {wins} verdes, {losses} rojos en {games} partidas 🟢',
+        'Así se repartió la historia: {wins} a {losses}. ¡Seguí!'
+      ],
+      picante: [
+        'Heatmap vs {rival}: {wins} verdes y {losses} rojos. Visual no miente.',
+        'Historia pintada: {wins} a {losses}. {rival} necesita más verde.'
+      ],
+      nachi: [
+        '{rival}, tu mapa contra mí es un charco rojo. {wins}-{losses}, patético.',
+        'Mapa de dominio: yo te pinté {wins} veces, vos me manchaste {losses}. Papafrita.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1541,67 +1604,94 @@ window._modTemporada = function() {
       ctx.fillStyle = '#4dff91'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('MAPA DE DOMINIO', w/2, h*0.09);
       ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText(`${STATE.you} vs ${STATE.rival} · Temporada 2026`, w/2, h*0.14);
-      // 7 cols x 10 rows grid (70 semanas)
-      const cols = 7, rows = 10, pad = w*0.05;
-      const cellW = (w - pad*2) / cols, cellH = (h*0.55) / rows;
+      ctx.fillText(`${youName()} vs ${rivalName()} · datos reales`, w/2, h*0.14);
+      const hh = h2hFor();
+      const seq = hh.sequence || [];
+      if (!seq.length) {
+        ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.045}px Fredoka One`;
+        ctx.fillText('SIN PARTIDAS VS ' + rivalName().toUpperCase(), w/2, h*0.50);
+        footer(ctx, w, h); return;
+      }
+      const cols = Math.min(7, seq.length);
+      const rows = Math.ceil(seq.length / cols);
+      const pad = w*0.05;
+      const cellW = (w - pad*2) / cols;
+      const cellH = Math.min((h*0.55) / Math.max(rows, 1), cellW);
       const startY = h*0.22;
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const isWin = Math.random() > 0.15; // mostly wins
-          ctx.fillStyle = isWin ? '#00a651' : '#ff4060';
-          roundRect(ctx, pad + c*cellW + 4, startY + r*cellH + 4, cellW-8, cellH-8, 6); ctx.fill();
-        }
+      for (let k = 0; k < seq.length; k++) {
+        const r = Math.floor(k/cols), c = k%cols;
+        ctx.fillStyle = seq[k] === 'W' ? '#00a651' : '#ff4060';
+        roundRect(ctx, pad + c*cellW + 4, startY + r*cellH + 4, cellW-8, cellH-8, 6); ctx.fill();
       }
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText(`${STATE.rival} no apareció`, w/2, h*0.87);
+      ctx.fillText(`${hh.wins} victorias · ${hh.losses} derrotas`, w/2, h*0.87);
       ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('🟢 victoria · 🔴 derrota', w/2, h*0.92);
+      ctx.fillText('🟢 victoria · 🔴 derrota (orden cronológico)', w/2, h*0.92);
       footer(ctx, w, h);
     }
   });
 
+  // ---------- 4) ESCALERA (W acumuladas reales) ----------
   registerIdea({
     id: 'escalera', module: 'temporada',
     title: 'Escalera de la temporada',
-    desc: 'Gráfico de línea donde tu puntaje sube y el del rival queda plano.',
+    desc: 'Curvas de victorias acumuladas reales: tuyas vs las del rival.',
+    computeFacts: function() {
+      const y = statsFor(youId()), r = statsFor(rivalId());
+      return { yW: y.W, rW: r.W };
+    },
     copies: {
-      picante: ['Tu línea vs la mía, {rival}. Electrocardiograma plano.','Temporada: {you} en subida, {rival} descansando en el piso.'],
-      tranqui: ['Evolución temporada 📈 — {you} subiendo, {rival} estable.','Curva que viene bien y curva que quedó ahí.']
+      algodon: [
+        'Evolución temporada: {you} acumuló {yW} W, {rival} {rW} W 📈',
+        'Dos curvas, un año. {yW} vs {rW}. ¡Sigan jugando!'
+      ],
+      picante: [
+        'Mi curva vs la tuya, {rival}. {yW} contra {rW}, eso no sube solo.',
+        'Gráfica de la temporada: yo arriba ({yW}), {rival} abajo ({rW}).'
+      ],
+      nachi: [
+        '{yW} victorias contra {rW}. {rival}, tu línea es una lápida.',
+        'Mi curva llega al techo. La tuya, {rival}, ni arranca. Inútil.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
       gradBG(ctx, w, h, '#0f0f1a', '#1a1a3e');
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('EVOLUCIÓN TEMPORADA', w/2, h*0.1);
-      // axes
+      const ys = ALL_STATS[youId()], rs = ALL_STATS[rivalId()];
+      const yRes = (ys?.gameResults || []).slice();
+      const rRes = (rs?.gameResults || []).slice();
+      const buildCum = arr => {
+        const out = [0]; let acc = 0;
+        arr.forEach(x => { if (x === 'W') acc++; out.push(acc); });
+        return out;
+      };
+      const yCum = buildCum(yRes), rCum = buildCum(rRes);
       const ox = w*0.12, oy = h*0.78, gw = w*0.80, gh = h*0.55;
       ctx.strokeStyle = '#3a3a5c'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(ox, oy-gh); ctx.lineTo(ox, oy); ctx.lineTo(ox+gw, oy); ctx.stroke();
-      // your line (up)
-      ctx.strokeStyle = '#4dff91'; ctx.lineWidth = 5;
-      ctx.beginPath();
-      for (let i = 0; i < 12; i++) {
-        const x = ox + (gw/11)*i;
-        const y = oy - gh*(0.05 + (i/11)*0.85 + Math.sin(i)*0.03);
-        if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-      // rival line (flat)
-      ctx.strokeStyle = '#ff4060'; ctx.lineWidth = 5;
-      ctx.beginPath();
-      for (let i = 0; i < 12; i++) {
-        const x = ox + (gw/11)*i;
-        const y = oy - gh*(0.08 + Math.sin(i*0.8)*0.02);
-        if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.stroke();
-      // legend
+      const maxY = Math.max(yCum[yCum.length-1] || 0, rCum[rCum.length-1] || 0, 1);
+      const nPoints = Math.max(yCum.length, rCum.length, 2);
+      const drawLine = (cum, color) => {
+        ctx.strokeStyle = color; ctx.lineWidth = 5; ctx.beginPath();
+        for (let i = 0; i < nPoints; i++) {
+          const val = cum[i] !== undefined ? cum[i] : cum[cum.length-1] || 0;
+          const x = ox + (gw/(nPoints-1))*i;
+          const y = oy - gh*(val/maxY);
+          if (i === 0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+      };
+      drawLine(yCum, '#4dff91');
+      drawLine(rCum, '#ff4060');
       ctx.textAlign = 'left';
       ctx.fillStyle = '#4dff91'; ctx.font = `700 ${w*0.035}px Inter`;
-      ctx.fillRect(w*0.12, h*0.88, w*0.03, h*0.015); ctx.fillText(STATE.you, w*0.17, h*0.895);
+      ctx.fillRect(w*0.12, h*0.88, w*0.03, h*0.015);
+      ctx.fillText(`${youName()} (${yCum[yCum.length-1]||0}W)`, w*0.17, h*0.895);
       ctx.fillStyle = '#ff4060';
-      ctx.fillRect(w*0.52, h*0.88, w*0.03, h*0.015); ctx.fillText(STATE.rival, w*0.57, h*0.895);
+      ctx.fillRect(w*0.52, h*0.88, w*0.03, h*0.015);
+      ctx.fillText(`${rivalName()} (${rCum[rCum.length-1]||0}W)`, w*0.57, h*0.895);
       footer(ctx, w, h);
     }
   });
