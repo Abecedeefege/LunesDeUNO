@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuestas de burlas - Lunes de UNO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --uno-red: #ED1C24;
+      --uno-yellow: #FFDE00;
+      --uno-green: #00A651;
+      --uno-blue: #0072BC;
+      --bg: #0f0f1a;
+      --surface: #1a1a2e;
+      --surface-2: #242442;
+      --surface-3: #2e2e50;
+      --text: #f0f0f5;
+      --text-muted: #8888a8;
+      --border: #3a3a5c;
+      --danger: #ff4d6a;
+      --success: #4dff91;
+      --asado: #c2410c;
+      --asado-2: #7c2d12;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    h1,h2,h3,h4 { font-family: 'Fredoka One', cursive; letter-spacing: .02em; }
+
+    .mockup-banner {
+      background: linear-gradient(90deg, var(--uno-yellow), #ffb703);
+      color: #111; text-align: center; font-weight: 700;
+      padding: .6rem 1rem; font-size: .85rem;
+      position: sticky; top: 0; z-index: 300;
+    }
+    .mockup-banner strong { font-family: 'Fredoka One', cursive; }
+
+    .app-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .back-link {
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: .4rem;
+      font-weight: 600; font-size: .95rem;
+    }
+    .back-link:hover { color: var(--uno-yellow); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    .intro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .intro h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: .5rem; color: var(--uno-yellow); }
+    .intro p { color: var(--text-muted); line-height: 1.55; }
+
+    .controls {
+      display: grid; gap: 1rem; margin-bottom: 2rem;
+      grid-template-columns: 1fr;
+    }
+    @media(min-width: 720px){ .controls { grid-template-columns: 1fr 1fr 1fr; } }
+    .control-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 1rem;
+    }
+    .control-card label {
+      display: block; font-size: .75rem; text-transform: uppercase;
+      color: var(--text-muted); letter-spacing: .08em; margin-bottom: .5rem;
+      font-weight: 700;
+    }
+    select, input[type="text"] {
+      width: 100%; background: var(--surface-2);
+      border: 1px solid var(--border); color: var(--text);
+      padding: .6rem .8rem; border-radius: 10px;
+      font-family: inherit; font-size: .95rem;
+    }
+    .tone-toggle {
+      display: flex; gap: .4rem;
+    }
+    .tone-btn {
+      flex: 1; padding: .55rem; border-radius: 10px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer; font-weight: 600;
+      font-family: inherit; font-size: .85rem;
+    }
+    .tone-btn.active {
+      background: var(--uno-red); border-color: var(--uno-red);
+      color: #fff; box-shadow: 0 4px 16px rgba(237,28,36,.35);
+    }
+    .tone-btn.active[data-tone="tranqui"] {
+      background: var(--uno-blue); border-color: var(--uno-blue);
+      box-shadow: 0 4px 16px rgba(0,114,188,.35);
+    }
+
+    .module-section { margin-top: 2.5rem; }
+    .module-header {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1rem; padding-bottom: .75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .module-header .badge {
+      background: var(--surface-2);
+      color: var(--uno-yellow);
+      padding: .3rem .7rem; border-radius: 999px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; border: 1px solid var(--border);
+    }
+    .module-header h2 { font-size: clamp(1.3rem, 3vw, 1.8rem); }
+
+    .ideas-grid {
+      display: grid; gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    .idea-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .2s, border-color .2s;
+    }
+    .idea-card:hover { transform: translateY(-2px); border-color: var(--uno-yellow); }
+    .preview-wrap {
+      aspect-ratio: 4/5;
+      background: #000;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .preview-wrap canvas { width: 100%; height: 100%; display: block; }
+    .idea-body { padding: 1rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+    .idea-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem; color: var(--uno-yellow);
+    }
+    .idea-desc { font-size: .82rem; color: var(--text-muted); line-height: 1.45; }
+    .idea-copy {
+      background: var(--surface-2); border-radius: 10px;
+      padding: .7rem .8rem; font-size: .85rem; font-style: italic;
+      color: var(--text); border-left: 3px solid var(--uno-red);
+      min-height: 48px;
+    }
+    .idea-actions {
+      display: flex; gap: .5rem; margin-top: auto; padding-top: .5rem;
+    }
+    .btn {
+      flex: 1; padding: .6rem .7rem; border-radius: 10px;
+      font-family: inherit; font-weight: 600; font-size: .82rem;
+      cursor: pointer; border: none;
+      display: flex; align-items: center; justify-content: center; gap: .35rem;
+      transition: transform .15s, box-shadow .2s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--uno-red), #ff4060); color: #fff;
+      box-shadow: 0 4px 14px rgba(237,28,36,.3);
+    }
+    .btn-secondary {
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--surface-3); }
+
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: var(--surface-3); border: 1px solid var(--border);
+      color: var(--text); padding: .7rem 1.2rem; border-radius: 12px;
+      font-size: .9rem; z-index: 500; opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .toast.show { opacity: 1; }
+
+    .wa-preview {
+      background: #0b141a;
+      border-radius: 14px; padding: 1rem;
+      max-width: 360px; margin: 1rem auto 0;
+    }
+    .wa-bubble {
+      background: #005c4b; color: #fff;
+      padding: .6rem .8rem; border-radius: 10px 10px 2px 10px;
+      margin-left: auto; max-width: 85%;
+      font-size: .88rem; line-height: 1.4;
+    }
+    .wa-bubble small { display: block; color: rgba(255,255,255,.65); font-size: .7rem; margin-top: .2rem; text-align: right; }
+
+    .bonus-section { margin-top: 3rem; background: var(--surface); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); }
+    .bonus-section h2 { margin-bottom: 1rem; color: var(--uno-yellow); }
+  </style>
+</head>
+<body>
+
+<div class="mockup-banner">
+  <strong>PROPUESTA · MOCKUP</strong> · esto es una página de ideas, no afecta los juegos reales ni las stats
+</div>
+
+<header class="app-header">
+  <a href="index.html" class="back-link">← Volver a Lunes de UNO</a>
+  <span style="color: var(--text-muted); font-size: .8rem;">propuestas.html</span>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h1>Propuestas: compartir burlas desde Stats</h1>
+    <p>
+      Desde cualquier módulo de la pantalla de estadísticas, poder generar una imagen/video/sticker
+      para cargar a los amigos que ya fueron vencidos. Todo el roster, stats y marcadores son
+      <strong>datos dummy</strong> — es solo para ver cómo se verían los shares. Cambiá el rival,
+      el tono, y probá cada propuesta con los botones.
+    </p>
+  </section>
+
+  <section class="controls">
+    <div class="control-card">
+      <label for="youSelect">Tu jugador (el ganador)</label>
+      <select id="youSelect"></select>
+    </div>
+    <div class="control-card">
+      <label for="rivalSelect">Rival a humillar</label>
+      <select id="rivalSelect"></select>
+    </div>
+    <div class="control-card">
+      <label>Tono del roast</label>
+      <div class="tone-toggle">
+        <button class="tone-btn" data-tone="tranqui">😌 Tranqui</button>
+        <button class="tone-btn active" data-tone="picante">🌶️ Picante</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MODULO: JUGADOR ========== -->
+  <section class="module-section" id="mod-jugador">
+    <div class="module-header">
+      <span class="badge">Módulo 1</span>
+      <h2>Jugador (mis stats)</h2>
+    </div>
+    <div class="ideas-grid" id="grid-jugador">
+      <!-- IDEAS:JUGADOR:START -->
+      <!-- IDEAS:JUGADOR:END -->
+    </div>
+  </section>
+
+  <!-- ========== MODULO: RANKING ANUAL ========== -->
+  <section class="module-section" id="mod-anual">
+    <div class="module-header">
+      <span class="badge">Módulo 2</span>
+      <h2>Ranking anual</h2>
+    </div>
+    <div class="ideas-grid" id="grid-anual">
+      <!-- IDEAS:ANUAL:START -->
+      <!-- IDEAS:ANUAL:END -->
+    </div>
+  </section>
+
+  <!-- ========== MODULO: RANKING TEMPORADA ========== -->
+  <section class="module-section" id="mod-temporada">
+    <div class="module-header">
+      <span class="badge">Módulo 3</span>
+      <h2>Ranking temporada</h2>
+    </div>
+    <div class="ideas-grid" id="grid-temporada">
+      <!-- IDEAS:TEMPORADA:START -->
+      <!-- IDEAS:TEMPORADA:END -->
+    </div>
+  </section>
+
+  <!-- ========== MODULO: TEMPORADAS ========== -->
+  <section class="module-section" id="mod-temporadas">
+    <div class="module-header">
+      <span class="badge">Módulo 4</span>
+      <h2>Temporadas (histórico)</h2>
+    </div>
+    <div class="ideas-grid" id="grid-temporadas">
+      <!-- IDEAS:TEMPORADAS:START -->
+      <!-- IDEAS:TEMPORADAS:END -->
+    </div>
+  </section>
+
+  <!-- ========== MODULO: H2H ========== -->
+  <section class="module-section" id="mod-h2h">
+    <div class="module-header">
+      <span class="badge">Módulo 5</span>
+      <h2>Mano a mano (H2H)</h2>
+    </div>
+    <div class="ideas-grid" id="grid-h2h">
+      <!-- IDEAS:H2H:START -->
+      <!-- IDEAS:H2H:END -->
+    </div>
+  </section>
+
+  <section class="bonus-section" id="mod-bonus">
+    <h2>Bonus transversales</h2>
+    <p style="color: var(--text-muted); margin-bottom: 1rem;">
+      Features que aplicarían a todos los shares, no a uno específico.
+    </p>
+    <div class="ideas-grid" id="grid-bonus">
+      <!-- IDEAS:BONUS:START -->
+      <!-- IDEAS:BONUS:END -->
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATOS DUMMY =====
+const FACES = ['Bucket','Carucha','Cobra','Gael','Gordo','Mac','Mata','Nachi','Naso','Negro','PT','Tano'];
+const FACE_PATH = n => `assets/${n}.png`;
+
+const DUMMY_STATS = {
+  'Bucket':  { W: 12, L: 18, streak: -2 },
+  'Carucha': { W: 23, L: 7,  streak: 5  },
+  'Cobra':   { W: 4,  L: 19, streak: -6 },
+  'Gael':    { W: 17, L: 14, streak: 1  },
+  'Gordo':   { W: 6,  L: 15, streak: -3 },
+  'Mac':     { W: 19, L: 11, streak: 2  },
+  'Mata':    { W: 9,  L: 13, streak: -1 },
+  'Nachi':   { W: 14, L: 12, streak: 0  },
+  'Naso':    { W: 8,  L: 17, streak: -4 },
+  'Negro':   { W: 21, L: 9,  streak: 4  },
+  'PT':      { W: 11, L: 10, streak: 1  },
+  'Tano':    { W: 7,  L: 16, streak: -2 }
+};
+
+// H2H dummy: [winnerWs vs loserWs] relative to a given pair
+function dummyH2H(you, rival) {
+  const a = (you.charCodeAt(0) + rival.charCodeAt(1)) % 7 + 6;
+  const b = Math.max(0, (rival.charCodeAt(0) * 3) % 5);
+  return { you: a, rival: b, games: a + b };
+}
+
+// ===== ESTADO GLOBAL =====
+let STATE = {
+  you: 'Carucha',
+  rival: 'Cobra',
+  tone: 'picante',
+  copyIndex: {} // ideaId -> index
+};
+
+const IDEAS = []; // filled by each module section
+
+// ===== UTILIDADES COMPARTIDAS =====
+const imageCache = {};
+function loadFace(name) {
+  if (imageCache[name]) return Promise.resolve(imageCache[name]);
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { imageCache[name] = img; resolve(img); };
+    img.onerror = reject;
+    img.src = FACE_PATH(name);
+  });
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawFaceCircle(ctx, img, cx, cy, r) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.clip();
+  ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2);
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#fff';
+  ctx.stroke();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+      ctx.fillText(line.trim(), x, y);
+      line = words[n] + ' ';
+      y += lineHeight;
+    } else { line = testLine; }
+  }
+  ctx.fillText(line.trim(), x, y);
+  return y;
+}
+
+// ===== COPY SYSTEM =====
+function getCopy(idea) {
+  const arr = idea.copies[STATE.tone];
+  const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
+  return arr[idx].replaceAll('{you}', STATE.you).replaceAll('{rival}', STATE.rival);
+}
+function rotateCopy(ideaId) {
+  STATE.copyIndex[ideaId] = (STATE.copyIndex[ideaId] || 0) + 1;
+  refreshIdea(ideaId);
+}
+
+// ===== RENDER CARDS =====
+function refreshIdea(ideaId) {
+  const idea = IDEAS.find(i => i.id === ideaId);
+  if (!idea) return;
+  const card = document.querySelector(`[data-idea="${ideaId}"]`);
+  if (!card) return;
+  card.querySelector('.idea-copy').textContent = getCopy(idea);
+  const canvas = card.querySelector('canvas');
+  idea.draw(canvas, { preview: true }).catch(console.error);
+}
+
+function refreshAll() {
+  IDEAS.forEach(idea => refreshIdea(idea.id));
+}
+
+function renderIdeaCard(idea) {
+  const grid = document.getElementById('grid-' + idea.module);
+  if (!grid) return;
+  const el = document.createElement('div');
+  el.className = 'idea-card';
+  el.dataset.idea = idea.id;
+  el.innerHTML = `
+    <div class="preview-wrap"><canvas width="540" height="675"></canvas></div>
+    <div class="idea-body">
+      <div class="idea-title">${idea.title}</div>
+      <div class="idea-desc">${idea.desc}</div>
+      <div class="idea-copy">${getCopy(idea)}</div>
+      <div class="idea-actions">
+        <button class="btn btn-secondary" onclick="rotateCopy('${idea.id}')">🔀 Variante</button>
+        <button class="btn btn-primary" onclick="generateAndShare('${idea.id}')">📤 Compartir</button>
+      </div>
+    </div>
+  `;
+  grid.appendChild(el);
+  // first draw
+  const canvas = el.querySelector('canvas');
+  idea.draw(canvas, { preview: true }).catch(console.error);
+}
+
+function registerIdea(idea) {
+  IDEAS.push(idea);
+  renderIdeaCard(idea);
+}
+
+// ===== SHARE =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+async function generateAndShare(ideaId) {
+  const idea = IDEAS.find(i => i.id === ideaId);
+  if (!idea) return;
+  // render full-size (1080x1350)
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1350;
+  await idea.draw(canvas, { preview: false });
+
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+  const file = new File([blob], `burla-${ideaId}-${STATE.rival}.png`, { type: 'image/png' });
+  const text = getCopy(idea);
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text, title: 'Lunes de UNO' });
+      return;
+    } catch (e) { /* fallback */ }
+  }
+  // fallback: download + open WhatsApp
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = file.name; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  const waUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n(imagen descargada, adjuntala al chat 📎)')}`;
+  window.open(waUrl, '_blank');
+  showToast('Imagen descargada + WhatsApp abierto');
+}
+
+// ===== POBLAR SELECTS =====
+function populateRosters() {
+  const you = document.getElementById('youSelect');
+  const rv = document.getElementById('rivalSelect');
+  FACES.forEach(f => {
+    you.innerHTML += `<option value="${f}" ${f===STATE.you?'selected':''}>${f}</option>`;
+    rv.innerHTML += `<option value="${f}" ${f===STATE.rival?'selected':''}>${f}</option>`;
+  });
+  you.addEventListener('change', e => { STATE.you = e.target.value; refreshAll(); });
+  rv.addEventListener('change', e => { STATE.rival = e.target.value; refreshAll(); });
+}
+
+function setupToneToggle() {
+  document.querySelectorAll('.tone-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      STATE.tone = btn.dataset.tone;
+      document.querySelectorAll('.tone-btn').forEach(b => b.classList.toggle('active', b.dataset.tone === STATE.tone));
+      refreshAll();
+    });
+  });
+}
+
+// ===== HELPERS PARA DRAW FUNCTIONS =====
+function gradBG(ctx, w, h, c1, c2) {
+  const g = ctx.createLinearGradient(0, 0, w, h);
+  g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+}
+
+function footer(ctx, w, h) {
+  ctx.fillStyle = 'rgba(255,255,255,.35)';
+  ctx.font = '700 22px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillText('🎴 lunes de uno', w/2, h - 30);
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  populateRosters();
+  setupToneToggle();
+  // Ideas are registered from module blocks below
+  if (window._initIdeas) window._initIdeas();
+});
+
+// ===== MODULE IDEAS WILL BE APPENDED BELOW =====
+// DRAWS:JUGADOR:START
+// DRAWS:JUGADOR:END
+
+// DRAWS:ANUAL:START
+// DRAWS:ANUAL:END
+
+// DRAWS:TEMPORADA:START
+// DRAWS:TEMPORADA:END
+
+// DRAWS:TEMPORADAS:START
+// DRAWS:TEMPORADAS:END
+
+// DRAWS:H2H:START
+// DRAWS:H2H:END
+
+// DRAWS:BONUS:START
+// DRAWS:BONUS:END
+
+window._initIdeas = function() {
+  if (window._modJugador) window._modJugador();
+  if (window._modAnual) window._modAnual();
+  if (window._modTemporada) window._modTemporada();
+  if (window._modTemporadas) window._modTemporadas();
+  if (window._modH2H) window._modH2H();
+  if (window._modBonus) window._modBonus();
+};
+</script>
+
+</body>
+</html>
