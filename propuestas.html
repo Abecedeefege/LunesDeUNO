@@ -2223,10 +2223,29 @@ window._modH2H = function() {
   registerIdea({
     id: 'te-cocino', module: 'h2h',
     title: 'Te Cocino',
-    desc: 'Carta H2H clásica: cara vs cara, marcador grande con llamita.',
+    desc: 'H2H más lopsided del grupo (mín 5 partidas): cara vs cara, marcador grande con llamita.',
+    pick: function(ctx) {
+      let best = null, bestDiff = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.together || 0) < 5) continue;
+          const diff = (h.wins || 0) - (h.losses || 0);
+          if (diff > bestDiff) { bestDiff = diff; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Te tengo de hijo, {rival}. 9 a 1 no miente.','{rival}, venís a comer y te llevás derrota. Como siempre.'],
-      tranqui: ['Duelo eterno 🔥 marcador {you} vs {rival}','Así vamos mano a mano 💪']
+      algodon: ['{protagonist} y {rival} tienen historia 💛 {wins}–{losses} en H2H.', 'Rivalidad linda entre {protagonist} y {rival} — {wins} a {losses}.'],
+      picante: ['Te tengo de hijo, {rival}. {wins} a {losses} no miente.', '{rival}, venís a comer y te llevás derrota. Contra {protagonist} vas {losses}–{wins}.'],
+      nachi: ['{rival}, {wins}–{losses} contra {protagonist}. Dejá de jugar, estás haciendo el ridículo.', '¿Sabés lo que es {wins} a {losses}, {rival}? El ADN de un perdedor crónico. {protagonist} te cocinó para siempre.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2259,10 +2278,30 @@ window._modH2H = function() {
   registerIdea({
     id: 'campanita', module: 'h2h',
     title: 'Campanita de la Vergüenza',
-    desc: 'Card con el shame bell — tocala al compartir. Audio ya existe en /assets/.',
+    desc: 'Jugador con racha W más larga + su rival más castigado. Shame bell al compartir.',
+    pick: function(ctx) {
+      let top = null, topStreak = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.currentStreak || 0) > topStreak) { topStreak = ps.currentStreak; top = ps; }
+      }
+      if (!top) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        top = ctx.ALL_STATS[rk[0].id];
+      }
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || ctx.annualRanking().slice().reverse()[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: top.id, name: top.name || ctx.NAME_BY_ID[top.id] || top.id },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.','TUS DERROTAS merecen una ceremonia. Tocá la campana.'],
-      tranqui: ['Clásica campanita 🔔 para marcar el momento.','Ceremonia oficial — {rival} te merece la campanita.']
+      algodon: ['🔔 Suena la campanita para {rival}. Con cariño.', 'Ceremonia con campanita — {protagonist} te saluda, {rival}.'],
+      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.', 'Tus derrotas contra {protagonist} merecen una ceremonia, {rival}.'],
+      nachi: ['🔔🔔🔔 {rival}, ya deberían pegarte la campana con velcro. {protagonist} te rompe todos los lunes.', 'Vení {rival}, tocate la campana. {protagonist} ya ni pregunta.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2287,10 +2326,25 @@ window._modH2H = function() {
   registerIdea({
     id: 'apodo', module: 'h2h',
     title: 'Apodo Automático',
-    desc: 'Generador que crea un apodo bardeable según el record H2H.',
+    desc: 'Apodo para el jugador con peor winRate del año.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      const protag = rk[0];
+      const rival = rk[rk.length - 1];
+      const h = ctx.ALL_STATS[protag.id]?.h2h?.[rival.id] || { wins: 0, losses: 0 };
+      const apodos = ['El Invitado de Piedra','El Señor Cero-Uno','Don Empate Nunca','El Rey del Fondo','Capitán Derrota','El 11 Por Ciento'];
+      const apodo = apodos[((h.wins||0) + (h.losses||0)) % apodos.length];
+      return {
+        protagonist: { id: protag.id, name: protag.name },
+        rival: { id: rival.id, name: rival.name },
+        facts: { wins: h.wins, losses: h.losses, apodo }
+      };
+    },
     copies: {
-      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.','Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
-      tranqui: ['Nuevo apodo para {rival}: "{apodo}" 🎭','Premium nickname desbloqueado para {rival}.']
+      algodon: ['Nuevo apodo cariñoso para {rival}: "{apodo}" 💛', 'Nickname oficial del grupo para {rival}: "{apodo}".'],
+      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.', 'Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
+      nachi: ['{rival}, desde hoy sos "{apodo}". Ganada a pulso.', 'Te bautizamos "{apodo}", {rival}. {protagonist} hasta te firma el DNI.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2330,10 +2384,29 @@ window._modH2H = function() {
   registerIdea({
     id: 'memes', module: 'h2h',
     title: 'Meme Templates',
-    desc: 'Drake / distracted boyfriend / two buttons con la cara del rival en lo peor.',
+    desc: 'Reutiliza el pair del H2H más lopsided (mismo de Te Cocino).',
+    pick: function(ctx) {
+      let best = null, bestDiff = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.together || 0) < 5) continue;
+          const diff = (h.wins || 0) - (h.losses || 0);
+          if (diff > bestDiff) { bestDiff = diff; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra cualquiera.','Meme oficial de {rival}: confirmado.'],
-      tranqui: ['Meme ready 🤣 para el chat de {rival}','Plantilla completada: {rival} en rol estelar.']
+      algodon: ['Meme dedicado a {rival} 💛 con onda.', 'Plantilla lista para {rival} — rol estelar, cero bardo.'],
+      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra {protagonist}.', 'Meme oficial de {rival}: confirmado en el grupo.'],
+      nachi: ['Plantilla de {rival}: {protagonist} lo tiene {wins}–{losses}. Hasta Drake se ríe.', '{rival}, sos meme stock del grupo. Ni merece caption.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2364,10 +2437,27 @@ window._modH2H = function() {
   registerIdea({
     id: 'recibo', module: 'h2h',
     title: 'Recibo Oficial',
-    desc: 'Ticket de venta detallando las palizas con QR falso.',
+    desc: 'Pareja con más palizas acumuladas (máx h2h.wins). Ticket con QR falso.',
+    pick: function(ctx) {
+      let best = null, bestWins = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.wins || 0) > bestWins) { bestWins = h.wins; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Guardá el recibo {rival}. 1 × paliza. Total: tu dignidad.','Factura emitida a {rival}. Adjuntá al chat.'],
-      tranqui: ['Recibo oficial de temporada 🧾','Comprobante fiscal UNO para {rival}.']
+      algodon: ['Recibo oficial de {protagonist} vs {rival} 🧾 ({wins}–{losses}).', 'Factura histórica entre {protagonist} y {rival}.'],
+      picante: ['Guardá el recibo {rival}: {wins} × paliza de {protagonist}. Total: tu dignidad.', 'Factura emitida a {rival}. Adjuntá al chat del grupo.'],
+      nachi: ['{rival}, el recibo dice {wins}–{losses}. Pagá con dignidad, ya no te queda otra.', 'Acá está la factura {rival}: {wins} palizas de {protagonist}. No aceptamos notas de crédito.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2428,10 +2518,23 @@ window._modH2H = function() {
   registerIdea({
     id: 'convocatoria', module: 'h2h',
     title: 'Convocatoria Judicial',
-    desc: 'Citación falsa: se cita a X a comparecer el próximo lunes para nueva paliza.',
+    desc: 'Citación falsa al rival más castigado por el #1 del ranking.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const victims = ctx.rivalDefeatedListFor(one.id);
+      const rival = victims[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: one.id, name: one.name },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['Te cito {rival}. Comparecencia obligatoria.','Judicial: {rival} debe presentarse este lunes a recibir paliza.'],
-      tranqui: ['Invitación formal 📜 para {rival} — próximo lunes.','Convocatoria oficial: te esperamos.']
+      algodon: ['Invitación formal 📜 para {rival} — próximo lunes con {protagonist}.', 'Convocatoria cariñosa: te esperamos, {rival}.'],
+      picante: ['Te cito {rival}. Comparecencia obligatoria ante {protagonist}.', 'Judicial: {rival} debe presentarse este lunes a recibir paliza de {protagonist}.'],
+      nachi: ['{rival}, citación obligatoria. {protagonist} te espera en la mesa.', 'Convocatoria judicial: {rival}, a recibir paliza de {protagonist}. Sin excusas ni revancha.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2485,21 +2588,51 @@ window._modH2H = function() {
   registerIdea({
     id: 'top-victimas', module: 'h2h',
     title: 'Mi Top 3 Víctimas',
-    desc: 'Podio con los 3 rivales a los que más les ganaste H2H.',
+    desc: 'Podio con los 3 rivales reales más dominados por el jugador con más víctimas.',
+    pick: function(ctx) {
+      let best = null, bestN = 0, bestList = [];
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const list = ctx.rivalDefeatedListFor(pid);
+        if (list.length >= 3 && list.length > bestN) {
+          bestN = list.length; best = pid; bestList = list.slice(0, 3);
+        }
+      }
+      if (!best) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        best = rk[0].id;
+        bestList = ctx.rivalDefeatedListFor(best).slice(0, 3);
+      }
+      if (!bestList.length) return null;
+      const victimsWithScore = bestList.map(v => {
+        const h = ctx.ALL_STATS[best]?.h2h?.[v.id] || { wins: 0, losses: 0 };
+        return { id: v.id, name: v.name, wins: h.wins, losses: h.losses };
+      });
+      return {
+        protagonist: { id: best, name: ctx.NAME_BY_ID[best] || best },
+        rival: { id: victimsWithScore[0].id, name: victimsWithScore[0].name },
+        facts: { victims: victimsWithScore }
+      };
+    },
     copies: {
-      picante: ['Mi top 3 de víctimas: {rival} en el podio.','Exhibiendo a los que colecciono: {rival}, Cobra y Gordo.'],
-      tranqui: ['Mis rivales más frecuentes 🏆 top 3.','Top contrincantes — {rival} lidera la lista 😎']
+      algodon: ['Top 3 rivales frecuentes de {protagonist} 🏆 {rival} en el podio.', 'Los contrincantes históricos de {protagonist} — con cariño.'],
+      picante: ['Top 3 víctimas de {protagonist}: {rival} en el podio.', 'Los que colecciona {protagonist}: {rival} lidera la lista 🥇'],
+      nachi: ['{protagonist} tiene víctimas en serie. {rival} es la predilecta.', 'Top 3 palizas de {protagonist}: {rival} y compañía. Ninguno levanta la cabeza.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
       gradBG(ctx, w, h, '#0a0a2e', '#0f0f1a');
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('MI TOP 3 VÍCTIMAS', w/2, h*0.11);
-      const victims = [
-        { name: STATE.rival, score: '12-2', medal: '🥇', y: 0.38, size: 0.13 },
-        { name: 'Cobra',     score: '9-3',  medal: '🥈', y: 0.52, size: 0.10 },
-        { name: 'Gordo',     score: '7-1',  medal: '🥉', y: 0.68, size: 0.10 }
-      ];
+      ctx.fillText(`TOP 3 VÍCTIMAS DE ${String(STATE.you).toUpperCase()}`, w/2, h*0.11);
+      const ideaRef = IDEAS.find(i => i.id === 'top-victimas');
+      const pickedRef = ideaRef ? getPicked(ideaRef) : null;
+      const real = (pickedRef && pickedRef.facts && pickedRef.facts.victims) || [];
+      const medals = ['🥇','🥈','🥉'];
+      const ys = [0.38, 0.52, 0.68];
+      const sizes = [0.13, 0.10, 0.10];
+      const victims = real.slice(0, 3).map((v, i) => ({
+        name: v.name, score: `${v.wins}-${v.losses}`, medal: medals[i], y: ys[i], size: sizes[i]
+      }));
       for (const v of victims) {
         try {
           const img = await loadFace(v.name);
@@ -2522,10 +2655,30 @@ window._modH2H = function() {
   registerIdea({
     id: 'modo-asado', module: 'h2h',
     title: 'Modo Asado Flame',
-    desc: 'Versión del share con paleta cálida, brasas y humo — combina con el Modo Asado del sitio.',
+    desc: 'Mismo pair que Campanita (jugador más en racha + su víctima preferida). Paleta cálida y brasas.',
+    pick: function(ctx) {
+      let top = null, topStreak = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.currentStreak || 0) > topStreak) { topStreak = ps.currentStreak; top = ps; }
+      }
+      if (!top) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        top = ctx.ALL_STATS[rk[0].id];
+      }
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || ctx.annualRanking().slice().reverse()[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: top.id, name: top.name || ctx.NAME_BY_ID[top.id] || top.id },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.','Parrilla prendida. {rival} al fuego.'],
-      tranqui: ['Modo asado 🔥 versión brasas — {rival} en juego.','Sábado de parrilla y bardo con {rival} 🍖']
+      algodon: ['Sábado de parrilla y UNO con {rival} 🍖 {protagonist} invita.', 'Modo asado 🔥 versión brasas — {rival} y {protagonist} en la mesa.'],
+      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.', 'Parrilla prendida. {rival} al fuego contra {protagonist}.'],
+      nachi: ['{rival}, al fuego. {protagonist} ya limpió la parrilla para vos.', 'Asado: hoy se cocina {rival}. {protagonist} como siempre, dueño de la pinza.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2561,10 +2714,25 @@ window._modH2H = function() {
   registerIdea({
     id: 'stickers', module: 'h2h',
     title: 'Sticker Pack',
-    desc: 'Preview de 6 stickers transparentes listos para WhatsApp con cara y frases.',
+    desc: 'Rival con más derrotas totales del grupo. 6 stickers ready para WhatsApp.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      let worstLoser = null, worstL = -1;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.L || 0) > worstL) { worstL = ps.L; worstLoser = ps; }
+      }
+      if (!worstLoser) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: worstLoser.id, name: worstLoser.name }
+      };
+    },
     copies: {
-      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.','6 stickers ready para el grupo. {rival} en cada uno.'],
-      tranqui: ['Sticker pack {rival} listo 📦 subilo al WhatsApp.','Stickers frescos para el grupo.']
+      algodon: ['Pack de stickers de {rival} 📦 subilo al grupo.', 'Stickers frescos de {rival} — el más generoso con las derrotas.'],
+      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.', '6 stickers ready para el grupo. {rival} en cada uno.'],
+      nachi: ['{rival}, armamos stickers con tus derrotas. 6 de entrada, hay más.', 'Stickers de {rival}: edición coleccionable "el que siempre pierde".']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2605,8 +2773,9 @@ window._modBonus = function() {
     title: 'Preview de WhatsApp',
     desc: 'Simula cómo se va a ver el mensaje en el chat del rival antes de mandarlo.',
     copies: {
-      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.','Preview antes de arruinarle el día a {rival}.'],
-      tranqui: ['Mirá cómo va a llegar el mensaje ✨','Chequeá el preview antes de compartir.']
+      algodon: ['Mirá cómo va a llegar el mensaje a {rival} ✨', 'Chequeá el preview antes de compartir con {rival}.'],
+      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.', 'Preview antes de arruinarle el día a {rival}.'],
+      nachi: ['{rival} lo va a abrir y cerrar el celu tres veces. Mandalo.', 'Preview listo. {rival} no tiene escape: esto va al grupo igual.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2649,10 +2818,11 @@ window._modBonus = function() {
   registerIdea({
     id: 'tono-selector', module: 'bonus',
     title: 'Selector de Tono (feature)',
-    desc: 'El mismo share, dos intensidades. Arriba picante, abajo tranqui. (Probá el toggle arriba de la página)',
+    desc: 'El mismo share, tres intensidades: algodón, picante y nachi. (Probá el toggle arriba de la página)',
     copies: {
-      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.','Picante ON: {rival} no va a querer abrir WhatsApp.'],
-      tranqui: ['😌 Versión tranqui: con respeto, {rival} perdió 😅','Tranqui ON: palmada cariñosa a {rival}.']
+      algodon: ['🍬 Algodón ON: abracito a {rival} con el ranking abajo.', 'Versión dulce para {rival} — con respeto y caramelito.'],
+      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.', 'Picante ON: {rival} no va a querer abrir WhatsApp.'],
+      nachi: ['🔥 Nachi ON: {rival}, sos el chiste del grupo. Fin.', 'Modo nachi activado. {rival}, ni respondas.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2685,8 +2855,9 @@ window._modBonus = function() {
     title: 'Editor rápido del copy',
     desc: 'Feature: campo para retocar la frase antes de mandar (mockup visual).',
     copies: {
-      picante: ['Retocá el bardo antes de mandarlo a {rival}.','Ajuste fino del roast y lo tirás exacto.'],
-      tranqui: ['Editá antes de compartir ✍️','Personalizá el mensaje con tu toque.']
+      algodon: ['Editá antes de compartir ✍️ con {rival}.', 'Personalizá el mensaje para {rival} con tu toque.'],
+      picante: ['Retocá el bardo antes de mandarlo a {rival}.', 'Ajuste fino del roast y lo tirás exacto a {rival}.'],
+      nachi: ['Ajustá el puñal antes de clavarlo, {rival} no se lo espera.', 'Editor ON: afilá el roast para {rival}. Que duela parejo.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2726,8 +2897,9 @@ window._modBonus = function() {
     title: 'Video corto con audio',
     desc: 'Feature: exporta un video de 3s con el shame bell + animación de la cara del rival.',
     copies: {
-      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.','3 segundos de gloria con campanita de la vergüenza 🔔'],
-      tranqui: ['Formato video 🎬 para el grupo — {rival} estelar.','Clip cortito con efectos para variar del PNG.']
+      algodon: ['Clip de 3s para {rival} 🎬 con su musiquita.', 'Formato video para variar del PNG — {rival} estelar.'],
+      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.', '3 segundos de gloria con campanita de la vergüenza 🔔 para {rival}.'],
+      nachi: ['{rival}, te dedicamos 3 segundos con campanita. Loop infinito.', 'Video con audio: {rival} en bucle eterno de vergüenza 🔔🔔']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
