@@ -813,6 +813,22 @@ window._modJugador = function() {
   // ---------- 1) PAREDÓN (muestra las caras que venció el RIVAL, no el jugador) ----------
   registerIdea({
     id: 'paredon', module: 'jugador',
+    pick: function(ctx) {
+      // protagonista del card = jugador con MÁS rivales únicos vencidos
+      const ranked = Object.values(ctx.ALL_STATS)
+        .map(p => ({ id: p.id, name: p.name, unique: Object.keys(p.defeatedCount||{}).length }))
+        .filter(p => p.unique > 0)
+        .sort((a,b) => b.unique - a.unique);
+      if (!ranked.length) return null;
+      const champ = ranked[0];
+      // el "you" es simbólico (narrador); dejamos al rival del champ como protagonista del texto
+      const victims = ctx.rivalDefeatedListFor(champ.id);
+      return {
+        protagonist: { id: champ.id, name: champ.name },
+        rival: { id: champ.id, name: champ.name }, // usamos rival=champ para reusar rivalName() en el draw
+        facts: { victimas: victims.length, topVictim: victims[0]?.name || '—' }
+      };
+    },
     title: 'Mi Paredón',
     desc: 'Grid con las caras de los rivales a los que {rival} ya le ganó. Sin inventos: si venció a 3, aparecen 3.',
     computeFacts: function() {
@@ -853,7 +869,7 @@ window._modJugador = function() {
         ctx.fillText('A NADIE', w/2, h*0.58);
         ctx.fillStyle = 'rgba(255,255,255,.5)';
         ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText('(sin datos en localStorage)', w/2, h*0.65);
+        ctx.fillText('(sin datos en Firestore)', w/2, h*0.65);
         footer(ctx, w, h);
         return;
       }
@@ -897,6 +913,28 @@ window._modJugador = function() {
   // ---------- 2) RACHA H2H (solo datos reales) ----------
   registerIdea({
     id: 'racha', module: 'jugador',
+    pick: function(ctx) {
+      // protagonista = jugador con mayor racha W actual
+      const players = Object.values(ctx.ALL_STATS).filter(p => p.currentStreak > 0);
+      if (!players.length) {
+        // fallback: mayor racha L (negativa) para shame
+        const worst = Object.values(ctx.ALL_STATS)
+          .filter(p => p.currentStreak < 0)
+          .sort((a,b) => a.currentStreak - b.currentStreak)[0];
+        if (!worst) return null;
+        const victims = ctx.rivalDefeatedListFor(worst.id);
+        const rival = victims[0] || { id: worst.id, name: worst.name };
+        return { protagonist: { id: worst.id, name: worst.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
+      }
+      const top = players.sort((a,b) => b.currentStreak - a.currentStreak)[0];
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || null;
+      return {
+        protagonist: { id: top.id, name: top.name },
+        rival: rival ? { id: rival.id, name: rival.name } : { id: top.id, name: top.name },
+        facts: {}
+      };
+    },
     title: 'Racha vs este rival',
     desc: 'Tu racha actual de victorias o derrotas solo en partidas donde estuvieron ambos.',
     computeFacts: function() {
@@ -912,7 +950,7 @@ window._modJugador = function() {
       ],
       picante: [
         '{streak} {rachaDir} seguidas contra {rival}. La data no miente.',
-        'H2H real: {wins}-{losses}. {rival}, no es chicana, es localStorage.'
+        'H2H real: {wins}-{losses}. {rival}, no es chicana, es data real.'
       ],
       nachi: [
         '{streak} {rachaDir} seguidas, {rival}. Sos mi perra.',
@@ -959,6 +997,23 @@ window._modJugador = function() {
   // ---------- 3) CERTIFICADO DE DOMINANCIA ----------
   registerIdea({
     id: 'certificado', module: 'jugador',
+    pick: function(ctx) {
+      // H2H más desbalanceado con >= 3 partidas
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (h.together < 3) return;
+          const gap = h.wins - h.losses;
+          if (!best || gap > best.gap) best = { youId: p.id, youName: p.name, rid, gap, h };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Certificado de Dominancia',
     desc: 'Diploma falso con el marcador H2H real.',
     computeFacts: function() { const h = h2hFor(); return { wins: h.wins, losses: h.losses, games: h.games }; },
@@ -998,7 +1053,7 @@ window._modJugador = function() {
       ctx.font = `900 ${w*0.10}px Fredoka One`;
       ctx.fillText(`${hh.wins} — ${hh.losses}`, w/2, h*0.60);
       ctx.font = `500 ${w*0.024}px Inter`;
-      ctx.fillText(`(${hh.games} partidas registradas en localStorage)`, w/2, h*0.66);
+      ctx.fillText(`(${hh.games} partidas registradas en Firestore)`, w/2, h*0.66);
       // firma
       ctx.font = `700 italic ${w*0.035}px Inter`;
       ctx.fillText('— ' + youName() + ' —', w/2, h*0.80);
@@ -1022,6 +1077,25 @@ window._modJugador = function() {
   // ---------- 4) HIGHLIGHTS DE VÍCTIMAS (top 3 rivales que MÁS venciste) ----------
   registerIdea({
     id: 'highlights', module: 'jugador',
+    pick: function(ctx) {
+      // Jugador con más rivales a los que dominó sin derrota (wins>=2, losses=0)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        const dominados = Object.entries(p.h2h || {})
+          .filter(([rid, h]) => h.wins >= 2 && h.losses === 0)
+          .map(([rid, h]) => ({ id: rid, name: ctx.NAME_BY_ID[rid] || rid, wins: h.wins }))
+          .sort((a,b) => b.wins - a.wins);
+        if (dominados.length >= 1 && (!best || dominados.length > best.count)) {
+          best = { p, count: dominados.length, top: dominados };
+        }
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.p.id, name: best.p.name },
+        rival: { id: best.top[0].id, name: best.top[0].name },
+        facts: { dominados: best.count, top1: best.top[0].name, top2: best.top[1]?.name || '—', top3: best.top[2]?.name || '—' }
+      };
+    },
     title: 'Top 3 de víctimas',
     desc: 'Los 3 jugadores a los que más veces les ganaste. Orden y números reales.',
     computeFacts: function() {
@@ -1093,6 +1167,14 @@ window._modJugador = function() {
   // ---------- 5) MI CARTA UNO ----------
   registerIdea({
     id: 'mi-carta', module: 'jugador',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const victims = ctx.rivalDefeatedListFor(one.id);
+      const rival = victims[0] || { id: one.id, name: one.name };
+      return { protagonist: { id: one.id, name: one.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
+    },
     title: 'Mi temporada en 1 carta',
     desc: 'Stats reales de {you} como carta UNO: partidas totales, W-L y % real.',
     computeFacts: function() {
@@ -1167,6 +1249,17 @@ window._modAnual = function() {
   // ---------- 1) PODIO CON SOMBRA (datos reales) ----------
   registerIdea({
     id: 'podio', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const last = rk[rk.length - 1];
+      return {
+        protagonist: { id: one.id, name: one.name },
+        rival: { id: last.id, name: last.name },
+        facts: {}
+      };
+    },
     title: 'Podio con Sombra',
     desc: 'Podio 1-2-3 del ranking anual real; abajo los del fondo "también jugaron".',
     computeFacts: function() {
@@ -1237,6 +1330,15 @@ window._modAnual = function() {
   // ---------- 2) RANKING DE PATÉTICOS (invertido, datos reales) ----------
   registerIdea({
     id: 'pateticos', module: 'anual',
+    pick: function(ctx) {
+      const bottom = ctx.annualRanking().slice().reverse();
+      if (!bottom.length) return null;
+      return {
+        protagonist: { id: bottom[0].id, name: bottom[0].name },
+        rival: { id: bottom[0].id, name: bottom[0].name },
+        facts: {}
+      };
+    },
     title: 'Ranking de Patéticos',
     desc: 'El ranking al revés: los 3 con menor % de victorias del año.',
     computeFacts: function() {
@@ -1295,6 +1397,21 @@ window._modAnual = function() {
   // ---------- 3) FACTURA ANUAL (H2H real) ----------
   registerIdea({
     id: 'factura', module: 'anual',
+    pick: function(ctx) {
+      // Pareja con más palizas acumuladas: max h2h.wins
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (!best || h.wins > best.wins) best = { youId: p.id, youName: p.name, rid, wins: h.wins, losses: h.losses, games: h.together };
+        });
+      });
+      if (!best || best.wins === 0) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Factura Anual',
     desc: 'Comprobante fiscal con las partidas H2H reales entre ustedes.',
     computeFacts: function() {
@@ -1363,6 +1480,15 @@ window._modAnual = function() {
   // ---------- 4) GAP SHAMING (anual real) ----------
   registerIdea({
     id: 'gap-shame', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'Gap Shaming',
     desc: 'Barra comparativa con las victorias anuales reales de ambos.',
     computeFacts: function() {
@@ -1427,6 +1553,17 @@ window._modAnual = function() {
   // ---------- 5) NFT DE PATÉTICO (posición real) ----------
   registerIdea({
     id: 'nft', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const last = rk[rk.length - 1];
+      const first = rk[0];
+      return {
+        protagonist: { id: first.id, name: first.name },
+        rival: { id: last.id, name: last.name },
+        facts: {}
+      };
+    },
     title: 'NFT de Patético',
     desc: 'Mock de NFT con cara pixelada del rival y su puesto real del año.',
     computeFacts: function() {
@@ -1490,6 +1627,30 @@ window._modTemporada = function() {
   // ---------- 1) PREDICCIÓN (basada en racha H2H real) ----------
   registerIdea({
     id: 'prediccion', module: 'temporada',
+    pick: function(ctx) {
+      // Pareja con mayor racha H2H activa (absoluta)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          const seq = (h.sequence || []).filter(v => v !== null);
+          if (seq.length < 2) return;
+          let s = 0;
+          for (let i = seq.length - 1; i >= 0; i--) {
+            const w = seq[i];
+            if (i === seq.length - 1) s = w ? 1 : -1;
+            else if ((s > 0 && w) || (s < 0 && !w)) s += (w ? 1 : -1);
+            else break;
+          }
+          if (!best || Math.abs(s) > Math.abs(best.streak)) best = { youId: p.id, youName: p.name, rid, streak: s, h };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Predicción para la próxima',
     desc: 'Modelo simple que proyecta el próximo resultado a partir de tu racha real contra el rival.',
     computeFacts: function() {
@@ -1561,6 +1722,15 @@ window._modTemporada = function() {
   // ---------- 2) MVP vs LVP (del ranking real) ----------
   registerIdea({
     id: 'mvp-lvp', module: 'temporada',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'MVP vs LVP',
     desc: 'Carta dividida con el líder real del ranking vs el último, según datos.',
     computeFacts: function() {
@@ -1621,6 +1791,21 @@ window._modTemporada = function() {
   // ---------- 3) HEATMAP (partidas H2H reales) ----------
   registerIdea({
     id: 'heatmap', module: 'temporada',
+    pick: function(ctx) {
+      // Pareja con más partidas juntos (max h2h.together)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (!best || h.together > best.games) best = { youId: p.id, youName: p.name, rid, games: h.together };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Mapa de Dominio',
     desc: 'Heatmap con las partidas H2H reales entre ambos: verde ganaste, rojo perdiste.',
     computeFacts: function() {
@@ -1677,6 +1862,15 @@ window._modTemporada = function() {
   // ---------- 4) ESCALERA (W acumuladas reales) ----------
   registerIdea({
     id: 'escalera', module: 'temporada',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[1].id, name: rk[1].name },
+        facts: {}
+      };
+    },
     title: 'Escalera de la temporada',
     desc: 'Curvas de victorias acumuladas reales: tuyas vs las del rival.',
     computeFacts: function() {
@@ -1747,6 +1941,15 @@ window._modTemporadas = function() {
   // ---------- 1) HALL OF SHAME (los 3 con peor winrate real, al menos 1 partida) ----------
   registerIdea({
     id: 'hall-shame', module: 'temporadas',
+    pick: function(ctx) {
+      const bottom = ctx.annualRanking().slice().reverse();
+      if (bottom.length < 3) return null;
+      return {
+        protagonist: { id: bottom[0].id, name: bottom[0].name },
+        rival: { id: bottom[0].id, name: bottom[0].name },
+        facts: {}
+      };
+    },
     title: 'Hall of Shame Eterno',
     desc: 'Las 3 placas de bronce van para los 3 jugadores con peor winRate histórico.',
     computeFacts: function() {
@@ -1805,6 +2008,18 @@ window._modTemporadas = function() {
   // ---------- 2) TIMELINE (última victoria real del rival + datos) ----------
   registerIdea({
     id: 'timeline', module: 'temporadas',
+    pick: function(ctx) {
+      // Peor racha L actual
+      const worst = Object.values(ctx.ALL_STATS)
+        .filter(p => p.currentStreak < 0)
+        .sort((a,b) => a.currentStreak - b.currentStreak)[0];
+      if (!worst) return null;
+      return {
+        protagonist: { id: worst.id, name: worst.name },
+        rival: { id: worst.id, name: worst.name },
+        facts: {}
+      };
+    },
     title: 'Libro de Historia',
     desc: 'Página tipo Wikipedia con los hitos reales del rival según las partidas registradas.',
     computeFacts: function() {
@@ -1831,7 +2046,7 @@ window._modTemporadas = function() {
       ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.05}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('HISTORIA DE ' + rivalName().toUpperCase(), w/2, h*0.09);
       ctx.fillStyle = '#666'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('De la wikipedia del asado · fuentes: localStorage', w/2, h*0.135);
+      ctx.fillText('De la wikipedia del asado · fuentes: Firestore', w/2, h*0.135);
       ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(w*0.18, h*0.20); ctx.lineTo(w*0.18, h*0.85); ctx.stroke();
       const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, W: 0, L: 0, gameResults: [], currentStreak: 0 };
@@ -1861,6 +2076,23 @@ window._modTemporadas = function() {
   // ---------- 3) ARQUEOLOGÍA (días desde última victoria real) ----------
   registerIdea({
     id: 'arqueologia', module: 'temporadas',
+    pick: function(ctx) {
+      // Jugador con mayor cantidad de partidas desde su último W
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        const res = p.gameResults || [];
+        let lastWinIdx = -1;
+        for (let i = res.length - 1; i >= 0; i--) { if (res[i].won) { lastWinIdx = i; break; } }
+        const sincewin = lastWinIdx === -1 ? res.length : (res.length - 1 - lastWinIdx);
+        if (sincewin >= 1 && (!best || sincewin > best.sincewin)) best = { p, sincewin };
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.p.id, name: best.p.name },
+        rival: { id: best.p.id, name: best.p.name },
+        facts: {}
+      };
+    },
     title: 'Arqueología del Perdedor',
     desc: 'Cuántas partidas pasaron desde la última vez que el rival ganó (datos reales).',
     computeFacts: function() {
@@ -1919,6 +2151,15 @@ window._modTemporadas = function() {
   // ---------- 4) DÉCADAS (winRate histórico real) ----------
   registerIdea({
     id: 'decadas', module: 'temporadas',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'Promedio Histórico',
     desc: 'WinRate acumulado real de ambos y comparativa barra a barra.',
     computeFacts: function() {
