@@ -1577,6 +1577,269 @@ window._modTemporadas = function() {
 // DRAWS:TEMPORADAS:END
 
 // DRAWS:H2H:START
+window._modH2H = function() {
+  registerIdea({
+    id: 'te-cocino', module: 'h2h',
+    title: 'Te Cocino',
+    desc: 'Carta H2H clásica: cara vs cara, marcador grande con llamita.',
+    copies: {
+      picante: ['Te tengo de hijo, {rival}. 9 a 1 no miente.','{rival}, venís a comer y te llevás derrota. Como siempre.'],
+      tranqui: ['Duelo eterno 🔥 marcador {you} vs {rival}','Así vamos mano a mano 💪']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#1a0000', '#0f0f1a');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.07}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('TE COCINO', w/2, h*0.11);
+      const h2h = dummyH2H(STATE.you, STATE.rival);
+      try {
+        const img = await loadFace(STATE.you);
+        drawFaceCircle(ctx, img, w*0.28, h*0.35, w*0.15);
+      } catch(e){}
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w*0.72, h*0.35, w*0.15);
+      } catch(e){}
+      ctx.fillStyle = '#4dff91'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText(STATE.you, w*0.28, h*0.55);
+      ctx.fillStyle = '#ff4060';
+      ctx.fillText(STATE.rival, w*0.72, h*0.55);
+      ctx.font = `${w*0.09}px serif`;
+      ctx.fillText('🔥', w/2, h*0.38);
+      ctx.fillStyle = '#fff'; ctx.font = `800 ${w*0.20}px Fredoka One`;
+      ctx.fillText(`${h2h.you} — ${h2h.rival}`, w/2, h*0.78);
+      ctx.fillStyle = '#FFDE00'; ctx.font = `600 ${w*0.03}px Inter`;
+      ctx.fillText('MANO A MANO HISTÓRICO', w/2, h*0.86);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'campanita', module: 'h2h',
+    title: 'Campanita de la Vergüenza',
+    desc: 'Card con el shame bell — tocala al compartir. Audio ya existe en /assets/.',
+    copies: {
+      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.','TUS DERROTAS merecen una ceremonia. Tocá la campana.'],
+      tranqui: ['Clásica campanita 🔔 para marcar el momento.','Ceremonia oficial — {rival} te merece la campanita.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#2a0f05', '#0f0f1a');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.07}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('CAMPANITA DE', w/2, h*0.10);
+      ctx.fillText('LA VERGÜENZA', w/2, h*0.17);
+      ctx.font = `${w*0.35}px serif`;
+      ctx.fillText('🔔', w/2, h*0.55);
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w/2, h*0.74, w*0.09);
+      } catch(e){}
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.045}px Fredoka One`;
+      ctx.fillText(STATE.rival, w/2, h*0.87);
+      ctx.fillStyle = '#ff4060'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText('🎵 toca al compartir', w/2, h*0.92);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'apodo', module: 'h2h',
+    title: 'Apodo Automático',
+    desc: 'Generador que crea un apodo bardeable según el record H2H.',
+    copies: {
+      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.','Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
+      tranqui: ['Nuevo apodo para {rival}: "{apodo}" 🎭','Premium nickname desbloqueado para {rival}.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#0a0a2e', '#0f0f1a');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('NUEVO APODO OFICIAL', w/2, h*0.11);
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w/2, h*0.30, w*0.13);
+      } catch(e){}
+      const h2h = dummyH2H(STATE.you, STATE.rival);
+      const apodos = [
+        'El Invitado de Piedra',
+        'El Señor Cero-Uno',
+        'Don Empate Nunca',
+        'El Rey del Fondo',
+        'Capitán Derrota',
+        'El 11 Por Ciento'
+      ];
+      const apodo = apodos[(h2h.you + h2h.rival) % apodos.length];
+      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.035}px Inter`;
+      ctx.fillText(STATE.rival + ', a partir de ahora:', w/2, h*0.50);
+      // apodo card
+      roundRect(ctx, w*0.08, h*0.55, w*0.84, h*0.18, 18);
+      ctx.fillStyle = '#ED1C24'; ctx.fill();
+      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 5; ctx.stroke();
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.065}px Fredoka One`;
+      ctx.fillText('"' + apodo + '"', w/2, h*0.66);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText(`basado en H2H ${h2h.you}-${h2h.rival} · oficial e irreversible`, w/2, h*0.82);
+      footer(ctx, w, h);
+      // stash apodo in copy vars for share text
+      IDEAS.find(i => i.id === 'apodo')._lastApodo = apodo;
+    }
+  });
+
+  registerIdea({
+    id: 'memes', module: 'h2h',
+    title: 'Meme Templates',
+    desc: 'Drake / distracted boyfriend / two buttons con la cara del rival en lo peor.',
+    copies: {
+      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra cualquiera.','Meme oficial de {rival}: confirmado.'],
+      tranqui: ['Meme ready 🤣 para el chat de {rival}','Plantilla completada: {rival} en rol estelar.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
+      // drake panels
+      const pH = h*0.42;
+      // top: no
+      ctx.fillStyle = '#fde1e1'; ctx.fillRect(0, h*0.08, w, pH);
+      ctx.fillStyle = '#e1ffe1'; ctx.fillRect(0, h*0.50, w, pH);
+      // drake faces (emoji)
+      ctx.font = `${w*0.18}px serif`; ctx.textAlign = 'center';
+      ctx.fillText('🙅', w*0.25, h*0.32);
+      ctx.fillText('👉', w*0.25, h*0.74);
+      // captions
+      ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.045}px Fredoka One`; ctx.textAlign = 'left';
+      wrapText(ctx, `Perder contra ${STATE.rival}`, w*0.43, h*0.24, w*0.54, h*0.06);
+      wrapText(ctx, `Ganarle a ${STATE.rival} todos los lunes`, w*0.43, h*0.66, w*0.54, h*0.06);
+      // rival face in bottom right
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w*0.88, h*0.14, w*0.06);
+      } catch(e){}
+      ctx.fillStyle = '#666'; ctx.font = `500 ${w*0.02}px Inter`; ctx.textAlign = 'center';
+      ctx.fillText('meme generator · lunes de uno', w/2, h*0.97);
+    }
+  });
+
+  registerIdea({
+    id: 'recibo', module: 'h2h',
+    title: 'Recibo Oficial',
+    desc: 'Ticket de venta detallando las palizas con QR falso.',
+    copies: {
+      picante: ['Guardá el recibo {rival}. 1 × paliza. Total: tu dignidad.','Factura emitida a {rival}. Adjuntá al chat.'],
+      tranqui: ['Recibo oficial de temporada 🧾','Comprobante fiscal UNO para {rival}.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#f8f4e8'; ctx.fillRect(0,0,w,h);
+      // zigzag top
+      ctx.fillStyle = '#f8f4e8';
+      ctx.beginPath();
+      ctx.moveTo(0, h*0.05);
+      for (let i = 0; i < 20; i++) {
+        ctx.lineTo(w*(i/20), h*0.03 + (i%2)*h*0.015);
+      }
+      ctx.lineTo(w, h*0.05); ctx.lineTo(w, 0); ctx.lineTo(0, 0);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('LUNES DE UNO S.A.', w/2, h*0.12);
+      ctx.font = `500 ${w*0.022}px monospace`;
+      ctx.fillText('Paliza garantizada · cambios no aceptados', w/2, h*0.155);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+      ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(w*0.08, h*0.18); ctx.lineTo(w*0.92, h*0.18); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = `600 ${w*0.028}px monospace`; ctx.textAlign = 'left';
+      ctx.fillText(`CLIENTE: ${STATE.rival}`, w*0.1, h*0.22);
+      const h2h = dummyH2H(STATE.you, STATE.rival);
+      const items = [
+        ['Paliza UNO', `x${h2h.you}`, '$$$'],
+        ['Humillación pública', 'x1', 'GRATIS'],
+        ['Excusa post-derrota', 'x4', '$0'],
+        ['Pedido de revancha', 'x99', 'NEG.']
+      ];
+      items.forEach((it, i) => {
+        const y = h*(0.30 + i*0.06);
+        ctx.fillText(it[0], w*0.1, y);
+        ctx.textAlign = 'center'; ctx.fillText(it[1], w*0.62, y);
+        ctx.textAlign = 'right'; ctx.fillText(it[2], w*0.9, y);
+        ctx.textAlign = 'left';
+      });
+      ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(w*0.08, h*0.60); ctx.lineTo(w*0.92, h*0.60); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = `700 ${w*0.045}px Fredoka One`;
+      ctx.fillText('TOTAL:', w*0.1, h*0.67);
+      ctx.textAlign = 'right'; ctx.fillStyle = '#c2110c';
+      ctx.fillText('TU DIGNIDAD', w*0.9, h*0.67);
+      // QR mock
+      ctx.fillStyle = '#000';
+      const qs = w*0.24, qx = (w-qs)/2, qy = h*0.72;
+      for (let i = 0; i < 12; i++) {
+        for (let j = 0; j < 12; j++) {
+          if (Math.random() > 0.5) ctx.fillRect(qx + i*(qs/12), qy + j*(qs/12), qs/12, qs/12);
+        }
+      }
+      ctx.fillStyle = '#333'; ctx.font = `500 ${w*0.022}px monospace`; ctx.textAlign = 'center';
+      ctx.fillText('¡gracias por su preferencia!', w/2, h*0.96);
+    }
+  });
+
+  registerIdea({
+    id: 'convocatoria', module: 'h2h',
+    title: 'Convocatoria Judicial',
+    desc: 'Citación falsa: se cita a X a comparecer el próximo lunes para nueva paliza.',
+    copies: {
+      picante: ['Te cito {rival}. Comparecencia obligatoria.','Judicial: {rival} debe presentarse este lunes a recibir paliza.'],
+      tranqui: ['Invitación formal 📜 para {rival} — próximo lunes.','Convocatoria oficial: te esperamos.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#f5efe0'; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 4;
+      ctx.strokeRect(w*0.06, h*0.05, w*0.88, h*0.90);
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+      ctx.strokeRect(w*0.08, h*0.07, w*0.84, h*0.86);
+      ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('⚖️ CONVOCATORIA', w/2, h*0.15);
+      ctx.font = `500 italic ${w*0.025}px Inter`;
+      ctx.fillText('República del Asado · Fuero UNO', w/2, h*0.20);
+      ctx.textAlign = 'left';
+      ctx.font = `500 ${w*0.028}px Inter`;
+      let y = h*0.30;
+      const lines = [
+        `Se cita al ciudadano:`,
+        ``,
+        `${STATE.rival.toUpperCase()}`,
+        ``,
+        `a comparecer el próximo LUNES`,
+        `en la mesa del asado, a fin de`,
+        `recibir nueva paliza en nombre`,
+        `del acusador ${STATE.you}.`,
+        ``,
+        `La ausencia no impedirá el`,
+        `fallo en su contra.`
+      ];
+      lines.forEach(ln => {
+        if (ln === `${STATE.rival.toUpperCase()}`) {
+          ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+          ctx.fillText(ln, w/2, y); y += h*0.05;
+          ctx.font = `500 ${w*0.028}px Inter`; ctx.textAlign = 'left';
+        } else {
+          ctx.fillText(ln, w*0.12, y); y += h*0.04;
+        }
+      });
+      ctx.font = `700 italic ${w*0.03}px Inter`; ctx.textAlign = 'center';
+      ctx.fillText(`— ${STATE.you}, denunciante —`, w/2, h*0.88);
+      // fake seal
+      ctx.save();
+      ctx.translate(w*0.82, h*0.82); ctx.rotate(-0.3);
+      ctx.strokeStyle = '#c2110c'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, 0, w*0.08, 0, Math.PI*2); ctx.stroke();
+      ctx.fillStyle = '#c2110c'; ctx.font = `700 ${w*0.02}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('OFICIAL', 0, -4); ctx.fillText('LUNES UNO', 0, 14);
+      ctx.restore();
+    }
+  });
+};
 // DRAWS:H2H:END
 
 // DRAWS:BONUS:START
