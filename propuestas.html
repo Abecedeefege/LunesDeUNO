@@ -1700,13 +1700,29 @@ window._modTemporada = function() {
 
 // DRAWS:TEMPORADAS:START
 window._modTemporadas = function() {
+
+  // ---------- 1) HALL OF SHAME (los 3 con peor winrate real, al menos 1 partida) ----------
   registerIdea({
     id: 'hall-shame', module: 'temporadas',
     title: 'Hall of Shame Eterno',
-    desc: 'Museo virtual con placas de bronce por cada rival humillado históricamente.',
+    desc: 'Las 3 placas de bronce van para los 3 jugadores con peor winRate histórico.',
+    computeFacts: function() {
+      const r = annualRanking().slice().reverse();
+      return { s1: r[0]?.name || '—', s2: r[1]?.name || '—', s3: r[2]?.name || '—' };
+    },
     copies: {
-      picante: ['Ingresaste al Hall of Shame {rival}. Placa eterna.','Tu cara merece un museo, {rival}. Lo creamos.'],
-      tranqui: ['Reconocimiento histórico para {rival} 🏛️','Hall of Shame: los clásicos que siempre juegan.']
+      algodon: [
+        'Homenaje eterno: {s1}, {s2} y {s3}. ¡Próximo lunes revancha!',
+        'Hall of Shame: {s1} encabeza. Hay tiempo para salir del muro.'
+      ],
+      picante: [
+        'Placas oficiales: {s1}, {s2} y {s3}. Bronceados para siempre.',
+        'Hall of Shame confirmado por la data: {s1}, {s2}, {s3}. Impecable.'
+      ],
+      nachi: [
+        '{s1}, {s2} y {s3}: sos peor que un 4+ robado. Placa eterna.',
+        'Museo del fracaso: {s1} lidera. Pagarías entrada por no verte.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1714,56 +1730,76 @@ window._modTemporadas = function() {
       ctx.fillStyle = '#c2710c'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('HALL OF SHAME', w/2, h*0.1);
       ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText('· museo del asado ·', w/2, h*0.145);
-      // 3 bronze plaques
-      const shameList = [STATE.rival, 'Cobra', 'Gordo'];
-      for (let i = 0; i < 3; i++) {
+      ctx.fillText('· museo del asado · winRate histórico ·', w/2, h*0.145);
+      const shameList = annualRanking().slice().reverse().slice(0, 3);
+      if (!shameList.length) {
+        ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.04}px Inter`;
+        ctx.fillText('SIN DATOS HISTÓRICOS', w/2, h*0.50);
+        footer(ctx, w, h); return;
+      }
+      for (let i = 0; i < shameList.length; i++) {
         const y = h*(0.22 + i*0.23);
-        // plaque bg
         const gp = ctx.createLinearGradient(w*0.1, y, w*0.9, y+h*0.18);
         gp.addColorStop(0,'#a06020'); gp.addColorStop(0.5,'#c2710c'); gp.addColorStop(1,'#7a4410');
         ctx.fillStyle = gp;
         roundRect(ctx, w*0.1, y, w*0.8, h*0.18, 10); ctx.fill();
         ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
         try {
-          const img = await loadFace(shameList[i]);
+          const img = await loadFace(shameList[i].id);
           drawFaceCircle(ctx, img, w*0.2, y+h*0.09, w*0.06);
         } catch(e){}
         ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'left';
-        ctx.fillText(shameList[i], w*0.32, y+h*0.07);
+        ctx.fillText(shameList[i].name, w*0.32, y+h*0.07);
         ctx.fillStyle = '#1a0f05'; ctx.font = `600 ${w*0.024}px Inter`;
-        ctx.fillText('"Peor racha histórica"', w*0.32, y+h*0.11);
+        ctx.fillText(`WinRate: ${(shameList[i].winRate*100).toFixed(0)}% · ${shameList[i].W}W-${shameList[i].L}L`, w*0.32, y+h*0.11);
         ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.022}px Inter`;
-        ctx.fillText(`Inducido ${2024+i}`, w*0.32, y+h*0.15);
+        ctx.fillText('Peor racha histórica', w*0.32, y+h*0.15);
       }
       footer(ctx, w, h);
     }
   });
 
+  // ---------- 2) TIMELINE (última victoria real del rival + datos) ----------
   registerIdea({
     id: 'timeline', module: 'temporadas',
     title: 'Libro de Historia',
-    desc: 'Timeline tipo Wikipedia de las caídas del rival año por año.',
+    desc: 'Página tipo Wikipedia con los hitos reales del rival según las partidas registradas.',
+    computeFacts: function() {
+      const rs = ALL_STATS[rivalId()];
+      return { total: rs?.gamesPlayed || 0, wins: rs?.W || 0, losses: rs?.L || 0 };
+    },
     copies: {
-      picante: ['Escribí tu página de Wikipedia, {rival}. No es linda.','Historia oficial del UNO: capítulo {rival}.'],
-      tranqui: ['Repaso histórico 📖 {rival} — temporadas memorables.','Timeline oficial de {rival} en Lunes de UNO.']
+      algodon: [
+        'Historia breve de {rival}: {wins}W-{losses}L en {total} partidas 📖',
+        'Capítulo {rival}: jugó {total}, ganó {wins}. Historia viva.'
+      ],
+      picante: [
+        'Wikipedia oficial de {rival}: {wins} victorias en {total}. Enciclopedia aburrida.',
+        'Libro de {rival}: {losses} derrotas registradas. Tapa dura.'
+      ],
+      nachi: [
+        '{rival} — resumen: {losses} derrotas, chiste andante. Biografía impresentable.',
+        'Historia de {rival}: {wins} W de pura casualidad. Merecería borrarse.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
       ctx.fillStyle = '#f5efe0'; ctx.fillRect(0, 0, w, h);
       ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.05}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('HISTORIA DE ' + STATE.rival.toUpperCase(), w/2, h*0.09);
+      ctx.fillText('HISTORIA DE ' + rivalName().toUpperCase(), w/2, h*0.09);
       ctx.fillStyle = '#666'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('De la wikipedia del asado · fuentes confiables', w/2, h*0.135);
-      // vertical timeline
+      ctx.fillText('De la wikipedia del asado · fuentes: localStorage', w/2, h*0.135);
       ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(w*0.18, h*0.20); ctx.lineTo(w*0.18, h*0.85); ctx.stroke();
+      const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, W: 0, L: 0, gameResults: [], currentStreak: 0 };
+      const lastWinIdx = rs.gameResults.lastIndexOf('W');
+      const gamesSinceWin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
       const events = [
-        ['2023', 'Debut. Perdió 6 de 7.'],
-        ['2024 Q2', 'Ganó 1 partida. No se repitió.'],
-        ['2024 Q4', 'Intento fallido de remontada.'],
-        ['2025', 'Año oscuro. 3 victorias.'],
-        ['2026', 'En caída libre. ' + (DUMMY_STATS[STATE.rival]?.W||4) + ' W.']
+        ['Total', `Jugó ${rs.gamesPlayed} partidas.`],
+        ['Victorias', `${rs.W} W acumuladas.`],
+        ['Derrotas', `${rs.L} L a lo largo del tiempo.`],
+        ['Racha actual', rs.currentStreak > 0 ? `${rs.currentStreak} victorias seguidas.` : (rs.currentStreak < 0 ? `${Math.abs(rs.currentStreak)} derrotas seguidas.` : 'Sin racha activa.')],
+        ['Última victoria', lastWinIdx === -1 ? 'NO HAY REGISTRO' : `hace ${gamesSinceWin} partida${gamesSinceWin===1?'':'s'}.`]
       ];
       events.forEach((ev, i) => {
         const y = h*(0.25 + i*0.12);
@@ -1775,17 +1811,35 @@ window._modTemporadas = function() {
         ctx.fillText(ev[1], w*0.23, y+20);
       });
       ctx.fillStyle = '#666'; ctx.font = `500 italic ${w*0.02}px Inter`; ctx.textAlign = 'center';
-      ctx.fillText('[se necesita cita]', w/2, h*0.92);
+      ctx.fillText('[datos extraídos de lunesdeuno_games]', w/2, h*0.92);
     }
   });
 
+  // ---------- 3) ARQUEOLOGÍA (días desde última victoria real) ----------
   registerIdea({
     id: 'arqueologia', module: 'temporadas',
     title: 'Arqueología del Perdedor',
-    desc: 'Cuántos días pasaron desde la última vez que el rival ganó.',
+    desc: 'Cuántas partidas pasaron desde la última vez que el rival ganó (datos reales).',
+    computeFacts: function() {
+      const rs = ALL_STATS[rivalId()];
+      if (!rs) return { sincewin: 0, total: 0 };
+      const lastWinIdx = rs.gameResults.lastIndexOf('W');
+      const sincewin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
+      return { sincewin, total: rs.gamesPlayed, lastWinIdx };
+    },
     copies: {
-      picante: ['Llevás 47 días sin ganar {rival}. Excavación arqueológica en curso.','Antropólogos buscan la última victoria de {rival}. Siguen cavando.'],
-      tranqui: ['Archivo histórico: {rival} última victoria hace un rato 👀','Sequía registrada. ¡A romperla {rival}!']
+      algodon: [
+        'Van {sincewin} partidas sin ganar, {rival}. ¡La próxima es!',
+        'Racha sin W: {sincewin}. Vamos {rival}, a cortar esa seca.'
+      ],
+      picante: [
+        '{sincewin} partidas sin ganar, {rival}. Excavamos con paleta, ya no aparece.',
+        'Arqueología confirma: hace {sincewin} partidas que {rival} no huele victoria.'
+      ],
+      nachi: [
+        '{rival} lleva {sincewin} partidas de pura mierda. Museo viviente.',
+        'Van {sincewin} sin W. {rival}, pedí jubilación de UNO, sos patrimonio perdido.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1795,38 +1849,54 @@ window._modTemporadas = function() {
       ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.03}px Inter`;
       ctx.fillText('Excavando la última victoria de:', w/2, h*0.16);
       ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.055}px Fredoka One`;
-      ctx.fillText(STATE.rival, w/2, h*0.225);
+      ctx.fillText(rivalName(), w/2, h*0.225);
       try {
-        const img = await loadFace(STATE.rival);
+        const img = await loadFace(rivalId());
         drawFaceCircle(ctx, img, w/2, h*0.35, w*0.09);
       } catch(e){}
-      // dig layers
-      const layers = [
-        ['Hace 7 días', 'Perdió de nuevo.'],
-        ['Hace 21 días', 'Una paliza histórica.'],
-        ['Hace 47 días', '🧐 acá se ve algo...'],
-        ['Hace 112 días', '⛏️ última victoria confirmada.']
-      ];
-      layers.forEach((lyr, i) => {
-        const y = h*(0.50 + i*0.08);
-        ctx.fillStyle = `rgba(194,113,12,${0.15 + i*0.15})`;
-        ctx.fillRect(w*0.08, y, w*0.84, h*0.06);
-        ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.025}px Inter`; ctx.textAlign = 'left';
-        ctx.fillText(lyr[0], w*0.12, y+h*0.03);
-        ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.024}px Inter`;
-        ctx.fillText(lyr[1], w*0.12, y+h*0.05);
-      });
+      const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, gameResults: [] };
+      const lastWinIdx = rs.gameResults.lastIndexOf('W');
+      const sincewin = lastWinIdx === -1 ? rs.gamesPlayed : (rs.gameResults.length - 1 - lastWinIdx);
+      ctx.fillStyle = '#FFDE00'; ctx.font = `800 ${w*0.16}px Fredoka One`;
+      ctx.fillText(String(sincewin), w/2, h*0.60);
+      ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.032}px Inter`;
+      ctx.fillText('partidas sin ganar', w/2, h*0.67);
+      ctx.fillStyle = 'rgba(255,222,0,.75)'; ctx.font = `500 ${w*0.025}px Inter`;
+      if (lastWinIdx === -1) {
+        ctx.fillText('(nunca se registró una victoria)', w/2, h*0.72);
+      } else {
+        ctx.fillText(`(de ${rs.gamesPlayed} partidas totales)`, w/2, h*0.72);
+      }
+      ctx.fillStyle = '#c2710c'; ctx.font = `500 italic ${w*0.025}px Inter`;
+      ctx.fillText('⛏️ sigue la excavación...', w/2, h*0.86);
       footer(ctx, w, h);
     }
   });
 
+  // ---------- 4) DÉCADAS (winRate histórico real) ----------
   registerIdea({
     id: 'decadas', module: 'temporadas',
-    title: 'Promedio de Décadas',
-    desc: 'Vista histórica multi-temporada con ratio acumulado.',
+    title: 'Promedio Histórico',
+    desc: 'WinRate acumulado real de ambos y comparativa barra a barra.',
+    computeFacts: function() {
+      const y = statsFor(youId()), r = statsFor(rivalId());
+      const yPct = y.gamesPlayed ? Math.round((y.W / y.gamesPlayed) * 100) : 0;
+      const rPct = r.gamesPlayed ? Math.round((r.W / r.gamesPlayed) * 100) : 0;
+      return { yPct, rPct, yW: y.W, rW: r.W, yG: y.gamesPlayed, rG: r.gamesPlayed };
+    },
     copies: {
-      picante: ['Mirá mi ratio histórico vs el tuyo, {rival}. No hay por dónde.','Diez temporadas tirando estadísticas: siempre arriba de {rival}.'],
-      tranqui: ['Ratio histórico total: {you} on top 📊','Histórico multi-temporada — largo plazo gana {you}.']
+      algodon: [
+        'Histórico: {you} {yPct}% vs {rival} {rPct}%. ¡Seguir así!',
+        'Récord acumulado: {yPct}% contra {rPct}%. Cada uno a lo suyo.'
+      ],
+      picante: [
+        'Histórico {yPct}% vs {rPct}%. {rival}, la matemática no perdona.',
+        '{yPct} a {rPct}. {rival}, es un abismo estadístico.'
+      ],
+      nachi: [
+        '{yPct}% yo vs {rPct}% de {rival}. Sos un fraude aritmético.',
+        '{rPct}% de winrate, {rival}. Alérgico a ganar, payaso.'
+      ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1834,29 +1904,30 @@ window._modTemporadas = function() {
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('RÉCORD HISTÓRICO', w/2, h*0.10);
       ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText('Temporadas 2023 → 2026', w/2, h*0.15);
-      // big ratio you
+      ctx.fillText('WinRate acumulado de toda la historia', w/2, h*0.15);
+      const y = statsFor(youId()), r = statsFor(rivalId());
+      const yPct = y.gamesPlayed ? Math.round((y.W / y.gamesPlayed) * 100) : 0;
+      const rPct = r.gamesPlayed ? Math.round((r.W / r.gamesPlayed) * 100) : 0;
       ctx.fillStyle = '#4dff91'; ctx.font = `800 ${w*0.14}px Fredoka One`;
-      ctx.fillText('74%', w/2, h*0.33);
+      ctx.fillText(yPct + '%', w/2, h*0.33);
       ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.033}px Inter`;
-      ctx.fillText(STATE.you + ' — WinRate histórico', w/2, h*0.40);
+      ctx.fillText(`${youName()} — ${y.W}W en ${y.gamesPlayed} partidas`, w/2, h*0.40);
       ctx.strokeStyle = '#3a3a5c'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(w*0.15, h*0.48); ctx.lineTo(w*0.85, h*0.48); ctx.stroke();
-      // bars per season
-      const years = ['2023','2024','2025','2026'];
-      years.forEach((y, i) => {
-        const bx = w*(0.15 + i*0.20), bwd = w*0.12;
-        const youH = h*0.18*(0.6 + Math.random()*0.4);
-        const rivH = h*0.18*(0.2 + Math.random()*0.3);
-        ctx.fillStyle = '#4dff91';
-        ctx.fillRect(bx, h*0.78-youH, bwd*0.45, youH);
-        ctx.fillStyle = '#ff4060';
-        ctx.fillRect(bx+bwd*0.5, h*0.78-rivH, bwd*0.45, rivH);
-        ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.025}px Inter`; ctx.textAlign = 'center';
-        ctx.fillText(y, bx+bwd*0.4, h*0.82);
-      });
+      // dos barras comparativas
+      const barY = h*0.60, maxH = h*0.20;
+      const maxPct = Math.max(yPct, rPct, 1);
+      const yH = maxH * (yPct / maxPct);
+      const rH = maxH * (rPct / maxPct);
+      ctx.fillStyle = '#4dff91';
+      ctx.fillRect(w*0.28, barY + maxH - yH, w*0.14, yH);
+      ctx.fillStyle = '#ff4060';
+      ctx.fillRect(w*0.58, barY + maxH - rH, w*0.14, rH);
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.03}px Inter`; ctx.textAlign = 'center';
+      ctx.fillText(youName(), w*0.35, barY + maxH + h*0.04);
+      ctx.fillText(rivalName(), w*0.65, barY + maxH + h*0.04);
       ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText(STATE.rival + ': 23% — plano.', w/2, h*0.90);
+      ctx.fillText(`${rivalName()}: ${rPct}% — ${r.W}W en ${r.gamesPlayed} partidas`, w/2, h*0.94);
       footer(ctx, w, h);
     }
   });
