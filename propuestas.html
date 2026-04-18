@@ -1839,6 +1839,120 @@ window._modH2H = function() {
       ctx.restore();
     }
   });
+
+  registerIdea({
+    id: 'top-victimas', module: 'h2h',
+    title: 'Mi Top 3 Víctimas',
+    desc: 'Podio con los 3 rivales a los que más les ganaste H2H.',
+    copies: {
+      picante: ['Mi top 3 de víctimas: {rival} en el podio.','Exhibiendo a los que colecciono: {rival}, Cobra y Gordo.'],
+      tranqui: ['Mis rivales más frecuentes 🏆 top 3.','Top contrincantes — {rival} lidera la lista 😎']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#0a0a2e', '#0f0f1a');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('MI TOP 3 VÍCTIMAS', w/2, h*0.11);
+      const victims = [
+        { name: STATE.rival, score: '12-2', medal: '🥇', y: 0.38, size: 0.13 },
+        { name: 'Cobra',     score: '9-3',  medal: '🥈', y: 0.52, size: 0.10 },
+        { name: 'Gordo',     score: '7-1',  medal: '🥉', y: 0.68, size: 0.10 }
+      ];
+      for (const v of victims) {
+        try {
+          const img = await loadFace(v.name);
+          drawFaceCircle(ctx, img, w*0.30, h*v.y, w*v.size);
+        } catch(e){}
+        ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.045}px Fredoka One`; ctx.textAlign = 'left';
+        ctx.fillText(v.name, w*0.45, h*(v.y-0.02));
+        ctx.fillStyle = '#4dff91'; ctx.font = `700 ${w*0.05}px Fredoka One`;
+        ctx.fillText(v.score, w*0.45, h*(v.y+0.04));
+        ctx.textAlign = 'right'; ctx.font = `${w*0.06}px serif`;
+        ctx.fillText(v.medal, w*0.90, h*(v.y+0.015));
+      }
+      ctx.fillStyle = '#FFDE00'; ctx.textAlign = 'center';
+      ctx.font = `700 ${w*0.035}px Fredoka One`;
+      ctx.fillText('MARCADOR H2H HISTÓRICO', w/2, h*0.87);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'modo-asado', module: 'h2h',
+    title: 'Modo Asado Flame',
+    desc: 'Versión del share con paleta cálida, brasas y humo — combina con el Modo Asado del sitio.',
+    copies: {
+      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.','Parrilla prendida. {rival} al fuego.'],
+      tranqui: ['Modo asado 🔥 versión brasas — {rival} en juego.','Sábado de parrilla y bardo con {rival} 🍖']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,0,h);
+      g.addColorStop(0,'#7c2d12'); g.addColorStop(0.5,'#c2410c'); g.addColorStop(1,'#1a0a05');
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      // embers particles
+      for (let i = 0; i < 80; i++) {
+        ctx.fillStyle = `rgba(255,${150+Math.random()*105},0,${Math.random()*0.5})`;
+        ctx.beginPath();
+        ctx.arc(Math.random()*w, Math.random()*h, Math.random()*4+1, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.08}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('🍖 MODO ASADO', w/2, h*0.13);
+      const h2h = dummyH2H(STATE.you, STATE.rival);
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w/2, h*0.40, w*0.14);
+      } catch(e){}
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.06}px Fredoka One`;
+      ctx.fillText(STATE.rival, w/2, h*0.58);
+      ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.03}px Inter`;
+      ctx.fillText('chinchulín oficial del asado', w/2, h*0.63);
+      ctx.fillStyle = '#ffa500'; ctx.font = `800 ${w*0.13}px Fredoka One`;
+      ctx.fillText(`${h2h.you} — ${h2h.rival}`, w/2, h*0.80);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText('encendida desde 2023 🔥', w/2, h*0.87);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'stickers', module: 'h2h',
+    title: 'Sticker Pack',
+    desc: 'Preview de 6 stickers transparentes listos para WhatsApp con cara y frases.',
+    copies: {
+      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.','6 stickers ready para el grupo. {rival} en cada uno.'],
+      tranqui: ['Sticker pack {rival} listo 📦 subilo al WhatsApp.','Stickers frescos para el grupo.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#1a1a3e', '#0f0f1a');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('PACK DE STICKERS', w/2, h*0.09);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText(`6 stickers de ${STATE.rival}`, w/2, h*0.135);
+      const phrases = ['PERDÍ 😭', 'OTRA VEZ', 'ME CAGUÉ', 'UNO 🤦', 'NO PUDE', 'LLORO'];
+      let rivalImg;
+      try { rivalImg = await loadFace(STATE.rival); } catch(e){}
+      const cellW = w*0.28, cellH = h*0.22, gap = w*0.03;
+      const startX = (w - (cellW*3 + gap*2))/2;
+      const startY = h*0.22;
+      for (let i = 0; i < 6; i++) {
+        const col = i % 3, row = Math.floor(i/3);
+        const x = startX + col*(cellW+gap), y = startY + row*(cellH+gap);
+        // sticker bubble
+        ctx.fillStyle = '#fff';
+        roundRect(ctx, x, y, cellW, cellH, 20); ctx.fill();
+        ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
+        if (rivalImg) drawFaceCircle(ctx, rivalImg, x+cellW/2, y+cellH*0.38, cellW*0.22);
+        ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.028}px Fredoka One`;
+        ctx.fillText(phrases[i], x+cellW/2, y+cellH*0.80);
+      }
+      ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.026}px Inter`;
+      ctx.fillText('📎 listo para importar a WhatsApp', w/2, h*0.90);
+      footer(ctx, w, h);
+    }
+  });
 };
 // DRAWS:H2H:END
 
