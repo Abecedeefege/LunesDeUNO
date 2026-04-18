@@ -543,6 +543,479 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== MODULE IDEAS WILL BE APPENDED BELOW =====
 // DRAWS:JUGADOR:START
+window._modJugador = function() {
+
+  // ---------- 1) PAREDÓN ----------
+  registerIdea({
+    id: 'paredon',
+    module: 'jugador',
+    title: 'Mi Paredón',
+    desc: 'Grid con rivales que vencí más de lo que perdieron contra mí. {rival} en el lugar de honor.',
+    copies: {
+      picante: [
+        'Bienvenido a mi paredón, {rival}. Sos pieza de museo 🖼️',
+        'Este es mi muro de trofeos. {rival}, vos estás ahí abajo a la derecha, chiquito.'
+      ],
+      tranqui: [
+        'Mi paredón de logros 🏆 {rival} incluido con honores.',
+        'Top rivales que ya pasaron por mi living. Bienvenido {rival}.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      gradBG(ctx, w, h, '#0f0f1a', '#2e0e1a');
+
+      // titulo
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `800 ${w*0.075}px Fredoka One, Inter`;
+      ctx.textAlign = 'center';
+      ctx.fillText('MI PAREDÓN', w/2, h*0.10);
+      ctx.fillStyle = 'rgba(255,255,255,.6)';
+      ctx.font = `600 ${w*0.028}px Inter`;
+      ctx.fillText('propiedad de ' + STATE.you, w/2, h*0.14);
+
+      // rivales: excluir you, priorizar rival
+      const others = FACES.filter(f => f !== STATE.you && f !== STATE.rival).slice(0, 5);
+      const allSlots = [STATE.rival, ...others]; // rival primero
+
+      // rival en grande arriba
+      const rivalR = w*0.13;
+      const rivalCx = w/2, rivalCy = h*0.30;
+      try {
+        const rivalImg = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, rivalImg, rivalCx, rivalCy, rivalR);
+      } catch(e) {}
+      // anillo rojo
+      ctx.beginPath();
+      ctx.arc(rivalCx, rivalCy, rivalR + 8, 0, Math.PI*2);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = '#ED1C24';
+      ctx.stroke();
+      // X overlay
+      ctx.strokeStyle = 'rgba(237,28,36,.85)';
+      ctx.lineWidth = 10;
+      ctx.beginPath();
+      ctx.moveTo(rivalCx - rivalR*0.7, rivalCy - rivalR*0.7);
+      ctx.lineTo(rivalCx + rivalR*0.7, rivalCy + rivalR*0.7);
+      ctx.moveTo(rivalCx + rivalR*0.7, rivalCy - rivalR*0.7);
+      ctx.lineTo(rivalCx - rivalR*0.7, rivalCy + rivalR*0.7);
+      ctx.stroke();
+      // rival name + W-L
+      const rs = DUMMY_STATS[STATE.rival] || {W:0,L:0};
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.font = `800 ${w*0.04}px Inter`;
+      ctx.fillText(STATE.rival.toUpperCase(), rivalCx, rivalCy + rivalR + 38);
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `700 ${w*0.032}px Inter`;
+      ctx.fillText(`${rs.W}W - ${rs.L}L`, rivalCx, rivalCy + rivalR + 68);
+
+      // grid 5 restantes (2 filas de ~3)
+      const gridTop = h*0.58;
+      const cols = Math.min(5, others.length);
+      const cellW = w / (cols + 1);
+      const smallR = w*0.07;
+      for (let i = 0; i < others.length; i++) {
+        const name = others[i];
+        const cx = cellW * (i + 1) + cellW/2 - (cellW/2);
+        // centrar fila: spread across
+        const x = (w / (others.length + 1)) * (i + 1);
+        const y = gridTop;
+        try {
+          const img = await loadFace(name);
+          drawFaceCircle(ctx, img, x, y, smallR);
+        } catch(e) {}
+        const s = DUMMY_STATS[name] || {W:0,L:0};
+        ctx.fillStyle = '#fff';
+        ctx.font = `700 ${w*0.022}px Inter`;
+        ctx.textAlign = 'center';
+        ctx.fillText(name, x, y + smallR + 24);
+        ctx.fillStyle = 'rgba(255,222,0,.85)';
+        ctx.font = `600 ${w*0.02}px Inter`;
+        ctx.fillText(`${s.W}-${s.L}`, x, y + smallR + 46);
+      }
+
+      footer(ctx, w, h);
+    }
+  });
+
+  // ---------- 2) RACHA ----------
+  registerIdea({
+    id: 'racha',
+    module: 'jugador',
+    title: 'Racha Activa',
+    desc: 'Mostrale al grupo la racha de victorias seguidas, especialmente contra {rival}.',
+    copies: {
+      picante: [
+        '{rival}, es gracioso ya. Dejá de anotarte, hacenos el favor 🔥',
+        'Racha encendida. {rival} ya ni mira la mano, solo resigna los puntos.'
+      ],
+      tranqui: [
+        'En llamas 🔥 ganando seguido, perdón {rival}.',
+        'Racha activa, no la quiero cortar. Aguante {you} 🔥'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      // BG negro con gradiente naranja-rojo
+      const g = ctx.createRadialGradient(w/2, h*0.45, 50, w/2, h*0.45, w*0.9);
+      g.addColorStop(0, '#ff6b00');
+      g.addColorStop(0.45, '#c2410c');
+      g.addColorStop(1, '#0a0000');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,w,h);
+
+      // flame emoji gigante
+      ctx.textAlign = 'center';
+      ctx.font = `${w*0.28}px serif`;
+      ctx.fillText('🔥', w/2, h*0.32);
+
+      // numero gigante
+      const racha = 7;
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `900 ${w*0.32}px Fredoka One, Inter`;
+      ctx.fillText(String(racha), w/2, h*0.58);
+
+      // texto
+      ctx.fillStyle = '#fff';
+      ctx.font = `800 ${w*0.055}px Inter`;
+      ctx.fillText('VICTORIAS SEGUIDAS', w/2, h*0.68);
+
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.font = `600 ${w*0.038}px Inter`;
+      ctx.fillText(`contra ${STATE.rival}`, w/2, h*0.75);
+
+      // rival face chica en esquina
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w - w*0.13, h - h*0.13, w*0.08);
+      } catch(e) {}
+      // tachado
+      ctx.strokeStyle = '#ED1C24';
+      ctx.lineWidth = 6;
+      const cx = w - w*0.13, cy = h - h*0.13, rr = w*0.08;
+      ctx.beginPath();
+      ctx.moveTo(cx-rr, cy+rr);
+      ctx.lineTo(cx+rr, cy-rr);
+      ctx.stroke();
+
+      // you label top-left
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `800 ${w*0.04}px Fredoka One, Inter`;
+      ctx.textAlign = 'left';
+      ctx.fillText(STATE.you.toUpperCase(), w*0.06, h*0.08);
+
+      footer(ctx, w, h);
+    }
+  });
+
+  // ---------- 3) CERTIFICADO ----------
+  registerIdea({
+    id: 'certificado',
+    module: 'jugador',
+    title: 'Certificado de Dominancia',
+    desc: 'Diploma oficial que certifica que {rival} es propiedad intelectual de {you}.',
+    copies: {
+      picante: [
+        'Pegalo en la heladera, {rival}. Es oficial: sos mío 📜',
+        'Firmado, sellado y entregado. {rival} pertenece a {you} ante escribano.'
+      ],
+      tranqui: [
+        'Certificado oficial de temporada 📜 {rival} estás en mi colección.',
+        'Un papelito para enmarcar: {rival}, fuiste parte de mi buen año.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      gradBG(ctx, w, h, '#f5e6c8', '#d4a574');
+
+      // marco doble
+      ctx.strokeStyle = '#3b2a10';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(w*0.05, h*0.05, w*0.90, h*0.90);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(w*0.07, h*0.07, w*0.86, h*0.86);
+
+      // titulo serif
+      ctx.fillStyle = '#2a1a07';
+      ctx.textAlign = 'center';
+      ctx.font = `800 ${w*0.055}px Georgia, serif`;
+      ctx.fillText('CERTIFICADO', w/2, h*0.18);
+      ctx.font = `800 ${w*0.055}px Georgia, serif`;
+      ctx.fillText('DE DOMINANCIA', w/2, h*0.25);
+
+      // línea decorativa
+      ctx.strokeStyle = '#3b2a10';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w*0.2, h*0.29);
+      ctx.lineTo(w*0.8, h*0.29);
+      ctx.stroke();
+
+      // body
+      ctx.fillStyle = '#3a2810';
+      ctx.font = `italic 500 ${w*0.034}px Georgia, serif`;
+      const body = `Se certifica que ${STATE.rival} es propiedad intelectual de ${STATE.you}. Firmado ante testigos y sin posibilidad de apelación.`;
+      wrapText(ctx, body, w/2, h*0.40, w*0.78, w*0.05);
+
+      // rival face chica
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w*0.28, h*0.70, w*0.09);
+      } catch(e) {}
+      ctx.fillStyle = '#3a2810';
+      ctx.font = `700 ${w*0.025}px Georgia, serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(STATE.rival, w*0.28, h*0.82);
+      ctx.font = `italic 500 ${w*0.02}px Georgia, serif`;
+      ctx.fillText('(el certificado)', w*0.28, h*0.85);
+
+      // seal
+      const sx = w*0.72, sy = h*0.72, sr = w*0.12;
+      ctx.save();
+      ctx.translate(sx, sy);
+      ctx.rotate(-0.2);
+      ctx.beginPath();
+      ctx.arc(0, 0, sr, 0, Math.PI*2);
+      ctx.strokeStyle = '#a02020';
+      ctx.lineWidth = 6;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0, 0, sr - 10, 0, Math.PI*2);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#a02020';
+      ctx.font = `900 ${w*0.038}px Georgia, serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('OFICIAL', 0, 0);
+      ctx.font = `700 ${w*0.018}px Georgia, serif`;
+      ctx.fillText('LUNES DE UNO', 0, sr*0.5);
+      ctx.restore();
+      ctx.textBaseline = 'alphabetic';
+
+      // firma
+      ctx.fillStyle = '#2a1a07';
+      ctx.font = `italic 600 ${w*0.03}px Georgia, serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(`— ${STATE.you} —`, w/2, h*0.94);
+
+      // footer en oscuro para contraste
+      ctx.fillStyle = 'rgba(42,26,7,.6)';
+      ctx.font = '700 22px Inter';
+      ctx.fillText('🎴 lunes de uno', w/2, h - 22);
+    }
+  });
+
+  // ---------- 4) HIGHLIGHTS / TOP 3 PATÉTICOS ----------
+  registerIdea({
+    id: 'highlights',
+    module: 'jugador',
+    title: 'Highlight de la Vergüenza',
+    desc: 'Top 3 rivales más patéticos de la temporada. {rival} encabeza el ranking.',
+    copies: {
+      picante: [
+        'El top 3 de la vergüenza. Felicitaciones {rival}, nº 1 con orgullo 💀',
+        'Los que no la vieron. {rival} podio asegurado, temporada tras temporada.'
+      ],
+      tranqui: [
+        'Top 3 rivales que necesitan un abrazo 🫂 {rival} el más achuchable.',
+        'Ranking amistoso de los más maltratados. Arriba ese ánimo {rival}.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      gradBG(ctx, w, h, '#0f0f1a', '#3a0f1a');
+
+      // titulo
+      ctx.fillStyle = '#FFDE00';
+      ctx.font = `900 ${w*0.062}px Fredoka One, Inter`;
+      ctx.textAlign = 'center';
+      ctx.fillText('TOP 3 RIVALES', w/2, h*0.10);
+      ctx.fillStyle = '#ED1C24';
+      ctx.fillText('PATÉTICOS', w/2, h*0.17);
+      ctx.fillStyle = 'rgba(255,255,255,.55)';
+      ctx.font = `600 ${w*0.025}px Inter`;
+      ctx.fillText('según ' + STATE.you, w/2, h*0.215);
+
+      // armar lista: rival #1, después los 2 de menor W que no sean you ni rival
+      const losers = FACES
+        .filter(f => f !== STATE.you && f !== STATE.rival)
+        .sort((a,b) => (DUMMY_STATS[a].W - DUMMY_STATS[b].W))
+        .slice(0, 2);
+      const list = [STATE.rival, ...losers];
+
+      const rivalStats = DUMMY_STATS[STATE.rival] || {W:0,L:0};
+      const apodos = {};
+      // apodo rival basado en W-L
+      if (rivalStats.W < rivalStats.L) {
+        apodos[STATE.rival] = STATE.tone === 'picante' ? 'El Eterno Segundón' : 'El Siempre Digno';
+      } else {
+        apodos[STATE.rival] = STATE.tone === 'picante' ? 'El Que Se La Cree' : 'El Rival Constante';
+      }
+      const fallbackApodos = STATE.tone === 'picante'
+        ? ['El Rendidor', 'Don Resignación', 'Robot Perdedor', 'El Pagador', 'Víctima Express']
+        : ['El Aprendiz', 'El Paciente', 'Siempre Sonriente', 'Con Buena Onda', 'Clasicón'];
+      losers.forEach((n, i) => { apodos[n] = fallbackApodos[i % fallbackApodos.length]; });
+
+      // render 3 rows
+      const rowH = h*0.22;
+      const startY = h*0.28;
+      const medals = ['🥇', '🥈', '🥉'];
+      for (let i = 0; i < list.length; i++) {
+        const name = list[i];
+        const y = startY + i*rowH;
+        // bg row
+        ctx.fillStyle = i === 0 ? 'rgba(237,28,36,.18)' : 'rgba(255,255,255,.05)';
+        roundRect(ctx, w*0.06, y, w*0.88, rowH*0.85, 18);
+        ctx.fill();
+
+        // medal
+        ctx.fillStyle = '#FFDE00';
+        ctx.font = `${w*0.07}px serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText(medals[i], w*0.14, y + rowH*0.52);
+
+        // face
+        try {
+          const img = await loadFace(name);
+          drawFaceCircle(ctx, img, w*0.28, y + rowH*0.42, rowH*0.32);
+        } catch(e) {}
+
+        // name + apodo
+        ctx.fillStyle = '#fff';
+        ctx.font = `800 ${w*0.042}px Inter`;
+        ctx.textAlign = 'left';
+        ctx.fillText(name, w*0.42, y + rowH*0.38);
+        ctx.fillStyle = '#FFDE00';
+        ctx.font = `italic 600 ${w*0.028}px Inter`;
+        ctx.fillText(`"${apodos[name]}"`, w*0.42, y + rowH*0.58);
+
+        // W-L
+        const s = DUMMY_STATS[name] || {W:0,L:0};
+        ctx.fillStyle = 'rgba(255,255,255,.65)';
+        ctx.font = `600 ${w*0.024}px Inter`;
+        ctx.fillText(`${s.W}W - ${s.L}L`, w*0.42, y + rowH*0.73);
+      }
+
+      footer(ctx, w, h);
+    }
+  });
+
+  // ---------- 5) MI CARTA ----------
+  registerIdea({
+    id: 'mi-carta',
+    module: 'jugador',
+    title: 'Mi Temporada en 1 Carta',
+    desc: 'Tu temporada resumida en una carta UNO. W, L y % en formato oficial.',
+    copies: {
+      picante: [
+        'Mi carta de temporada. Dámela y callate, {rival} 🎴',
+        'Esta es la carta que te tiro en la mesa, {rival}. Suma 4 derrotas tuyas.'
+      ],
+      tranqui: [
+        'Mi temporada en 1 carta 🎴 honor a los rivales.',
+        'Resumen anual en formato UNO. Gracias por jugar, {rival}.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      // BG oscuro
+      gradBG(ctx, w, h, '#0f0f1a', '#1a1a2e');
+
+      // carta roja centrada
+      const cardW = w*0.78, cardH = h*0.82;
+      const cardX = (w - cardW)/2, cardY = (h - cardH)/2;
+      // sombra
+      ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,.5)';
+      ctx.shadowBlur = 30;
+      ctx.shadowOffsetY = 12;
+      roundRect(ctx, cardX, cardY, cardW, cardH, 32);
+      ctx.fillStyle = '#ED1C24';
+      ctx.fill();
+      ctx.restore();
+
+      // borde blanco interno redondeado
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 8;
+      roundRect(ctx, cardX + 18, cardY + 18, cardW - 36, cardH - 36, 26);
+      ctx.stroke();
+
+      // elipse blanca diagonal clásica UNO
+      ctx.save();
+      ctx.translate(cardX + cardW/2, cardY + cardH/2);
+      ctx.rotate(-0.35);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, cardW*0.48, cardH*0.28, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.restore();
+
+      // UNO logo top-left
+      ctx.save();
+      ctx.translate(cardX + 58, cardY + 68);
+      ctx.rotate(-0.25);
+      ctx.fillStyle = '#FFDE00';
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 4;
+      ctx.font = `900 ${w*0.055}px Fredoka One, Inter`;
+      ctx.textAlign = 'left';
+      ctx.strokeText('UNO', 0, 0);
+      ctx.fillText('UNO', 0, 0);
+      ctx.restore();
+
+      // UNO logo bottom-right (rotated)
+      ctx.save();
+      ctx.translate(cardX + cardW - 58, cardY + cardH - 40);
+      ctx.rotate(Math.PI - 0.25);
+      ctx.fillStyle = '#FFDE00';
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 4;
+      ctx.font = `900 ${w*0.055}px Fredoka One, Inter`;
+      ctx.textAlign = 'left';
+      ctx.strokeText('UNO', 0, 0);
+      ctx.fillText('UNO', 0, 0);
+      ctx.restore();
+
+      // numero gigante (W count) centro
+      const you = STATE.you;
+      const s = DUMMY_STATS[you] || {W: 0, L: 0};
+      const pct = s.W + s.L > 0 ? Math.round((s.W/(s.W+s.L))*100) : 0;
+
+      ctx.fillStyle = '#ED1C24';
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 6;
+      ctx.font = `900 ${w*0.22}px Fredoka One, Inter`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.strokeText(String(s.W), w/2, h/2 - 10);
+      ctx.fillText(String(s.W), w/2, h/2 - 10);
+      ctx.textBaseline = 'alphabetic';
+
+      // label "VICTORIAS" chico debajo
+      ctx.fillStyle = '#000';
+      ctx.font = `800 ${w*0.032}px Inter`;
+      ctx.fillText('VICTORIAS', w/2, h/2 + w*0.10);
+
+      // bottom white strip: player + season + stats
+      ctx.fillStyle = '#fff';
+      ctx.font = `800 ${w*0.036}px Inter`;
+      ctx.fillText(`${you} · Temporada 2026`, w/2, cardY + cardH - 90);
+      ctx.fillStyle = 'rgba(255,255,255,.9)';
+      ctx.font = `600 ${w*0.028}px Inter`;
+      ctx.fillText(`${s.W}W  ·  ${s.L}L  ·  ${pct}%`, w/2, cardY + cardH - 58);
+
+      footer(ctx, w, h);
+    }
+  });
+
+};
 // DRAWS:JUGADOR:END
 
 // DRAWS:ANUAL:START
