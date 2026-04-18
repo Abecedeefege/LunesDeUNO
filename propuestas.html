@@ -1957,6 +1957,175 @@ window._modH2H = function() {
 // DRAWS:H2H:END
 
 // DRAWS:BONUS:START
+window._modBonus = function() {
+  registerIdea({
+    id: 'wa-preview', module: 'bonus',
+    title: 'Preview de WhatsApp',
+    desc: 'Simula cómo se va a ver el mensaje en el chat del rival antes de mandarlo.',
+    copies: {
+      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.','Preview antes de arruinarle el día a {rival}.'],
+      tranqui: ['Mirá cómo va a llegar el mensaje ✨','Chequeá el preview antes de compartir.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#0b141a'; ctx.fillRect(0,0,w,h);
+      // wa header
+      ctx.fillStyle = '#202c33'; ctx.fillRect(0, 0, w, h*0.1);
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w*0.1, h*0.05, w*0.035);
+      } catch(e){}
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.032}px Inter`; ctx.textAlign = 'left';
+      ctx.fillText(STATE.rival, w*0.16, h*0.045);
+      ctx.fillStyle = '#8696a0'; ctx.font = `500 ${w*0.022}px Inter`;
+      ctx.fillText('en línea', w*0.16, h*0.075);
+      // outgoing bubble (green)
+      const bx = w*0.35, by = h*0.25, bw = w*0.58, bh = h*0.18;
+      ctx.fillStyle = '#005c4b';
+      roundRect(ctx, bx, by, bw, bh, 12); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.03}px Inter`;
+      wrapText(ctx, `${STATE.rival}, el ranking habló.`, bx+w*0.02, by+h*0.04, bw-w*0.04, h*0.04);
+      wrapText(ctx, 'Mirá la imagen 👇', bx+w*0.02, by+h*0.10, bw-w*0.04, h*0.04);
+      ctx.fillStyle = '#8696a0'; ctx.font = `500 ${w*0.018}px Inter`; ctx.textAlign = 'right';
+      ctx.fillText('22:45 ✓✓', bx+bw-w*0.02, by+bh-h*0.015);
+      // image attachment bubble
+      const ax = w*0.35, ay = h*0.48, awd = w*0.58, ahh = h*0.35;
+      ctx.fillStyle = '#005c4b';
+      roundRect(ctx, ax, ay, awd, ahh, 12); ctx.fill();
+      // fake share preview inside
+      ctx.fillStyle = '#ED1C24';
+      roundRect(ctx, ax+w*0.02, ay+h*0.02, awd-w*0.04, ahh-h*0.06, 8); ctx.fill();
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.045}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('TE COCINO', ax+awd/2, ay+ahh*0.3);
+      ctx.fillStyle = '#fff'; ctx.font = `800 ${w*0.075}px Fredoka One`;
+      ctx.fillText('9 — 1', ax+awd/2, ay+ahh*0.70);
+      ctx.fillStyle = '#8696a0'; ctx.textAlign = 'right'; ctx.font = `500 ${w*0.018}px Inter`;
+      ctx.fillText('22:45 ✓✓', ax+awd-w*0.02, ay+ahh-h*0.015);
+    }
+  });
+
+  registerIdea({
+    id: 'tono-selector', module: 'bonus',
+    title: 'Selector de Tono (feature)',
+    desc: 'El mismo share, dos intensidades. Arriba picante, abajo tranqui. (Probá el toggle arriba de la página)',
+    copies: {
+      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.','Picante ON: {rival} no va a querer abrir WhatsApp.'],
+      tranqui: ['😌 Versión tranqui: con respeto, {rival} perdió 😅','Tranqui ON: palmada cariñosa a {rival}.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#0f0f1a', '#2e2e50');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('2 TONOS · 1 SHARE', w/2, h*0.09);
+      // picante panel
+      ctx.fillStyle = '#ff4060';
+      roundRect(ctx, w*0.08, h*0.17, w*0.84, h*0.30, 16); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'left';
+      ctx.fillText('🌶️ PICANTE', w*0.12, h*0.23);
+      ctx.font = `500 italic ${w*0.028}px Inter`;
+      wrapText(ctx, `"${STATE.rival}, estás más abajo que la moral de un domingo."`, w*0.12, h*0.29, w*0.76, h*0.045);
+      // tranqui panel
+      ctx.fillStyle = '#0072BC';
+      roundRect(ctx, w*0.08, h*0.52, w*0.84, h*0.30, 16); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText('😌 TRANQUI', w*0.12, h*0.58);
+      ctx.font = `500 italic ${w*0.028}px Inter`;
+      wrapText(ctx, `"${STATE.rival}, a entrenar un poco, dale 😉"`, w*0.12, h*0.64, w*0.76, h*0.045);
+      ctx.fillStyle = '#FFDE00'; ctx.textAlign = 'center';
+      ctx.font = `500 ${w*0.028}px Inter`;
+      ctx.fillText('elegí el bardo según el grupo', w/2, h*0.90);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'editor-copy', module: 'bonus',
+    title: 'Editor rápido del copy',
+    desc: 'Feature: campo para retocar la frase antes de mandar (mockup visual).',
+    copies: {
+      picante: ['Retocá el bardo antes de mandarlo a {rival}.','Ajuste fino del roast y lo tirás exacto.'],
+      tranqui: ['Editá antes de compartir ✍️','Personalizá el mensaje con tu toque.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      gradBG(ctx, w, h, '#0f0f1a', '#1a1a2e');
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('EDITOR DE ROAST', w/2, h*0.11);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText('texto editable antes de compartir', w/2, h*0.16);
+      // input mock
+      ctx.fillStyle = '#242442';
+      roundRect(ctx, w*0.08, h*0.24, w*0.84, h*0.32, 14); ctx.fill();
+      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.032}px Inter`; ctx.textAlign = 'left';
+      wrapText(ctx, `${STATE.rival}, el H2H no miente: 9 a 1. Si querés revancha, traéte asado y perdón.|`, w*0.12, h*0.32, w*0.76, h*0.055);
+      // chips
+      ctx.fillStyle = '#ED1C24';
+      roundRect(ctx, w*0.10, h*0.62, w*0.22, h*0.06, 14); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.025}px Inter`; ctx.textAlign = 'center';
+      ctx.fillText('+ 🔥 picante', w*0.21, h*0.658);
+      ctx.fillStyle = '#0072BC';
+      roundRect(ctx, w*0.34, h*0.62, w*0.22, h*0.06, 14); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText('+ emoji', w*0.45, h*0.658);
+      ctx.fillStyle = '#4dff91';
+      roundRect(ctx, w*0.58, h*0.62, w*0.28, h*0.06, 14); ctx.fill();
+      ctx.fillStyle = '#000'; ctx.fillText('+ H2H auto', w*0.72, h*0.658);
+      // share btn mock
+      ctx.fillStyle = '#25D366';
+      roundRect(ctx, w*0.10, h*0.78, w*0.80, h*0.08, 14); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.035}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('✅ Compartir a WhatsApp', w/2, h*0.83);
+      footer(ctx, w, h);
+    }
+  });
+
+  registerIdea({
+    id: 'streak-video', module: 'bonus',
+    title: 'Video corto con audio',
+    desc: 'Feature: exporta un video de 3s con el shame bell + animación de la cara del rival.',
+    copies: {
+      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.','3 segundos de gloria con campanita de la vergüenza 🔔'],
+      tranqui: ['Formato video 🎬 para el grupo — {rival} estelar.','Clip cortito con efectos para variar del PNG.']
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+      // video frame mock
+      ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 4;
+      ctx.strokeRect(w*0.05, h*0.08, w*0.90, h*0.65);
+      // rival face
+      try {
+        const img = await loadFace(STATE.rival);
+        drawFaceCircle(ctx, img, w/2, h*0.40, w*0.13);
+      } catch(e){}
+      ctx.font = `${w*0.18}px serif`; ctx.textAlign = 'center';
+      ctx.fillText('🔔', w/2, h*0.60);
+      // play button overlay
+      ctx.fillStyle = 'rgba(0,0,0,.55)';
+      ctx.beginPath(); ctx.arc(w/2, h*0.40, w*0.08, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.moveTo(w*0.50-w*0.03, h*0.36);
+      ctx.lineTo(w*0.50+w*0.04, h*0.40);
+      ctx.lineTo(w*0.50-w*0.03, h*0.44);
+      ctx.closePath(); ctx.fill();
+      // timeline
+      ctx.fillStyle = '#242442';
+      ctx.fillRect(w*0.1, h*0.78, w*0.80, h*0.015);
+      ctx.fillStyle = '#FFDE00';
+      ctx.fillRect(w*0.1, h*0.78, w*0.35, h*0.015);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.022}px Inter`; ctx.textAlign = 'left';
+      ctx.fillText('0:01', w*0.1, h*0.82);
+      ctx.textAlign = 'right';
+      ctx.fillText('0:03', w*0.9, h*0.82);
+      ctx.fillStyle = '#FFDE00'; ctx.textAlign = 'center';
+      ctx.font = `700 ${w*0.035}px Fredoka One`;
+      ctx.fillText('🎬 VIDEO + AUDIO', w/2, h*0.89);
+      ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.025}px Inter`;
+      ctx.fillText('usa shame-bell.mp3 existente', w/2, h*0.94);
+    }
+  });
+};
 // DRAWS:BONUS:END
 
 window._initIdeas = function() {
