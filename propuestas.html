@@ -214,30 +214,22 @@
   <section class="intro">
     <h1>Propuestas: compartir burlas desde Stats</h1>
     <p>
-      Desde cualquier módulo de la pantalla de estadísticas, generar una imagen/video/sticker
-      para cargar a los amigos a los que ya les ganaste. <strong>Toda la data viene de tu localStorage real</strong>
-      (<code>lunesdeuno_games</code>) — nada inventado. Elegí tu jugador, el rival (o "Random") y el tono del roast.
+      Galería de shares pre-armados con <strong>datos reales de Firestore</strong>
+      (collection <code>games</code>). Cada propuesta elige su propio ejemplo más jugoso
+      — no hay que configurar nada. Solo elegí el tono del roast.
     </p>
   </section>
 
   <div id="dataBanner" style="display:none; margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid var(--danger); background: rgba(255,77,106,.08); color: var(--text);">
-    <strong style="color: var(--danger);">⚠ No se encontraron partidas finalizadas en localStorage.</strong>
-    <div style="margin-top: .4rem; color: var(--text-muted); font-size: .9rem;">
-      Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a> y jugá al menos una partida finalizada.
+    <strong style="color: var(--danger);">⚠ <span id="dataBannerTitle">Firestore aún no devolvió partidas finalizadas.</span></strong>
+    <div style="margin-top: .4rem; color: var(--text-muted); font-size: .9rem;" id="dataBannerMsg">
+      Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a>, jugá una partida y sincronizá con la nube.
       Esta página <strong>no inventa datos</strong>: todos los previews se generan con stats reales.
     </div>
   </div>
 
   <section class="controls">
-    <div class="control-card">
-      <label for="youSelect">Tu jugador (el que roastea)</label>
-      <select id="youSelect"></select>
-    </div>
-    <div class="control-card">
-      <label for="rivalSelect">Rival a humillar</label>
-      <select id="rivalSelect"></select>
-    </div>
-    <div class="control-card">
+    <div class="control-card" style="flex: 1 1 100%;">
       <label>Tono del roast</label>
       <div class="tone-toggle">
         <button class="tone-btn" data-tone="algodon">🍭 Algodón</button>
@@ -251,7 +243,7 @@
   <section class="module-section" id="mod-jugador">
     <div class="module-header">
       <span class="badge">Módulo 1</span>
-      <h2 id="title-jugador">Tus pijeos a <span class="rival-name">—</span></h2>
+      <h2 id="title-jugador">Jugador &middot; stats personales</h2>
     </div>
     <div class="ideas-grid" id="grid-jugador">
       <!-- IDEAS:JUGADOR:START -->
@@ -322,7 +314,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
 // ===== ROSTER REAL (idéntico a index.html PRESET_NAMES) =====
 // NO incluye Bucket — Bucket no es un jugador del grupo.
 const PRESET_NAMES = ['PT','Mac','Mata','Gael','Nachi','Carucha','Negro','Naso','Tano','Gordo','Cobra'];
@@ -330,16 +325,36 @@ const PRESET_IDS = PRESET_NAMES.map(n => n.toLowerCase()); // playerId (slug)
 const NAME_BY_ID = Object.fromEntries(PRESET_NAMES.map(n => [n.toLowerCase(), n]));
 const FACE_PATH = id => `assets/faces/${id}.png`;
 
-// ===== CARGA DE DATOS REALES =====
-// Mismo storage que usa index.html (ver línea 3637).
-function loadRealGames() {
-  try {
-    const raw = localStorage.getItem('lunesdeuno_games');
-    if (!raw) return [];
-    const all = JSON.parse(raw);
-    if (!Array.isArray(all)) return [];
-    return all.filter(g => g && g.finished && g.winnerPlayerId && g.state && Array.isArray(g.state.participants));
-  } catch (e) { return []; }
+// ===== FIREBASE (mismo projectId que index.html) =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM",
+  authDomain: "lunesdeuno.firebaseapp.com",
+  projectId: "lunesdeuno",
+  storageBucket: "lunesdeuno.firebasestorage.app",
+  messagingSenderId: "694296428363",
+  appId: "1:694296428363:web:fb8cc52a4a5c58e24372ce",
+  measurementId: "G-BL6BEJ39C1"
+};
+const _fbApp = initializeApp(firebaseConfig);
+const _db = getFirestore(_fbApp);
+
+// ===== CARGA DE DATOS REALES DESDE FIRESTORE =====
+// Fuente canónica: collection `games`. Filtro cliente para evitar índice compuesto.
+async function loadRealGames() {
+  const snap = await getDocs(collection(_db, 'games'));
+  const toMs = t => (t && typeof t.toMillis === 'function') ? t.toMillis() : (typeof t === 'number' ? t : 0);
+  return snap.docs
+    .map(d => d.data())
+    .filter(g => g && g.finished === true && g.winnerPlayerId && Array.isArray(g.participants))
+    .map(g => ({
+      id: g.gameId,
+      finished: true,
+      finishedAt: toMs(g.finishedAt),
+      timestamp: toMs(g.createdAt),
+      winnerPlayerId: g.winnerPlayerId,
+      state: { participants: g.participants }
+    }))
+    .sort((a,b) => (a.finishedAt||0) - (b.finishedAt||0));
 }
 
 // Calcula stats reales por jugador a partir de games terminados.
@@ -420,40 +435,25 @@ function currentH2HStreak(youStats, rivalId) {
 }
 
 // ===== ESTADO GLOBAL =====
-const RAW_GAMES = loadRealGames();
-const ALL_STATS = computeAllStats(RAW_GAMES);
-const PLAYERS_WITH_DATA = Object.keys(ALL_STATS); // ids con al menos 1 partida
+// Se popula en init() después de await loadRealGames()
+let RAW_GAMES = [];
+let ALL_STATS = {};
+let PLAYERS_WITH_DATA = [];
 
-// STATE.you y STATE.rival almacenan el DISPLAY NAME (ej: 'Carucha', 'Cobra').
-// Los helpers *Id() convierten a slug (lowercase) para lookups en ALL_STATS.
-const DEFAULT_YOU = 'Carucha';
-const DEFAULT_RIVAL = 'Gael';
+// STATE.you / STATE.rival ya NO son selecciones del usuario — cada idea las setea
+// contextualmente vía withPicked() para que las draw functions existentes sigan funcionando.
 let STATE = {
-  you: (PLAYERS_WITH_DATA.includes(DEFAULT_YOU.toLowerCase()) ? DEFAULT_YOU
-        : (PLAYERS_WITH_DATA[0] ? (NAME_BY_ID[PLAYERS_WITH_DATA[0]] || DEFAULT_YOU) : DEFAULT_YOU)),
-  rival: (PLAYERS_WITH_DATA.includes(DEFAULT_RIVAL.toLowerCase()) ? DEFAULT_RIVAL : DEFAULT_RIVAL),
+  you: '—',
+  rival: '—',
   _resolvedRival: null,
   tone: 'picante',                      // 'algodon' | 'picante' | 'nachi'
   copyIndex: {}
 };
 
 function youId() { return String(STATE.you || '').toLowerCase(); }
-function rivalId() {
-  if (STATE.rival && STATE.rival !== 'random') return String(STATE.rival).toLowerCase();
-  return STATE._resolvedRival ? STATE._resolvedRival.toLowerCase() : null;
-}
+function rivalId() { return String(STATE.rival || '').toLowerCase(); }
 function youName() { return STATE.you || '—'; }
-function rivalName() { return (STATE.rival && STATE.rival !== 'random') ? STATE.rival : (STATE._resolvedRival || '—'); }
-
-function resolveRandomRival() {
-  const me = ALL_STATS[youId()];
-  if (!me) return null;
-  const defeatedIds = Object.keys(me.defeatedCount || {});
-  const poolIds = defeatedIds.length ? defeatedIds : PLAYERS_WITH_DATA.filter(id => id !== youId());
-  if (!poolIds.length) return null;
-  const pickedId = poolIds[Math.floor(Math.random() * poolIds.length)];
-  return NAME_BY_ID[pickedId] || pickedId;
-}
+function rivalName() { return STATE.rival || '—'; }
 
 // ===== STATS ACCESSORS (reemplazan DUMMY_STATS / dummyH2H) =====
 // statsFor('carucha') o statsFor() devuelve stats del jugador activo.
@@ -494,6 +494,67 @@ function rivalDefeatedList() {
   return Object.keys(map)
     .map(id => ({ id, name: NAME_BY_ID[id] || id, count: map[id] }))
     .sort((a,b) => b.count - a.count);
+}
+
+// ===== PICK SYSTEM =====
+// Cada idea puede definir pick(ctx) que elige su protagonista/rival desde datos REALES.
+// Si no define pick, se usa defaultPick: top del ranking + su víctima más castigada.
+const PICKED_CACHE = {};
+
+function pickCtx() {
+  return {
+    ALL_STATS,
+    PLAYERS_WITH_DATA,
+    NAME_BY_ID,
+    annualRanking,
+    rivalDefeatedListFor: (rid) => {
+      if (!rid || !ALL_STATS[rid]) return [];
+      const map = ALL_STATS[rid].defeatedCount || {};
+      return Object.keys(map).map(id => ({ id, name: NAME_BY_ID[id] || id, count: map[id] })).sort((a,b) => b.count - a.count);
+    }
+  };
+}
+
+function defaultPick(ctx) {
+  const rk = ctx.annualRanking();
+  if (rk.length < 1) return null;
+  const protag = rk[0];
+  const stats = ctx.ALL_STATS[protag.id];
+  const victims = Object.entries(stats?.defeatedCount || {}).sort((a,b) => b[1] - a[1]);
+  let rival;
+  if (victims.length) {
+    rival = { id: victims[0][0], name: ctx.NAME_BY_ID[victims[0][0]] || victims[0][0] };
+  } else if (rk.length > 1) {
+    const r = rk[rk.length - 1];
+    rival = { id: r.id, name: r.name };
+  } else {
+    rival = { id: protag.id, name: protag.name };
+  }
+  return { protagonist: { id: protag.id, name: protag.name }, rival, facts: {} };
+}
+
+function getPicked(idea) {
+  if (PICKED_CACHE[idea.id] !== undefined) return PICKED_CACHE[idea.id];
+  const ctx = pickCtx();
+  let picked = null;
+  try {
+    picked = idea.pick ? idea.pick(ctx) : defaultPick(ctx);
+    if (!picked) picked = defaultPick(ctx);
+  } catch (e) { picked = defaultPick(ctx); }
+  PICKED_CACHE[idea.id] = picked;
+  return picked;
+}
+
+// Ejecuta fn(picked) con STATE.you/rival seteados al pair elegido por pick(idea).
+// Así las draw functions existentes que leen STATE.you/STATE.rival siguen funcionando.
+function withPicked(idea, fn) {
+  const picked = getPicked(idea);
+  if (!picked) return fn(null);
+  const prev = { you: STATE.you, rival: STATE.rival, _resolvedRival: STATE._resolvedRival };
+  STATE.you = picked.protagonist?.name || '—';
+  STATE.rival = picked.rival?.name || '—';
+  STATE._resolvedRival = null;
+  try { return fn(picked); } finally { Object.assign(STATE, prev); }
 }
 
 const IDEAS = []; // filled by each module section
@@ -574,22 +635,29 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
 
 // ===== COPY SYSTEM (3 tonos: algodon, picante, nachi) =====
 function getCopy(idea) {
-  const tone = STATE.tone;
-  const arr = (idea.copies && idea.copies[tone])
-    || (idea.copies && idea.copies.picante)   // fallback defensivo
-    || [''];
-  const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
-  const stats = idea.computeFacts ? idea.computeFacts() : {};
-  let text = arr[idx]
-    .replaceAll('{you}', youName())
-    .replaceAll('{rival}', rivalName());
-  Object.keys(stats).forEach(k => { text = text.replaceAll('{' + k + '}', String(stats[k])); });
-  return text;
+  return withPicked(idea, (picked) => {
+    const tone = STATE.tone;
+    const arr = (idea.copies && idea.copies[tone])
+      || (idea.copies && idea.copies.picante)   // fallback defensivo
+      || [''];
+    const idx = (STATE.copyIndex[idea.id] || 0) % arr.length;
+    const facts = Object.assign({},
+      idea.computeFacts ? idea.computeFacts() : {},
+      (picked && picked.facts) || {}
+    );
+    let text = arr[idx]
+      .replaceAll('{you}', youName())
+      .replaceAll('{protagonist}', youName())
+      .replaceAll('{rival}', rivalName());
+    Object.keys(facts).forEach(k => { text = text.replaceAll('{' + k + '}', String(facts[k])); });
+    return text;
+  });
 }
 function rotateCopy(ideaId) {
   STATE.copyIndex[ideaId] = (STATE.copyIndex[ideaId] || 0) + 1;
   refreshIdea(ideaId);
 }
+window.rotateCopy = rotateCopy;
 
 // ===== RENDER CARDS =====
 function refreshIdea(ideaId) {
@@ -599,7 +667,7 @@ function refreshIdea(ideaId) {
   if (!card) return;
   card.querySelector('.idea-copy').textContent = getCopy(idea);
   const canvas = card.querySelector('canvas');
-  idea.draw(canvas, { preview: true }).catch(console.error);
+  withPicked(idea, () => idea.draw(canvas, { preview: true }).catch(console.error));
 }
 
 function refreshAll() {
@@ -627,13 +695,14 @@ function renderIdeaCard(idea) {
   grid.appendChild(el);
   // first draw
   const canvas = el.querySelector('canvas');
-  idea.draw(canvas, { preview: true }).catch(console.error);
+  withPicked(idea, () => idea.draw(canvas, { preview: true }).catch(console.error));
 }
 
 function registerIdea(idea) {
   IDEAS.push(idea);
   renderIdeaCard(idea);
 }
+window.registerIdea = registerIdea;
 
 // ===== SHARE =====
 function showToast(msg) {
@@ -647,75 +716,35 @@ function showToast(msg) {
 async function generateAndShare(ideaId) {
   const idea = IDEAS.find(i => i.id === ideaId);
   if (!idea) return;
-  // render full-size (1080x1350)
-  const canvas = document.createElement('canvas');
-  canvas.width = 1080; canvas.height = 1350;
-  await idea.draw(canvas, { preview: false });
+  const picked = getPicked(idea);
+  await withPicked(idea, async () => {
+    // render full-size (1080x1350)
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080; canvas.height = 1350;
+    await idea.draw(canvas, { preview: false });
 
-  const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
-  const file = new File([blob], `burla-${ideaId}-${rivalId()||'rival'}.png`, { type: 'image/png' });
-  const text = getCopy(idea);
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    const rivalSlug = (picked && picked.rival && picked.rival.id) || 'rival';
+    const file = new File([blob], `burla-${ideaId}-${rivalSlug}.png`, { type: 'image/png' });
+    const text = getCopy(idea);
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], text, title: 'Lunes de UNO' });
-      return;
-    } catch (e) { /* fallback */ }
-  }
-  // fallback: download + open WhatsApp
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = file.name; a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
-  const waUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n(imagen descargada, adjuntala al chat 📎)')}`;
-  window.open(waUrl, '_blank');
-  showToast('Imagen descargada + WhatsApp abierto');
-}
-
-// ===== POBLAR SELECTS (display names · siempre todo el roster) =====
-function buildRivalOptions(currentYouName) {
-  // Random primero, luego los demás (excluyendo 'you')
-  let html = `<option value="random">🎲 Random (cualquiera al que ya le ganaste)</option>`;
-  PRESET_NAMES.forEach(name => {
-    if (name === currentYouName) return;
-    html += `<option value="${name}">${name}</option>`;
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], text, title: 'Lunes de UNO' });
+        return;
+      } catch (e) { /* fallback */ }
+    }
+    // fallback: download + open WhatsApp
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = file.name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(text + '\n(imagen descargada, adjuntala al chat 📎)')}`;
+    window.open(waUrl, '_blank');
+    showToast('Imagen descargada + WhatsApp abierto');
   });
-  return html;
 }
-
-function populateRosters() {
-  const you = document.getElementById('youSelect');
-  const rv  = document.getElementById('rivalSelect');
-
-  you.innerHTML = PRESET_NAMES.map(name =>
-    `<option value="${name}" ${name===STATE.you?'selected':''}>${name}</option>`
-  ).join('');
-
-  rv.innerHTML = buildRivalOptions(STATE.you);
-  // marcar seleccionado
-  Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
-
-  you.addEventListener('change', e => {
-    STATE.you = e.target.value;
-    rv.innerHTML = buildRivalOptions(STATE.you);
-    // si el rival anterior es ahora 'you', caer a random
-    if (STATE.rival === STATE.you) STATE.rival = 'random';
-    Array.from(rv.options).forEach(o => { o.selected = (o.value === STATE.rival); });
-    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-    syncModuleTitle();
-    refreshAll();
-  });
-  rv.addEventListener('change', e => {
-    STATE.rival = e.target.value;
-    if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-    syncModuleTitle();
-    refreshAll();
-  });
-
-  // Resolución inicial (por si default es 'random', aunque ahora es 'Gael')
-  if (STATE.rival === 'random') STATE._resolvedRival = resolveRandomRival();
-  syncModuleTitle();
-}
+window.generateAndShare = generateAndShare;
 
 function setupToneToggle() {
   document.querySelectorAll('.tone-btn').forEach(btn => {
@@ -727,17 +756,12 @@ function setupToneToggle() {
   });
 }
 
-// Sincroniza el título del módulo 1 con el rival actual
-function syncModuleTitle() {
-  const el = document.querySelector('#title-jugador .rival-name');
-  if (el) el.textContent = rivalName();
-}
-
-// Muestra/esconde banner "no hay datos"
-function setupDataBanner() {
+function showDataBanner(title, msg) {
   const b = document.getElementById('dataBanner');
   if (!b) return;
-  if (!RAW_GAMES.length) b.style.display = '';
+  if (title) document.getElementById('dataBannerTitle').textContent = title;
+  if (msg) document.getElementById('dataBannerMsg').innerHTML = msg;
+  b.style.display = '';
 }
 
 // ===== HELPERS PARA DRAW FUNCTIONS =====
@@ -756,12 +780,31 @@ function footer(ctx, w, h) {
 }
 
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-  setupDataBanner();
-  populateRosters();
+async function init() {
   setupToneToggle();
-  if (window._initIdeas) window._initIdeas();
-});
+  try {
+    RAW_GAMES = await loadRealGames();
+  } catch (e) {
+    console.error('Firestore load failed', e);
+    showDataBanner('No pude conectar con Firestore.',
+      `Detalle: <code>${(e && e.message) || e}</code>. Revisá que las reglas de Firestore permitan lectura.`);
+    RAW_GAMES = [];
+  }
+  ALL_STATS = computeAllStats(RAW_GAMES);
+  PLAYERS_WITH_DATA = Object.keys(ALL_STATS);
+  if (!RAW_GAMES.length) {
+    showDataBanner('Firestore aún no devolvió partidas finalizadas.',
+      'Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a>, jugá una partida y sincronizá. Esta galería <strong>no inventa datos</strong>.');
+    return; // no renderizar ideas sin datos
+  }
+  if (window._modJugador) window._modJugador();
+  if (window._modAnual) window._modAnual();
+  if (window._modTemporada) window._modTemporada();
+  if (window._modTemporadas) window._modTemporadas();
+  if (window._modH2H) window._modH2H();
+  if (window._modBonus) window._modBonus();
+}
+document.addEventListener('DOMContentLoaded', () => { init(); });
 
 // ===== MODULE IDEAS WILL BE APPENDED BELOW =====
 // DRAWS:JUGADOR:START
@@ -770,6 +813,22 @@ window._modJugador = function() {
   // ---------- 1) PAREDÓN (muestra las caras que venció el RIVAL, no el jugador) ----------
   registerIdea({
     id: 'paredon', module: 'jugador',
+    pick: function(ctx) {
+      // protagonista del card = jugador con MÁS rivales únicos vencidos
+      const ranked = Object.values(ctx.ALL_STATS)
+        .map(p => ({ id: p.id, name: p.name, unique: Object.keys(p.defeatedCount||{}).length }))
+        .filter(p => p.unique > 0)
+        .sort((a,b) => b.unique - a.unique);
+      if (!ranked.length) return null;
+      const champ = ranked[0];
+      // el "you" es simbólico (narrador); dejamos al rival del champ como protagonista del texto
+      const victims = ctx.rivalDefeatedListFor(champ.id);
+      return {
+        protagonist: { id: champ.id, name: champ.name },
+        rival: { id: champ.id, name: champ.name }, // usamos rival=champ para reusar rivalName() en el draw
+        facts: { victimas: victims.length, topVictim: victims[0]?.name || '—' }
+      };
+    },
     title: 'Mi Paredón',
     desc: 'Grid con las caras de los rivales a los que {rival} ya le ganó. Sin inventos: si venció a 3, aparecen 3.',
     computeFacts: function() {
@@ -810,7 +869,7 @@ window._modJugador = function() {
         ctx.fillText('A NADIE', w/2, h*0.58);
         ctx.fillStyle = 'rgba(255,255,255,.5)';
         ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText('(sin datos en localStorage)', w/2, h*0.65);
+        ctx.fillText('(sin datos en Firestore)', w/2, h*0.65);
         footer(ctx, w, h);
         return;
       }
@@ -854,6 +913,28 @@ window._modJugador = function() {
   // ---------- 2) RACHA H2H (solo datos reales) ----------
   registerIdea({
     id: 'racha', module: 'jugador',
+    pick: function(ctx) {
+      // protagonista = jugador con mayor racha W actual
+      const players = Object.values(ctx.ALL_STATS).filter(p => p.currentStreak > 0);
+      if (!players.length) {
+        // fallback: mayor racha L (negativa) para shame
+        const worst = Object.values(ctx.ALL_STATS)
+          .filter(p => p.currentStreak < 0)
+          .sort((a,b) => a.currentStreak - b.currentStreak)[0];
+        if (!worst) return null;
+        const victims = ctx.rivalDefeatedListFor(worst.id);
+        const rival = victims[0] || { id: worst.id, name: worst.name };
+        return { protagonist: { id: worst.id, name: worst.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
+      }
+      const top = players.sort((a,b) => b.currentStreak - a.currentStreak)[0];
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || null;
+      return {
+        protagonist: { id: top.id, name: top.name },
+        rival: rival ? { id: rival.id, name: rival.name } : { id: top.id, name: top.name },
+        facts: {}
+      };
+    },
     title: 'Racha vs este rival',
     desc: 'Tu racha actual de victorias o derrotas solo en partidas donde estuvieron ambos.',
     computeFacts: function() {
@@ -869,7 +950,7 @@ window._modJugador = function() {
       ],
       picante: [
         '{streak} {rachaDir} seguidas contra {rival}. La data no miente.',
-        'H2H real: {wins}-{losses}. {rival}, no es chicana, es localStorage.'
+        'H2H real: {wins}-{losses}. {rival}, no es chicana, es data real.'
       ],
       nachi: [
         '{streak} {rachaDir} seguidas, {rival}. Sos mi perra.',
@@ -916,6 +997,23 @@ window._modJugador = function() {
   // ---------- 3) CERTIFICADO DE DOMINANCIA ----------
   registerIdea({
     id: 'certificado', module: 'jugador',
+    pick: function(ctx) {
+      // H2H más desbalanceado con >= 3 partidas
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (h.together < 3) return;
+          const gap = h.wins - h.losses;
+          if (!best || gap > best.gap) best = { youId: p.id, youName: p.name, rid, gap, h };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Certificado de Dominancia',
     desc: 'Diploma falso con el marcador H2H real.',
     computeFacts: function() { const h = h2hFor(); return { wins: h.wins, losses: h.losses, games: h.games }; },
@@ -955,7 +1053,7 @@ window._modJugador = function() {
       ctx.font = `900 ${w*0.10}px Fredoka One`;
       ctx.fillText(`${hh.wins} — ${hh.losses}`, w/2, h*0.60);
       ctx.font = `500 ${w*0.024}px Inter`;
-      ctx.fillText(`(${hh.games} partidas registradas en localStorage)`, w/2, h*0.66);
+      ctx.fillText(`(${hh.games} partidas registradas en Firestore)`, w/2, h*0.66);
       // firma
       ctx.font = `700 italic ${w*0.035}px Inter`;
       ctx.fillText('— ' + youName() + ' —', w/2, h*0.80);
@@ -979,6 +1077,25 @@ window._modJugador = function() {
   // ---------- 4) HIGHLIGHTS DE VÍCTIMAS (top 3 rivales que MÁS venciste) ----------
   registerIdea({
     id: 'highlights', module: 'jugador',
+    pick: function(ctx) {
+      // Jugador con más rivales a los que dominó sin derrota (wins>=2, losses=0)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        const dominados = Object.entries(p.h2h || {})
+          .filter(([rid, h]) => h.wins >= 2 && h.losses === 0)
+          .map(([rid, h]) => ({ id: rid, name: ctx.NAME_BY_ID[rid] || rid, wins: h.wins }))
+          .sort((a,b) => b.wins - a.wins);
+        if (dominados.length >= 1 && (!best || dominados.length > best.count)) {
+          best = { p, count: dominados.length, top: dominados };
+        }
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.p.id, name: best.p.name },
+        rival: { id: best.top[0].id, name: best.top[0].name },
+        facts: { dominados: best.count, top1: best.top[0].name, top2: best.top[1]?.name || '—', top3: best.top[2]?.name || '—' }
+      };
+    },
     title: 'Top 3 de víctimas',
     desc: 'Los 3 jugadores a los que más veces les ganaste. Orden y números reales.',
     computeFacts: function() {
@@ -1050,6 +1167,14 @@ window._modJugador = function() {
   // ---------- 5) MI CARTA UNO ----------
   registerIdea({
     id: 'mi-carta', module: 'jugador',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const victims = ctx.rivalDefeatedListFor(one.id);
+      const rival = victims[0] || { id: one.id, name: one.name };
+      return { protagonist: { id: one.id, name: one.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
+    },
     title: 'Mi temporada en 1 carta',
     desc: 'Stats reales de {you} como carta UNO: partidas totales, W-L y % real.',
     computeFacts: function() {
@@ -1124,6 +1249,17 @@ window._modAnual = function() {
   // ---------- 1) PODIO CON SOMBRA (datos reales) ----------
   registerIdea({
     id: 'podio', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const last = rk[rk.length - 1];
+      return {
+        protagonist: { id: one.id, name: one.name },
+        rival: { id: last.id, name: last.name },
+        facts: {}
+      };
+    },
     title: 'Podio con Sombra',
     desc: 'Podio 1-2-3 del ranking anual real; abajo los del fondo "también jugaron".',
     computeFacts: function() {
@@ -1194,6 +1330,15 @@ window._modAnual = function() {
   // ---------- 2) RANKING DE PATÉTICOS (invertido, datos reales) ----------
   registerIdea({
     id: 'pateticos', module: 'anual',
+    pick: function(ctx) {
+      const bottom = ctx.annualRanking().slice().reverse();
+      if (!bottom.length) return null;
+      return {
+        protagonist: { id: bottom[0].id, name: bottom[0].name },
+        rival: { id: bottom[0].id, name: bottom[0].name },
+        facts: {}
+      };
+    },
     title: 'Ranking de Patéticos',
     desc: 'El ranking al revés: los 3 con menor % de victorias del año.',
     computeFacts: function() {
@@ -1252,6 +1397,21 @@ window._modAnual = function() {
   // ---------- 3) FACTURA ANUAL (H2H real) ----------
   registerIdea({
     id: 'factura', module: 'anual',
+    pick: function(ctx) {
+      // Pareja con más palizas acumuladas: max h2h.wins
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (!best || h.wins > best.wins) best = { youId: p.id, youName: p.name, rid, wins: h.wins, losses: h.losses, games: h.together };
+        });
+      });
+      if (!best || best.wins === 0) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Factura Anual',
     desc: 'Comprobante fiscal con las partidas H2H reales entre ustedes.',
     computeFacts: function() {
@@ -1320,6 +1480,15 @@ window._modAnual = function() {
   // ---------- 4) GAP SHAMING (anual real) ----------
   registerIdea({
     id: 'gap-shame', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'Gap Shaming',
     desc: 'Barra comparativa con las victorias anuales reales de ambos.',
     computeFacts: function() {
@@ -1384,6 +1553,17 @@ window._modAnual = function() {
   // ---------- 5) NFT DE PATÉTICO (posición real) ----------
   registerIdea({
     id: 'nft', module: 'anual',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const last = rk[rk.length - 1];
+      const first = rk[0];
+      return {
+        protagonist: { id: first.id, name: first.name },
+        rival: { id: last.id, name: last.name },
+        facts: {}
+      };
+    },
     title: 'NFT de Patético',
     desc: 'Mock de NFT con cara pixelada del rival y su puesto real del año.',
     computeFacts: function() {
@@ -1447,6 +1627,30 @@ window._modTemporada = function() {
   // ---------- 1) PREDICCIÓN (basada en racha H2H real) ----------
   registerIdea({
     id: 'prediccion', module: 'temporada',
+    pick: function(ctx) {
+      // Pareja con mayor racha H2H activa (absoluta)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          const seq = (h.sequence || []).filter(v => v !== null);
+          if (seq.length < 2) return;
+          let s = 0;
+          for (let i = seq.length - 1; i >= 0; i--) {
+            const w = seq[i];
+            if (i === seq.length - 1) s = w ? 1 : -1;
+            else if ((s > 0 && w) || (s < 0 && !w)) s += (w ? 1 : -1);
+            else break;
+          }
+          if (!best || Math.abs(s) > Math.abs(best.streak)) best = { youId: p.id, youName: p.name, rid, streak: s, h };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Predicción para la próxima',
     desc: 'Modelo simple que proyecta el próximo resultado a partir de tu racha real contra el rival.',
     computeFacts: function() {
@@ -1518,6 +1722,15 @@ window._modTemporada = function() {
   // ---------- 2) MVP vs LVP (del ranking real) ----------
   registerIdea({
     id: 'mvp-lvp', module: 'temporada',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'MVP vs LVP',
     desc: 'Carta dividida con el líder real del ranking vs el último, según datos.',
     computeFacts: function() {
@@ -1578,6 +1791,21 @@ window._modTemporada = function() {
   // ---------- 3) HEATMAP (partidas H2H reales) ----------
   registerIdea({
     id: 'heatmap', module: 'temporada',
+    pick: function(ctx) {
+      // Pareja con más partidas juntos (max h2h.together)
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
+          if (!best || h.together > best.games) best = { youId: p.id, youName: p.name, rid, games: h.together };
+        });
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.youId, name: best.youName },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: {}
+      };
+    },
     title: 'Mapa de Dominio',
     desc: 'Heatmap con las partidas H2H reales entre ambos: verde ganaste, rojo perdiste.',
     computeFacts: function() {
@@ -1634,6 +1862,15 @@ window._modTemporada = function() {
   // ---------- 4) ESCALERA (W acumuladas reales) ----------
   registerIdea({
     id: 'escalera', module: 'temporada',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[1].id, name: rk[1].name },
+        facts: {}
+      };
+    },
     title: 'Escalera de la temporada',
     desc: 'Curvas de victorias acumuladas reales: tuyas vs las del rival.',
     computeFacts: function() {
@@ -1704,6 +1941,15 @@ window._modTemporadas = function() {
   // ---------- 1) HALL OF SHAME (los 3 con peor winrate real, al menos 1 partida) ----------
   registerIdea({
     id: 'hall-shame', module: 'temporadas',
+    pick: function(ctx) {
+      const bottom = ctx.annualRanking().slice().reverse();
+      if (bottom.length < 3) return null;
+      return {
+        protagonist: { id: bottom[0].id, name: bottom[0].name },
+        rival: { id: bottom[0].id, name: bottom[0].name },
+        facts: {}
+      };
+    },
     title: 'Hall of Shame Eterno',
     desc: 'Las 3 placas de bronce van para los 3 jugadores con peor winRate histórico.',
     computeFacts: function() {
@@ -1762,6 +2008,18 @@ window._modTemporadas = function() {
   // ---------- 2) TIMELINE (última victoria real del rival + datos) ----------
   registerIdea({
     id: 'timeline', module: 'temporadas',
+    pick: function(ctx) {
+      // Peor racha L actual
+      const worst = Object.values(ctx.ALL_STATS)
+        .filter(p => p.currentStreak < 0)
+        .sort((a,b) => a.currentStreak - b.currentStreak)[0];
+      if (!worst) return null;
+      return {
+        protagonist: { id: worst.id, name: worst.name },
+        rival: { id: worst.id, name: worst.name },
+        facts: {}
+      };
+    },
     title: 'Libro de Historia',
     desc: 'Página tipo Wikipedia con los hitos reales del rival según las partidas registradas.',
     computeFacts: function() {
@@ -1788,7 +2046,7 @@ window._modTemporadas = function() {
       ctx.fillStyle = '#000'; ctx.font = `700 ${w*0.05}px Fredoka One`; ctx.textAlign = 'center';
       ctx.fillText('HISTORIA DE ' + rivalName().toUpperCase(), w/2, h*0.09);
       ctx.fillStyle = '#666'; ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('De la wikipedia del asado · fuentes: localStorage', w/2, h*0.135);
+      ctx.fillText('De la wikipedia del asado · fuentes: Firestore', w/2, h*0.135);
       ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.moveTo(w*0.18, h*0.20); ctx.lineTo(w*0.18, h*0.85); ctx.stroke();
       const rs = ALL_STATS[rivalId()] || { gamesPlayed: 0, W: 0, L: 0, gameResults: [], currentStreak: 0 };
@@ -1818,6 +2076,23 @@ window._modTemporadas = function() {
   // ---------- 3) ARQUEOLOGÍA (días desde última victoria real) ----------
   registerIdea({
     id: 'arqueologia', module: 'temporadas',
+    pick: function(ctx) {
+      // Jugador con mayor cantidad de partidas desde su último W
+      let best = null;
+      Object.values(ctx.ALL_STATS).forEach(p => {
+        const res = p.gameResults || [];
+        let lastWinIdx = -1;
+        for (let i = res.length - 1; i >= 0; i--) { if (res[i].won) { lastWinIdx = i; break; } }
+        const sincewin = lastWinIdx === -1 ? res.length : (res.length - 1 - lastWinIdx);
+        if (sincewin >= 1 && (!best || sincewin > best.sincewin)) best = { p, sincewin };
+      });
+      if (!best) return null;
+      return {
+        protagonist: { id: best.p.id, name: best.p.name },
+        rival: { id: best.p.id, name: best.p.name },
+        facts: {}
+      };
+    },
     title: 'Arqueología del Perdedor',
     desc: 'Cuántas partidas pasaron desde la última vez que el rival ganó (datos reales).',
     computeFacts: function() {
@@ -1876,6 +2151,15 @@ window._modTemporadas = function() {
   // ---------- 4) DÉCADAS (winRate histórico real) ----------
   registerIdea({
     id: 'decadas', module: 'temporadas',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[rk.length-1].id, name: rk[rk.length-1].name },
+        facts: {}
+      };
+    },
     title: 'Promedio Histórico',
     desc: 'WinRate acumulado real de ambos y comparativa barra a barra.',
     computeFacts: function() {
@@ -1939,10 +2223,29 @@ window._modH2H = function() {
   registerIdea({
     id: 'te-cocino', module: 'h2h',
     title: 'Te Cocino',
-    desc: 'Carta H2H clásica: cara vs cara, marcador grande con llamita.',
+    desc: 'H2H más lopsided del grupo (mín 5 partidas): cara vs cara, marcador grande con llamita.',
+    pick: function(ctx) {
+      let best = null, bestDiff = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.together || 0) < 5) continue;
+          const diff = (h.wins || 0) - (h.losses || 0);
+          if (diff > bestDiff) { bestDiff = diff; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Te tengo de hijo, {rival}. 9 a 1 no miente.','{rival}, venís a comer y te llevás derrota. Como siempre.'],
-      tranqui: ['Duelo eterno 🔥 marcador {you} vs {rival}','Así vamos mano a mano 💪']
+      algodon: ['{protagonist} y {rival} tienen historia 💛 {wins}–{losses} en H2H.', 'Rivalidad linda entre {protagonist} y {rival} — {wins} a {losses}.'],
+      picante: ['Te tengo de hijo, {rival}. {wins} a {losses} no miente.', '{rival}, venís a comer y te llevás derrota. Contra {protagonist} vas {losses}–{wins}.'],
+      nachi: ['{rival}, {wins}–{losses} contra {protagonist}. Dejá de jugar, estás haciendo el ridículo.', '¿Sabés lo que es {wins} a {losses}, {rival}? El ADN de un perdedor crónico. {protagonist} te cocinó para siempre.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1975,10 +2278,30 @@ window._modH2H = function() {
   registerIdea({
     id: 'campanita', module: 'h2h',
     title: 'Campanita de la Vergüenza',
-    desc: 'Card con el shame bell — tocala al compartir. Audio ya existe en /assets/.',
+    desc: 'Jugador con racha W más larga + su rival más castigado. Shame bell al compartir.',
+    pick: function(ctx) {
+      let top = null, topStreak = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.currentStreak || 0) > topStreak) { topStreak = ps.currentStreak; top = ps; }
+      }
+      if (!top) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        top = ctx.ALL_STATS[rk[0].id];
+      }
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || ctx.annualRanking().slice().reverse()[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: top.id, name: top.name || ctx.NAME_BY_ID[top.id] || top.id },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.','TUS DERROTAS merecen una ceremonia. Tocá la campana.'],
-      tranqui: ['Clásica campanita 🔔 para marcar el momento.','Ceremonia oficial — {rival} te merece la campanita.']
+      algodon: ['🔔 Suena la campanita para {rival}. Con cariño.', 'Ceremonia con campanita — {protagonist} te saluda, {rival}.'],
+      picante: ['🔔 Sonó la campanita, {rival}. Caminá hacia la vergüenza.', 'Tus derrotas contra {protagonist} merecen una ceremonia, {rival}.'],
+      nachi: ['🔔🔔🔔 {rival}, ya deberían pegarte la campana con velcro. {protagonist} te rompe todos los lunes.', 'Vení {rival}, tocate la campana. {protagonist} ya ni pregunta.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2003,10 +2326,25 @@ window._modH2H = function() {
   registerIdea({
     id: 'apodo', module: 'h2h',
     title: 'Apodo Automático',
-    desc: 'Generador que crea un apodo bardeable según el record H2H.',
+    desc: 'Apodo para el jugador con peor winRate del año.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      const protag = rk[0];
+      const rival = rk[rk.length - 1];
+      const h = ctx.ALL_STATS[protag.id]?.h2h?.[rival.id] || { wins: 0, losses: 0 };
+      const apodos = ['El Invitado de Piedra','El Señor Cero-Uno','Don Empate Nunca','El Rey del Fondo','Capitán Derrota','El 11 Por Ciento'];
+      const apodo = apodos[((h.wins||0) + (h.losses||0)) % apodos.length];
+      return {
+        protagonist: { id: protag.id, name: protag.name },
+        rival: { id: rival.id, name: rival.name },
+        facts: { wins: h.wins, losses: h.losses, apodo }
+      };
+    },
     copies: {
-      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.','Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
-      tranqui: ['Nuevo apodo para {rival}: "{apodo}" 🎭','Premium nickname desbloqueado para {rival}.']
+      algodon: ['Nuevo apodo cariñoso para {rival}: "{apodo}" 💛', 'Nickname oficial del grupo para {rival}: "{apodo}".'],
+      picante: ['Desde hoy te llamás: {apodo}. Nuevo apodo, {rival}.', 'Bautismo oficial de {rival}: {apodo}. Acostumbrate.'],
+      nachi: ['{rival}, desde hoy sos "{apodo}". Ganada a pulso.', 'Te bautizamos "{apodo}", {rival}. {protagonist} hasta te firma el DNI.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2046,10 +2384,29 @@ window._modH2H = function() {
   registerIdea({
     id: 'memes', module: 'h2h',
     title: 'Meme Templates',
-    desc: 'Drake / distracted boyfriend / two buttons con la cara del rival en lo peor.',
+    desc: 'Reutiliza el pair del H2H más lopsided (mismo de Te Cocino).',
+    pick: function(ctx) {
+      let best = null, bestDiff = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.together || 0) < 5) continue;
+          const diff = (h.wins || 0) - (h.losses || 0);
+          if (diff > bestDiff) { bestDiff = diff; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra cualquiera.','Meme oficial de {rival}: confirmado.'],
-      tranqui: ['Meme ready 🤣 para el chat de {rival}','Plantilla completada: {rival} en rol estelar.']
+      algodon: ['Meme dedicado a {rival} 💛 con onda.', 'Plantilla lista para {rival} — rol estelar, cero bardo.'],
+      picante: ['Drake sabe: arriba, ganarle a {rival}. Abajo: perder contra {protagonist}.', 'Meme oficial de {rival}: confirmado en el grupo.'],
+      nachi: ['Plantilla de {rival}: {protagonist} lo tiene {wins}–{losses}. Hasta Drake se ríe.', '{rival}, sos meme stock del grupo. Ni merece caption.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2080,10 +2437,27 @@ window._modH2H = function() {
   registerIdea({
     id: 'recibo', module: 'h2h',
     title: 'Recibo Oficial',
-    desc: 'Ticket de venta detallando las palizas con QR falso.',
+    desc: 'Pareja con más palizas acumuladas (máx h2h.wins). Ticket con QR falso.',
+    pick: function(ctx) {
+      let best = null, bestWins = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        for (const rid in (ps.h2h || {})) {
+          const h = ps.h2h[rid];
+          if ((h.wins || 0) > bestWins) { bestWins = h.wins; best = { pid, rid, wins: h.wins, losses: h.losses }; }
+        }
+      }
+      if (!best) return null;
+      return {
+        protagonist: { id: best.pid, name: ctx.NAME_BY_ID[best.pid] || best.pid },
+        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
+        facts: { wins: best.wins, losses: best.losses }
+      };
+    },
     copies: {
-      picante: ['Guardá el recibo {rival}. 1 × paliza. Total: tu dignidad.','Factura emitida a {rival}. Adjuntá al chat.'],
-      tranqui: ['Recibo oficial de temporada 🧾','Comprobante fiscal UNO para {rival}.']
+      algodon: ['Recibo oficial de {protagonist} vs {rival} 🧾 ({wins}–{losses}).', 'Factura histórica entre {protagonist} y {rival}.'],
+      picante: ['Guardá el recibo {rival}: {wins} × paliza de {protagonist}. Total: tu dignidad.', 'Factura emitida a {rival}. Adjuntá al chat del grupo.'],
+      nachi: ['{rival}, el recibo dice {wins}–{losses}. Pagá con dignidad, ya no te queda otra.', 'Acá está la factura {rival}: {wins} palizas de {protagonist}. No aceptamos notas de crédito.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2144,10 +2518,23 @@ window._modH2H = function() {
   registerIdea({
     id: 'convocatoria', module: 'h2h',
     title: 'Convocatoria Judicial',
-    desc: 'Citación falsa: se cita a X a comparecer el próximo lunes para nueva paliza.',
+    desc: 'Citación falsa al rival más castigado por el #1 del ranking.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const one = rk[0];
+      const victims = ctx.rivalDefeatedListFor(one.id);
+      const rival = victims[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: one.id, name: one.name },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['Te cito {rival}. Comparecencia obligatoria.','Judicial: {rival} debe presentarse este lunes a recibir paliza.'],
-      tranqui: ['Invitación formal 📜 para {rival} — próximo lunes.','Convocatoria oficial: te esperamos.']
+      algodon: ['Invitación formal 📜 para {rival} — próximo lunes con {protagonist}.', 'Convocatoria cariñosa: te esperamos, {rival}.'],
+      picante: ['Te cito {rival}. Comparecencia obligatoria ante {protagonist}.', 'Judicial: {rival} debe presentarse este lunes a recibir paliza de {protagonist}.'],
+      nachi: ['{rival}, citación obligatoria. {protagonist} te espera en la mesa.', 'Convocatoria judicial: {rival}, a recibir paliza de {protagonist}. Sin excusas ni revancha.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2201,21 +2588,51 @@ window._modH2H = function() {
   registerIdea({
     id: 'top-victimas', module: 'h2h',
     title: 'Mi Top 3 Víctimas',
-    desc: 'Podio con los 3 rivales a los que más les ganaste H2H.',
+    desc: 'Podio con los 3 rivales reales más dominados por el jugador con más víctimas.',
+    pick: function(ctx) {
+      let best = null, bestN = 0, bestList = [];
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const list = ctx.rivalDefeatedListFor(pid);
+        if (list.length >= 3 && list.length > bestN) {
+          bestN = list.length; best = pid; bestList = list.slice(0, 3);
+        }
+      }
+      if (!best) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        best = rk[0].id;
+        bestList = ctx.rivalDefeatedListFor(best).slice(0, 3);
+      }
+      if (!bestList.length) return null;
+      const victimsWithScore = bestList.map(v => {
+        const h = ctx.ALL_STATS[best]?.h2h?.[v.id] || { wins: 0, losses: 0 };
+        return { id: v.id, name: v.name, wins: h.wins, losses: h.losses };
+      });
+      return {
+        protagonist: { id: best, name: ctx.NAME_BY_ID[best] || best },
+        rival: { id: victimsWithScore[0].id, name: victimsWithScore[0].name },
+        facts: { victims: victimsWithScore }
+      };
+    },
     copies: {
-      picante: ['Mi top 3 de víctimas: {rival} en el podio.','Exhibiendo a los que colecciono: {rival}, Cobra y Gordo.'],
-      tranqui: ['Mis rivales más frecuentes 🏆 top 3.','Top contrincantes — {rival} lidera la lista 😎']
+      algodon: ['Top 3 rivales frecuentes de {protagonist} 🏆 {rival} en el podio.', 'Los contrincantes históricos de {protagonist} — con cariño.'],
+      picante: ['Top 3 víctimas de {protagonist}: {rival} en el podio.', 'Los que colecciona {protagonist}: {rival} lidera la lista 🥇'],
+      nachi: ['{protagonist} tiene víctimas en serie. {rival} es la predilecta.', 'Top 3 palizas de {protagonist}: {rival} y compañía. Ninguno levanta la cabeza.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
       gradBG(ctx, w, h, '#0a0a2e', '#0f0f1a');
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('MI TOP 3 VÍCTIMAS', w/2, h*0.11);
-      const victims = [
-        { name: STATE.rival, score: '12-2', medal: '🥇', y: 0.38, size: 0.13 },
-        { name: 'Cobra',     score: '9-3',  medal: '🥈', y: 0.52, size: 0.10 },
-        { name: 'Gordo',     score: '7-1',  medal: '🥉', y: 0.68, size: 0.10 }
-      ];
+      ctx.fillText(`TOP 3 VÍCTIMAS DE ${String(STATE.you).toUpperCase()}`, w/2, h*0.11);
+      const ideaRef = IDEAS.find(i => i.id === 'top-victimas');
+      const pickedRef = ideaRef ? getPicked(ideaRef) : null;
+      const real = (pickedRef && pickedRef.facts && pickedRef.facts.victims) || [];
+      const medals = ['🥇','🥈','🥉'];
+      const ys = [0.38, 0.52, 0.68];
+      const sizes = [0.13, 0.10, 0.10];
+      const victims = real.slice(0, 3).map((v, i) => ({
+        name: v.name, score: `${v.wins}-${v.losses}`, medal: medals[i], y: ys[i], size: sizes[i]
+      }));
       for (const v of victims) {
         try {
           const img = await loadFace(v.name);
@@ -2238,10 +2655,30 @@ window._modH2H = function() {
   registerIdea({
     id: 'modo-asado', module: 'h2h',
     title: 'Modo Asado Flame',
-    desc: 'Versión del share con paleta cálida, brasas y humo — combina con el Modo Asado del sitio.',
+    desc: 'Mismo pair que Campanita (jugador más en racha + su víctima preferida). Paleta cálida y brasas.',
+    pick: function(ctx) {
+      let top = null, topStreak = 0;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.currentStreak || 0) > topStreak) { topStreak = ps.currentStreak; top = ps; }
+      }
+      if (!top) {
+        const rk = ctx.annualRanking();
+        if (!rk.length) return null;
+        top = ctx.ALL_STATS[rk[0].id];
+      }
+      const victims = ctx.rivalDefeatedListFor(top.id);
+      const rival = victims[0] || ctx.annualRanking().slice().reverse()[0];
+      if (!rival) return null;
+      return {
+        protagonist: { id: top.id, name: top.name || ctx.NAME_BY_ID[top.id] || top.id },
+        rival: { id: rival.id, name: rival.name }
+      };
+    },
     copies: {
-      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.','Parrilla prendida. {rival} al fuego.'],
-      tranqui: ['Modo asado 🔥 versión brasas — {rival} en juego.','Sábado de parrilla y bardo con {rival} 🍖']
+      algodon: ['Sábado de parrilla y UNO con {rival} 🍖 {protagonist} invita.', 'Modo asado 🔥 versión brasas — {rival} y {protagonist} en la mesa.'],
+      picante: ['Asado listo, {rival}. Vos sos el chinchulín que se quema.', 'Parrilla prendida. {rival} al fuego contra {protagonist}.'],
+      nachi: ['{rival}, al fuego. {protagonist} ya limpió la parrilla para vos.', 'Asado: hoy se cocina {rival}. {protagonist} como siempre, dueño de la pinza.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2277,10 +2714,25 @@ window._modH2H = function() {
   registerIdea({
     id: 'stickers', module: 'h2h',
     title: 'Sticker Pack',
-    desc: 'Preview de 6 stickers transparentes listos para WhatsApp con cara y frases.',
+    desc: 'Rival con más derrotas totales del grupo. 6 stickers ready para WhatsApp.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      let worstLoser = null, worstL = -1;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.L || 0) > worstL) { worstL = ps.L; worstLoser = ps; }
+      }
+      if (!worstLoser) return null;
+      return {
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: worstLoser.id, name: worstLoser.name }
+      };
+    },
     copies: {
-      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.','6 stickers ready para el grupo. {rival} en cada uno.'],
-      tranqui: ['Sticker pack {rival} listo 📦 subilo al WhatsApp.','Stickers frescos para el grupo.']
+      algodon: ['Pack de stickers de {rival} 📦 subilo al grupo.', 'Stickers frescos de {rival} — el más generoso con las derrotas.'],
+      picante: ['Pack de stickers de {rival} descargado ✅ listo para bardear.', '6 stickers ready para el grupo. {rival} en cada uno.'],
+      nachi: ['{rival}, armamos stickers con tus derrotas. 6 de entrada, hay más.', 'Stickers de {rival}: edición coleccionable "el que siempre pierde".']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2321,8 +2773,9 @@ window._modBonus = function() {
     title: 'Preview de WhatsApp',
     desc: 'Simula cómo se va a ver el mensaje en el chat del rival antes de mandarlo.',
     copies: {
-      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.','Preview antes de arruinarle el día a {rival}.'],
-      tranqui: ['Mirá cómo va a llegar el mensaje ✨','Chequeá el preview antes de compartir.']
+      algodon: ['Mirá cómo va a llegar el mensaje a {rival} ✨', 'Chequeá el preview antes de compartir con {rival}.'],
+      picante: ['Así lo va a recibir {rival}. Sin vuelta atrás.', 'Preview antes de arruinarle el día a {rival}.'],
+      nachi: ['{rival} lo va a abrir y cerrar el celu tres veces. Mandalo.', 'Preview listo. {rival} no tiene escape: esto va al grupo igual.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2365,10 +2818,11 @@ window._modBonus = function() {
   registerIdea({
     id: 'tono-selector', module: 'bonus',
     title: 'Selector de Tono (feature)',
-    desc: 'El mismo share, dos intensidades. Arriba picante, abajo tranqui. (Probá el toggle arriba de la página)',
+    desc: 'El mismo share, tres intensidades: algodón, picante y nachi. (Probá el toggle arriba de la página)',
     copies: {
-      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.','Picante ON: {rival} no va a querer abrir WhatsApp.'],
-      tranqui: ['😌 Versión tranqui: con respeto, {rival} perdió 😅','Tranqui ON: palmada cariñosa a {rival}.']
+      algodon: ['🍬 Algodón ON: abracito a {rival} con el ranking abajo.', 'Versión dulce para {rival} — con respeto y caramelito.'],
+      picante: ['🌶️ Versión picante: te doblo a {rival} sin anestesia.', 'Picante ON: {rival} no va a querer abrir WhatsApp.'],
+      nachi: ['🔥 Nachi ON: {rival}, sos el chiste del grupo. Fin.', 'Modo nachi activado. {rival}, ni respondas.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2401,8 +2855,9 @@ window._modBonus = function() {
     title: 'Editor rápido del copy',
     desc: 'Feature: campo para retocar la frase antes de mandar (mockup visual).',
     copies: {
-      picante: ['Retocá el bardo antes de mandarlo a {rival}.','Ajuste fino del roast y lo tirás exacto.'],
-      tranqui: ['Editá antes de compartir ✍️','Personalizá el mensaje con tu toque.']
+      algodon: ['Editá antes de compartir ✍️ con {rival}.', 'Personalizá el mensaje para {rival} con tu toque.'],
+      picante: ['Retocá el bardo antes de mandarlo a {rival}.', 'Ajuste fino del roast y lo tirás exacto a {rival}.'],
+      nachi: ['Ajustá el puñal antes de clavarlo, {rival} no se lo espera.', 'Editor ON: afilá el roast para {rival}. Que duela parejo.']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2442,8 +2897,9 @@ window._modBonus = function() {
     title: 'Video corto con audio',
     desc: 'Feature: exporta un video de 3s con el shame bell + animación de la cara del rival.',
     copies: {
-      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.','3 segundos de gloria con campanita de la vergüenza 🔔'],
-      tranqui: ['Formato video 🎬 para el grupo — {rival} estelar.','Clip cortito con efectos para variar del PNG.']
+      algodon: ['Clip de 3s para {rival} 🎬 con su musiquita.', 'Formato video para variar del PNG — {rival} estelar.'],
+      picante: ['Video con sonido — {rival} no va a poder dejar de escucharlo.', '3 segundos de gloria con campanita de la vergüenza 🔔 para {rival}.'],
+      nachi: ['{rival}, te dedicamos 3 segundos con campanita. Loop infinito.', 'Video con audio: {rival} en bucle eterno de vergüenza 🔔🔔']
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -2486,14 +2942,6 @@ window._modBonus = function() {
 };
 // DRAWS:BONUS:END
 
-window._initIdeas = function() {
-  if (window._modJugador) window._modJugador();
-  if (window._modAnual) window._modAnual();
-  if (window._modTemporada) window._modTemporada();
-  if (window._modTemporadas) window._modTemporadas();
-  if (window._modH2H) window._modH2H();
-  if (window._modBonus) window._modBonus();
-};
 </script>
 
 </body>
