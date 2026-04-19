@@ -2431,7 +2431,414 @@ window._modUsuarios = function() {
   // Las propuestas de usuarios están registradas dentro de los módulos
   // JUGADOR, ANUAL y H2H con module:'usuarios', así que se renderizan
   // automáticamente en #grid-usuarios sin necesidad de código extra aquí.
-  // Las propuestas nuevas que se implementen en el futuro irán aquí abajo.
+
+  // ---------- PROPUESTA: POEMA AL SEGUNDO ----------
+  // Propuesta Firestore ID: AFB2SZJK6d0WSunL2q6G
+  registerIdea({
+    id: 'poema-al-segundo',
+    module: 'usuarios',
+    title: '📜 Poema al Segundo',
+    desc: 'Versos dedicados al #2 del ranking anual. Tan cerca, tan lejos, tan inútilmente cerca.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      return { protagonist: { id: rk[1].id, name: rk[1].name }, rival: { id: rk[0].id, name: rk[0].name }, facts: {} };
+    },
+    copies: { nachi: [
+      '"{protagonist}, eterno segundo,\ntan cerca del techo,\ntan lejos del mundo."',
+      '"Medalla de plata, {protagonist}.\nBrilla igual que el oro...\npero no es oro."',
+      '"{protagonist}: segundo lugar.\nNadie recuerda al segundo.\nNadie."'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      gradBG(c, w, h, '#0e1a2e', '#1a0e2e');
+      c.strokeStyle = '#4a90d9'; c.lineWidth = w*0.01;
+      roundRect(c, w*0.05, h*0.04, w*0.9, h*0.92, 18); c.stroke();
+
+      c.fillStyle = '#7eb8f7'; c.font = `700 ${w*0.06}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('📜 POEMA AL SEGUNDO', w/2, h*0.1);
+      c.fillStyle = 'rgba(126,184,247,0.5)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText('una tragedia en cuatro versos', w/2, h*0.14);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId = (you||'').toLowerCase();
+      let img; try { img = await loadFace(youId); } catch(e){}
+      const r = w*0.14, cx2 = w/2, cy2 = h*0.31;
+      if (img) drawFaceCircle(c, img, cx2, cy2, r);
+      else { c.fillStyle='#4a90d9'; c.beginPath(); c.arc(cx2,cy2,r,0,Math.PI*2); c.fill(); }
+      c.font=`${w*0.07}px serif`; c.textAlign='center'; c.fillText('🥈', cx2+r*0.8, cy2-r*0.6);
+      c.fillStyle='#7eb8f7'; c.font=`700 ${w*0.048}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.048);
+
+      const verses = [
+        `Oh ${you}, eterno segundo,`, `tan cerca del cielo,`, `tan lejos de ${rival}...`, `¡Gracias por intentarlo! 🌸`
+      ];
+      const py = h*0.57;
+      c.fillStyle='rgba(126,184,247,0.1)'; roundRect(c, w*0.08, py-h*0.02, w*0.84, h*0.24, 14); c.fill();
+      c.strokeStyle='rgba(126,184,247,0.3)'; c.lineWidth=1; c.stroke();
+      c.fillStyle='rgba(255,255,255,0.85)'; c.font=`italic 500 ${w*0.03}px Inter`;
+      verses.forEach((v,i) => c.fillText(v, w/2, py + i*h*0.052));
+
+      c.fillStyle='rgba(255,255,255,0.35)'; c.font=`500 ${w*0.022}px Inter`;
+      c.fillText(`— dedicado a ${you} con cariño y algo de lástima`, w/2, h*0.875);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: POEMA AL PENÚLTIMO ----------
+  // Propuesta Firestore ID: GbBhDfDMVDeNUcTDfjvj
+  registerIdea({
+    id: 'poema-al-penultimo',
+    module: 'usuarios',
+    title: '🖤 Poema al Penúltimo',
+    desc: 'Versos para el segundo peor del ranking anual. Ni el último siquiera. La tragedia perfecta.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (rk.length < 2) return null;
+      const penult = rk[rk.length - 2];
+      const last = rk[rk.length - 1];
+      return { protagonist: { id: penult.id, name: penult.name }, rival: { id: last.id, name: last.name }, facts: {} };
+    },
+    copies: { nachi: [
+      '"{protagonist}: ni siquiera el último.\nAl menos {rival} tiene el récord.\nVos ¿qué tenés?"',
+      '"Penúltimo. La posición de\nlos que no ganan ni pierden bien.\n{protagonist}, un saludo."',
+      '"Aplausos para {protagonist}.\nQuiso ser el peor y ni eso pudo.\nQué poetico."'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      gradBG(c, w, h, '#1a0a0a', '#0a0a1a');
+      c.strokeStyle = '#666'; c.lineWidth = w*0.01;
+      roundRect(c, w*0.05, h*0.04, w*0.9, h*0.92, 18); c.stroke();
+
+      c.fillStyle = '#aaa'; c.font=`700 ${w*0.058}px Fredoka One`; c.textAlign='center';
+      c.fillText('🖤 POEMA AL PENÚLTIMO', w/2, h*0.1);
+      c.fillStyle='rgba(170,170,170,0.5)'; c.font=`italic 500 ${w*0.024}px Inter`;
+      c.fillText('entre los peores, tampoco el peor', w/2, h*0.14);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId=(you||'').toLowerCase();
+      let img; try { img=await loadFace(youId); } catch(e){}
+      const r=w*0.14, cx2=w/2, cy2=h*0.31;
+      if(img) drawFaceCircle(c,img,cx2,cy2,r);
+      else { c.fillStyle='#555'; c.beginPath(); c.arc(cx2,cy2,r,0,Math.PI*2); c.fill(); }
+      c.font=`${w*0.07}px serif`; c.textAlign='center'; c.fillText('😶', cx2+r*0.8, cy2-r*0.6);
+      c.fillStyle='#ccc'; c.font=`700 ${w*0.048}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.048);
+      c.fillStyle='rgba(255,255,255,0.4)'; c.font=`500 ${w*0.022}px Inter`;
+      c.fillText(`por encima de ${rival} (pero nada más)`, cx2, cy2+r+w*0.077);
+
+      const verses = [
+        `${you}, penúltimo ilustre,`, `ni gloria ni desastre total,`, `el limbo del ranking,`, `tu hogar natural.`
+      ];
+      const py=h*0.57;
+      c.fillStyle='rgba(150,150,150,0.1)'; roundRect(c,w*0.08,py-h*0.02,w*0.84,h*0.24,14); c.fill();
+      c.strokeStyle='rgba(150,150,150,0.25)'; c.lineWidth=1; c.stroke();
+      c.fillStyle='rgba(220,220,220,0.8)'; c.font=`italic 500 ${w*0.03}px Inter`;
+      verses.forEach((v,i) => c.fillText(v, w/2, py+i*h*0.052));
+
+      c.fillStyle='rgba(255,255,255,0.3)'; c.font=`500 ${w*0.022}px Inter`;
+      c.fillText('— ni último ni primero. Solo... ahí.', w/2, h*0.875);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: FUN FACT ANUAL ----------
+  // Propuesta Firestore ID: Wf4M5mjE43l0zWc402in
+  registerIdea({
+    id: 'fun-fact-anual',
+    module: 'usuarios',
+    title: '🤓 Fun Fact del Año',
+    desc: 'Un dato estadístico random del ranking anual que nadie pidió pero que igual te damos.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const best = rk[0], worst = rk[rk.length-1];
+      return { protagonist: { id: best.id, name: best.name }, rival: { id: worst.id, name: worst.name }, facts: {} };
+    },
+    copies: { nachi: [
+      '🤓 Fun fact: {protagonist} ganó más partidas este año que {rival} en toda su vida junta.',
+      '📊 Dato random: {rival} perdió tantas veces que ya ni él sabe por qué sigue viniendo.',
+      '🎲 Estadística inútil: la probabilidad de que {rival} gane es técnicamente mayor a 0%. Técnicamente.',
+      '📉 Fun fact: {protagonist} lidera el ranking. {rival} lidera el ranking de irse a su casa llorando.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      gradBG(c, w, h, '#001a1a', '#0a1a0d');
+      c.strokeStyle='#00d4aa'; c.lineWidth=w*0.01;
+      roundRect(c,w*0.05,h*0.04,w*0.9,h*0.92,18); c.stroke();
+
+      c.fillStyle='#00d4aa'; c.font=`700 ${w*0.06}px Fredoka One`; c.textAlign='center';
+      c.fillText('🤓 FUN FACT DEL AÑO', w/2, h*0.1);
+      c.fillStyle='rgba(0,212,170,0.5)'; c.font=`italic 500 ${w*0.024}px Inter`;
+      c.fillText('dato inútil, dato real', w/2, h*0.14);
+
+      const you=STATE.you, rival=STATE.rival;
+      const youId=(you||'').toLowerCase(), rivalId2=(rival||'').toLowerCase();
+      const psY=ALL_STATS[youId], psR=ALL_STATS[rivalId2];
+      const winsY=psY?.W||0, lossR=psR?.L||0;
+      const gpY=psY?.gamesPlayed||0, gpR=psR?.gamesPlayed||0;
+      const pctY=gpY>0?Math.round(winsY/gpY*100):0;
+
+      let imgY, imgR;
+      try{imgY=await loadFace(youId);}catch(e){}
+      try{imgR=await loadFace(rivalId2);}catch(e){}
+
+      const r1=w*0.12, x1=w*0.3, y1=h*0.35;
+      if(imgY) drawFaceCircle(c,imgY,x1,y1,r1);
+      else{c.fillStyle='#00d4aa';c.beginPath();c.arc(x1,y1,r1,0,Math.PI*2);c.fill();}
+      c.fillStyle='#00d4aa';c.font=`700 ${w*0.036}px Fredoka One`;c.textAlign='center';
+      c.fillText(you,x1,y1+r1+w*0.04);
+
+      const r2=w*0.12, x2=w*0.7, y2=h*0.35;
+      if(imgR) drawFaceCircle(c,imgR,x2,y2,r2);
+      else{c.fillStyle='#ff6b6b';c.beginPath();c.arc(x2,y2,r2,0,Math.PI*2);c.fill();}
+      c.fillStyle='#ff6b6b';c.font=`700 ${w*0.036}px Fredoka One`;c.textAlign='center';
+      c.fillText(rival,x2,y2+r2+w*0.04);
+
+      const facts=[
+        `${you} gana el ${pctY}% de sus partidas`,
+        `${rival} acumuló ${lossR} derrotas este año`,
+        `Entre los dos jugaron ${gpY+gpR} partidas`,
+        `Solo uno de los dos duerme bien 😴`
+      ];
+      const fy=h*0.6;
+      c.fillStyle='rgba(0,212,170,0.08)'; roundRect(c,w*0.07,fy,w*0.86,h*0.25,14); c.fill();
+      c.strokeStyle='rgba(0,212,170,0.3)';c.lineWidth=1.5;c.stroke();
+      c.fillStyle='rgba(255,255,255,0.85)';c.font=`500 ${w*0.028}px Inter`;
+      facts.forEach((f,i)=>{
+        c.fillStyle=i%2===0?'#00d4aa':'rgba(255,255,255,0.7)';
+        c.fillText((i===0?'📊 ':i===1?'📉 ':i===2?'🎲 ':'🌙 ')+f, w/2, fy+h*0.04+i*h*0.054);
+      });
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: BULLYING EXTREMO ----------
+  // Propuesta Firestore ID: aXOdfkCucNrbBxHnFlej
+  registerIdea({
+    id: 'bullying-extremo',
+    module: 'usuarios',
+    title: '💀 Bullying Extremo',
+    desc: 'Sin filtros. Sin piedad. El peor del grupo se merece esto y más.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const worst = rk[rk.length-1];
+      const best = rk[0];
+      const ps = ctx.ALL_STATS[worst.id];
+      const wins = ps?.W||0, losses = ps?.L||0;
+      return {
+        protagonist: { id: worst.id, name: worst.name },
+        rival: { id: best.id, name: best.name },
+        facts: { wins, losses }
+      };
+    },
+    copies: { nachi: [
+      '💀 {protagonist}: {losses} derrotas. {wins} victorias. La estadística habla sola. Y grita.',
+      '🔥 Hay que tener TALENTO para perder tanto, {protagonist}. Talento especial. Único.',
+      '☠️ {protagonist}, sos el tipo de jugador que hace sentir bien a todos los demás por contraste.',
+      '💀 Los científicos estudian a {protagonist} para entender cómo alguien puede perder tan consistentemente.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      const bg=c.createLinearGradient(0,0,w,h);
+      bg.addColorStop(0,'#1a0000'); bg.addColorStop(1,'#0a0010');
+      c.fillStyle=bg; c.fillRect(0,0,w,h);
+
+      // Llamas de fondo
+      for(let i=0;i<8;i++){
+        const fx=w*(0.05+i*0.13), fy=h*0.92;
+        const fg=c.createLinearGradient(fx,fy,fx,fy-h*0.25);
+        fg.addColorStop(0,'rgba(255,80,0,0.7)'); fg.addColorStop(1,'rgba(255,200,0,0)');
+        c.fillStyle=fg;
+        c.beginPath(); c.ellipse(fx,fy,w*0.04,h*0.2,0,0,Math.PI*2); c.fill();
+      }
+
+      c.strokeStyle='#ff2200'; c.lineWidth=w*0.012;
+      roundRect(c,w*0.04,h*0.04,w*0.92,h*0.92,20); c.stroke();
+
+      c.fillStyle='#ff3300'; c.font=`700 ${w*0.07}px Fredoka One`; c.textAlign='center';
+      c.fillText('💀 BULLYING EXTREMO', w/2, h*0.1);
+      c.fillStyle='rgba(255,50,0,0.6)'; c.font=`700 ${w*0.028}px Inter`;
+      c.fillText('MODO: SIN PIEDAD ACTIVADO', w/2, h*0.142);
+
+      const you=STATE.you;
+      const youId=(you||'').toLowerCase();
+      const ps=ALL_STATS[youId];
+      const wins=ps?.W||0, losses=ps?.L||0, gp=ps?.gamesPlayed||0;
+
+      let img; try{img=await loadFace(youId);}catch(e){}
+      const r=w*0.16, cx2=w/2, cy2=h*0.36;
+      if(img){
+        c.save();
+        c.shadowColor='#ff0000'; c.shadowBlur=30;
+        drawFaceCircle(c,img,cx2,cy2,r);
+        c.shadowBlur=0; c.restore();
+      } else { c.fillStyle='#ff2200';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill(); }
+
+      c.font=`${w*0.09}px serif`; c.textAlign='center';
+      c.fillText('💀', cx2-r*0.9, cy2-r*0.5);
+      c.fillText('🔥', cx2+r*0.9, cy2-r*0.5);
+
+      c.fillStyle='#ff4444'; c.font=`700 ${w*0.055}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.052);
+
+      const sy=h*0.67;
+      c.fillStyle='rgba(255,30,0,0.12)'; roundRect(c,w*0.07,sy,w*0.86,h*0.16,14); c.fill();
+      c.strokeStyle='rgba(255,50,0,0.4)'; c.lineWidth=2; c.stroke();
+
+      c.fillStyle='#ff6666'; c.font=`700 ${w*0.072}px Fredoka One`; c.textAlign='center';
+      c.fillText(`${losses}`, w*0.35, sy+h*0.1);
+      c.fillStyle='rgba(255,100,100,0.6)'; c.font=`500 ${w*0.024}px Inter`;
+      c.fillText('derrotas', w*0.35, sy+h*0.135);
+
+      c.fillStyle='#aaffaa'; c.font=`700 ${w*0.072}px Fredoka One`;
+      c.fillText(`${wins}`, w*0.65, sy+h*0.1);
+      c.fillStyle='rgba(170,255,170,0.6)'; c.font=`500 ${w*0.024}px Inter`;
+      c.fillText('victorias', w*0.65, sy+h*0.135);
+
+      c.fillStyle='rgba(255,255,255,0.5)'; c.font=`italic 500 ${w*0.027}px Inter`;
+      c.fillText(`"${you}, sos un fenómeno. Un fenómeno raro."`, w/2, h*0.875);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: FELICITACIÓN SORPRESA ----------
+  // Propuesta Firestore ID: k9xhyqYRjti07NMDPkOb
+  registerIdea({
+    id: 'felicitacion-sorpresa',
+    module: 'usuarios',
+    title: '🎉 Felicitación Sorpresa',
+    desc: 'Una felicitación inesperada para alguien del grupo. Por algo. Lo que sea.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      // Felicitamos al del medio: ni el mejor ni el peor, el más "inesperado"
+      const mid = rk[Math.floor(rk.length / 2)];
+      const best = rk[0];
+      return { protagonist: { id: mid.id, name: mid.name }, rival: { id: best.id, name: best.name }, facts: {} };
+    },
+    copies: { nachi: [
+      '🎉 Felicitaciones, {protagonist}! Sos el mejor del grupo... en no ser ni el mejor ni el peor.',
+      '🏅 Premio especial para {protagonist}: "El más promedio del año". Es más difícil de lo que parece.',
+      '🎊 {protagonist}, te felicitamos por seguir viniendo a pesar de todo. Eso requiere valentía.',
+      '✨ Reconocimiento a {protagonist}: por existir, por estar, por no rendirse (aunque quizás debería).'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      const bg=c.createLinearGradient(0,0,w,h);
+      bg.addColorStop(0,'#1a1a00'); bg.addColorStop(1,'#001a1a');
+      c.fillStyle=bg; c.fillRect(0,0,w,h);
+
+      // Confetti
+      const confColors=['#FFDE00','#ED1C24','#00A651','#0072BC','#FF69B4'];
+      for(let i=0;i<40;i++){
+        const cx3=Math.abs(Math.sin(i*137)*w), cy3=Math.abs(Math.cos(i*97)*h*0.6);
+        c.fillStyle=confColors[i%5]+'99';
+        c.fillRect(cx3,cy3,w*0.015,w*0.007);
+      }
+
+      c.strokeStyle='#FFDE00'; c.lineWidth=w*0.01;
+      roundRect(c,w*0.04,h*0.04,w*0.92,h*0.92,20); c.stroke();
+
+      c.fillStyle='#FFDE00'; c.font=`700 ${w*0.06}px Fredoka One`; c.textAlign='center';
+      c.fillText('🎉 FELICITACIÓN ESPECIAL', w/2, h*0.1);
+      c.fillStyle='rgba(255,222,0,0.55)'; c.font=`italic 500 ${w*0.024}px Inter`;
+      c.fillText('un reconocimiento muy merecido (o no)', w/2, h*0.14);
+
+      const you=STATE.you;
+      const youId=(you||'').toLowerCase();
+      const ps=ALL_STATS[youId];
+      const gp=ps?.gamesPlayed||0, wins=ps?.W||0;
+
+      let img; try{img=await loadFace(youId);}catch(e){}
+      const r=w*0.17, cx2=w/2, cy2=h*0.36;
+      if(img) drawFaceCircle(c,img,cx2,cy2,r);
+      else{c.fillStyle='#FFDE00';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill();}
+
+      c.font=`${w*0.08}px serif`; c.textAlign='center';
+      c.fillText('🎊', cx2-r*0.9, cy2-r*0.4);
+      c.fillText('🎉', cx2+r*0.9, cy2-r*0.4);
+      c.fillText('✨', cx2, cy2-r-5);
+
+      c.fillStyle='#FFDE00'; c.font=`700 ${w*0.055}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.052);
+
+      const sy=h*0.66;
+      c.fillStyle='rgba(255,222,0,0.1)'; roundRect(c,w*0.08,sy,w*0.84,h*0.17,14); c.fill();
+      c.strokeStyle='rgba(255,222,0,0.35)'; c.lineWidth=1.5; c.stroke();
+      c.fillStyle='#FFDE00'; c.font=`700 ${w*0.04}px Fredoka One`; c.textAlign='center';
+      c.fillText('PREMIO:', w/2, sy+h*0.045);
+      c.fillStyle='rgba(255,255,255,0.8)'; c.font=`italic 500 ${w*0.03}px Inter`;
+      c.fillText(`"El Más Constante de Lunes de UNO"`, w/2, sy+h*0.09);
+      c.fillStyle='rgba(255,222,0,0.55)'; c.font=`500 ${w*0.023}px Inter`;
+      c.fillText(`${gp} partidas jugadas · ${wins} victorias · seguís viniendo`, w/2, sy+h*0.135);
+
+      c.fillStyle='rgba(255,255,255,0.4)'; c.font=`italic 500 ${w*0.025}px Inter`;
+      c.fillText('"Lo que importa es participar." (en serio, no tenemos más.)', w/2, h*0.877);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: POEMA AL SEGUNDÓN DE TEMPORADA ----------
+  // Propuesta Firestore ID: vFm6GmvMiF1MaaWwZZ3X
+  registerIdea({
+    id: 'poema-segundon-temporada',
+    module: 'usuarios',
+    title: '🌊 Poema al Segundón de Temporada',
+    desc: 'Versos para el segundo del ranking de la temporada actual. Esfuerzo, talento, y sin resultados.',
+    pick: function(ctx) {
+      const rk = currentSeasonPointsRanking();
+      if (rk.length < 2) return null;
+      const seg = rk[1], pri = rk[0];
+      return {
+        protagonist: { id: seg.id, name: ctx.NAME_BY_ID[seg.id] || seg.name },
+        rival: { id: pri.id, name: ctx.NAME_BY_ID[pri.id] || pri.name },
+        facts: {}
+      };
+    },
+    copies: { nachi: [
+      '"Esta temporada, {protagonist},\npusiste todo de vos...\ny quedaste segundo igual."',
+      '"Segundo en la temporada, {protagonist}.\n{rival} te saca ventaja.\nComo siempre."',
+      '"Oh {protagonist}, segundón de la temp,\ntan comprometido,\ntan sin suerte."'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      gradBG(c, w, h, '#001020', '#100020');
+      c.strokeStyle='#9b59b6'; c.lineWidth=w*0.01;
+      roundRect(c,w*0.05,h*0.04,w*0.9,h*0.92,18); c.stroke();
+
+      c.fillStyle='#c39bd3'; c.font=`700 ${w*0.053}px Fredoka One`; c.textAlign='center';
+      c.fillText('🌊 POEMA AL SEGUNDÓN', w/2, h*0.09);
+      c.fillStyle='rgba(155,89,182,0.55)'; c.font=`italic 500 ${w*0.024}px Inter`;
+      c.fillText('de la temporada actual', w/2, h*0.13);
+
+      const you=STATE.you, rival=STATE.rival;
+      const youId=(you||'').toLowerCase();
+      const rk=currentSeasonPointsRanking();
+      const myRkEntry=rk.find(r=>r.id===youId);
+      const score=myRkEntry?.totalScore||0;
+
+      let img; try{img=await loadFace(youId);}catch(e){}
+      const r=w*0.15, cx2=w/2, cy2=h*0.32;
+      if(img) drawFaceCircle(c,img,cx2,cy2,r);
+      else{c.fillStyle='#9b59b6';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill();}
+      c.font=`${w*0.07}px serif`; c.textAlign='center'; c.fillText('🥈', cx2+r*0.8, cy2-r*0.6);
+      c.fillStyle='#c39bd3'; c.font=`700 ${w*0.048}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.048);
+      c.fillStyle='rgba(195,155,211,0.5)'; c.font=`500 ${w*0.022}px Inter`;
+      c.fillText(`puntaje temp: ${score} pts`, cx2, cy2+r+w*0.077);
+
+      const verses=[
+        `${you}, segundo en la temp,`, `pusiste el corazón en juego,`, `y ${rival} igual te ganó.`, `Temporada que viene: igual.`
+      ];
+      const py=h*0.58;
+      c.fillStyle='rgba(155,89,182,0.1)'; roundRect(c,w*0.08,py-h*0.02,w*0.84,h*0.25,14); c.fill();
+      c.strokeStyle='rgba(155,89,182,0.3)'; c.lineWidth=1; c.stroke();
+      c.fillStyle='rgba(255,255,255,0.82)'; c.font=`italic 500 ${w*0.03}px Inter`;
+      verses.forEach((v,i)=>c.fillText(v, w/2, py+i*h*0.052));
+
+      c.fillStyle='rgba(195,155,211,0.4)'; c.font=`500 ${w*0.022}px Inter`;
+      c.fillText('— con amor y poca esperanza para vos', w/2, h*0.877);
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
