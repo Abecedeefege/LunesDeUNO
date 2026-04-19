@@ -4083,7 +4083,10 @@ function initStats() {
     // Build a season-scoped stats snapshot for Ranking Temporada using only
     // the games that belong to the in-progress season.
     var ongoingGames = _ongoingSeasonGames(_statsData.games, _statsData.seasons);
-    _statsData.computedSeason = computeAllStats(ongoingGames, []);
+    // Pass the full seasons list so "Temp. ganadas" reflects the running
+    // yearly total of finished seasons a player has won, even in the
+    // season-scoped leaderboard (which only counts games from the ongoing season).
+    _statsData.computedSeason = computeAllStats(ongoingGames, _statsData.seasons);
     // Refresh season-winner set (also used for face badges site-wide).
     SEASON_WINNERS = new Set();
     (_statsData.seasons || []).forEach(function(s) {
