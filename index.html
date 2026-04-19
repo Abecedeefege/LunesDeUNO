@@ -1451,7 +1451,7 @@ const STRINGS = {
     leaderboard_games: 'PJ',
     leaderboard_wins: 'PG',
     leaderboard_losses: 'PP',
-    leaderboard_seasons: 'Temp.',
+    leaderboard_seasons: 'Temp. ganadas',
     leaderboard_score: 'Puntaje',
     leaderboard_avg_pos: 'Pos. prom.',
     leaderboard_hosted: 'Anfitrión',
@@ -1611,7 +1611,7 @@ const STRINGS = {
     leaderboard_games: 'GP',
     leaderboard_wins: 'W',
     leaderboard_losses: 'L',
-    leaderboard_seasons: 'Sns.',
+    leaderboard_seasons: 'Seasons won',
     leaderboard_score: 'Score',
     leaderboard_avg_pos: 'Avg pos.',
     leaderboard_hosted: 'Hosted',
@@ -4616,7 +4616,7 @@ function renderLeaderboard(sortKey, scope) {
       + '<td>' + p.gamesWon + '</td>'
       + '<td>' + p.gamesLost + '</td>'
       + '<td>' + (p.gamesPlayed ? (p.winRate * 100).toFixed(0) + '%' : '—') + '</td>'
-      + '<td>' + p.seasonsWon + '</td>'
+      + '<td>' + (p.seasonsWon > 0 ? '<span style="color:#ffd400;letter-spacing:2px;">' + '\u2726'.repeat(p.seasonsWon) + '</span>' : '—') + '</td>'
       + '<td>' + (p.avgPosition ? p.avgPosition.toFixed(2) : '—') + '</td>'
       + '<td>' + p.timesHosted + '</td>'
       + '<td>' + p.absences + '</td>'
