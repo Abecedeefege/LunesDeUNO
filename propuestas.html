@@ -324,6 +324,8 @@ async function loadRealGames() {
       finishedAt: toMs(g.finishedAt),
       timestamp: toMs(g.createdAt),
       winnerPlayerId: g.winnerPlayerId,
+      rounds: Array.isArray(g.rounds) ? g.rounds : [],
+      absentees: Array.isArray(g.absentees) ? g.absentees : [],
       state: { participants: g.participants }
     }))
     .sort((a,b) => (a.finishedAt||0) - (b.finishedAt||0));
@@ -462,6 +464,124 @@ function annualRanking(year) {
     .filter(ps => ps.gamesPlayed > 0)
     .map(ps => ({ id: ps.id, name: ps.name, W: ps.W, L: ps.L, gamesPlayed: ps.gamesPlayed, winRate: ps.W / ps.gamesPlayed }))
     .sort((a,b) => b.winRate - a.winRate || b.W - a.W);
+}
+
+// Año en curso (para títulos dinámicos y filtros). Lazy, por si cambia de año durante la sesión.
+function currentYear() { return new Date().getFullYear(); }
+
+// Suma por participante de los puntajes de rounds (sin fines/cortes, que no están en el loader).
+// Devuelve { playerId: totalScore }. Si un slot no tiene puntaje se cuenta como 0.
+function gameTotalScores(g) {
+  const totals = {};
+  const parts = (g && g.state && g.state.participants) || [];
+  parts.forEach(p => {
+    if (!p || !p.playerId) return;
+    const slot = p.slot;
+    const base = (g.rounds || []).reduce((s, r) => s + ((r && r[slot]) || 0), 0);
+    totals[p.playerId] = base;
+  });
+  return totals;
+}
+
+// Ranking de posiciones dentro de un partido (menor puntaje = mejor).
+// Devuelve { playerId: position } (1-based). Tie → misma posición densa.
+function gamePositions(g) {
+  const totals = gameTotalScores(g);
+  const entries = Object.entries(totals).sort((a, b) => a[1] - b[1]);
+  const pos = {};
+  let lastScore = null, lastPos = 0;
+  entries.forEach(([pid, score], idx) => {
+    const p = (score === lastScore) ? lastPos : (idx + 1);
+    pos[pid] = p;
+    lastScore = score; lastPos = p;
+  });
+  return pos;
+}
+
+// computePositionWins: para cada par (jugador, rival), cuántas veces el jugador terminó
+// EN MEJOR POSICIÓN que el rival en partidos del año dado (default: año en curso).
+// Devuelve { playerId: { rivalId: count } }. Exclusivo para certificado/verdugo — no toca la DB.
+function computePositionWins(games, year) {
+  const y = year || currentYear();
+  const wins = {};
+  (games || []).forEach(g => {
+    const when = new Date(g.finishedAt || g.timestamp || 0);
+    if (when.getFullYear() !== y) return;
+    const pos = gamePositions(g);
+    const ids = Object.keys(pos);
+    ids.forEach(a => {
+      ids.forEach(b => {
+        if (a === b) return;
+        if (pos[a] < pos[b]) {
+          if (!wins[a]) wins[a] = {};
+          wins[a][b] = (wins[a][b] || 0) + 1;
+        }
+      });
+    });
+  });
+  return wins;
+}
+
+// Top 3 rivales por count y suma, para cada jugador, a partir de un map de wins.
+function computeTop3Sum(positionWins) {
+  const out = {};
+  Object.keys(positionWins || {}).forEach(pid => {
+    const entries = Object.entries(positionWins[pid] || {})
+      .map(([rid, n]) => ({ rid, n }))
+      .sort((a, b) => b.n - a.n);
+    const top3 = entries.slice(0, 3);
+    out[pid] = { top3, sum: top3.reduce((s, x) => s + x.n, 0) };
+  });
+  return out;
+}
+
+// Puntaje anual acumulado por jugador (suma de puntajes de rounds en el año).
+function computeAnnualPoints(year) {
+  const y = year || currentYear();
+  const tot = {};
+  (RAW_GAMES || []).forEach(g => {
+    const when = new Date(g.finishedAt || g.timestamp || 0);
+    if (when.getFullYear() !== y) return;
+    const scores = gameTotalScores(g);
+    Object.keys(scores).forEach(pid => {
+      tot[pid] = (tot[pid] || 0) + scores[pid];
+    });
+  });
+  return tot;
+}
+
+// Faltas (absentees) acumuladas por jugador en el año.
+function computeAnnualAbsences(year) {
+  const y = year || currentYear();
+  const abs = {};
+  (RAW_GAMES || []).forEach(g => {
+    const when = new Date(g.finishedAt || g.timestamp || 0);
+    if (when.getFullYear() !== y) return;
+    (g.absentees || []).forEach(slug => {
+      if (!slug) return;
+      abs[slug] = (abs[slug] || 0) + 1;
+    });
+  });
+  return abs;
+}
+
+// Dirección ETH determinística (40 hex) derivada del id del jugador.
+// Simple hash FNV-1a sobre la semilla, expandida a 40 chars — suficiente para visualización.
+function ethAddressFor(seed) {
+  const s = String(seed || 'x');
+  let h1 = 2166136261 >>> 0, h2 = 0x9dc5 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h1 = Math.imul((h1 ^ s.charCodeAt(i)) >>> 0, 16777619) >>> 0;
+    h2 = Math.imul((h2 ^ s.charCodeAt(i * 2 + 1 < s.length ? i * 2 + 1 : i)) >>> 0, 2246822507) >>> 0;
+  }
+  let hex = '';
+  let a = h1, b = h2;
+  while (hex.length < 40) {
+    a = Math.imul(a ^ (a >>> 13), 2654435761) >>> 0;
+    b = Math.imul(b ^ (b >>> 7), 40503) >>> 0;
+    hex += a.toString(16).padStart(8, '0') + b.toString(16).padStart(8, '0');
+  }
+  return '0x' + hex.slice(0, 40);
 }
 
 // Jugadores que VENCIÓ el rival (ordenados por cantidad) — para "Mi Paredón".
@@ -801,409 +921,358 @@ document.addEventListener('DOMContentLoaded', () => { init(); });
 // DRAWS:JUGADOR:START
 window._modJugador = function() {
 
-  // ---------- 1) PAREDÓN (muestra las caras que venció el RIVAL, no el jugador) ----------
-  registerIdea({
-    id: 'paredon', module: 'jugador',
-    pick: function(ctx) {
-      // protagonista del card = jugador con MÁS rivales únicos vencidos
-      const ranked = Object.values(ctx.ALL_STATS)
-        .map(p => ({ id: p.id, name: p.name, unique: Object.keys(p.defeatedCount||{}).length }))
-        .filter(p => p.unique > 0)
-        .sort((a,b) => b.unique - a.unique);
-      if (!ranked.length) return null;
-      const champ = ranked[0];
-      // el "you" es simbólico (narrador); dejamos al rival del champ como protagonista del texto
-      const victims = ctx.rivalDefeatedListFor(champ.id);
-      return {
-        protagonist: { id: champ.id, name: champ.name },
-        rival: { id: champ.id, name: champ.name }, // usamos rival=champ para reusar rivalName() en el draw
-        facts: { victimas: victims.length, topVictim: victims[0]?.name || '—' }
-      };
-    },
-    title: 'Le Ganó a TODOS',
-    desc: 'Jugador con más rivales únicos vencidos (paredón de víctimas). Si venció a todo el roster, el cartel lo grita.',
-    computeFacts: function() {
-      const list = rivalDefeatedList();
-      return { victimas: list.length, topVictim: list[0]?.name || '—' };
-    },
-    copies: {
-      nachi: [
-        '{rival} tiene {victimas} víctimas y encima se las cree. Payaso.',
-        'Tu paredón no asusta ni a {topVictim}. Sos un muerto, {rival}.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      gradBG(ctx, w, h, '#0f0f1a', '#2e0e1a');
-      const list = rivalDefeatedList();
-      const totalOthers = Math.max(0, Object.keys(ALL_STATS || {}).length - 1);
-      const allBeaten = totalOthers > 0 && list.length >= totalOthers;
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `800 ${w*0.07}px Fredoka One`;
-      ctx.textAlign = 'center';
-      if (allBeaten) {
-        ctx.fillText(rivalName().toUpperCase(), w/2, h*0.09);
-        ctx.fillStyle = '#ff4060';
-        ctx.font = `900 ${w*0.095}px Fredoka One`;
-        ctx.fillText('LE GANÓ', w/2, h*0.175);
-        ctx.fillText('A TODOS', w/2, h*0.255);
-        ctx.fillStyle = 'rgba(255,255,255,.6)';
-        ctx.font = `500 ${w*0.025}px Inter`;
-        ctx.fillText(`${list.length}/${totalOthers} rivales del grupo — 100% datos reales`, w/2, h*0.30);
-      } else {
-        ctx.fillText('PAREDÓN DE ' + rivalName().toUpperCase(), w/2, h*0.10);
-        ctx.fillStyle = 'rgba(255,255,255,.6)';
-        ctx.font = `500 ${w*0.025}px Inter`;
-        ctx.fillText('caras que ya venció — 100% datos reales', w/2, h*0.145);
-      }
+  // ---------- 1) FIGURITAS COLECCIONABLES — una tarjeta por preset ----------
+  // Frase meme por preset (editable sin tocar el resto del código).
+  const FIGURITAS_MEMES = {
+    pt:      'El tío que no pierde nunca... excepto cuando pierde.',
+    mac:     'Callado pero letal.',
+    mata:    'Viene a la mesa, se lleva a tu familia.',
+    gael:    'Energy drink en forma humana.',
+    nachi:   'Mira todo, dice poco.',
+    carucha: 'La reina sin corona.',
+    negro:   'Si te mira, te gana.',
+    naso:    'Físico de campeón, cartas de aficionado.',
+    tano:    'Habla primero, piensa después.',
+    gordo:   'Campeón anterior, meme eterno.',
+    cobra:   'Se te enrosca en silencio.'
+  };
 
-      if (!list.length) {
-        ctx.fillStyle = '#ff4060';
-        ctx.font = `700 ${w*0.045}px Fredoka One`;
-        ctx.fillText(rivalName() + ' NO LE GANÓ', w/2, h*0.50);
-        ctx.fillText('A NADIE', w/2, h*0.58);
-        ctx.fillStyle = 'rgba(255,255,255,.5)';
-        ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText('(sin datos en Firestore)', w/2, h*0.65);
-        footer(ctx, w, h);
-        return;
-      }
+  function drawFaceCircleDimmed(ctx, img, cx, cy, r) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath(); ctx.clip();
+    ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2);
+    ctx.fillStyle = 'rgba(0,0,0,.55)';
+    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.stroke();
+  }
 
-      // grid dinámico según cantidad (max 12 visibles)
-      const items = list.slice(0, 12);
-      const cols = items.length <= 4 ? items.length : (items.length <= 6 ? 3 : 4);
-      const rows = Math.ceil(items.length / cols);
-      const cellW = (w*0.88) / cols;
-      const cellH = ((allBeaten ? 0.54 : 0.60) * h) / rows;
-      const startX = w*0.06, startY = allBeaten ? h*0.34 : h*0.22;
-      const faceR = Math.min(cellW, cellH) * 0.30;
-
-      for (let i = 0; i < items.length; i++) {
-        const r = Math.floor(i/cols), col = i%cols;
-        const cx = startX + col*cellW + cellW/2;
-        const cy = startY + r*cellH + cellH/2;
-        try {
-          const img = await loadFace(items[i].id);
-          drawFaceCircle(ctx, img, cx, cy - h*0.015, faceR);
-        } catch(e) {
-          ctx.fillStyle = '#3a3a5c';
-          ctx.beginPath(); ctx.arc(cx, cy - h*0.015, faceR, 0, Math.PI*2); ctx.fill();
-        }
-        ctx.fillStyle = '#fff';
-        ctx.font = `700 ${Math.min(w*0.028, cellW*0.18)}px Inter`;
+  PRESET_IDS.forEach(function(ownerId) {
+    const ownerName = NAME_BY_ID[ownerId] || ownerId;
+    registerIdea({
+      id: 'figuritas-' + ownerId, module: 'jugador',
+      pick: function(ctx) {
+        return {
+          protagonist: { id: ownerId, name: ownerName },
+          rival: { id: ownerId, name: ownerName },
+          facts: {}
+        };
+      },
+      title: ownerName + ' — Figuritas coleccionables',
+      desc: 'Álbum de ' + ownerName + ': qué rivales ya venció y cuántas veces. Colección completa si llegó a los 10.',
+      computeFacts: function() {
+        const me = ALL_STATS[ownerId];
+        const dc = (me && me.defeatedCount) || {};
+        const unique = Object.keys(dc).length;
+        return { victimas: unique, topVictim: Object.entries(dc).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—' };
+      },
+      copies: {
+        nachi: [ FIGURITAS_MEMES[ownerId] || (ownerName + ', coleccionable oficial.') ]
+      },
+      draw: async function(canvas, opts) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        gradBG(ctx, w, h, '#0f0f1a', '#23132a');
+        // Título + face del dueño de la colección
+        ctx.fillStyle = '#FFDE00';
+        ctx.font = `800 ${w*0.055}px Fredoka One`;
         ctx.textAlign = 'center';
-        ctx.fillText(items[i].name, cx, cy + faceR + h*0.025);
-        ctx.fillStyle = '#4dff91';
-        ctx.font = `700 ${Math.min(w*0.024, cellW*0.14)}px Inter`;
-        ctx.fillText('×' + items[i].count, cx, cy + faceR + h*0.048);
+        ctx.fillText(ownerName.toUpperCase(), w/2, h*0.08);
+        ctx.fillStyle = '#fff';
+        ctx.font = `600 ${w*0.035}px Inter`;
+        ctx.fillText('FIGURITAS COLECCIONABLES', w/2, h*0.125);
+        // Face grande del dueño
+        try {
+          const ownerImg = await loadFace(ownerId);
+          drawFaceCircle(ctx, ownerImg, w/2, h*0.225, w*0.09);
+        } catch (e) {}
+        // Frase meme
+        ctx.fillStyle = 'rgba(255,255,255,.75)';
+        ctx.font = `italic 500 ${w*0.028}px Inter`;
+        wrapText(ctx, (FIGURITAS_MEMES[ownerId] || ''), w/2, h*0.34, w*0.85, w*0.035);
+        // Grid de rivales (10 mini-faces, 5×2)
+        const rivalIds = PRESET_IDS.filter(id => id !== ownerId);
+        const me = ALL_STATS[ownerId] || {};
+        const defeated = me.defeatedCount || {};
+        const cols = 5, rows = 2;
+        const gridW = w*0.86, gridH = h*0.36;
+        const cellW = gridW / cols, cellH = gridH / rows;
+        const startX = (w - gridW) / 2;
+        const startY = h*0.42;
+        const faceR = Math.min(cellW, cellH) * 0.30;
+        for (let i = 0; i < rivalIds.length; i++) {
+          const rid = rivalIds[i];
+          const count = defeated[rid] || 0;
+          const col = i % cols, row = Math.floor(i / cols);
+          const cx = startX + col*cellW + cellW/2;
+          const cy = startY + row*cellH + cellH/2;
+          try {
+            const img = await loadFace(rid);
+            if (count > 0) drawFaceCircle(ctx, img, cx, cy - h*0.015, faceR);
+            else drawFaceCircleDimmed(ctx, img, cx, cy - h*0.015, faceR);
+          } catch (e) {
+            ctx.fillStyle = count > 0 ? '#3a3a5c' : '#1a1a2e';
+            ctx.beginPath(); ctx.arc(cx, cy - h*0.015, faceR, 0, Math.PI*2); ctx.fill();
+          }
+          // Badge con count (amarillo si >0, gris si 0)
+          const badgeR = faceR * 0.42;
+          const bx = cx + faceR * 0.75, by = cy - h*0.015 + faceR * 0.75;
+          ctx.beginPath();
+          ctx.fillStyle = count > 0 ? '#FFDE00' : '#2a2a40';
+          ctx.arc(bx, by, badgeR, 0, Math.PI*2); ctx.fill();
+          ctx.lineWidth = 2; ctx.strokeStyle = '#0f0f1a'; ctx.stroke();
+          ctx.fillStyle = count > 0 ? '#0f0f1a' : 'rgba(255,255,255,.35)';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = `800 ${badgeR*1.05}px Fredoka One`;
+          ctx.fillText(count > 0 ? String(count) : '—', bx, by + badgeR*0.05);
+          ctx.textBaseline = 'alphabetic';
+          // Nombre chico bajo la figurita
+          ctx.fillStyle = count > 0 ? '#fff' : 'rgba(255,255,255,.4)';
+          ctx.font = `600 ${Math.min(w*0.022, cellW*0.14)}px Inter`;
+          ctx.fillText(NAME_BY_ID[rid] || rid, cx, cy + faceR + h*0.022);
+        }
+        // Total
+        const uniqueCount = Object.keys(defeated).length;
+        ctx.fillStyle = '#FFDE00';
+        ctx.font = `800 ${w*0.045}px Fredoka One`;
+        ctx.textAlign = 'center';
+        ctx.fillText(uniqueCount + '/10 víctimas', w/2, h*0.89);
+        // Sello "COLECCIÓN COMPLETA"
+        if (uniqueCount >= 10) {
+          ctx.save();
+          ctx.translate(w*0.82, h*0.22);
+          ctx.rotate(-0.28);
+          ctx.strokeStyle = '#ff4060'; ctx.lineWidth = 5;
+          ctx.beginPath(); ctx.arc(0, 0, w*0.095, 0, Math.PI*2); ctx.stroke();
+          ctx.fillStyle = '#ff4060';
+          ctx.font = `900 ${w*0.022}px Fredoka One`;
+          ctx.textAlign = 'center';
+          ctx.fillText('COLECCIÓN', 0, -6);
+          ctx.fillText('COMPLETA', 0, 16);
+          ctx.restore();
+        }
+        footer(ctx, w, h);
       }
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `700 ${w*0.03}px Fredoka One`;
-      ctx.textAlign = 'center';
-      ctx.fillText('total: ' + list.length + ' víctima' + (list.length===1?'':'s'), w/2, h*0.91);
-      footer(ctx, w, h);
-    }
+    });
   });
 
-  // ---------- 2) RACHA H2H (solo datos reales) ----------
-  registerIdea({
-    id: 'racha', module: 'jugador',
-    pick: function(ctx) {
-      // protagonista = jugador con mayor racha W actual
-      const players = Object.values(ctx.ALL_STATS).filter(p => p.currentStreak > 0);
-      if (!players.length) {
-        // fallback: mayor racha L (negativa) para shame
-        const worst = Object.values(ctx.ALL_STATS)
-          .filter(p => p.currentStreak < 0)
-          .sort((a,b) => a.currentStreak - b.currentStreak)[0];
-        if (!worst) return null;
-        const victims = ctx.rivalDefeatedListFor(worst.id);
-        const rival = victims[0] || { id: worst.id, name: worst.name };
-        return { protagonist: { id: worst.id, name: worst.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
-      }
-      const top = players.sort((a,b) => b.currentStreak - a.currentStreak)[0];
-      const victims = ctx.rivalDefeatedListFor(top.id);
-      const rival = victims[0] || null;
-      return {
-        protagonist: { id: top.id, name: top.name },
-        rival: rival ? { id: rival.id, name: rival.name } : { id: top.id, name: top.name },
-        facts: {}
-      };
-    },
-    title: 'Racha Activa Más Larga',
-    desc: 'Jugador con más victorias consecutivas ahora mismo, según orden cronológico en Firestore. El rival que aparece es su víctima más castigada.',
-    computeFacts: function() {
-      const pStats = ALL_STATS[youId()] || { currentStreak: 0, W: 0, L: 0, gamesPlayed: 0 };
-      const streak = pStats.currentStreak || 0;
-      return { streak: Math.abs(streak), wins: pStats.W, losses: pStats.L, games: pStats.gamesPlayed };
-    },
-    copies: {
-      nachi: [
-        '{protagonist} lleva {streak} victorias seguidas. {rival}, sos la última víctima de la fila.',
-        '{streak} W en fila para {protagonist}. {rival} encabeza la lista de perros.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      gradBG(ctx, w, h, '#3a0000', '#0f0f1a');
-      const pStats = ALL_STATS[youId()] || { currentStreak: 0, W: 0, L: 0, gamesPlayed: 0 };
-      const streak = pStats.currentStreak || 0;
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `900 ${w*0.07}px Fredoka One`;
-      ctx.textAlign = 'center';
-      ctx.fillText('RACHA ACTIVA DE ' + youName().toUpperCase(), w/2, h*0.10);
-      ctx.fillStyle = 'rgba(255,255,255,.65)';
-      ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('victorias seguidas — orden cronológico Firestore', w/2, h*0.145);
-      if (streak <= 0) {
-        ctx.fillStyle = '#ff4060';
-        ctx.font = `900 ${w*0.08}px Fredoka One`;
-        ctx.fillText('SIN RACHA', w/2, h*0.45);
-        ctx.fillText('ACTIVA', w/2, h*0.55);
-        ctx.fillStyle = 'rgba(255,255,255,.55)';
-        ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText('(última partida no fue victoria)', w/2, h*0.63);
-        footer(ctx, w, h); return;
-      }
-      ctx.font = `${w*0.18}px serif`;
-      ctx.fillText('🔥', w/2, h*0.30);
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `900 ${w*0.30}px Fredoka One`;
-      ctx.fillText(String(streak), w/2, h*0.58);
-      ctx.fillStyle = '#fff';
-      ctx.font = `800 ${w*0.055}px Fredoka One`;
-      ctx.fillText('VICTORIAS SEGUIDAS', w/2, h*0.70);
-      ctx.fillStyle = 'rgba(255,255,255,.75)';
-      ctx.font = `600 ${w*0.032}px Inter`;
-      ctx.fillText('última víctima destacada: ' + rivalName(), w/2, h*0.77);
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `700 ${w*0.032}px Fredoka One`;
-      ctx.fillText(`Total 2026: ${pStats.W}W — ${pStats.L}L · ${pStats.gamesPlayed} partidas`, w/2, h*0.87);
-      footer(ctx, w, h);
-    }
-  });
+  // ---------- 2) RACHA ACTIVA MÁS LARGA — solo el líder (o empatados) ----------
+  (function() {
+    const streaks = Object.values(ALL_STATS)
+      .filter(p => (p.currentStreak || 0) > 0)
+      .map(p => ({ id: p.id, name: p.name, streak: p.currentStreak }));
+    if (!streaks.length) return; // nadie con racha activa → no se registra nada
+    const maxStreak = streaks.reduce((m, p) => Math.max(m, p.streak), 0);
+    const leaders = streaks.filter(p => p.streak === maxStreak);
 
-  // ---------- 3) CERTIFICADO DE DOMINANCIA ----------
-  registerIdea({
-    id: 'certificado', module: 'jugador',
-    pick: function(ctx) {
-      // H2H más desbalanceado con >= 3 partidas
-      let best = null;
-      Object.values(ctx.ALL_STATS).forEach(p => {
-        Object.entries(p.h2h || {}).forEach(([rid, h]) => {
-          if (h.together < 3) return;
-          const gap = h.wins - h.losses;
-          if (!best || gap > best.gap) best = { youId: p.id, youName: p.name, rid, gap, h };
-        });
-      });
-      if (!best) return null;
-      return {
-        protagonist: { id: best.youId, name: best.youName },
-        rival: { id: best.rid, name: ctx.NAME_BY_ID[best.rid] || best.rid },
-        facts: {}
-      };
-    },
-    title: 'Certificado de Dominancia H2H',
-    desc: 'Dupla con H2H más desbalanceado (mín. 3 partidas, máximo gap wins − losses). Diploma con el marcador real.',
-    computeFacts: function() { const h = h2hFor(); return { wins: h.wins, losses: h.losses, games: h.games }; },
-    copies: {
-      nachi: [
-        '{rival}, acá tu certificado de inútil: {wins}-{losses}. Colgalo en el baño.',
-        'Papel oficial: {rival} es un desecho. {wins}-{losses} lo demuestra.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      ctx.fillStyle = '#f5e6c8'; ctx.fillRect(0,0,w,h);
-      // doble marco
-      ctx.strokeStyle = '#000'; ctx.lineWidth = 6;
-      ctx.strokeRect(w*0.05, h*0.05, w*0.90, h*0.90);
-      ctx.lineWidth = 2;
-      ctx.strokeRect(w*0.08, h*0.08, w*0.84, h*0.84);
-      ctx.fillStyle = '#000'; ctx.textAlign = 'center';
-      ctx.font = `700 ${w*0.065}px Fredoka One`;
-      ctx.fillText('CERTIFICADO', w/2, h*0.20);
-      ctx.fillText('DE DOMINANCIA', w/2, h*0.28);
-      const hh = h2hFor();
-      ctx.font = `500 italic ${w*0.03}px Inter`;
-      const line1 = `Se certifica que ${rivalName()} cayó ${hh.losses} veces`;
-      const line2 = `frente a ${youName()}, con un H2H real de`;
-      ctx.fillText(line1, w/2, h*0.42);
-      ctx.fillText(line2, w/2, h*0.47);
-      ctx.font = `900 ${w*0.10}px Fredoka One`;
-      ctx.fillText(`${hh.wins} — ${hh.losses}`, w/2, h*0.60);
-      ctx.font = `500 ${w*0.024}px Inter`;
-      ctx.fillText(`(${hh.games} partidas registradas en Firestore)`, w/2, h*0.66);
-      // firma
-      ctx.font = `700 italic ${w*0.035}px Inter`;
-      ctx.fillText('— ' + youName() + ' —', w/2, h*0.80);
-      // sello
-      ctx.save();
-      ctx.translate(w*0.80, h*0.78); ctx.rotate(-0.25);
-      ctx.strokeStyle = '#c2110c'; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.arc(0,0, w*0.07, 0, Math.PI*2); ctx.stroke();
-      ctx.fillStyle = '#c2110c';
-      ctx.font = `700 ${w*0.018}px Fredoka One`;
-      ctx.fillText('OFICIAL', 0, -3); ctx.fillText('LUNES UNO', 0, 12);
-      ctx.restore();
-      // rival face small
-      try {
-        const img = await loadFace(rivalId());
-        drawFaceCircle(ctx, img, w*0.22, h*0.80, w*0.055);
-      } catch(e){}
-    }
-  });
-
-  // ---------- 4) HIGHLIGHTS DE VÍCTIMAS (top 3 rivales que MÁS venciste) ----------
-  registerIdea({
-    id: 'highlights', module: 'jugador',
-    pick: function(ctx) {
-      // Jugador con más rivales a los que dominó sin derrota (wins>=2, losses=0)
-      let best = null;
-      Object.values(ctx.ALL_STATS).forEach(p => {
-        const dominados = Object.entries(p.h2h || {})
-          .filter(([rid, h]) => h.wins >= 2 && h.losses === 0)
-          .map(([rid, h]) => ({ id: rid, name: ctx.NAME_BY_ID[rid] || rid, wins: h.wins }))
-          .sort((a,b) => b.wins - a.wins);
-        if (dominados.length >= 1 && (!best || dominados.length > best.count)) {
-          best = { p, count: dominados.length, top: dominados };
+    leaders.forEach(function(leader) {
+      registerIdea({
+        id: 'racha-' + leader.id, module: 'jugador',
+        pick: function(ctx) {
+          return {
+            protagonist: { id: leader.id, name: leader.name },
+            rival: { id: leader.id, name: leader.name },
+            facts: { streak: leader.streak }
+          };
+        },
+        title: 'Racha Activa Más Larga — ' + leader.name,
+        desc: 'Plaqueta con la racha actual de victorias consecutivas.',
+        computeFacts: function() { return { streak: leader.streak }; },
+        copies: { nachi: [''] },
+        draw: async function(canvas, opts) {
+          const ctx = canvas.getContext('2d');
+          const w = canvas.width, h = canvas.height;
+          gradBG(ctx, w, h, '#3a0000', '#0f0f1a');
+          // Face del jugador arriba
+          try {
+            const img = await loadFace(leader.id);
+            drawFaceCircle(ctx, img, w/2, h*0.26, w*0.13);
+          } catch (e) {}
+          // Nombre (identificador visual, no es texto descriptivo)
+          ctx.fillStyle = '#fff';
+          ctx.font = `700 ${w*0.05}px Fredoka One`;
+          ctx.textAlign = 'center';
+          ctx.fillText(leader.name, w/2, h*0.46);
+          // Plaqueta con SOLO el número
+          const plaqueW = w * 0.6, plaqueH = h * 0.26;
+          const px = (w - plaqueW) / 2, py = h * 0.52;
+          ctx.fillStyle = '#FFDE00';
+          roundRect(ctx, px, py, plaqueW, plaqueH, 24); ctx.fill();
+          ctx.lineWidth = 4; ctx.strokeStyle = '#c2a500'; ctx.stroke();
+          ctx.fillStyle = '#0f0f1a';
+          ctx.font = `900 ${w*0.24}px Fredoka One`;
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(leader.streak), w/2, py + plaqueH/2);
+          ctx.textBaseline = 'alphabetic';
+          footer(ctx, w, h);
         }
       });
-      if (!best) return null;
-      return {
-        protagonist: { id: best.p.id, name: best.p.name },
-        rival: { id: best.top[0].id, name: best.top[0].name },
-        facts: { dominados: best.count, top1: best.top[0].name, top2: best.top[1]?.name || '—', top3: best.top[2]?.name || '—' }
-      };
-    },
-    title: 'Highlights del Verdugo',
-    desc: 'Jugador con más rivales dominados sin perder (wins ≥ 2, losses = 0). Muestra sus 3 víctimas más frecuentes.',
-    computeFacts: function() {
-      const me = ALL_STATS[youId()];
-      if (!me) return { top1: '—' };
-      const top = Object.entries(me.defeatedCount||{}).sort((a,b)=>b[1]-a[1]).slice(0,3);
-      return {
-        top1: top[0] ? (NAME_BY_ID[top[0][0]] + ' ×' + top[0][1]) : '—',
-        total: top.reduce((s,x)=>s+x[1],0)
-      };
-    },
-    copies: {
-      nachi: [
-        'Top 3 perros que tengo: {top1} al frente. {total} palizas totales.',
-        'Mi colección de tarados: {top1} presidente del club.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const ctx = canvas.getContext('2d');
-      const w = canvas.width, h = canvas.height;
-      gradBG(ctx, w, h, '#0f0f1a', '#1a1a2e');
-      ctx.fillStyle = '#FFDE00';
-      ctx.font = `800 ${w*0.07}px Fredoka One`;
-      ctx.textAlign = 'center';
-      ctx.fillText('TOP 3 VÍCTIMAS', w/2, h*0.12);
-      ctx.fillStyle = 'rgba(255,255,255,.55)';
-      ctx.font = `500 ${w*0.025}px Inter`;
-      ctx.fillText('de ' + youName() + ' · datos reales', w/2, h*0.17);
-      const me = ALL_STATS[youId()];
-      const top = me ? Object.entries(me.defeatedCount||{}).sort((a,b)=>b[1]-a[1]).slice(0,3) : [];
-      if (!top.length) {
-        ctx.fillStyle = '#ff4060';
-        ctx.font = `700 ${w*0.05}px Fredoka One`;
-        ctx.fillText('TODAVÍA NO LE', w/2, h*0.50);
-        ctx.fillText('GANASTE A NADIE', w/2, h*0.58);
-        footer(ctx, w, h); return;
-      }
-      const medals = ['🥇','🥈','🥉'];
-      for (let i = 0; i < top.length; i++) {
-        const [rid, count] = top[i];
-        const y = h*(0.28 + i*0.20);
-        ctx.fillStyle = 'rgba(255,222,0,.10)';
-        roundRect(ctx, w*0.08, y, w*0.84, h*0.15, 14); ctx.fill();
-        try {
-          const img = await loadFace(rid);
-          drawFaceCircle(ctx, img, w*0.18, y+h*0.075, w*0.06);
-        } catch(e){}
-        ctx.textAlign = 'left'; ctx.fillStyle = '#fff';
-        ctx.font = `800 ${w*0.05}px Fredoka One`;
-        ctx.fillText(NAME_BY_ID[rid] || rid, w*0.30, y+h*0.08);
-        ctx.fillStyle = '#4dff91';
-        ctx.font = `700 ${w*0.035}px Inter`;
-        ctx.fillText(count + ' victoria' + (count===1?'':'s'), w*0.30, y+h*0.12);
-        ctx.textAlign = 'right'; ctx.font = `${w*0.06}px serif`;
-        ctx.fillText(medals[i] || '', w*0.88, y+h*0.09);
-      }
-      footer(ctx, w, h);
-    }
-  });
+    });
+  })();
 
-  // ---------- 5) MI CARTA UNO ----------
+  // ---------- 3+4) CERTIFICADO DE DOMINANCIA H2H (top-3 por posición del año) ----------
+  // Fusiona "Certificado" y "Highlights del verdugo": un único certificado para el jugador
+  // que acumule más victorias-por-posición contra sus 3 rivales más frecuentemente batidos
+  // en partidos del año en curso. "Victoria por posición" = terminar por delante en un partido.
+  // Esto sólo afecta a este módulo (no edita la DB ni los H2H clásicos).
+  (function() {
+    const year = currentYear();
+    const posWins = computePositionWins(RAW_GAMES, year);
+    const byPlayer = computeTop3Sum(posWins);
+    let best = null;
+    Object.entries(byPlayer).forEach(([pid, info]) => {
+      if (!info || !info.top3.length) return;
+      if (!best || info.sum > best.sum) {
+        best = { id: pid, name: NAME_BY_ID[pid] || pid, sum: info.sum, top3: info.top3 };
+      }
+    });
+    if (!best || best.sum <= 0) return; // sin datos suficientes
+
+    const top3Names = best.top3.map(t => NAME_BY_ID[t.rid] || t.rid);
+
+    registerIdea({
+      id: 'certificado-dominancia', module: 'jugador',
+      pick: function(ctx) {
+        return {
+          protagonist: { id: best.id, name: best.name },
+          rival: { id: best.top3[0].rid, name: top3Names[0] },
+          facts: { total: best.sum, top1: top3Names[0] || '—', top2: top3Names[1] || '—', top3: top3Names[2] || '—' }
+        };
+      },
+      title: 'Certificado de Dominancia H2H',
+      desc: 'Jugador con más victorias acumuladas (por posición final del partido) contra sus top 3 víctimas en ' + year + '.',
+      computeFacts: function() {
+        return { total: best.sum, top1: top3Names[0] || '—', top2: top3Names[1] || '—', top3: top3Names[2] || '—' };
+      },
+      copies: {
+        nachi: [
+          '{you} es el verdugo del año: {total} posiciones ganadas contra {top1}, {top2} y {top3}.',
+          'Certificado oficial: {you} tiene a {top1}, {top2} y {top3} de alfombra. {total} palizas posicionales.'
+        ]
+      },
+      draw: async function(canvas, opts) {
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        // Pergamino
+        ctx.fillStyle = '#f5e6c8'; ctx.fillRect(0,0,w,h);
+        ctx.strokeStyle = '#000'; ctx.lineWidth = 6;
+        ctx.strokeRect(w*0.05, h*0.05, w*0.90, h*0.90);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(w*0.08, h*0.08, w*0.84, h*0.84);
+        // Título
+        ctx.fillStyle = '#000'; ctx.textAlign = 'center';
+        ctx.font = `700 ${w*0.06}px Fredoka One`;
+        ctx.fillText('CERTIFICADO', w/2, h*0.17);
+        ctx.fillText('DE DOMINANCIA', w/2, h*0.235);
+        ctx.font = `500 italic ${w*0.025}px Inter`;
+        ctx.fillText('— top 3 víctimas por posición final en ' + year + ' —', w/2, h*0.275);
+        // Face grande del ganador
+        try {
+          const img = await loadFace(best.id);
+          drawFaceCircle(ctx, img, w/2, h*0.40, w*0.09);
+        } catch (e) {}
+        ctx.fillStyle = '#000';
+        ctx.font = `800 ${w*0.045}px Fredoka One`;
+        ctx.fillText(best.name, w/2, h*0.52);
+        // Lista top 3
+        ctx.textAlign = 'left';
+        ctx.font = `600 ${w*0.034}px Inter`;
+        const listX = w*0.18, listY0 = h*0.585;
+        for (let i = 0; i < 3; i++) {
+          const it = best.top3[i];
+          const y = listY0 + i * h*0.055;
+          ctx.fillStyle = '#000';
+          const rivalName = it ? (NAME_BY_ID[it.rid] || it.rid) : '—';
+          const count = it ? it.n : 0;
+          ctx.fillText((i+1) + '. ' + rivalName + ' × ' + count, listX, y);
+        }
+        // Total
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#c2110c';
+        ctx.font = `900 ${w*0.055}px Fredoka One`;
+        ctx.fillText('Total: ' + best.sum + ' victorias', w/2, h*0.80);
+        // Sello
+        ctx.save();
+        ctx.translate(w*0.80, h*0.75); ctx.rotate(-0.25);
+        ctx.strokeStyle = '#c2110c'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.arc(0, 0, w*0.07, 0, Math.PI*2); ctx.stroke();
+        ctx.fillStyle = '#c2110c';
+        ctx.font = `700 ${w*0.018}px Fredoka One`;
+        ctx.fillText('OFICIAL', 0, -3);
+        ctx.fillText('LUNES UNO', 0, 12);
+        ctx.restore();
+      }
+    });
+  })();
+
+  // ---------- 5) UNO DEL NÚMERO UNO — cara + partidos disputados/ganados en grande ----------
   registerIdea({
-    id: 'mi-carta', module: 'jugador',
+    id: 'uno-del-uno', module: 'jugador',
     pick: function(ctx) {
       const rk = ctx.annualRanking();
       if (!rk.length) return null;
       const one = rk[0];
-      const victims = ctx.rivalDefeatedListFor(one.id);
-      const rival = victims[0] || { id: one.id, name: one.name };
-      return { protagonist: { id: one.id, name: one.name }, rival: { id: rival.id, name: rival.name }, facts: {} };
+      return { protagonist: { id: one.id, name: one.name }, rival: { id: one.id, name: one.name }, facts: {} };
     },
-    title: 'Carta UNO del #1',
-    desc: 'Carta UNO con las stats reales del jugador #1 del ranking anual (winRate): W, L y % de victorias.',
+    title: 'Uno del #1',
+    desc: 'El jugador con mejor winRate del año: su cara + partidos disputados y ganados en grande.',
     computeFacts: function() {
       const s = statsFor(youId());
-      const pct = (s.W+s.L) > 0 ? Math.round((s.W/(s.W+s.L))*100) : 0;
-      return { W: s.W, L: s.L, games: s.gamesPlayed, pct };
+      return { games: s.gamesPlayed, wins: s.W };
     },
     copies: {
       nachi: [
-        '{W}-{L} ({pct}%). {rival}, vos no llegás ni en pedo a estos números.',
-        'Acá mi carta, {rival}. {pct}% de winrate. Vos sos el +4 del ridículo.'
+        '{you}: {wins} victorias en {games} partidos. El número uno, papi.',
+        '{you} rompió la cancha: {wins}/{games}. El resto, a mirar.'
       ]
     },
     draw: async function(canvas, opts) {
       const ctx = canvas.getContext('2d');
       const w = canvas.width, h = canvas.height;
-      // fondo negro
+      // Fondo negro + carta UNO roja
       ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
-      // carta UNO roja
-      const cardY = h*0.08, cardH = h*0.84;
+      const cardY = h*0.06, cardH = h*0.88;
       ctx.fillStyle = '#ED1C24';
-      roundRect(ctx, w*0.08, cardY, w*0.84, cardH, 28); ctx.fill();
-      // elipse blanca rotada
+      roundRect(ctx, w*0.07, cardY, w*0.86, cardH, 28); ctx.fill();
+      // Elipse blanca rotada
       ctx.save();
       ctx.translate(w/2, cardY + cardH/2);
       ctx.rotate(-0.35);
       ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.ellipse(0, 0, w*0.40, h*0.26, 0, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(0, 0, w*0.42, h*0.32, 0, 0, Math.PI*2); ctx.fill();
       ctx.restore();
       // UNO top-left
       ctx.save();
-      ctx.translate(w*0.18, cardY + h*0.06); ctx.rotate(-0.2);
+      ctx.translate(w*0.17, cardY + h*0.06); ctx.rotate(-0.2);
       ctx.fillStyle = '#FFDE00'; ctx.strokeStyle = '#000'; ctx.lineWidth = 4;
-      ctx.font = `900 ${w*0.055}px Fredoka One`; ctx.textAlign = 'left';
+      ctx.font = `900 ${w*0.06}px Fredoka One`; ctx.textAlign = 'left';
       ctx.strokeText('UNO', 0, 0); ctx.fillText('UNO', 0, 0);
       ctx.restore();
-      // numero gigante (W real)
+      // Face grande del #1 en el centro
       const s = statsFor(youId());
-      const pct = (s.W+s.L) > 0 ? Math.round((s.W/(s.W+s.L))*100) : 0;
-      ctx.fillStyle = '#ED1C24'; ctx.strokeStyle = '#000'; ctx.lineWidth = 6;
-      ctx.font = `900 ${w*0.22}px Fredoka One`;
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.strokeText(String(s.W), w/2, h/2 - 10);
-      ctx.fillText(String(s.W), w/2, h/2 - 10);
-      ctx.textBaseline = 'alphabetic';
+      try {
+        const img = await loadFace(youId());
+        drawFaceCircle(ctx, img, w/2, h*0.36, w*0.13);
+      } catch (e) {}
       ctx.fillStyle = '#000';
-      ctx.font = `800 ${w*0.032}px Inter`;
-      ctx.fillText('VICTORIAS REALES', w/2, h/2 + w*0.10);
-      ctx.fillStyle = '#fff';
-      ctx.font = `800 ${w*0.036}px Inter`;
-      ctx.fillText(`${youName()} · ${s.gamesPlayed} partidas`, w/2, cardY + cardH - 90);
-      ctx.fillStyle = 'rgba(255,255,255,.9)';
-      ctx.font = `600 ${w*0.028}px Inter`;
-      ctx.fillText(`${s.W}W  ·  ${s.L}L  ·  ${pct}%`, w/2, cardY + cardH - 58);
+      ctx.font = `900 ${w*0.055}px Fredoka One`;
+      ctx.textAlign = 'center';
+      ctx.fillText(youName(), w/2, h*0.52);
+      // Dos filas grandes: partidos disputados + ganados
+      ctx.fillStyle = '#000';
+      ctx.font = `600 ${w*0.03}px Inter`;
+      ctx.fillText('PARTIDOS DISPUTADOS', w/2, h*0.60);
+      ctx.fillStyle = '#000';
+      ctx.font = `900 ${w*0.16}px Fredoka One`;
+      ctx.fillText(String(s.gamesPlayed), w/2, h*0.72);
+      ctx.fillStyle = '#ED1C24';
+      ctx.font = `600 ${w*0.03}px Inter`;
+      ctx.fillText('PARTIDOS GANADOS', w/2, h*0.78);
+      ctx.fillStyle = '#ED1C24';
+      ctx.font = `900 ${w*0.16}px Fredoka One`;
+      ctx.fillText(String(s.W), w/2, h*0.90);
       footer(ctx, w, h);
     }
   });
@@ -1213,11 +1282,27 @@ window._modJugador = function() {
 // DRAWS:ANUAL:START
 window._modAnual = function() {
 
-  // ---------- 1) PODIO CON SOMBRA (datos reales) ----------
+  // ---------- 1) PODIO ANUAL — top 3 por puntaje descendente ----------
+  // Criterio: sumatoria de puntaje (rounds) por jugador en el año en curso.
+  // Nota: en UNO el menor puntaje suele ganar, pero el pedido explícito es "descendente".
+  function _pointsRankingForYear(year) {
+    const y = year || currentYear();
+    const pts = computeAnnualPoints(y);
+    return Object.keys(pts)
+      .map(id => ({
+        id,
+        name: NAME_BY_ID[id] || id,
+        totalScore: pts[id],
+        gamesPlayed: (ALL_STATS[id] && ALL_STATS[id].gamesPlayed) || 0
+      }))
+      .filter(p => p.gamesPlayed > 0)
+      .sort((a, b) => b.totalScore - a.totalScore);
+  }
+
   registerIdea({
-    id: 'podio', module: 'anual',
+    id: 'podio-anual', module: 'anual',
     pick: function(ctx) {
-      const rk = ctx.annualRanking();
+      const rk = _pointsRankingForYear();
       if (!rk.length) return null;
       const one = rk[0];
       const last = rk[rk.length - 1];
@@ -1227,29 +1312,31 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'Podio Anual 2026 (por winRate)',
-    desc: 'Top 3 del ranking anual, ordenados por winRate = victorias / partidas jugadas en 2026.',
+    title: 'Podio Anual ' + currentYear(),
+    desc: 'Top 3 de la tabla anual de ' + currentYear() + ', ordenada por puntaje acumulado (descendente).',
     computeFacts: function() {
-      const r = annualRanking();
+      const r = _pointsRankingForYear();
       return {
         p1: r[0]?.name || '—', p2: r[1]?.name || '—', p3: r[2]?.name || '—',
-        rivalPos: (r.findIndex(x => x.id === rivalId()) + 1) || '—',
-        youPos: (r.findIndex(x => x.id === youId()) + 1) || '—',
         total: r.length
       };
     },
     copies: {
       nachi: [
-        '{rival} terminó #{rivalPos} de {total}. Patético. {p1} lo tiene de mascota.',
-        'El podio no tiene lugar para perdedores como {rival}. #{rivalPos}, mongo.'
+        'Podio ' + currentYear() + ': {p1}, {p2}, {p3}. El resto a mirar.',
+        '{p1} arriba del podio con tranqui. El resto se acomoda atrás.'
       ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const year = currentYear();
       gradBG(ctx, w, h, '#0f0f1a', '#2e2e50');
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.07}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('PODIO 2026', w/2, h*0.12);
-      const r = annualRanking();
+      ctx.fillText('PODIO ' + year, w/2, h*0.12);
+      ctx.fillStyle = 'rgba(255,255,255,.55)';
+      ctx.font = `500 ${w*0.024}px Inter`;
+      ctx.fillText('por puntaje anual descendente', w/2, h*0.165);
+      const r = _pointsRankingForYear();
       if (!r.length) {
         ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.045}px Fredoka One`;
         ctx.fillText('SIN PARTIDAS REGISTRADAS', w/2, h*0.50);
@@ -1276,7 +1363,7 @@ window._modAnual = function() {
         ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.028}px Inter`;
         ctx.fillText(b.name, x+bw/2, h*0.86);
         ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = `500 ${w*0.022}px Inter`;
-        ctx.fillText(`${b.W}W · ${b.L}L`, x+bw/2, h*0.90);
+        ctx.fillText(`${b.totalScore} pts`, x+bw/2, h*0.90);
       }
       const tail = r.slice(3).map(x => x.name).join(', ') || 'nadie más';
       ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = `500 ${w*0.022}px Inter`;
@@ -1286,38 +1373,39 @@ window._modAnual = function() {
     }
   });
 
-  // ---------- 2) RANKING DE PATÉTICOS (invertido, datos reales) ----------
+  // ---------- 2) PEORES POR PUNTAJE ANUAL (top 3 por puntos acumulados, descendente) ----------
   registerIdea({
-    id: 'pateticos', module: 'anual',
+    id: 'peores-puntaje', module: 'anual',
     pick: function(ctx) {
-      const bottom = ctx.annualRanking().slice().reverse();
-      if (!bottom.length) return null;
+      const rk = _pointsRankingForYear();
+      if (!rk.length) return null;
       return {
-        protagonist: { id: bottom[0].id, name: bottom[0].name },
-        rival: { id: bottom[0].id, name: bottom[0].name },
+        protagonist: { id: rk[0].id, name: rk[0].name },
+        rival: { id: rk[0].id, name: rk[0].name },
         facts: {}
       };
     },
-    title: 'Top Perdedores 2026 (por winRate)',
-    desc: 'Los 3 jugadores con peor winRate del año (ranking invertido).',
+    title: 'Peores por puntaje anual ' + currentYear(),
+    desc: 'Los 3 jugadores con más puntaje acumulado en ' + currentYear() + ' (más puntos = peor).',
     computeFacts: function() {
-      const r = annualRanking().slice().reverse();
+      const r = _pointsRankingForYear();
       return { last: r[0]?.name || '—', last2: r[1]?.name || '—', last3: r[2]?.name || '—' };
     },
     copies: {
       nachi: [
-        'Top inútiles 2026: {last}, {last2}, {last3}. Dejen UNO y pidan disculpas.',
-        '{last} es basura pura. Ni para sostener cartas sirve.'
+        'Los que más puntos cargan en ' + currentYear() + ': {last}, {last2}, {last3}. Basura pura.',
+        '{last} suma y suma puntos. En UNO eso se traduce en ridículo.'
       ]
     },
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const year = currentYear();
       gradBG(ctx, w, h, '#1a0a0a', '#0f0f1a');
-      ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.075}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('TOP PERDEDORES', w/2, h*0.12);
+      ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.065}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('PEORES POR PUNTAJE', w/2, h*0.12);
       ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.045}px Fredoka One`;
-      ctx.fillText('2026', w/2, h*0.19);
-      const losers = annualRanking().slice().reverse().slice(0, 3);
+      ctx.fillText('ANUAL ' + year, w/2, h*0.19);
+      const losers = _pointsRankingForYear().slice(0, 3);
       if (!losers.length) {
         ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.04}px Inter`;
         ctx.fillText('SIN DATOS REGISTRADOS', w/2, h*0.50);
@@ -1337,18 +1425,87 @@ window._modAnual = function() {
         ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.045}px Inter`;
         ctx.fillText(L.name, w*0.38, y+h*0.06);
         ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `500 ${w*0.028}px Inter`;
-        ctx.fillText(`${L.W} W · ${L.L} L · ${(L.winRate*100).toFixed(0)}%`, w*0.38, y+h*0.10);
+        ctx.fillText(`${L.totalScore} pts · ${L.gamesPlayed} partidas`, w*0.38, y+h*0.10);
         ctx.font = `${w*0.055}px serif`; ctx.textAlign = 'right';
-        ctx.fillText('👑💩', w*0.88, y+h*0.08);
+        ctx.fillText('💩', w*0.88, y+h*0.08);
       }
       footer(ctx, w, h);
     }
   });
 
-
-  // ---------- 4) NFT DE PATÉTICO (posición real) ----------
+  // ---------- 3) PEOR WINRATE (SOLO el peor, desempate por faltas) ----------
   registerIdea({
-    id: 'nft', module: 'anual',
+    id: 'peor-winrate', module: 'anual',
+    pick: function(ctx) {
+      const year = currentYear();
+      const rk = ctx.annualRanking(year);
+      if (!rk.length) return null;
+      const absences = computeAnnualAbsences(year);
+      const withAbs = rk.map(p => ({ ...p, absences: absences[p.id] || 0 }));
+      withAbs.sort((a, b) => a.winRate - b.winRate || b.absences - a.absences);
+      const worst = withAbs[0];
+      return {
+        protagonist: { id: worst.id, name: worst.name },
+        rival: { id: worst.id, name: worst.name },
+        facts: { winRate: Math.round(worst.winRate * 100), faltas: worst.absences, games: worst.gamesPlayed }
+      };
+    },
+    title: 'Peor porcentaje de victorias ' + currentYear(),
+    desc: 'El jugador con peor winRate de ' + currentYear() + '. Si hay empate, gana el de más faltas.',
+    computeFacts: function() {
+      const year = currentYear();
+      const rk = annualRanking(year);
+      const absences = computeAnnualAbsences(year);
+      const withAbs = rk.map(p => ({ ...p, absences: absences[p.id] || 0 }));
+      withAbs.sort((a, b) => a.winRate - b.winRate || b.absences - a.absences);
+      const w0 = withAbs[0];
+      return { winRate: w0 ? Math.round(w0.winRate * 100) : 0, faltas: w0?.absences || 0, games: w0?.gamesPlayed || 0 };
+    },
+    copies: {
+      nachi: [
+        '{you} terminó con {winRate}% de winrate y {faltas} faltas. Directo a la vergüenza.',
+        'Record en negativo: {you} apenas {winRate}%. {faltas} faltas sumadas de regalo.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const year = currentYear();
+      const rk = annualRanking(year);
+      const absences = computeAnnualAbsences(year);
+      const withAbs = rk.map(p => ({ ...p, absences: absences[p.id] || 0 }));
+      withAbs.sort((a, b) => a.winRate - b.winRate || b.absences - a.absences);
+      const loser = withAbs[0];
+      gradBG(ctx, w, h, '#1a0a0a', '#0f0f1a');
+      ctx.fillStyle = '#ff4060'; ctx.font = `700 ${w*0.06}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('PEOR WINRATE', w/2, h*0.12);
+      ctx.fillStyle = '#FFDE00'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText('ANUAL ' + year, w/2, h*0.18);
+      if (!loser) {
+        ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.04}px Inter`;
+        ctx.fillText('SIN DATOS REGISTRADOS', w/2, h*0.50);
+        footer(ctx, w, h); return;
+      }
+      try {
+        const img = await loadFace(loser.id);
+        drawFaceCircle(ctx, img, w/2, h*0.40, w*0.15);
+      } catch (e) {}
+      ctx.fillStyle = '#fff';
+      ctx.font = `800 ${w*0.065}px Fredoka One`;
+      ctx.fillText(loser.name, w/2, h*0.58);
+      ctx.fillStyle = '#ff4060';
+      ctx.font = `900 ${w*0.18}px Fredoka One`;
+      ctx.fillText((loser.winRate * 100).toFixed(0) + '%', w/2, h*0.76);
+      ctx.fillStyle = 'rgba(255,255,255,.75)';
+      ctx.font = `600 ${w*0.034}px Inter`;
+      ctx.fillText(`Faltas: ${loser.absences} · Partidas: ${loser.gamesPlayed}`, w/2, h*0.86);
+      footer(ctx, w, h);
+    }
+  });
+
+
+  // ---------- 4) NFT DEL ÚLTIMO (último del anual + dirección ETH determinística) ----------
+  registerIdea({
+    id: 'nft-ultimo', module: 'anual',
     pick: function(ctx) {
       const rk = ctx.annualRanking();
       if (!rk.length) return null;
@@ -1360,8 +1517,8 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'NFT del Último (ranking anual)',
-    desc: 'Último puesto del ranking anual 2026 por winRate. NFT falso con cara pixelada y puesto real.',
+    title: 'NFT del Último',
+    desc: 'Último puesto del ranking anual ' + currentYear() + ' por winRate. NFT falso con cara pixelada y dirección ETH determinística.',
     computeFacts: function() {
       const r = annualRanking();
       const pos = (r.findIndex(x => x.id === rivalId()) + 1) || '—';
@@ -1369,8 +1526,8 @@ window._modAnual = function() {
     },
     copies: {
       nachi: [
-        '{rival} #{rivalPos}, minteado como NFT de verguenza. Pieza de museo del ridículo.',
-        '"Certified Patético" edición {rival}: puesto #{rivalPos}. Pagarías por no tenerlo.'
+        '{rival} #{rivalPos}, minteado como NFT. Pieza de museo del ridículo.',
+        '"Último del Anual" edición {rival}: puesto #{rivalPos}. Pagarías por no tenerlo.'
       ]
     },
     draw: async function(canvas, opts) {
@@ -1380,11 +1537,16 @@ window._modAnual = function() {
       ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
       ctx.strokeStyle = '#00ffe1'; ctx.lineWidth = w*0.01;
       ctx.strokeRect(w*0.05, h*0.05, w*0.9, h*0.9);
-      ctx.fillStyle = '#00ffe1'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('CERTIFIED PATÉTICO', w/2, h*0.14);
+      // Título renombrado
+      ctx.fillStyle = '#00ffe1'; ctx.font = `700 ${w*0.058}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('ÚLTIMO DEL ANUAL', w/2, h*0.115);
+      // Bajada: "NFT único"
+      ctx.fillStyle = '#ff00e6';
+      ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText('NFT único', w/2, h*0.165);
       try {
         const img = await loadFace(rivalId());
-        const size = w*0.45;
+        const size = w*0.38;
         ctx.save();
         ctx.imageSmoothingEnabled = false;
         const tmp = document.createElement('canvas');
@@ -1398,11 +1560,14 @@ window._modAnual = function() {
       const rk = annualRanking();
       const pos = (rk.findIndex(x => x.id === rivalId()) + 1) || '—';
       ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`;
-      ctx.fillText(`RANKING #${pos} / ${rk.length || '—'}`, w/2, h*0.75);
-      ctx.fillStyle = '#00ffe1'; ctx.font = `500 ${w*0.025}px monospace`;
-      ctx.fillText('0x' + Array.from({length:10}, () => 'abcdef0123456789'[Math.floor(Math.random()*16)]).join('') + '...', w/2, h*0.80);
-      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.035}px Fredoka One`;
-      ctx.fillText('1/1 EDITION · BLOCKCHAIN DEL ASADO', w/2, h*0.87);
+      ctx.fillText(`RANKING #${pos} / ${rk.length || '—'}`, w/2, h*0.72);
+      // Dirección ETH completa (determinística por jugador), partida en dos líneas
+      const addr = ethAddressFor(rivalId());
+      ctx.fillStyle = '#00ffe1'; ctx.font = `500 ${w*0.022}px monospace`;
+      ctx.fillText(addr.slice(0, 22), w/2, h*0.785);
+      ctx.fillText(addr.slice(22), w/2, h*0.82);
+      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.032}px Fredoka One`;
+      ctx.fillText('1/1 EDITION · BLOCKCHAIN DEL ASADO', w/2, h*0.88);
       footer(ctx, w, h);
     }
   });
@@ -1421,64 +1586,75 @@ window._modTemporada = function() {
 // DRAWS:TEMPORADAS:START
 window._modTemporadas = function() {
 
-  // ---------- 1) HALL OF SHAME (los 3 con peor winrate real, al menos 1 partida) ----------
-  registerIdea({
-    id: 'hall-shame', module: 'temporadas',
-    pick: function(ctx) {
-      const bottom = ctx.annualRanking().slice().reverse();
-      if (bottom.length < 3) return null;
-      return {
-        protagonist: { id: bottom[0].id, name: bottom[0].name },
-        rival: { id: bottom[0].id, name: bottom[0].name },
-        facts: {}
-      };
-    },
-    title: 'Hall of Shame Histórico',
-    desc: 'Los 3 jugadores con peor winRate en toda la historia de Firestore (todas las temporadas). Placas de bronce oficiales.',
-    computeFacts: function() {
-      const r = annualRanking().slice().reverse();
-      return { s1: r[0]?.name || '—', s2: r[1]?.name || '—', s3: r[2]?.name || '—' };
-    },
-    copies: {
-      nachi: [
-        '{s1}, {s2} y {s3}: sos peor que un 4+ robado. Placa eterna.',
-        'Museo del fracaso: {s1} lidera. Pagarías entrada por no verte.'
-      ]
-    },
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
-      gradBG(ctx, w, h, '#1a0f05', '#0f0f1a');
-      ctx.fillStyle = '#c2710c'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('HALL OF SHAME', w/2, h*0.1);
-      ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.028}px Inter`;
-      ctx.fillText('· museo del asado · winRate histórico ·', w/2, h*0.145);
-      const shameList = annualRanking().slice().reverse().slice(0, 3);
-      if (!shameList.length) {
-        ctx.fillStyle = '#fff'; ctx.font = `600 ${w*0.04}px Inter`;
-        ctx.fillText('SIN DATOS HISTÓRICOS', w/2, h*0.50);
-        footer(ctx, w, h); return;
+  // ---------- 1) HALL OF SHAME HISTÓRICO (jugadores con TODOS sus partidos perdidos) ----------
+  (function() {
+    const allLosers = Object.values(ALL_STATS)
+      .filter(p => p.gamesPlayed > 0 && p.W === 0)
+      .sort((a, b) => b.L - a.L);
+    if (!allLosers.length) return; // no se registra el módulo si no hay nadie con 0 victorias
+
+    registerIdea({
+      id: 'hall-shame', module: 'temporadas',
+      pick: function(ctx) {
+        const first = allLosers[0];
+        return {
+          protagonist: { id: first.id, name: first.name },
+          rival: { id: first.id, name: first.name },
+          facts: { count: allLosers.length }
+        };
+      },
+      title: 'Hall of Shame Histórico',
+      desc: 'Jugadores que perdieron TODOS los partidos que disputaron en el histórico de Firestore.',
+      computeFacts: function() {
+        return {
+          count: allLosers.length,
+          s1: allLosers[0]?.name || '—',
+          s2: allLosers[1]?.name || '—',
+          s3: allLosers[2]?.name || '—'
+        };
+      },
+      copies: {
+        nachi: [
+          '{s1}: histórico del 0%. Placa eterna.',
+          'Museo del fracaso: {count} miembros sin una sola victoria. {s1} lidera.'
+        ]
+      },
+      draw: async function(canvas, opts) {
+        const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+        gradBG(ctx, w, h, '#1a0f05', '#0f0f1a');
+        ctx.fillStyle = '#c2710c'; ctx.font = `700 ${w*0.055}px Fredoka One`; ctx.textAlign = 'center';
+        ctx.fillText('HALL OF SHAME', w/2, h*0.1);
+        ctx.fillStyle = '#FFDE00'; ctx.font = `500 ${w*0.026}px Inter`;
+        ctx.fillText('· jugadores con 0 victorias en toda su historia ·', w/2, h*0.145);
+        const n = allLosers.length;
+        const maxRows = Math.min(n, 5);
+        const rowH = h*0.13;
+        const startY = h*0.22;
+        for (let i = 0; i < maxRows; i++) {
+          const y = startY + i * (rowH + h*0.015);
+          const gp = ctx.createLinearGradient(w*0.1, y, w*0.9, y + rowH);
+          gp.addColorStop(0, '#a06020'); gp.addColorStop(0.5, '#c2710c'); gp.addColorStop(1, '#7a4410');
+          ctx.fillStyle = gp;
+          roundRect(ctx, w*0.1, y, w*0.8, rowH, 10); ctx.fill();
+          ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
+          try {
+            const img = await loadFace(allLosers[i].id);
+            drawFaceCircle(ctx, img, w*0.2, y + rowH/2, w*0.055);
+          } catch (e) {}
+          ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.038}px Fredoka One`; ctx.textAlign = 'left';
+          ctx.fillText(allLosers[i].name, w*0.32, y + rowH*0.42);
+          ctx.fillStyle = '#1a0f05'; ctx.font = `600 ${w*0.024}px Inter`;
+          ctx.fillText(`PJ: ${allLosers[i].gamesPlayed} · V: 0 · D: ${allLosers[i].L}`, w*0.32, y + rowH*0.75);
+        }
+        if (n > maxRows) {
+          ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.font = `500 ${w*0.024}px Inter`;
+          ctx.textAlign = 'center';
+          ctx.fillText(`y ${n - maxRows} más…`, w/2, startY + maxRows * (rowH + h*0.015) + h*0.03);
+        }
+        footer(ctx, w, h);
       }
-      for (let i = 0; i < shameList.length; i++) {
-        const y = h*(0.22 + i*0.23);
-        const gp = ctx.createLinearGradient(w*0.1, y, w*0.9, y+h*0.18);
-        gp.addColorStop(0,'#a06020'); gp.addColorStop(0.5,'#c2710c'); gp.addColorStop(1,'#7a4410');
-        ctx.fillStyle = gp;
-        roundRect(ctx, w*0.1, y, w*0.8, h*0.18, 10); ctx.fill();
-        ctx.strokeStyle = '#FFDE00'; ctx.lineWidth = 3; ctx.stroke();
-        try {
-          const img = await loadFace(shameList[i].id);
-          drawFaceCircle(ctx, img, w*0.2, y+h*0.09, w*0.06);
-        } catch(e){}
-        ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.04}px Fredoka One`; ctx.textAlign = 'left';
-        ctx.fillText(shameList[i].name, w*0.32, y+h*0.07);
-        ctx.fillStyle = '#1a0f05'; ctx.font = `600 ${w*0.024}px Inter`;
-        ctx.fillText(`WinRate: ${(shameList[i].winRate*100).toFixed(0)}% · ${shameList[i].W}W-${shameList[i].L}L`, w*0.32, y+h*0.11);
-        ctx.fillStyle = '#fff'; ctx.font = `500 ${w*0.022}px Inter`;
-        ctx.fillText('Peor racha histórica', w*0.32, y+h*0.15);
-      }
-      footer(ctx, w, h);
-    }
-  });
+    });
+  })();
 
   // ---------- 2) TIMELINE (última victoria real del rival + datos) ----------
   registerIdea({
