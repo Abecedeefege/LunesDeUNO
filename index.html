@@ -920,9 +920,11 @@
 
     /* ---- Nachi credit button ---- */
     .btn-nachi {
+      display: inline-block;
       background: var(--surface-2);
       border: 2px solid var(--uno-yellow);
       color: var(--text);
+      text-decoration: none;
       border-radius: 999px;
       padding: .3rem .75rem;
       font-size: .85rem;
@@ -1164,7 +1166,7 @@
   <div id="stats" class="screen">
     <div style="display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:.25rem;">
       <h2 style="font-size:1.6rem;" data-i18n="stats_title"></h2>
-      <button type="button" class="btn-nachi" aria-label="by Nachi">🍎🍌 by Nachi 🍌🍎</button>
+      <a href="propuestas.html" class="btn-nachi" aria-label="by Nachi">🍎🍌 by Nachi 🍌🍎</a>
     </div>
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.6rem;" id="statsMeta"></p>
 
