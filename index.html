@@ -6,6 +6,7 @@
   <title>Lunes de UNO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     :root {
       --uno-red: #ED1C24;
@@ -25,12 +26,16 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
     /* ---- Header (logo + flags) ---- */
@@ -76,6 +81,8 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      width: 100%;
+      max-width: 100vw;
       padding: 2rem 1rem;
       animation: fadeIn .35s ease;
     }
@@ -863,9 +870,32 @@
     }
     .stats-table th, .stats-table td {
       padding: .5rem .6rem; text-align: left; border-bottom: 1px solid var(--border);
+      white-space: nowrap;
     }
     .stats-table th { background: var(--surface-2); font-weight: 700; color: var(--text-muted); text-transform: uppercase; font-size: .7rem; letter-spacing: .05em; }
     .stats-table tr:hover td { background: var(--surface-2); }
+
+    /* Horizontal-scroll wrapper so stats tables never widen the page on mobile */
+    .stats-table-scroll {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .stats-tab-panel { width: 100%; max-width: 100%; }
+
+    /* Share-to-WhatsApp button under each stats table */
+    .btn-whatsapp {
+      display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+      background: #25D366; color: #fff; border: none; border-radius: 10px;
+      padding: .55rem 1rem; font-family: 'Inter', sans-serif; font-weight: 600;
+      font-size: .85rem; cursor: pointer; margin-top: .75rem;
+      transition: all .2s ease;
+      box-shadow: 0 2px 8px rgba(37,211,102,.25);
+    }
+    .btn-whatsapp:hover:not(:disabled) { background: #1fb855; box-shadow: 0 4px 14px rgba(37,211,102,.4); }
+    .btn-whatsapp:disabled { opacity: .6; cursor: wait; }
+
     .h2h-matrix { font-size: .75rem; }
     .h2h-matrix td, .h2h-matrix th {
       text-align: center; padding: .3rem .35rem; min-width: 44px;
@@ -1128,7 +1158,10 @@
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
         <select id="leaderboardSort" onchange="renderLeaderboard(this.value, 'annual')"></select>
       </div>
-      <table class="stats-table" id="leaderboardTable"></table>
+      <div class="stats-table-scroll">
+        <table class="stats-table" id="leaderboardTable"></table>
+      </div>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTable', 'stats_tab_leaderboard', this)" data-i18n="stats_share_wa"></button>
     </div>
 
     <div id="statsTab_leaderboardSeason" class="stats-tab-panel">
@@ -1136,18 +1169,25 @@
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
         <select id="leaderboardSortSeason" onchange="renderLeaderboard(this.value, 'season')"></select>
       </div>
-      <table class="stats-table" id="leaderboardTableSeason"></table>
+      <div class="stats-table-scroll">
+        <table class="stats-table" id="leaderboardTableSeason"></table>
+      </div>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTableSeason', 'stats_tab_leaderboard_season', this)" data-i18n="stats_share_wa"></button>
     </div>
 
     <div id="statsTab_seasons" class="stats-tab-panel">
-      <table class="stats-table" id="seasonsTable"></table>
+      <div class="stats-table-scroll">
+        <table class="stats-table" id="seasonsTable"></table>
+      </div>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('seasonsTable', 'stats_tab_seasons', this)" data-i18n="stats_share_wa"></button>
     </div>
 
     <div id="statsTab_h2h" class="stats-tab-panel">
-      <div style="overflow-x:auto;">
+      <div class="stats-table-scroll">
         <table class="stats-table h2h-matrix" id="h2hMatrix"></table>
       </div>
       <p style="color:var(--text-muted);font-size:.75rem;margin-top:.5rem;" data-i18n="stats_h2h_help"></p>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('h2hMatrix', 'stats_tab_h2h', this)" data-i18n="stats_share_wa"></button>
     </div>
 
     <div style="margin-top:1rem; text-align:center;">
@@ -1450,6 +1490,10 @@ const STRINGS = {
     shame_rounds_lost: 'rondas perdidas',
     share_whatsapp: 'Mandale al grupo',
     share_copied: '¡Copiado al portapapeles!',
+    stats_share_wa: '📲 Compartir a WhatsApp',
+    stats_share_preparing: 'Preparando imagen...',
+    stats_share_error: 'No se pudo generar la imagen',
+    stats_share_downloaded: 'Imagen descargada',
     share_title: 'Compartir resultados',
     share_upload_photo: 'Subir foto con puntajes',
     share_select_file: 'Subir archivo',
@@ -1606,6 +1650,10 @@ const STRINGS = {
     shame_rounds_lost: 'rounds lost',
     share_whatsapp: 'Share to group',
     share_copied: 'Copied to clipboard!',
+    stats_share_wa: '📲 Share to WhatsApp',
+    stats_share_preparing: 'Preparing image...',
+    stats_share_error: 'Could not generate image',
+    stats_share_downloaded: 'Image downloaded',
     share_title: 'Share results',
     share_upload_photo: 'Upload photo with scores',
     share_select_file: 'Choose file',
@@ -4727,6 +4775,134 @@ function renderH2HMatrix() {
   });
   html += '</tbody>';
   table.innerHTML = html;
+}
+
+// ============ SHARE STATS TABLE AS IMAGE ============
+function _showStatsToast(msg) {
+  var toast = document.getElementById('copyToast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2200);
+}
+
+async function shareStatsTableImage(tableId, titleKey, btn) {
+  var table = document.getElementById(tableId);
+  if (!table || !table.querySelector('tbody')) return;
+  if (typeof html2canvas === 'undefined') {
+    _showStatsToast(t('stats_share_error'));
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.dataset._label = btn.textContent; btn.textContent = t('stats_share_preparing'); }
+
+  // Off-screen styled wrapper so the whole (non-scrolling) table renders at natural width.
+  var wrap = document.createElement('div');
+  wrap.style.cssText = [
+    'position:fixed',
+    'top:-100000px',
+    'left:0',
+    'background:#0f0f1a',
+    'color:#f0f0f5',
+    'padding:48px',
+    "font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif",
+    'z-index:-1'
+  ].join(';');
+
+  var header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;gap:16px;margin-bottom:28px;';
+  header.innerHTML =
+    '<div style="width:56px;height:56px;border-radius:12px;background:#FFDE00;display:flex;align-items:center;justify-content:center;font-size:32px;">🃏</div>'
+    + '<div>'
+    +   '<div style="font-family:\'Fredoka One\',cursive;font-size:42px;color:#FFDE00;line-height:1;">Lunes de UNO</div>'
+    +   '<div style="color:#8888a8;font-size:20px;margin-top:6px;">' + t(titleKey) + '</div>'
+    + '</div>';
+  wrap.appendChild(header);
+
+  var clone = table.cloneNode(true);
+  clone.style.borderCollapse = 'collapse';
+  clone.style.fontSize = '20px';
+  clone.style.background = '#1a1a2e';
+  clone.style.width = 'auto';
+  clone.style.borderRadius = '12px';
+  clone.style.overflow = 'hidden';
+  clone.querySelectorAll('th').forEach(function(th) {
+    th.style.padding = '14px 18px';
+    th.style.background = '#242442';
+    th.style.color = '#8888a8';
+    th.style.fontSize = '16px';
+    th.style.fontWeight = '700';
+    th.style.textAlign = 'left';
+    th.style.borderBottom = '1px solid #3a3a5c';
+    th.style.textTransform = 'uppercase';
+    th.style.letterSpacing = '.05em';
+    th.style.whiteSpace = 'nowrap';
+  });
+  clone.querySelectorAll('td').forEach(function(td) {
+    td.style.padding = '14px 18px';
+    td.style.borderBottom = '1px solid #3a3a5c';
+    td.style.whiteSpace = 'nowrap';
+    td.style.color = '#f0f0f5';
+  });
+  clone.querySelectorAll('img').forEach(function(img) {
+    img.style.width = '28px';
+    img.style.height = '28px';
+    img.style.verticalAlign = 'middle';
+    img.style.borderRadius = '50%';
+    img.style.marginRight = '8px';
+    img.crossOrigin = 'anonymous';
+  });
+  wrap.appendChild(clone);
+
+  var footer = document.createElement('div');
+  footer.style.cssText = 'margin-top:24px;color:#8888a8;font-size:16px;';
+  footer.textContent = 'lunesdeuno • ' + formatTimestamp(Date.now());
+  wrap.appendChild(footer);
+
+  document.body.appendChild(wrap);
+
+  try {
+    if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+
+    var canvas = await html2canvas(wrap, {
+      backgroundColor: '#0f0f1a',
+      scale: 2,
+      useCORS: true,
+      logging: false
+    });
+
+    var blob = await new Promise(function(resolve) { canvas.toBlob(resolve, 'image/png'); });
+    if (!blob) throw new Error('blob-null');
+
+    var filename = 'lunesdeuno-' + tableId + '.png';
+    var file = new File([blob], filename, { type: 'image/png' });
+    var shareData = { files: [file], title: 'Lunes de UNO', text: t(titleKey) };
+
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (e) {
+        if (e && e.name === 'AbortError') { /* user cancelled */ }
+        else throw e;
+      }
+    } else {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(a.href); }, 5000);
+      _showStatsToast(t('stats_share_downloaded'));
+      window.open('https://wa.me/', '_blank');
+    }
+  } catch (err) {
+    console.warn('[shareStatsTableImage]', err);
+    _showStatsToast(t('stats_share_error'));
+  } finally {
+    document.body.removeChild(wrap);
+    if (btn) { btn.disabled = false; btn.textContent = btn.dataset._label || t('stats_share_wa'); }
+  }
 }
 
 // ============ INIT ============
