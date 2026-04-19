@@ -1403,6 +1403,177 @@ window._modJugador = function() {
       footer(ctx, w, h);
     }
   });
+
+  // ---------- PROPUESTA: EL QUE MÁS FECHAS PARTICIPÓ ----------
+  // Propuesta Firestore ID: rhfqFgoLYWR8rHnvgFoU
+  registerIdea({
+    id: 'mas-fechas',
+    module: 'jugador',
+    title: '📅 El Más Pelma del Grupo',
+    desc: 'El jugador que más fechas participó. Nunca falta. Literalmente nunca. ¿No tiene vida?',
+    pick: function(ctx) {
+      let best = null, bestGP = -1;
+      for (const pid of ctx.PLAYERS_WITH_DATA) {
+        const ps = ctx.ALL_STATS[pid];
+        if ((ps.gamesPlayed || 0) > bestGP) { bestGP = ps.gamesPlayed; best = ps; }
+      }
+      if (!best) return null;
+      const rk = ctx.annualRanking();
+      const rival = rk.find(r => r.id !== best.id) || rk[0] || { id: best.id, name: best.name };
+      return {
+        protagonist: { id: best.id, name: best.name },
+        rival: { id: rival.id, name: rival.name },
+        facts: { gamesPlayed: bestGP }
+      };
+    },
+    copies: {
+      nachi: [
+        '{protagonist}: {gamesPlayed} fechas jugadas. No tiene vida, pero tiene récord.',
+        'Si {protagonist} faltara una vez, el mundo se acabaría. {gamesPlayed} partidas y contando.',
+        '{protagonist}, ¿nunca te cansás? {gamesPlayed} fechas. Conseguite un hobby, en serio.',
+        'El más fiel del grupo: {protagonist}. {gamesPlayed} partidas. Podrías usar ese tiempo para algo útil.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      gradBG(c, w, h, '#0a2a0a', '#0f1a0f');
+
+      c.strokeStyle = '#00A651'; c.lineWidth = w * 0.012;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 20); c.stroke();
+
+      c.fillStyle = '#00A651'; c.font = `700 ${w*0.062}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('📅 EL MÁS PELMA', w/2, h*0.1);
+      c.fillStyle = 'rgba(0,166,81,0.6)'; c.font = `500 ${w*0.026}px Inter`;
+      c.fillText('nunca falta · siempre está · insoportable', w/2, h*0.14);
+
+      const you = STATE.you;
+      const youId = (you || '').toLowerCase();
+      const ps = ALL_STATS[youId];
+      const gp = ps?.gamesPlayed || 0;
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+
+      const r = w * 0.2, cx2 = w/2, cy2 = h * 0.38;
+      if (img) drawFaceCircle(c, img, cx2, cy2, r);
+      else { c.fillStyle = '#00A651'; c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI*2); c.fill(); }
+
+      c.font = `${w*0.1}px serif`; c.textAlign = 'center';
+      c.fillText('🏅', cx2, cy2 - r - 4);
+
+      c.fillStyle = '#fff'; c.font = `700 ${w*0.055}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(you, cx2, cy2 + r + w*0.055);
+
+      const numY = h * 0.66;
+      c.fillStyle = 'rgba(0,166,81,0.15)';
+      roundRect(c, w*0.1, numY, w*0.8, h*0.15, 16); c.fill();
+      c.strokeStyle = 'rgba(0,166,81,0.5)'; c.lineWidth = 2; c.stroke();
+
+      c.fillStyle = '#00A651'; c.font = `700 ${w*0.11}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(String(gp), w/2, numY + h*0.1);
+      c.fillStyle = 'rgba(255,255,255,0.6)'; c.font = `500 ${w*0.026}px Inter`;
+      c.fillText('fechas jugadas', w/2, numY + h*0.135);
+
+      c.fillStyle = 'rgba(255,255,255,0.45)'; c.font = `italic 500 ${w*0.026}px Inter`;
+      c.fillText(`${ps?.W || 0}V · ${ps?.L || 0}D · ¿valió la pena?`, w/2, h*0.86);
+
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: SE BUSCA, DESAPARECIDO ----------
+  // Propuesta Firestore ID: xtad0ClROWIDQOG4H8xc
+  registerIdea({
+    id: 'se-busca',
+    module: 'jugador',
+    title: '🔍 Se Busca: Desaparecido',
+    desc: 'El jugador con más faltas del año. Se lo extraña... mentira, para nada.',
+    pick: function(ctx) {
+      const abs = computeAnnualAbsences();
+      const entries = Object.entries(abs).sort((a, b) => b[1] - a[1]);
+      if (!entries.length) return null;
+      const [worstId, absCount] = entries[0];
+      const rk = ctx.annualRanking();
+      const best = rk[0] || { id: ctx.PLAYERS_WITH_DATA[0], name: ctx.NAME_BY_ID[ctx.PLAYERS_WITH_DATA[0]] || '' };
+      return {
+        protagonist: { id: worstId, name: ctx.NAME_BY_ID[worstId] || worstId },
+        rival: { id: best.id, name: best.name },
+        facts: { absCount }
+      };
+    },
+    copies: {
+      nachi: [
+        'SE BUSCA: {protagonist}. Faltó {absCount} veces este año. Recompensa: ninguna.',
+        '{protagonist}: {absCount} faltas. Se dice que algún día vuelve a jugar.',
+        '¿Alguien vio a {protagonist}? {absCount} fechas ausente. Probá en casa de su abuela.',
+        '{protagonist} tiene {absCount} faltas. A este paso se convierte en leyenda urbana del grupo.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#2c1a00'); bg.addColorStop(1, '#1a1000');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      c.strokeStyle = 'rgba(180,120,40,0.07)'; c.lineWidth = 1;
+      for (let i = 0; i < h; i += 14) { c.beginPath(); c.moveTo(0, i); c.lineTo(w, i); c.stroke(); }
+
+      c.strokeStyle = '#8B5E1A'; c.lineWidth = w * 0.014;
+      roundRect(c, w*0.05, h*0.04, w*0.9, h*0.93, 10); c.stroke();
+      c.strokeStyle = '#c9a227'; c.lineWidth = w * 0.005;
+      roundRect(c, w*0.065, h*0.052, w*0.87, h*0.91, 7); c.stroke();
+
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.1}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('SE BUSCA', w/2, h * 0.12);
+      c.fillStyle = 'rgba(201,162,39,0.55)'; c.font = `500 ${w*0.032}px Inter`;
+      c.fillText('DESAPARECIDO EN COMBATE', w/2, h * 0.162);
+
+      const you = STATE.you;
+      const youId = (you || '').toLowerCase();
+      const abs = computeAnnualAbsences();
+      const absCount = abs[youId] || 0;
+
+      const fotoX = w*0.22, fotoY = h*0.23, fotoW = w*0.56, fotoH = h*0.32;
+      c.fillStyle = '#1a1000';
+      roundRect(c, fotoX, fotoY, fotoW, fotoH, 4); c.fill();
+      c.strokeStyle = '#8B5E1A'; c.lineWidth = 5; c.stroke();
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      if (img) {
+        c.save(); roundRect(c, fotoX+5, fotoY+5, fotoW-10, fotoH-10, 2); c.clip();
+        c.drawImage(img, fotoX+5, fotoY+5, fotoW-10, fotoH-10);
+        c.fillStyle = 'rgba(100,60,0,0.28)'; c.fillRect(fotoX+5, fotoY+5, fotoW-10, fotoH-10);
+        c.restore();
+      } else {
+        c.fillStyle = '#8B5E1A'; c.font = `${fotoH*0.5}px serif`; c.textAlign = 'center';
+        c.fillText('👤', fotoX + fotoW/2, fotoY + fotoH*0.67);
+      }
+
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.075}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(you.toUpperCase(), w/2, h * 0.605);
+
+      c.fillStyle = 'rgba(201,162,39,0.15)';
+      roundRect(c, w*0.1, h*0.635, w*0.8, h*0.1, 10); c.fill();
+      c.strokeStyle = 'rgba(201,162,39,0.4)'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = '#FF6B6B'; c.font = `700 ${w*0.048}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(`${absCount} FALTAS EN EL AÑO`, w/2, h * 0.705);
+
+      c.fillStyle = 'rgba(255,255,255,0.55)'; c.font = `500 ${w*0.026}px Inter`;
+      c.fillText('Último avistamiento: en su cama.', w/2, h * 0.785);
+      c.fillStyle = 'rgba(201,162,39,0.6)'; c.font = `italic 500 ${w*0.023}px Inter`;
+      c.fillText('Recompensa: que aparezca a jugar de una vez.', w/2, h * 0.822);
+
+      c.save(); c.translate(w*0.8, h*0.77); c.rotate(0.35);
+      c.strokeStyle = '#c00'; c.lineWidth = 3;
+      c.beginPath(); c.arc(0, 0, w*0.1, 0, Math.PI*2); c.stroke();
+      c.beginPath(); c.arc(0, 0, w*0.086, 0, Math.PI*2); c.stroke();
+      c.fillStyle = '#c00'; c.font = `700 ${w*0.03}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('AUSENTE', 0, -6); c.fillText('OFICIAL', 0, 18);
+      c.restore();
+
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:JUGADOR:END
 
@@ -1958,6 +2129,99 @@ window._modH2H = function() {
       footer(ctx, w, h);
     }
   });
+
+  // ---------- PROPUESTA: PATRIARCADO DE MATA ----------
+  // Propuesta Firestore ID: jMCTLhnlv8tlHOZyJr8F
+  registerIdea({
+    id: 'mata-patriarcado',
+    module: 'h2h',
+    title: '🏛 El Patriarcado de Mata',
+    desc: 'Mata y su víctima favorita en mano a mano. El patriarca habla, el resto obedece y llora.',
+    pick: function(ctx) {
+      const mataId = 'mata';
+      const mataStats = ctx.ALL_STATS[mataId];
+      if (!mataStats) return null;
+      const victims = Object.entries(mataStats.defeatedCount || {}).sort((a, b) => b[1] - a[1]);
+      if (!victims.length) return null;
+      const [victimId, wins] = victims[0];
+      return {
+        protagonist: { id: mataId, name: ctx.NAME_BY_ID[mataId] || 'Mata' },
+        rival: { id: victimId, name: ctx.NAME_BY_ID[victimId] || victimId },
+        facts: { mataWins: wins, mataLosses: mataStats.h2h?.[victimId]?.losses || 0 }
+      };
+    },
+    copies: {
+      nachi: [
+        '👑 {protagonist} manda. {rival} obedece. Así fue, así será. El patriarcado es de acá.',
+        'El Patriarca {protagonist} tiene a {rival} en el bolsillo. {mataWins} victorias y contando.',
+        '{rival}, dejá de mentirte. {protagonist} te gana siempre. El patriarcado existe y tiene cara.',
+        '¿{rival} creyendo que puede ganarle a {protagonist}? Qué tierno. Qué, qué tierno.'
+      ]
+    },
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#2d1b00'); bg.addColorStop(1, '#1a0f00');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      c.strokeStyle = '#c9a227'; c.lineWidth = w * 0.012;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 24); c.stroke();
+      c.strokeStyle = 'rgba(201,162,39,0.3)'; c.lineWidth = 1;
+      roundRect(c, w*0.055, h*0.052, w*0.89, h*0.9, 20); c.stroke();
+
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.065}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('🏛 EL PATRIARCADO', w/2, h * 0.1);
+      c.fillStyle = 'rgba(201,162,39,0.55)'; c.font = `500 ${w*0.026}px Inter`;
+      c.fillText('dominación histórica · lunes de uno', w/2, h * 0.14);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId = (you || '').toLowerCase(), rivalId2 = (rival || '').toLowerCase();
+      const mataStats = ALL_STATS[youId];
+      const wins = mataStats?.defeatedCount?.[rivalId2] || 0;
+      const losses = mataStats?.h2h?.[rivalId2]?.losses || 0;
+
+      let mataImg, victimImg;
+      try { mataImg = await loadFace(youId); } catch(e) {}
+      try { if (rivalId2) victimImg = await loadFace(rivalId2); } catch(e) {}
+
+      const mataR = w * 0.18, mataX = w * 0.32, mataY = h * 0.40;
+      if (mataImg) drawFaceCircle(c, mataImg, mataX, mataY, mataR);
+      else { c.fillStyle = '#c9a227'; c.beginPath(); c.arc(mataX, mataY, mataR, 0, Math.PI*2); c.fill(); }
+      c.font = `${w*0.1}px serif`; c.textAlign = 'center';
+      c.fillText('👑', mataX, mataY - mataR - 6);
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.05}px Fredoka One`;
+      c.fillText(you, mataX, mataY + mataR + w*0.052);
+      c.fillStyle = 'rgba(201,162,39,0.7)'; c.font = `500 ${w*0.025}px Inter`;
+      c.fillText('EL PATRIARCA', mataX, mataY + mataR + w*0.082);
+
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.06}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('VS', w*0.635, h * 0.42);
+
+      const victimR = w * 0.13, victimX = w * 0.79, victimY = h * 0.42;
+      if (victimImg) drawFaceCircle(c, victimImg, victimX, victimY, victimR);
+      else { c.fillStyle = '#444'; c.beginPath(); c.arc(victimX, victimY, victimR, 0, Math.PI*2); c.fill(); }
+      c.font = `${w*0.07}px serif`; c.fillText('😰', victimX, victimY - victimR - 4);
+      c.fillStyle = 'rgba(255,255,255,0.75)'; c.font = `700 ${w*0.04}px Fredoka One`;
+      c.fillText(rival, victimX, victimY + victimR + w*0.046);
+      c.fillStyle = 'rgba(255,255,255,0.4)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText('(el castigado)', victimX, victimY + victimR + w*0.074);
+
+      const sy = h * 0.69;
+      c.fillStyle = 'rgba(201,162,39,0.12)';
+      roundRect(c, w*0.08, sy, w*0.84, h*0.13, 14); c.fill();
+      c.strokeStyle = 'rgba(201,162,39,0.4)'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = '#c9a227'; c.font = `700 ${w*0.04}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(`${wins} victorias vs ${rival} · ${losses} derrotas`, w/2, sy + h*0.065);
+      c.fillStyle = 'rgba(255,255,255,0.5)'; c.font = `500 ${w*0.024}px Inter`;
+      c.fillText(`Ratio: ${losses > 0 ? (wins/losses).toFixed(1) : '∞'}x · El patriarcado no se negocia`, w/2, sy + h*0.1);
+
+      c.fillStyle = '#fff'; c.font = `italic 500 ${w*0.027}px Inter`;
+      c.fillText('"El patriarcado tiene nombre propio."', w/2, h * 0.875);
+
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:H2H:END
 
