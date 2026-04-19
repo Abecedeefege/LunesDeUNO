@@ -1785,6 +1785,7 @@ function setLang(lang) {
   if (document.getElementById('setup').classList.contains('active')) initSetup();
   if (document.getElementById('game').classList.contains('active')) renderGame();
   if (document.getElementById('results').classList.contains('active')) renderResults();
+  if (typeof _updateSeasonTabLabel === 'function') _updateSeasonTabLabel();
 }
 
 // ============ STATE ============
@@ -4104,6 +4105,33 @@ function initStats() {
     renderLeaderboard('gamesWon', 'season');
     renderSeasonsTable();
     renderH2HMatrix();
+    _updateSeasonTabLabel();
+  });
+}
+
+// Current ongoing season number (1-based). Returns null until stats have loaded.
+function _currentSeasonNumber() {
+  if (!_statsData || !_statsData.loaded) return null;
+  return (_statsData.seasons || []).length + 1;
+}
+
+// Returns the tab/share label for a stats section, suffixed with the current
+// season number when referring to the ongoing-season ranking.
+function _statsTabLabel(key) {
+  var base = t(key);
+  if (key === 'stats_tab_leaderboard_season') {
+    var n = _currentSeasonNumber();
+    if (n) return base + ' ' + n;
+  }
+  return base;
+}
+
+function _updateSeasonTabLabel() {
+  document.querySelectorAll('[data-i18n="stats_tab_leaderboard_season"]').forEach(function(el) {
+    // Only the tab button gets the season number suffix; the share button keeps its own i18n key.
+    if (el.classList.contains('stats-tab-btn')) {
+      el.textContent = _statsTabLabel('stats_tab_leaderboard_season');
+    }
   });
 }
 
@@ -4818,7 +4846,7 @@ async function shareStatsTableImage(tableId, titleKey, btn) {
     '<div style="width:56px;height:56px;border-radius:12px;background:#0f0f1a;border:1px solid #3a3a5c;display:flex;align-items:center;justify-content:center;font-size:32px;">🎩</div>'
     + '<div>'
     +   '<div style="font-family:\'Fredoka One\',cursive;font-size:42px;color:#FFDE00;line-height:1;">Lunes de UNO</div>'
-    +   '<div style="color:#8888a8;font-size:20px;margin-top:6px;">' + t(titleKey) + '</div>'
+    +   '<div style="color:#8888a8;font-size:20px;margin-top:6px;">' + _statsTabLabel(titleKey) + '</div>'
     + '</div>';
   wrap.appendChild(header);
 
@@ -4879,7 +4907,7 @@ async function shareStatsTableImage(tableId, titleKey, btn) {
 
     var filename = 'lunesdeuno-' + tableId + '.png';
     var file = new File([blob], filename, { type: 'image/png' });
-    var shareData = { files: [file], title: 'Lunes de UNO', text: t(titleKey) };
+    var shareData = { files: [file], title: 'Lunes de UNO', text: _statsTabLabel(titleKey) };
 
     if (navigator.canShare && navigator.canShare(shareData)) {
       try {
