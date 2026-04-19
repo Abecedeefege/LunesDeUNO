@@ -33,14 +33,6 @@
     }
     h1,h2,h3,h4 { font-family: 'Fredoka One', cursive; letter-spacing: .02em; }
 
-    .mockup-banner {
-      background: linear-gradient(90deg, var(--uno-yellow), #ffb703);
-      color: #111; text-align: center; font-weight: 700;
-      padding: .6rem 1rem; font-size: .85rem;
-      position: sticky; top: 0; z-index: 300;
-    }
-    .mockup-banner strong { font-family: 'Fredoka One', cursive; }
-
     .app-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1rem 1.25rem;
@@ -64,6 +56,22 @@
     }
     .intro h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: .5rem; color: var(--uno-yellow); }
     .intro p { color: var(--text-muted); line-height: 1.55; }
+
+    .request-form {
+      display: flex; gap: .6rem; margin-top: 1rem; flex-wrap: wrap;
+    }
+    .request-form input[type="text"] { flex: 1; min-width: 220px; }
+    .request-send { flex: 0 0 auto; padding: .6rem 1.2rem; border-radius: 10px; }
+
+    .gallery-section { margin-top: 2rem; }
+    .gallery-header {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1.5rem; padding-bottom: .75rem;
+      border-bottom: 2px solid var(--uno-yellow);
+    }
+    .gallery-header h2 {
+      font-size: clamp(1.6rem, 4vw, 2rem); color: var(--uno-yellow);
+    }
 
     .controls {
       display: grid; gap: 1rem; margin-bottom: 2rem;
@@ -182,24 +190,21 @@
 </head>
 <body>
 
-<div class="mockup-banner">
-  <strong>PROPUESTA · MOCKUP</strong> · esto es una página de ideas, no afecta los juegos reales ni las stats
-</div>
-
 <header class="app-header">
   <a href="index.html" class="back-link">← Volver a Lunes de UNO</a>
-  <span style="color: var(--text-muted); font-size: .8rem;">propuestas.html</span>
 </header>
 
 <main class="container">
 
   <section class="intro">
-    <h1>Propuestas: compartir burlas desde Stats</h1>
+    <h1>Media Center</h1>
     <p>
-      Galería de shares pre-armados con <strong>datos reales de Firestore</strong>
-      (collection <code>games</code>). Cada propuesta elige su propio ejemplo más jugoso
-      — no hay que configurar nada. Solo elegí el tono del roast.
+      Galería de shares pre-armados con <strong>datos reales</strong>.
     </p>
+    <form id="requestForm" class="request-form">
+      <input type="text" id="requestInput" placeholder="Ingresa tu pedido y te lo armo..." maxlength="500" autocomplete="off">
+      <button type="submit" class="btn btn-primary request-send">Enviar</button>
+    </form>
   </section>
 
   <div id="dataBanner" style="display:none; margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid var(--danger); background: rgba(255,77,106,.08); color: var(--text);">
@@ -209,6 +214,11 @@
       Esta página <strong>no inventa datos</strong>: todos los previews se generan con stats reales.
     </div>
   </div>
+
+  <section class="gallery-section">
+    <div class="gallery-header">
+      <h2>Gallery</h2>
+    </div>
 
   <!-- ========== MODULO: JUGADOR ========== -->
   <section class="module-section" id="mod-jugador">
@@ -270,13 +280,15 @@
     </div>
   </section>
 
+  </section>
+
 </main>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 // ===== ROSTER REAL (idéntico a index.html PRESET_NAMES) =====
 // NO incluye Bucket — Bucket no es un jugador del grupo.
@@ -666,6 +678,34 @@ function registerIdea(idea) {
   renderIdeaCard(idea);
 }
 window.registerIdea = registerIdea;
+
+// ===== REQUEST FORM (save to Firestore 'Propuestas') =====
+(function initRequestForm() {
+  const form = document.getElementById('requestForm');
+  if (!form) return;
+  const input = document.getElementById('requestInput');
+  const btn = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const text = (input.value || '').trim();
+    if (!text) return;
+    btn.disabled = true;
+    try {
+      await addDoc(collection(_db, 'Propuestas'), {
+        text,
+        createdAt: serverTimestamp(),
+        userAgent: navigator.userAgent || ''
+      });
+      input.value = '';
+      showToast('¡Pedido enviado!');
+    } catch (err) {
+      console.error('No se pudo guardar la propuesta', err);
+      showToast('No se pudo enviar, probá de nuevo');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+})();
 
 // ===== SHARE =====
 function showToast(msg) {
