@@ -113,6 +113,28 @@
       display: grid; gap: 1.25rem;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     }
+    .sin-figuritas-box {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface-2);
+      padding: 0;
+    }
+    .sin-figuritas-box[hidden] { display: none; }
+    .sin-figuritas-box > summary {
+      cursor: pointer; padding: .9rem 1.2rem;
+      font-weight: 700; letter-spacing: .04em;
+      color: var(--text); font-size: .95rem;
+      list-style: none; user-select: none;
+    }
+    .sin-figuritas-box > summary::-webkit-details-marker { display: none; }
+    .sin-figuritas-box > summary::before {
+      content: '▸ '; color: var(--uno-yellow); margin-right: .3rem;
+      display: inline-block; transition: transform .2s ease;
+    }
+    .sin-figuritas-box[open] > summary::before { content: '▾ '; }
+    .sin-figuritas-box[open] > summary { border-bottom: 1px solid var(--border); }
+    .sin-figuritas-box > .ideas-grid { padding: 1rem 1.2rem 1.2rem; }
     .idea-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -223,19 +245,21 @@
   <!-- ========== MODULO: JUGADOR ========== -->
   <section class="module-section" id="mod-jugador">
     <div class="module-header">
-      <span class="badge">Módulo 1</span>
       <h2 id="title-jugador">Jugador &middot; stats personales</h2>
     </div>
     <div class="ideas-grid" id="grid-jugador">
       <!-- IDEAS:JUGADOR:START -->
       <!-- IDEAS:JUGADOR:END -->
     </div>
+    <details class="sin-figuritas-box" id="sin-figuritas-details">
+      <summary>Jugadores sin figuritas</summary>
+      <div class="ideas-grid" id="grid-sin-figuritas"></div>
+    </details>
   </section>
 
   <!-- ========== MODULO: RANKING ANUAL ========== -->
   <section class="module-section" id="mod-anual">
     <div class="module-header">
-      <span class="badge">Módulo 2</span>
       <h2>Ranking anual</h2>
     </div>
     <div class="ideas-grid" id="grid-anual">
@@ -247,7 +271,6 @@
   <!-- ========== MODULO: RANKING TEMPORADA ========== -->
   <section class="module-section" id="mod-temporada">
     <div class="module-header">
-      <span class="badge">Módulo 3</span>
       <h2>Ranking temporada</h2>
     </div>
     <div class="ideas-grid" id="grid-temporada">
@@ -259,7 +282,6 @@
   <!-- ========== MODULO: TEMPORADAS ========== -->
   <section class="module-section" id="mod-temporadas">
     <div class="module-header">
-      <span class="badge">Módulo 4</span>
       <h2>Temporadas (histórico)</h2>
     </div>
     <div class="ideas-grid" id="grid-temporadas">
@@ -271,7 +293,6 @@
   <!-- ========== MODULO: H2H ========== -->
   <section class="module-section" id="mod-h2h">
     <div class="module-header">
-      <span class="badge">Módulo 5</span>
       <h2>Mano a mano (H2H)</h2>
     </div>
     <div class="ideas-grid" id="grid-h2h">
@@ -770,7 +791,10 @@ function refreshAll() {
 }
 
 function renderIdeaCard(idea) {
-  const grid = document.getElementById('grid-' + idea.module);
+  // `idea.grid` permite montar el card en un contenedor distinto al default del módulo
+  // (útil para el desplegable "Jugadores sin figuritas").
+  const gridId = idea.grid || ('grid-' + idea.module);
+  const grid = document.getElementById(gridId);
   if (!grid) return;
   const el = document.createElement('div');
   el.className = 'idea-card';
@@ -950,8 +974,12 @@ window._modJugador = function() {
 
   PRESET_IDS.forEach(function(ownerId) {
     const ownerName = NAME_BY_ID[ownerId] || ownerId;
+    const ownerStats = ALL_STATS[ownerId];
+    const uniqueVictims = ownerStats ? Object.keys(ownerStats.defeatedCount || {}).length : 0;
+    // Jugadores sin figuritas (0 victorias) van al desplegable colapsado.
+    const targetGrid = uniqueVictims > 0 ? 'grid-jugador' : 'grid-sin-figuritas';
     registerIdea({
-      id: 'figuritas-' + ownerId, module: 'jugador',
+      id: 'figuritas-' + ownerId, module: 'jugador', grid: targetGrid,
       pick: function(ctx) {
         return {
           protagonist: { id: ownerId, name: ownerName },
@@ -1057,6 +1085,13 @@ window._modJugador = function() {
       }
     });
   });
+
+  // Si nadie quedó en el desplegable, lo ocultamos por completo.
+  (function() {
+    const box = document.getElementById('sin-figuritas-details');
+    const grid = document.getElementById('grid-sin-figuritas');
+    if (box && grid && !grid.children.length) box.hidden = true;
+  })();
 
   // ---------- 2) RACHA ACTIVA MÁS LARGA — solo el líder (o empatados) ----------
   (function() {
