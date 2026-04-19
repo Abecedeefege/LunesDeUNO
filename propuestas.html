@@ -303,17 +303,6 @@
     </div>
   </section>
 
-  <!-- ========== MODULO: RANKING TEMPORADA ========== -->
-  <section class="module-section" id="mod-temporada">
-    <div class="module-header">
-      <h2>Ranking temporada</h2>
-    </div>
-    <div class="ideas-grid" id="grid-temporada">
-      <!-- IDEAS:TEMPORADA:START -->
-      <!-- IDEAS:TEMPORADA:END -->
-    </div>
-  </section>
-
   <!-- ========== MODULO: TEMPORADAS ========== -->
   <section class="module-section" id="mod-temporadas">
     <div class="module-header">
@@ -1135,7 +1124,6 @@ async function init() {
   await loadVisibilityRegistry();
   if (window._modJugador) window._modJugador();
   if (window._modAnual) window._modAnual();
-  if (window._modTemporada) window._modTemporada();
   if (window._modTemporadas) window._modTemporadas();
   if (window._modH2H) window._modH2H();
   if (window._modUsuarios) window._modUsuarios();
@@ -1941,14 +1929,6 @@ window._modAnual = function() {
 };
 // DRAWS:ANUAL:END
 
-// DRAWS:TEMPORADA:START
-window._modTemporada = function() {
-
-
-
-
-};
-// DRAWS:TEMPORADA:END
 
 // DRAWS:TEMPORADAS:START
 window._modTemporadas = function() {
