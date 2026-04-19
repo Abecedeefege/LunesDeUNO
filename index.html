@@ -988,7 +988,10 @@
       <h1 class="logo-title">Lunes de UNO</h1>
     </div>
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
-    <button class="btn btn-secondary" style="margin-top:.5rem;" onclick="showScreen('stats')" data-i18n="home_stats"></button>
+    <div style="display:flex; align-items:center; gap:.6rem; margin-top:.5rem; flex-wrap:wrap; justify-content:center;">
+      <button class="btn btn-secondary" onclick="showScreen('stats')" data-i18n="home_stats"></button>
+      <a href="propuestas.html" class="btn-nachi" aria-label="by Nachi">🍎🍌 by Nachi 🍌🍎</a>
+    </div>
     <div class="asado-toggle-row">
       <label class="asado-switch">
         <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
@@ -1164,10 +1167,7 @@
 
   <!-- ============ STATS ============ -->
   <div id="stats" class="screen">
-    <div style="display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:.25rem;">
-      <h2 style="font-size:1.6rem;" data-i18n="stats_title"></h2>
-      <a href="propuestas.html" class="btn-nachi" aria-label="by Nachi">🍎🍌 by Nachi 🍌🍎</a>
-    </div>
+    <h2 style="font-size:1.6rem; margin-bottom:.25rem;" data-i18n="stats_title"></h2>
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.6rem;" id="statsMeta"></p>
 
     <div class="stats-tabs">
