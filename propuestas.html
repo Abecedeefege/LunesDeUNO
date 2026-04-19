@@ -301,6 +301,18 @@
     </div>
   </section>
 
+  <!-- ========== MODULO: DE LOS USUARIOS ========== -->
+  <section class="module-section" id="mod-usuarios">
+    <div class="module-header" style="border-bottom-color: var(--uno-red);">
+      <h2 style="color: var(--uno-red);">💡 De los usuarios</h2>
+    </div>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: .9rem;">Propuestas enviadas por el grupo e implementadas acá.</p>
+    <div class="ideas-grid" id="grid-usuarios">
+      <!-- IDEAS:USUARIOS:START -->
+      <!-- IDEAS:USUARIOS:END -->
+    </div>
+  </section>
+
   </section>
 
 </main>
@@ -1006,6 +1018,7 @@ async function init() {
   if (window._modTemporada) window._modTemporada();
   if (window._modTemporadas) window._modTemporadas();
   if (window._modH2H) window._modH2H();
+  if (window._modUsuarios) window._modUsuarios();
 }
 document.addEventListener('DOMContentLoaded', () => { init(); });
 
@@ -1408,7 +1421,7 @@ window._modJugador = function() {
   // Propuesta Firestore ID: rhfqFgoLYWR8rHnvgFoU
   registerIdea({
     id: 'mas-fechas',
-    module: 'jugador',
+    module: 'usuarios',
     title: '📅 El Más Pelma del Grupo',
     desc: 'El jugador que más fechas participó. Nunca falta. Literalmente nunca. ¿No tiene vida?',
     pick: function(ctx) {
@@ -1484,7 +1497,7 @@ window._modJugador = function() {
   // Propuesta Firestore ID: xtad0ClROWIDQOG4H8xc
   registerIdea({
     id: 'se-busca',
-    module: 'jugador',
+    module: 'usuarios',
     title: '🔍 Se Busca: Desaparecido',
     desc: 'El jugador con más faltas del año. Se lo extraña... mentira, para nada.',
     pick: function(ctx) {
@@ -1799,7 +1812,7 @@ window._modAnual = function() {
   // Propuesta Firestore ID: JUcNZbNye5s6vwiMaytG
   registerIdea({
     id: 'oda-campeon',
-    module: 'anual',
+    module: 'usuarios',
     title: '🏆 Oda al Actual Campeón',
     desc: 'Un poema épico dedicado al líder del ranking anual. Con toda la pompa que se merece (o no).',
     pick: function(ctx) {
@@ -1894,7 +1907,7 @@ window._modAnual = function() {
   // Propuesta Firestore ID: GDOTJfRYiadK2kLAoRy9
   registerIdea({
     id: 'ansiedad-segundo',
-    module: 'anual',
+    module: 'usuarios',
     title: '😰 La Ansiedad del Segundo Lugar',
     desc: 'El que viene segundo esperando el próximo lunes para destronar al primero. Spoiler: no puede.',
     pick: function(ctx) {
@@ -2322,7 +2335,7 @@ window._modH2H = function() {
   // Propuesta Firestore ID: jMCTLhnlv8tlHOZyJr8F
   registerIdea({
     id: 'mata-patriarcado',
-    module: 'h2h',
+    module: 'usuarios',
     title: '🏛 El Patriarcado de Mata',
     desc: 'Mata y su víctima favorita en mano a mano. El patriarca habla, el resto obedece y llora.',
     pick: function(ctx) {
@@ -2412,6 +2425,15 @@ window._modH2H = function() {
 
 };
 // DRAWS:H2H:END
+
+// DRAWS:USUARIOS:START
+window._modUsuarios = function() {
+  // Las propuestas de usuarios están registradas dentro de los módulos
+  // JUGADOR, ANUAL y H2H con module:'usuarios', así que se renderizan
+  // automáticamente en #grid-usuarios sin necesidad de código extra aquí.
+  // Las propuestas nuevas que se implementen en el futuro irán aquí abajo.
+};
+// DRAWS:USUARIOS:END
 
 </script>
 
