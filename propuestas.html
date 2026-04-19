@@ -2690,6 +2690,493 @@ window._modUsuarios = function() {
     }
   });
 
+
+  // ---------- PROPUESTA: MEME ANSIEDAD DEL SEGUNDO ----------
+  // Propuesta Firestore ID: GDOTJfRYiadK2kLAoRy9
+  registerIdea({
+    id: 'meme-ansiedad-segundo',
+    module: 'usuarios',
+    title: '😰 Ansiedad del Segundo',
+    desc: 'El #2 de la temporada esperando ansiosamente la próxima partida para desbancar al líder. Spoiler: no va a poder.',
+    pick: function(ctx) {
+      const rk = currentSeasonPointsRanking();
+      if (rk.length < 2) return null;
+      const segundo = rk[1], primero = rk[0];
+      return {
+        protagonist: { id: segundo.id, name: ctx.NAME_BY_ID[segundo.id] || segundo.name },
+        rival: { id: primero.id, name: ctx.NAME_BY_ID[primero.id] || primero.name },
+        facts: {}
+      };
+    },
+    copies: { nachi: [
+      '😰 {protagonist} a las 3am antes del lunes: "esta semana SI lo banco a {rival}... ¿no?"',
+      '🧠 Pensamiento de {protagonist} en loop: "próxima partida gano, próxima partida gano, próxima..."',
+      '😤 {protagonist} lleva 7 días estrategizando. {rival} lleva 7 días durmiendo bien. Diferencia de clase.',
+      '📊 {protagonist} ya calculó que necesita ganar las próximas 4 para superar a {rival}. Tiene una presentación en PowerPoint.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      // Fondo tipo chat / pantalla de teléfono ansiosa
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#0d1117'); bg.addColorStop(1, '#1a1a2e');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Barra de "estado mental" estilo loading
+      c.fillStyle = '#1e2533';
+      roundRect(c, w*0.05, h*0.04, w*0.9, h*0.055, 8); c.fill();
+      const anxietyPct = 0.87;
+      const barGrad = c.createLinearGradient(w*0.05, 0, w*0.95, 0);
+      barGrad.addColorStop(0, '#f59e0b'); barGrad.addColorStop(0.6, '#ef4444'); barGrad.addColorStop(1, '#dc2626');
+      c.fillStyle = barGrad;
+      roundRect(c, w*0.05, h*0.04, w*0.9*anxietyPct, h*0.055, 8); c.fill();
+      c.fillStyle = '#fff'; c.font = `700 ${w*0.022}px Inter`; c.textAlign = 'center';
+      c.fillText('NIVEL DE ANSIEDAD: 87%', w/2, h*0.04 + h*0.037);
+
+      c.fillStyle = '#ef4444'; c.font = `700 ${w*0.055}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('😰 MODO ANSIOSO', w/2, h*0.155);
+      c.fillStyle = 'rgba(239,68,68,0.5)'; c.font = `italic 500 ${w*0.023}px Inter`;
+      c.fillText('esperando el próximo lunes desde hace 6 días', w/2, h*0.195);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId = (you||'').toLowerCase(), rivalId2 = (rival||'').toLowerCase();
+
+      // Face protagonist (grande, angustiada)
+      let imgY, imgR;
+      try { imgY = await loadFace(youId); } catch(e) {}
+      try { imgR = await loadFace(rivalId2); } catch(e) {}
+
+      const r1 = w*0.16, cx1 = w*0.5, cy1 = h*0.385;
+      if (imgY) {
+        c.save(); c.shadowColor = '#ef4444'; c.shadowBlur = 25;
+        drawFaceCircle(c, imgY, cx1, cy1, r1);
+        c.shadowBlur = 0; c.restore();
+      } else { c.fillStyle='#ef4444'; c.beginPath(); c.arc(cx1,cy1,r1,0,Math.PI*2); c.fill(); }
+      // Emoji de sudor
+      c.font = `${w*0.08}px serif`; c.textAlign = 'center';
+      c.fillText('💦', cx1 - r1*0.8, cy1 - r1*0.5);
+      c.fillText('💦', cx1 + r1*0.8, cy1 - r1*0.5);
+      c.fillText('😰', cx1, cy1 - r1 - 5);
+      c.fillStyle = '#ef4444'; c.font = `700 ${w*0.048}px Fredoka One`; c.fillText(you, cx1, cy1+r1+w*0.048);
+
+      // Mini rival arriba con corona
+      const r2 = w*0.065, cx2 = w*0.82, cy2 = h*0.22;
+      if (imgR) drawFaceCircle(c, imgR, cx2, cy2, r2);
+      c.font = `${w*0.05}px serif`; c.fillText('👑', cx2, cy2-r2-2);
+      c.fillStyle = 'rgba(255,222,0,0.9)'; c.font = `700 ${w*0.025}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(rival, cx2, cy2+r2+w*0.03);
+
+      // Burbujas de pensamiento
+      const thoughtY = h*0.62;
+      c.fillStyle = 'rgba(239,68,68,0.1)';
+      roundRect(c, w*0.07, thoughtY, w*0.86, h*0.23, 14); c.fill();
+      c.strokeStyle = 'rgba(239,68,68,0.4)'; c.lineWidth = 1.5; c.stroke();
+
+      const thoughts = [
+        '💭 "Esta semana sí lo banco..."',
+        '💭 "Tengo la estrategia perfecta..."',
+        '💭 "Solo necesito que él pierda y yo gane..."',
+        '💭 (repite esto desde hace 3 semanas)'
+      ];
+      c.textAlign = 'center';
+      thoughts.forEach((t, i) => {
+        c.fillStyle = i < 3 ? 'rgba(255,255,255,0.82)' : 'rgba(239,68,68,0.7)';
+        c.font = i < 3 ? `500 ${w*0.026}px Inter` : `italic 500 ${w*0.024}px Inter`;
+        c.fillText(t, w/2, thoughtY + h*0.042 + i*h*0.05);
+      });
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: ODA AL CAMPEÓN ACTUAL ----------
+  // Propuesta Firestore ID: JUcNZbNye5s6vwiMaytG
+  registerIdea({
+    id: 'oda-campeon-actual',
+    module: 'usuarios',
+    title: '👑 Oda al Campeón Actual',
+    desc: 'Oda épica al líder de la temporada en curso. Merecida o no, la corona es suya.',
+    pick: function(ctx) {
+      const rk = currentSeasonPointsRanking();
+      if (!rk.length) return null;
+      const campeon = rk[0], ultimo = rk[rk.length-1];
+      return {
+        protagonist: { id: campeon.id, name: ctx.NAME_BY_ID[campeon.id] || campeon.name },
+        rival: { id: ultimo.id, name: ctx.NAME_BY_ID[ultimo.id] || ultimo.name },
+        facts: {}
+      };
+    },
+    copies: { nachi: [
+      '👑 Oda a {protagonist}: "Llegaste, viste, venciste. Y los demás te miraron hacer todo eso."',
+      '🏆 {protagonist}, campeón de temporada. El grupo entero trabaja para que vos ganes. Sin querer, pero lo hacen.',
+      '⚡ {protagonist} no juega a ganar. Simplemente... los otros juegan a perder contra él. Hay diferencia.',
+      '👑 Señoras y señores: el único adulto en la sala de UNO. Aplausos. {rival}, podés aprender algo.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      // Fondo dorado real
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#1a1200'); bg.addColorStop(0.5, '#2d1f00'); bg.addColorStop(1, '#0f0a00');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Destellos dorados de fondo
+      for (let i = 0; i < 20; i++) {
+        const sx = w*(0.05 + Math.abs(Math.sin(i*73))*0.9);
+        const sy = h*(0.05 + Math.abs(Math.cos(i*41))*0.9);
+        const sr = w*(0.005 + Math.abs(Math.sin(i*17))*0.012);
+        c.fillStyle = `rgba(255,215,0,${0.1 + Math.abs(Math.sin(i*29))*0.25})`;
+        c.beginPath(); c.arc(sx, sy, sr, 0, Math.PI*2); c.fill();
+      }
+
+      // Borde dorado doble
+      c.strokeStyle = '#c9a227'; c.lineWidth = w*0.012;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 20); c.stroke();
+      c.strokeStyle = 'rgba(255,215,0,0.3)'; c.lineWidth = w*0.004;
+      roundRect(c, w*0.07, h*0.07, w*0.86, h*0.86, 14); c.stroke();
+
+      // Título
+      c.fillStyle = '#FFDE00'; c.font = `700 ${w*0.065}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('👑 ODA AL CAMPEÓN', w/2, h*0.13);
+      c.fillStyle = 'rgba(201,162,39,0.65)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText('temporada en curso', w/2, h*0.168);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId = (you||'').toLowerCase();
+      const rk2 = currentSeasonPointsRanking();
+      const myEntry = rk2.find(r => r.id === youId);
+      const score = myEntry?.totalScore || 0;
+      const gp = myEntry?.gamesPlayed || 0;
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w*0.17, cx2 = w/2, cy2 = h*0.39;
+      if (img) {
+        c.save(); c.shadowColor = '#FFD700'; c.shadowBlur = 35;
+        drawFaceCircle(c, img, cx2, cy2, r);
+        c.shadowBlur = 0; c.restore();
+      }
+      // Corona grande
+      c.font = `${w*0.1}px serif`; c.textAlign = 'center';
+      c.fillText('👑', cx2, cy2 - r - 5);
+      // Destellos alrededor
+      ['✨','⚡','🌟'].forEach((em, i) => {
+        const angle = -Math.PI/2 + (i-1)*0.9;
+        c.font = `${w*0.055}px serif`;
+        c.fillText(em, cx2 + Math.cos(angle)*(r+w*0.09), cy2 + Math.sin(angle)*(r+w*0.05));
+      });
+
+      c.fillStyle = '#FFDE00'; c.font = `700 ${w*0.055}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.055);
+      c.fillStyle = 'rgba(255,222,0,0.6)'; c.font = `500 ${w*0.023}px Inter`;
+      c.fillText(`${score} pts · ${gp} partidas jugadas`, cx2, cy2+r+w*0.088);
+
+      // Versos de la oda
+      const versos = [
+        `Oh ${you}, soberano del UNO,`,
+        `coronado con {rival} de rodillas.`,
+        `El grupo mira, el grupo llora...`,
+        `y vos seguís ganando igual.`
+      ].map(v => v.replaceAll('{rival}', rival));
+      const py = h*0.67;
+      c.fillStyle = 'rgba(201,162,39,0.12)';
+      roundRect(c, w*0.08, py-h*0.02, w*0.84, h*0.22, 14); c.fill();
+      c.strokeStyle = 'rgba(201,162,39,0.35)'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = 'rgba(255,222,0,0.85)'; c.font = `italic 500 ${w*0.029}px Inter`;
+      versos.forEach((v, i) => c.fillText(v, w/2, py + i*h*0.05));
+
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: PATRIARCADO DE MATA ----------
+  // Propuesta Firestore ID: jMCTLhnlv8tlHOZyJr8F
+  registerIdea({
+    id: 'patriarcado-mata',
+    module: 'usuarios',
+    title: '🪄 El Patriarcado de Mata',
+    desc: 'Mata y su víctima favorita. Dominancia, H2H, y un certificado oficial de sumisión.',
+    pick: function(ctx) {
+      const mataStats = ctx.ALL_STATS['mata'];
+      if (!mataStats) return null;
+      const victims = Object.entries(mataStats.defeatedCount || {})
+        .sort((a, b) => b[1] - a[1]);
+      if (!victims.length) return null;
+      const topVictimId = victims[0][0];
+      return {
+        protagonist: { id: 'mata', name: 'Mata' },
+        rival: { id: topVictimId, name: ctx.NAME_BY_ID[topVictimId] || topVictimId },
+        facts: { veces: victims[0][1] }
+      };
+    },
+    computeFacts: function() {
+      const mataStats = ALL_STATS['mata'];
+      const victims = Object.entries(mataStats?.defeatedCount || {}).sort((a,b)=>b[1]-a[1]);
+      const topVictimId = victims[0]?.[0] || '?';
+      const h2h = h2hFor('mata', topVictimId);
+      return { veces: victims[0]?.[1] || 0, h2hWins: h2h.wins, h2hLosses: h2h.losses };
+    },
+    copies: { nachi: [
+      '🪄 Mata tiene a {rival} de mascota. {veces} victorias directas. Le da de comer con la mano.',
+      '👴 El patriarca habló: {rival} ya sabe su lugar en la mesa. Abajo de Mata.',
+      '📜 Certificado oficial: {rival} es propiedad intelectual de Mata desde el primer partido.',
+      '🏛️ Mata no gana partidas, las colecciona. Y {rival} es su pieza favorita.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      // Fondo estilo pergamino/sepia dominante
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#1a0e00'); bg.addColorStop(1, '#100808');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Borde ornamental doble
+      c.strokeStyle = '#8B4513'; c.lineWidth = w*0.014;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 18); c.stroke();
+      c.strokeStyle = 'rgba(139,69,19,0.4)'; c.lineWidth = w*0.005;
+      roundRect(c, w*0.07, h*0.07, w*0.86, h*0.86, 12); c.stroke();
+
+      c.fillStyle = '#D4A017'; c.font = `700 ${w*0.06}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('🪄 EL PATRIARCADO', w/2, h*0.13);
+      c.fillStyle = 'rgba(212,160,23,0.55)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText('de Mata — desde el principio de los tiempos', w/2, h*0.167);
+
+      // Mata grande (soberano)
+      let imgMata, imgRival;
+      try { imgMata = await loadFace('mata'); } catch(e) {}
+      const rMata = w*0.16, cxMata = w*0.5, cyMata = h*0.34;
+      if (imgMata) {
+        c.save(); c.shadowColor = '#D4A017'; c.shadowBlur = 28;
+        drawFaceCircle(c, imgMata, cxMata, cyMata, rMata);
+        c.shadowBlur = 0; c.restore();
+      }
+      c.font = `${w*0.08}px serif`; c.textAlign = 'center';
+      c.fillText('👴', cxMata, cyMata - rMata - 5);
+      c.fillStyle = '#D4A017'; c.font = `700 ${w*0.05}px Fredoka One`; c.fillText('Mata', cxMata, cyMata+rMata+w*0.05);
+
+      // Rival pequeño abajo (víctima)
+      const rival = STATE.rival, rivalId2 = (rival||'').toLowerCase();
+      try { imgRival = await loadFace(rivalId2); } catch(e) {}
+      const h2hData = h2hFor('mata', rivalId2);
+      const rRival = w*0.09, cxRival = w*0.5, cyRival = h*0.635;
+      if (imgRival) drawFaceCircle(c, imgRival, cxRival, cyRival, rRival);
+      else { c.fillStyle='#8B4513'; c.beginPath(); c.arc(cxRival,cyRival,rRival,0,Math.PI*2); c.fill(); }
+      c.font = `${w*0.055}px serif`; c.fillText('🙇', cxRival, cyRival - rRival - 3);
+      c.fillStyle = 'rgba(212,160,23,0.75)'; c.font = `700 ${w*0.035}px Fredoka One`; c.fillText(rival, cxRival, cyRival+rRival+w*0.038);
+
+      // Flecha de dominancia
+      c.strokeStyle = '#8B4513'; c.lineWidth = 3;
+      c.setLineDash([6, 4]);
+      c.beginPath(); c.moveTo(cxMata, cyMata+rMata+w*0.065); c.lineTo(cxRival, cyRival-rRival-w*0.04); c.stroke();
+      c.setLineDash([]);
+
+      // Stats H2H
+      const boxY = h*0.74;
+      c.fillStyle = 'rgba(139,69,19,0.15)'; roundRect(c, w*0.09, boxY, w*0.82, h*0.12, 12); c.fill();
+      c.strokeStyle = 'rgba(212,160,23,0.35)'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = '#D4A017'; c.font = `700 ${w*0.035}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(`Mata ${h2hData.wins} — ${h2hData.losses} ${rival}  (${h2hData.games} partidos juntos)`, w/2, boxY+h*0.07);
+
+      c.fillStyle = 'rgba(255,255,255,0.3)'; c.font = `italic 500 ${w*0.022}px Inter`;
+      c.fillText('"La familia tiene reglas. Y Mata las dicta."', w/2, h*0.895);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: EL MÁS PRESENTE ----------
+  // Propuesta Firestore ID: rhfqFgoLYWR8rHnvgFoU
+  registerIdea({
+    id: 'mas-presente',
+    module: 'usuarios',
+    title: '📅 El Más Presente',
+    desc: 'El jugador que más fechas participó. Premio a la constancia. O a no tener vida social.',
+    pick: function(ctx) {
+      const byGP = Object.values(ctx.ALL_STATS)
+        .filter(p => p.gamesPlayed > 0)
+        .sort((a, b) => b.gamesPlayed - a.gamesPlayed);
+      if (!byGP.length) return null;
+      const champ = byGP[0];
+      const second = byGP[1] || byGP[0];
+      return {
+        protagonist: { id: champ.id, name: champ.name },
+        rival: { id: second.id, name: second.name },
+        facts: { partidas: champ.gamesPlayed, second: second.gamesPlayed }
+      };
+    },
+    computeFacts: function() {
+      const byGP = Object.values(ALL_STATS).filter(p=>p.gamesPlayed>0).sort((a,b)=>b.gamesPlayed-a.gamesPlayed);
+      return { partidas: byGP[0]?.gamesPlayed||0, second: byGP[1]?.gamesPlayed||0 };
+    },
+    copies: { nachi: [
+      '📅 {protagonist}: {partidas} fechas. La definición clínica de "no tener plan los lunes".',
+      '🥇 Premio asistencia perfecta para {protagonist}. {partidas} partidas. ¿Tenés familia, {protagonist}?',
+      '📊 {protagonist} jugó {partidas} fechas. {rival} jugó {second}. Uno de los dos claramente tiene más amigos.',
+      '🏅 {protagonist}, campeón de presencia. No de victorias, ojo. Pero de presencia, sí.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#001a0a'); bg.addColorStop(1, '#0a1a20');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Decoración de calendario en el fondo
+      c.fillStyle = 'rgba(0,166,81,0.06)';
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+          roundRect(c, w*(0.1+col*0.18), h*(0.12+row*0.16), w*0.13, h*0.11, 6);
+          c.fill();
+        }
+      }
+
+      c.strokeStyle = '#00A651'; c.lineWidth = w*0.011;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 18); c.stroke();
+
+      c.fillStyle = '#00d468'; c.font = `700 ${w*0.058}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('📅 EL MÁS PRESENTE', w/2, h*0.13);
+      c.fillStyle = 'rgba(0,166,81,0.6)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText('porque los lunes tienen dueño', w/2, h*0.168);
+
+      const you = STATE.you, rival = STATE.rival;
+      const youId = (you||'').toLowerCase();
+      const psY = ALL_STATS[youId];
+      const partidas = psY?.gamesPlayed || 0;
+      const wins = psY?.W || 0;
+      const winPct = partidas > 0 ? Math.round(wins/partidas*100) : 0;
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w*0.17, cx2 = w/2, cy2 = h*0.39;
+      if (img) {
+        c.save(); c.shadowColor = '#00A651'; c.shadowBlur = 28;
+        drawFaceCircle(c, img, cx2, cy2, r);
+        c.shadowBlur = 0; c.restore();
+      }
+      c.font = `${w*0.09}px serif`; c.textAlign = 'center';
+      c.fillText('📅', cx2, cy2 - r - 5);
+      c.fillStyle = '#00d468'; c.font = `700 ${w*0.055}px Fredoka One`; c.fillText(you, cx2, cy2+r+w*0.055);
+
+      // Número grande de partidas
+      const numY = h*0.63;
+      c.fillStyle = 'rgba(0,166,81,0.13)'; roundRect(c, w*0.12, numY, w*0.76, h*0.19, 16); c.fill();
+      c.strokeStyle = 'rgba(0,166,81,0.4)'; c.lineWidth = 2; c.stroke();
+
+      c.fillStyle = '#00d468'; c.font = `900 ${w*0.12}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(String(partidas), w/2, numY + h*0.125);
+      c.fillStyle = 'rgba(0,212,104,0.65)'; c.font = `600 ${w*0.028}px Inter`;
+      c.fillText(`fechas jugadas · ${winPct}% ganadas`, w/2, numY + h*0.162);
+
+      c.fillStyle = 'rgba(255,255,255,0.35)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText(`"Los lunes son de ${you}. Los otros... también vienen."`, w/2, h*0.893);
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: SE BUSCA DESAPARECIDO ----------
+  // Propuesta Firestore ID: xtad0ClROWIDQOG4H8xc
+  registerIdea({
+    id: 'se-busca-desaparecido',
+    module: 'usuarios',
+    title: '🚨 Se Busca: Desaparecido',
+    desc: 'Cartel de búsqueda para el jugador con más faltas del año. Reportado como "ausente de la semana".',
+    pick: function(ctx) {
+      const absences = computeAnnualAbsences();
+      const sorted = Object.entries(absences).sort((a, b) => b[1] - a[1]);
+      if (!sorted.length) return null;
+      const [topId, topCount] = sorted[0];
+      const secondId = sorted[1]?.[0] || topId;
+      return {
+        protagonist: { id: topId, name: ctx.NAME_BY_ID[topId] || topId },
+        rival: { id: secondId, name: ctx.NAME_BY_ID[secondId] || secondId },
+        facts: { faltas: topCount }
+      };
+    },
+    computeFacts: function() {
+      const absences = computeAnnualAbsences();
+      const sorted = Object.entries(absences).sort((a,b)=>b[1]-a[1]);
+      return { faltas: sorted[0]?.[1] || 0 };
+    },
+    copies: { nachi: [
+      '🚨 SE BUSCA {protagonist}. Desaparecido {faltas} veces en lo que va del año. Recompensa: que venga a jugar.',
+      '🔍 {protagonist} tiene {faltas} ausencias registradas. La leche en el fondo de la heladera lo extraña.',
+      '📋 Informe oficial: {protagonist} ha faltado {faltas} veces. El grupo sigue jugando sin él. Mejor, incluso.',
+      '🧾 {protagonist}: {faltas} faltas. El UNO lo recuerda. La multa también lo recuerda. Bastante, de hecho.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+      // Fondo tipo póster policial
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#1a0a00'); bg.addColorStop(1, '#0d0d0d');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Textura de papel viejo
+      for (let i = 0; i < 60; i++) {
+        const lx = Math.abs(Math.sin(i*137)*w), ly = Math.abs(Math.cos(i*79)*h);
+        c.fillStyle = `rgba(255,200,100,${0.01 + Math.abs(Math.sin(i*43))*0.02})`;
+        c.fillRect(lx, ly, w*0.06, 1);
+      }
+
+      // Borde tipo cartel de búsqueda
+      c.strokeStyle = '#ff6b00'; c.lineWidth = w*0.018;
+      c.strokeRect(w*0.04, h*0.04, w*0.92, h*0.92);
+      c.strokeStyle = '#ff6b00'; c.lineWidth = w*0.006;
+      c.strokeRect(w*0.065, h*0.065, w*0.87, h*0.87);
+
+      // "SE BUSCA" grande estilo occidental
+      c.fillStyle = '#ff6b00'; c.font = `900 ${w*0.1}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('SE BUSCA', w/2, h*0.155);
+      c.fillStyle = 'rgba(255,107,0,0.5)'; c.font = `700 ${w*0.026}px Inter`;
+      c.fillText('DESAPARECIDO MÚLTIPLES VECES', w/2, h*0.192);
+
+      const you = STATE.you;
+      const youId = (you||'').toLowerCase();
+      const facts = this.computeFacts ? this.computeFacts() : {};
+      const faltas = facts.faltas || 0;
+
+      // Foto en blanco y negro estilo ficha policial
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w*0.16, cx2 = w/2, cy2 = h*0.39;
+      if (img) {
+        // Efecto B&W
+        c.save();
+        c.filter = 'grayscale(100%) contrast(120%)';
+        c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI*2); c.closePath(); c.clip();
+        c.drawImage(img, cx2-r, cy2-r, r*2, r*2);
+        c.restore();
+        // Borde de ficha
+        c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI*2);
+        c.lineWidth = 5; c.strokeStyle = '#ff6b00'; c.stroke();
+      }
+
+      // Nombre del buscado
+      c.fillStyle = '#ff6b00'; c.font = `700 ${w*0.055}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(you.toUpperCase(), w/2, cy2+r+w*0.055);
+
+      // Líneas de ficha policial
+      const boxY = h*0.665;
+      c.fillStyle = 'rgba(255,107,0,0.1)'; roundRect(c, w*0.08, boxY, w*0.84, h*0.2, 10); c.fill();
+      c.strokeStyle = 'rgba(255,107,0,0.4)'; c.lineWidth = 1.5; c.stroke();
+
+      const lines = [
+        `CARGO: Ausente Reincidente`,
+        `FALTAS REGISTRADAS: ${faltas} en ${new Date().getFullYear()}`,
+        `MODUS OPERANDI: No aparece los lunes`,
+        `PELIGROSIDAD: Alta (para el bolsillo del grupo)`
+      ];
+      c.textAlign = 'left';
+      lines.forEach((line, i) => {
+        c.fillStyle = i % 2 === 0 ? 'rgba(255,107,0,0.9)' : 'rgba(255,255,255,0.7)';
+        c.font = `${i===0?'700':'500'} ${w*0.026}px Inter`;
+        c.fillText(line, w*0.12, boxY + h*0.04 + i*h*0.044);
+      });
+
+      // Sello REINCIDENTE
+      c.save();
+      c.translate(w*0.79, h*0.28); c.rotate(0.3);
+      c.strokeStyle = '#ff2200'; c.lineWidth = 5;
+      c.beginPath(); c.arc(0, 0, w*0.09, 0, Math.PI*2); c.stroke();
+      c.fillStyle = '#ff2200'; c.font = `700 ${w*0.022}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('REINCI-', 0, -5); c.fillText('DENTE', 0, 14);
+      c.restore();
+
+      c.fillStyle = 'rgba(255,255,255,0.3)'; c.font = `italic 500 ${w*0.022}px Inter`; c.textAlign = 'center';
+      c.fillText('"Si lo ves, avisá. Y cobrale la multa."', w/2, h*0.897);
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
