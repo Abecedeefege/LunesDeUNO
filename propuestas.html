@@ -208,6 +208,36 @@
 
     .bonus-section { margin-top: 3rem; background: var(--surface); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); }
     .bonus-section h2 { margin-bottom: 1rem; color: var(--uno-yellow); }
+
+    .request-ack {
+      margin-top: 1rem;
+      padding: 1rem 1.15rem;
+      background: var(--surface-2);
+      border: 1px solid var(--uno-yellow);
+      border-left: 4px solid var(--uno-yellow);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: .95rem; line-height: 1.55;
+      animation: ackFadeIn .35s ease;
+    }
+    .request-ack .ack-title {
+      display: inline;
+      font-family: 'Fredoka One', sans-serif;
+      color: var(--uno-yellow);
+      font-size: 1.05rem;
+      letter-spacing: .02em;
+      margin-right: .35rem;
+    }
+    .request-ack .ack-time {
+      font-family: 'Fredoka One', sans-serif;
+      color: var(--uno-yellow);
+      font-size: 1.05rem;
+      letter-spacing: .03em;
+    }
+    @keyframes ackFadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -227,6 +257,11 @@
       <input type="text" id="requestInput" placeholder="Ingresa tu pedido y te lo armo..." maxlength="500" autocomplete="off">
       <button type="submit" class="btn btn-primary request-send">Enviar</button>
     </form>
+    <p class="request-ack" id="requestAck" hidden>
+      <span class="ack-title">Pedido recibido.</span>
+      Claudio trabajará nuevamente a las <span class="ack-time" id="ackNextHour"></span> para integrar tu solución.
+      Vuelve a las <span class="ack-time" id="ackCheckBack"></span> para verla en vivo!
+    </p>
   </section>
 
   <div id="dataBanner" style="display:none; margin-bottom: 1.5rem; padding: 1rem 1.25rem; border-radius: 14px; border: 2px solid var(--danger); background: rgba(255,77,106,.08); color: var(--text);">
@@ -321,7 +356,7 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 // ===== ROSTER REAL (idéntico a index.html PRESET_NAMES) =====
 // NO incluye Bucket — Bucket no es un jugador del grupo.
@@ -871,6 +906,9 @@ function refreshAll() {
 }
 
 function renderIdeaCard(idea) {
+  // Filtro de visibilidad: si la colección `propuestasVisuales` fue sembrada
+  // y el doc para este `idea.id` fue eliminado, no renderizamos el card.
+  if (VISIBLE_IDS && !VISIBLE_IDS.has(idea.id)) return;
   // `idea.grid` permite montar el card en un contenedor distinto al default del módulo
   // (útil para el desplegable "Jugadores sin figuritas").
   const gridId = idea.grid || ('grid-' + idea.module);
@@ -909,19 +947,33 @@ window.registerIdea = registerIdea;
   if (!form) return;
   const input = document.getElementById('requestInput');
   const btn = form.querySelector('button[type="submit"]');
+  const ack = document.getElementById('requestAck');
+  const ackNextHour = document.getElementById('ackNextHour');
+  const ackCheckBack = document.getElementById('ackCheckBack');
+
+  const fmtTime = d => d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
   form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-    const text = (input.value || '').trim();
-    if (!text) return;
+    const texto = (input.value || '').trim();
+    if (!texto) return;
     btn.disabled = true;
     try {
+      const now = new Date();
+      const nextHour = new Date(now);
+      nextHour.setHours(nextHour.getHours() + 1, 0, 0, 0);
+      const checkBack = new Date(nextHour.getTime() + 13 * 60 * 1000);
+
       await addDoc(collection(_db, 'Propuestas'), {
-        text,
-        createdAt: serverTimestamp(),
-        userAgent: navigator.userAgent || ''
+        texto,
+        integracion: null,
+        createdAt: serverTimestamp()
       });
+
+      ackNextHour.textContent = fmtTime(nextHour);
+      ackCheckBack.textContent = fmtTime(checkBack);
+      ack.hidden = false;
       input.value = '';
-      showToast('¡Pedido enviado!');
     } catch (err) {
       console.error('No se pudo guardar la propuesta', err);
       showToast('No se pudo enviar, probá de nuevo');
@@ -996,6 +1048,47 @@ function footer(ctx, w, h) {
   ctx.fillText('🎴 lunes de uno', w/2, h - 30);
 }
 
+// ===== VISIBILIDAD DE MÓDULOS (colección `propuestasVisuales`) =====
+// Una vez sembrada, cada idea queda representada por un doc con id = idea.id.
+// Si el usuario elimina un doc, la idea correspondiente deja de renderizarse.
+// El doc `_meta` marca la colección como sembrada para no recrear los eliminados.
+let VISIBLE_IDS = null;     // null => no filtrar (primera corrida o error)
+let SHOULD_SEED = false;
+
+async function loadVisibilityRegistry() {
+  try {
+    const snap = await getDocs(collection(_db, 'propuestasVisuales'));
+    const metaDoc = snap.docs.find(d => d.id === '_meta');
+    const seeded = !!(metaDoc && metaDoc.data() && metaDoc.data().seeded);
+    if (seeded) {
+      VISIBLE_IDS = new Set(snap.docs.filter(d => d.id !== '_meta').map(d => d.id));
+    } else {
+      VISIBLE_IDS = null;
+      SHOULD_SEED = true;
+    }
+  } catch (e) {
+    console.error('No se pudo leer propuestasVisuales', e);
+    VISIBLE_IDS = null;
+  }
+}
+
+async function seedVisibilityRegistry() {
+  if (!SHOULD_SEED || !IDEAS.length) return;
+  try {
+    const colRef = collection(_db, 'propuestasVisuales');
+    await Promise.all(IDEAS.map(idea => setDoc(doc(colRef, idea.id), {
+      title: idea.title || idea.id,
+      module: idea.module || null,
+      grid: idea.grid || null,
+      createdAt: serverTimestamp()
+    })));
+    await setDoc(doc(colRef, '_meta'), { seeded: true, seededAt: serverTimestamp() });
+    SHOULD_SEED = false;
+  } catch (e) {
+    console.error('No se pudo inicializar propuestasVisuales', e);
+  }
+}
+
 // ===== INIT =====
 async function init() {
   try {
@@ -1013,12 +1106,14 @@ async function init() {
       'Abrí <a href="index.html" style="color: var(--uno-yellow);">index.html</a>, jugá una partida y sincronizá. Esta galería <strong>no inventa datos</strong>.');
     return; // no renderizar ideas sin datos
   }
+  await loadVisibilityRegistry();
   if (window._modJugador) window._modJugador();
   if (window._modAnual) window._modAnual();
   if (window._modTemporada) window._modTemporada();
   if (window._modTemporadas) window._modTemporadas();
   if (window._modH2H) window._modH2H();
   if (window._modUsuarios) window._modUsuarios();
+  seedVisibilityRegistry();
 }
 document.addEventListener('DOMContentLoaded', () => { init(); });
 
