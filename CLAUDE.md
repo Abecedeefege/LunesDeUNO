@@ -7,7 +7,7 @@ Scoretracker estático para partidas de UNO de un grupo de amigos. GitHub Pages,
 - `index.html` — app principal del juego. **NO TOCAR.**
 - `propuestas.html` — galería de tarjetas meme con stats reales. Aquí van las propuestas.
 - Sólo modificar `propuestas.html`. Nunca otras páginas.
-- Rama de trabajo: `claude/adoring-pascal-URFdF`
+- Rama de trabajo: `main` (push directo al sitio en producción)
 
 ---
 
@@ -103,7 +103,7 @@ curl -s -X PATCH \
 ```bash
 git add propuestas.html
 git commit -m "Implementar propuesta: [título] ([id])"
-git push -u origin claude/adoring-pascal-URFdF
+git push origin main
 ```
 
 ---
