@@ -303,17 +303,6 @@
     </div>
   </section>
 
-  <!-- ========== MODULO: RANKING TEMPORADA ========== -->
-  <section class="module-section" id="mod-temporada">
-    <div class="module-header">
-      <h2>Ranking temporada</h2>
-    </div>
-    <div class="ideas-grid" id="grid-temporada">
-      <!-- IDEAS:TEMPORADA:START -->
-      <!-- IDEAS:TEMPORADA:END -->
-    </div>
-  </section>
-
   <!-- ========== MODULO: TEMPORADAS ========== -->
   <section class="module-section" id="mod-temporadas">
     <div class="module-header">
@@ -1135,7 +1124,6 @@ async function init() {
   await loadVisibilityRegistry();
   if (window._modJugador) window._modJugador();
   if (window._modAnual) window._modAnual();
-  if (window._modTemporada) window._modTemporada();
   if (window._modTemporadas) window._modTemporadas();
   if (window._modH2H) window._modH2H();
   if (window._modUsuarios) window._modUsuarios();
@@ -1941,14 +1929,6 @@ window._modAnual = function() {
 };
 // DRAWS:ANUAL:END
 
-// DRAWS:TEMPORADA:START
-window._modTemporada = function() {
-
-
-
-
-};
-// DRAWS:TEMPORADA:END
 
 // DRAWS:TEMPORADAS:START
 window._modTemporadas = function() {
@@ -2278,208 +2258,14 @@ window._modH2H = function() {
 // DRAWS:H2H:END
 
 // DRAWS:USUARIOS:START
+// ELIMINADOS A PROPÓSITO — no re-agregar estos IDs bajo ningún concepto:
+//   - mas-fechas        (reemplazado por uni-de-oro-<player> en _modJugador)
+//   - oda-campeon       (removido por pedido del usuario)
+//   - ansiedad-segundo  (removido por pedido del usuario)
+//   - mata-patriarcado  (removido por pedido del usuario)
+// Si están en la colección `propuestasVisuales` de Firestore y parecen
+// "faltantes", NO significa que falten: el usuario los borró a propósito.
 window._modUsuarios = function() {
-
-  // ---------- PROPUESTA: EL QUE MÁS FECHAS PARTICIPÓ ----------
-  // Propuesta Firestore ID: rhfqFgoLYWR8rHnvgFoU
-  registerIdea({
-    id: 'mas-fechas',
-    module: 'usuarios',
-    title: '📅 El Más Pelma del Grupo',
-    desc: 'El jugador que más fechas participó. Nunca falta. Literalmente nunca. ¿No tiene vida?',
-    pick: function(ctx) {
-      let best = null, bestGP = -1;
-      for (const pid of ctx.PLAYERS_WITH_DATA) {
-        const ps = ctx.ALL_STATS[pid];
-        if ((ps.gamesPlayed || 0) > bestGP) { bestGP = ps.gamesPlayed; best = ps; }
-      }
-      if (!best) return null;
-      const rk = ctx.annualRanking();
-      const rival = rk.find(r => r.id !== best.id) || rk[0] || { id: best.id, name: best.name };
-      return { protagonist: { id: best.id, name: best.name }, rival: { id: rival.id, name: rival.name }, facts: { gamesPlayed: bestGP } };
-    },
-    copies: { nachi: [
-      '{protagonist}: {gamesPlayed} fechas jugadas. No tiene vida, pero tiene récord.',
-      'Si {protagonist} faltara una vez, el mundo se acabaría. {gamesPlayed} partidas y contando.',
-      '{protagonist}, ¿nunca te cansás? {gamesPlayed} fechas. Conseguite un hobby, en serio.',
-      'El más fiel del grupo: {protagonist}. {gamesPlayed} partidas. Podrías usar ese tiempo para algo útil.'
-    ]},
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
-      gradBG(c, w, h, '#0a2a0a', '#0f1a0f');
-      c.strokeStyle = '#00A651'; c.lineWidth = w * 0.012;
-      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 20); c.stroke();
-      c.fillStyle = '#00A651'; c.font = `700 ${w*0.062}px Fredoka One`; c.textAlign = 'center';
-      c.fillText('📅 EL MÁS PELMA', w/2, h*0.1);
-      c.fillStyle = 'rgba(0,166,81,0.6)'; c.font = `500 ${w*0.026}px Inter`;
-      c.fillText('nunca falta · siempre está · insoportable', w/2, h*0.14);
-      const you = STATE.you, youId = (you||'').toLowerCase(), ps = ALL_STATS[youId], gp = ps?.gamesPlayed||0;
-      let img; try { img = await loadFace(youId); } catch(e) {}
-      const r = w*0.2, cx2 = w/2, cy2 = h*0.38;
-      if (img) drawFaceCircle(c, img, cx2, cy2, r);
-      else { c.fillStyle='#00A651';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill(); }
-      c.font=`${w*0.1}px serif`;c.textAlign='center';c.fillText('🏅',cx2,cy2-r-4);
-      c.fillStyle='#fff';c.font=`700 ${w*0.055}px Fredoka One`;c.fillText(you,cx2,cy2+r+w*0.055);
-      const numY=h*0.66;
-      c.fillStyle='rgba(0,166,81,0.15)';roundRect(c,w*0.1,numY,w*0.8,h*0.15,16);c.fill();
-      c.strokeStyle='rgba(0,166,81,0.5)';c.lineWidth=2;c.stroke();
-      c.fillStyle='#00A651';c.font=`700 ${w*0.11}px Fredoka One`;c.fillText(String(gp),w/2,numY+h*0.1);
-      c.fillStyle='rgba(255,255,255,0.6)';c.font=`500 ${w*0.026}px Inter`;c.fillText('fechas jugadas',w/2,numY+h*0.135);
-      c.fillStyle='rgba(255,255,255,0.45)';c.font=`italic 500 ${w*0.026}px Inter`;
-      c.fillText(`${ps?.W||0}V · ${ps?.L||0}D · ¿valió la pena?`,w/2,h*0.86);
-      footer(c, w, h);
-    }
-  });
-
-  // ---------- PROPUESTA: ODA AL ACTUAL CAMPEÓN ----------
-  // Propuesta Firestore ID: JUcNZbNye5s6vwiMaytG
-  registerIdea({
-    id: 'oda-campeon',
-    module: 'usuarios',
-    title: '🏆 Oda al Actual Campeón',
-    desc: 'Un poema épico dedicado al líder del ranking anual. Con toda la pompa que se merece (o no).',
-    pick: function(ctx) {
-      const rk = ctx.annualRanking();
-      if (!rk.length) return null;
-      const champ = rk[0], rival = rk[1]||rk[0];
-      const wins = ctx.ALL_STATS[champ.id]?.W||0;
-      return { protagonist: { id: champ.id, name: champ.name }, rival: { id: rival.id, name: rival.name }, facts: { wins } };
-    },
-    copies: { nachi: [
-      '🏆 Oh, {protagonist}! Campeón de lo que nadie quería ser campeón. Te mereces este poema.',
-      'Escúchame, {protagonist}: sos el mejor. Por ahora. Mientras dure.',
-      '"{protagonist}, el Invicto" — título que suena bien hasta que deja de sonar.',
-      'Oda a {protagonist}: ganaste {wins} veces. Qué grande. (Es sarcasmo, pero un poco en serio.)'
-    ]},
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
-      const bg=c.createLinearGradient(0,0,w,h);
-      bg.addColorStop(0,'#1a0d00');bg.addColorStop(0.5,'#0d0d2e');bg.addColorStop(1,'#1a0d00');
-      c.fillStyle=bg;c.fillRect(0,0,w,h);
-      for(let i=0;i<60;i++){const sx=Math.abs(Math.sin(i*137.5)*w),sy=Math.abs(Math.cos(i*97.3)*h),sr=Math.abs(Math.sin(i*53))*2+0.5;c.fillStyle=`rgba(255,220,0,${0.2+Math.abs(Math.sin(i*41))*0.5})`;c.beginPath();c.arc(sx,sy,sr,0,Math.PI*2);c.fill();}
-      c.strokeStyle='#c9a227';c.lineWidth=w*0.01;roundRect(c,w*0.04,h*0.04,w*0.92,h*0.92,20);c.stroke();
-      c.fillStyle='#FFDE00';c.font=`700 ${w*0.055}px Fredoka One`;c.textAlign='center';c.fillText('✨ ODA AL CAMPEÓN ✨',w/2,h*0.1);
-      c.fillStyle='rgba(255,222,0,0.5)';c.font=`italic 500 ${w*0.026}px Inter`;c.fillText('una composición de lunes de uno',w/2,h*0.14);
-      const you=STATE.you,youId=(you||'').toLowerCase(),ps=ALL_STATS[youId],wins=ps?.W||0,losses=ps?.L||0;
-      let img;try{img=await loadFace(youId);}catch(e){}
-      const r=w*0.17,cx2=w/2,cy2=h*0.35;
-      if(img)drawFaceCircle(c,img,cx2,cy2,r);else{c.fillStyle='#c9a227';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill();}
-      c.font=`${w*0.1}px serif`;c.textAlign='center';c.fillText('👑',cx2-r*0.7,cy2-r-2);c.fillText('🏆',cx2+r*0.7,cy2-r-2);
-      c.fillStyle='#FFDE00';c.font=`700 ${w*0.065}px Fredoka One`;c.fillText(you,cx2,cy2+r+w*0.055);
-      const verses=[`Oh ${you}, portador de victorias,`,`con ${wins} triunfos y ${losses} humillaciones,`,`sos el primero... por ahora.`,`Disfrutalo mientras dura, crack.`];
-      const verseY=h*0.64;
-      c.fillStyle='rgba(255,222,0,0.12)';roundRect(c,w*0.07,verseY-h*0.025,w*0.86,h*0.22,14);c.fill();
-      c.strokeStyle='rgba(255,222,0,0.3)';c.lineWidth=1;c.stroke();
-      c.fillStyle='rgba(255,255,255,0.85)';c.font=`italic 500 ${w*0.028}px Inter`;
-      verses.forEach((v,i)=>c.fillText(v,w/2,verseY+i*h*0.048));
-      c.fillStyle='rgba(201,162,39,0.5)';c.font=`500 ${w*0.022}px Inter`;c.fillText('— Lunes de UNO, con cariño (y un poco de envidia)',w/2,h*0.89);
-      footer(c,w,h);
-    }
-  });
-
-  // ---------- PROPUESTA: ANSIEDAD DEL SEGUNDO LUGAR ----------
-  // Propuesta Firestore ID: GDOTJfRYiadK2kLAoRy9
-  registerIdea({
-    id: 'ansiedad-segundo',
-    module: 'usuarios',
-    title: '😰 La Ansiedad del Segundo Lugar',
-    desc: 'El que viene segundo esperando el próximo lunes para destronar al primero. Spoiler: no puede.',
-    pick: function(ctx) {
-      const rk=ctx.annualRanking();if(rk.length<2)return null;
-      return { protagonist:{id:rk[1].id,name:rk[1].name}, rival:{id:rk[0].id,name:rk[0].name}, facts:{} };
-    },
-    copies: { nachi: [
-      '{protagonist} mirando el calendario: "¿Cuándo es el próximo lunes...?" (desde el martes)',
-      'El {protagonist} despierta a las 3am pensando en cómo ganarle a {rival}. No va a poder.',
-      '{protagonist}: "esta vez le gano a {rival}, juro". Todos los lunes. Sin excepción.',
-      'Segundo lugar no es segundo lugar, {protagonist}. Es el primero de los perdedores. Beso.'
-    ]},
-    draw: async function(canvas, opts) {
-      const w=canvas.width,h=canvas.height,c=canvas.getContext('2d');
-      gradBG(c,w,h,'#0d0020','#1a0a2e');
-      c.strokeStyle='#8B5CF6';c.lineWidth=w*0.01;roundRect(c,w*0.04,h*0.04,w*0.92,h*0.92,20);c.stroke();
-      c.fillStyle='#a78bfa';c.font=`700 ${w*0.055}px Fredoka One`;c.textAlign='center';c.fillText('😰 ANSIEDAD NIVEL:',w/2,h*0.1);
-      c.fillStyle='#ff6b9d';c.font=`700 ${w*0.072}px Fredoka One`;c.fillText('SEGUNDO LUGAR',w/2,h*0.162);
-      const you=STATE.you,rival=STATE.rival,youId=(you||'').toLowerCase(),rivalId2=(rival||'').toLowerCase();
-      let imgYou,imgRival;
-      try{imgYou=await loadFace(youId);}catch(e){}try{imgRival=await loadFace(rivalId2);}catch(e){}
-      const r1=w*0.1,x1=w*0.72,y1=h*0.32;
-      if(imgRival)drawFaceCircle(c,imgRival,x1,y1,r1);else{c.fillStyle='#c9a227';c.beginPath();c.arc(x1,y1,r1,0,Math.PI*2);c.fill();}
-      c.font=`${w*0.065}px serif`;c.textAlign='center';c.fillText('👑',x1,y1-r1-3);
-      c.fillStyle='#FFDE00';c.font=`700 ${w*0.032}px Fredoka One`;c.fillText(rival,x1,y1+r1+w*0.035);
-      c.fillStyle='rgba(255,222,0,0.5)';c.font=`500 ${w*0.02}px Inter`;c.fillText('#1 😎',x1,y1+r1+w*0.06);
-      const r2=w*0.18,x2=w*0.33,y2=h*0.43;
-      if(imgYou)drawFaceCircle(c,imgYou,x2,y2,r2);else{c.fillStyle='#8B5CF6';c.beginPath();c.arc(x2,y2,r2,0,Math.PI*2);c.fill();}
-      c.font=`${w*0.08}px serif`;c.fillText('💦',x2+r2*0.7,y2-r2*0.3);c.fillText('💦',x2-r2*0.8,y2-r2*0.5);
-      c.fillStyle='#a78bfa';c.font=`700 ${w*0.042}px Fredoka One`;c.fillText(you,x2,y2+r2+w*0.048);
-      c.fillStyle='rgba(255,107,157,0.7)';c.font=`500 ${w*0.022}px Inter`;c.fillText('#2 😰 (esperando el lunes)',x2,y2+r2+w*0.075);
-      const barY=h*0.73;
-      c.fillStyle='rgba(139,92,246,0.15)';roundRect(c,w*0.08,barY,w*0.84,h*0.055,12);c.fill();
-      c.strokeStyle='rgba(139,92,246,0.4)';c.lineWidth=1.5;c.stroke();
-      const pct=Math.min(0.95,0.6+Math.random()*0.35);
-      const gr=c.createLinearGradient(w*0.08,0,w*0.92,0);gr.addColorStop(0,'#8B5CF6');gr.addColorStop(1,'#ff6b9d');
-      c.fillStyle=gr;roundRect(c,w*0.08,barY,w*0.84*pct,h*0.055,12);c.fill();
-      c.fillStyle='#fff';c.font=`700 ${w*0.028}px Fredoka One`;c.textAlign='center';
-      c.fillText('ANSIEDAD: '+Math.round(pct*100)+'%',w*0.08+(w*0.84*pct)/2,barY+h*0.037);
-      c.fillStyle='rgba(255,255,255,0.45)';c.font=`italic 500 ${w*0.024}px Inter`;
-      c.fillText('"Esta vez le gano..." — '+you+', todos los lunes',w/2,h*0.835);
-      c.fillStyle='rgba(255,107,157,0.5)';c.font=`500 ${w*0.022}px Inter`;c.fillText('(spoiler: no pudo)',w/2,h*0.862);
-      footer(c,w,h);
-    }
-  });
-
-  // ---------- PROPUESTA: PATRIARCADO DE MATA ----------
-  // Propuesta Firestore ID: jMCTLhnlv8tlHOZyJr8F
-  registerIdea({
-    id: 'mata-patriarcado',
-    module: 'usuarios',
-    title: '🏛 El Patriarcado de Mata',
-    desc: 'Mata y su víctima favorita en mano a mano. El patriarca habla, el resto obedece y llora.',
-    pick: function(ctx) {
-      const mataStats=ctx.ALL_STATS['mata'];if(!mataStats)return null;
-      const victims=Object.entries(mataStats.defeatedCount||{}).sort((a,b)=>b[1]-a[1]);if(!victims.length)return null;
-      const [victimId,wins]=victims[0];
-      return { protagonist:{id:'mata',name:ctx.NAME_BY_ID['mata']||'Mata'}, rival:{id:victimId,name:ctx.NAME_BY_ID[victimId]||victimId}, facts:{mataWins:wins,mataLosses:mataStats.h2h?.[victimId]?.losses||0} };
-    },
-    copies: { nachi: [
-      '👑 {protagonist} manda. {rival} obedece. Así fue, así será. El patriarcado es de acá.',
-      'El Patriarca {protagonist} tiene a {rival} en el bolsillo. {mataWins} victorias y contando.',
-      '{rival}, dejá de mentirte. {protagonist} te gana siempre. El patriarcado existe y tiene cara.',
-      '¿{rival} creyendo que puede ganarle a {protagonist}? Qué tierno. Qué, qué tierno.'
-    ]},
-    draw: async function(canvas, opts) {
-      const w=canvas.width,h=canvas.height,c=canvas.getContext('2d');
-      const bg=c.createLinearGradient(0,0,w,h);bg.addColorStop(0,'#2d1b00');bg.addColorStop(1,'#1a0f00');
-      c.fillStyle=bg;c.fillRect(0,0,w,h);
-      c.strokeStyle='#c9a227';c.lineWidth=w*0.012;roundRect(c,w*0.04,h*0.04,w*0.92,h*0.92,24);c.stroke();
-      c.fillStyle='#c9a227';c.font=`700 ${w*0.065}px Fredoka One`;c.textAlign='center';c.fillText('🏛 EL PATRIARCADO',w/2,h*0.1);
-      c.fillStyle='rgba(201,162,39,0.55)';c.font=`500 ${w*0.026}px Inter`;c.fillText('dominación histórica · lunes de uno',w/2,h*0.14);
-      const you=STATE.you,rival=STATE.rival,youId=(you||'').toLowerCase(),rivalId2=(rival||'').toLowerCase();
-      const mataStats=ALL_STATS[youId],wins=mataStats?.defeatedCount?.[rivalId2]||0,losses=mataStats?.h2h?.[rivalId2]?.losses||0;
-      let mataImg,victimImg;
-      try{mataImg=await loadFace(youId);}catch(e){}try{if(rivalId2)victimImg=await loadFace(rivalId2);}catch(e){}
-      const mataR=w*0.18,mataX=w*0.32,mataY=h*0.40;
-      if(mataImg)drawFaceCircle(c,mataImg,mataX,mataY,mataR);else{c.fillStyle='#c9a227';c.beginPath();c.arc(mataX,mataY,mataR,0,Math.PI*2);c.fill();}
-      c.font=`${w*0.1}px serif`;c.textAlign='center';c.fillText('👑',mataX,mataY-mataR-6);
-      c.fillStyle='#c9a227';c.font=`700 ${w*0.05}px Fredoka One`;c.fillText(you,mataX,mataY+mataR+w*0.052);
-      c.fillStyle='rgba(201,162,39,0.7)';c.font=`500 ${w*0.025}px Inter`;c.fillText('EL PATRIARCA',mataX,mataY+mataR+w*0.082);
-      c.fillStyle='#c9a227';c.font=`700 ${w*0.06}px Fredoka One`;c.fillText('VS',w*0.635,h*0.42);
-      const victimR=w*0.13,victimX=w*0.79,victimY=h*0.42;
-      if(victimImg)drawFaceCircle(c,victimImg,victimX,victimY,victimR);else{c.fillStyle='#444';c.beginPath();c.arc(victimX,victimY,victimR,0,Math.PI*2);c.fill();}
-      c.font=`${w*0.07}px serif`;c.fillText('😰',victimX,victimY-victimR-4);
-      c.fillStyle='rgba(255,255,255,0.75)';c.font=`700 ${w*0.04}px Fredoka One`;c.fillText(rival,victimX,victimY+victimR+w*0.046);
-      c.fillStyle='rgba(255,255,255,0.4)';c.font=`500 ${w*0.022}px Inter`;c.fillText('(el castigado)',victimX,victimY+victimR+w*0.074);
-      const sy=h*0.69;
-      c.fillStyle='rgba(201,162,39,0.12)';roundRect(c,w*0.08,sy,w*0.84,h*0.13,14);c.fill();
-      c.strokeStyle='rgba(201,162,39,0.4)';c.lineWidth=1.5;c.stroke();
-      c.fillStyle='#c9a227';c.font=`700 ${w*0.04}px Fredoka One`;c.textAlign='center';
-      c.fillText(`${wins} victorias vs ${rival} · ${losses} derrotas`,w/2,sy+h*0.065);
-      c.fillStyle='rgba(255,255,255,0.5)';c.font=`500 ${w*0.024}px Inter`;
-      c.fillText(`Ratio: ${losses>0?(wins/losses).toFixed(1):'∞'}x · El patriarcado no se negocia`,w/2,sy+h*0.1);
-      c.fillStyle='#fff';c.font=`italic 500 ${w*0.027}px Inter`;c.fillText('"El patriarcado tiene nombre propio."',w/2,h*0.875);
-      footer(c,w,h);
-    }
-  });
 
   // ---------- PROPUESTA: POEMA AL SEGUNDO ----------
   // Propuesta Firestore ID: AFB2SZJK6d0WSunL2q6G
