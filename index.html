@@ -3956,45 +3956,51 @@ function unwrap2d(arr) {
   });
 }
 
+function _remoteGameToEntry(r) {
+  var rRounds = unwrap2d(r.rounds);
+  var rFines = unwrap2d(r.fines);
+  var rCortes = unwrap2d(r.cortes);
+  return {
+    id: r.gameId,
+    timestamp: r.createdAt && r.createdAt.toMillis ? r.createdAt.toMillis() : Date.now(),
+    finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : null,
+    winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
+    winnerPlayerId: r.winnerPlayerId || null,
+    seasonId: r.seasonId || null,
+    state: {
+      playerCount: (r.participants || []).length,
+      maxPoints: r.maxPoints || 0,
+      players: (r.participants || []).map(function(p) { return { name: p.name, color: p.color, face: p.face }; }),
+      rounds: rRounds,
+      currentRound: rRounds.length,
+      gameOver: !!r.finished,
+      gameId: r.gameId,
+      fines: rFines,
+      cortes: rCortes,
+      participants: r.participants || [],
+      absentees: r.absentees || [],
+      hostId: r.hostId || null,
+      venue: r.venue || ''
+    },
+    finished: !!r.finished
+  };
+}
+
+// Firestore es la fuente de verdad. Reemplaza la lista local con la colección
+// `games`. Solo preservamos partidas locales en curso (finished === false)
+// que todavía no se subieron, para no romper un "resume" en progreso.
+// Los juegos locales finalizados que no estén en Firestore se descartan.
 function syncRemoteGamesToLocal() {
   if (!window.LDU_READY || !window.LDU || !window.LDU.getAllGames) return Promise.resolve();
   return window.LDU.getAllGames().then(function(remoteGames) {
-    if (!remoteGames || !remoteGames.length) return;
-    var local = loadGames();
-    var byId = {};
-    local.forEach(function(g) { byId[g.id] = g; });
-    remoteGames.forEach(function(r) {
-      var rRounds = unwrap2d(r.rounds);
-      var rFines = unwrap2d(r.fines);
-      var rCortes = unwrap2d(r.cortes);
-      var entry = {
-        id: r.gameId,
-        timestamp: r.createdAt && r.createdAt.toMillis ? r.createdAt.toMillis() : Date.now(),
-        finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : null,
-        winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
-        winnerPlayerId: r.winnerPlayerId || null,
-        seasonId: r.seasonId || null,
-        state: {
-          playerCount: (r.participants || []).length,
-          maxPoints: r.maxPoints || 0,
-          players: (r.participants || []).map(function(p) { return { name: p.name, color: p.color, face: p.face }; }),
-          rounds: rRounds,
-          currentRound: rRounds.length,
-          gameOver: !!r.finished,
-          gameId: r.gameId,
-          fines: rFines,
-          cortes: rCortes,
-          participants: r.participants || [],
-          absentees: r.absentees || [],
-          hostId: r.hostId || null,
-          venue: r.venue || ''
-        },
-        finished: !!r.finished
-      };
-      byId[entry.id] = entry;
+    var remoteEntries = (remoteGames || []).map(_remoteGameToEntry);
+    var remoteIds = {};
+    remoteEntries.forEach(function(e) { remoteIds[e.id] = true; });
+    var localInProgress = loadGames().filter(function(g) {
+      return !g.finished && !remoteIds[g.id];
     });
-    var merged = Object.values(byId);
-    saveGames(merged);
+    saveGames(remoteEntries.concat(localInProgress));
+    if (typeof renderGamesList === 'function') renderGamesList();
   }).catch(function(err) { console.warn('[LDU] syncRemoteGamesToLocal failed:', err); });
 }
 
@@ -4188,54 +4194,38 @@ function renderStatsLoadingState() {
 }
 
 function loadStatsData() {
-  var gamesPromise;
-  if (window.LDU_READY && window.LDU && window.LDU.getAllFinishedGames) {
-    gamesPromise = window.LDU.getAllFinishedGames().then(function(remoteGames) {
-      return (remoteGames || []).map(function(r) {
-        return {
-          gameId: r.gameId,
-          finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : (r.finishedAt || 0),
-          maxPoints: r.maxPoints || 0,
-          venue: r.venue || '',
-          hostId: r.hostId || null,
-          participants: r.participants || [],
-          absentees: r.absentees || [],
-          rounds: unwrap2d(r.rounds),
-          fines: unwrap2d(r.fines),
-          cortes: unwrap2d(r.cortes),
-          winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
-          winnerPlayerId: r.winnerPlayerId || null,
-          seasonId: r.seasonId || null,
-          finished: true
-        };
-      });
+  // Firestore-only: si todavía no está listo, esperamos `ldu-ready` y reintentamos.
+  // Ya no se cae a localStorage — las stats tienen que reflejar solo partidas reales.
+  if (!(window.LDU_READY && window.LDU && window.LDU.getAllFinishedGames)) {
+    return new Promise(function(resolve) {
+      document.addEventListener('ldu-ready', function onReady() {
+        loadStatsData().then(resolve);
+      }, { once: true });
     });
-  } else {
-    var local = loadGames().filter(function(g) { return g.finished; });
-    local.sort(function(a, b) { return (a.finishedAt || a.timestamp) - (b.finishedAt || b.timestamp); });
-    var mapped = local.map(function(g) {
-      var s = g.state || {};
+  }
+
+  var gamesPromise = window.LDU.getAllFinishedGames().then(function(remoteGames) {
+    return (remoteGames || []).map(function(r) {
       return {
-        gameId: g.id,
-        finishedAt: g.finishedAt || g.timestamp || 0,
-        maxPoints: s.maxPoints || 0,
-        venue: s.venue || '',
-        hostId: s.hostId || null,
-        participants: s.participants || [],
-        absentees: s.absentees || [],
-        rounds: s.rounds || [],
-        fines: s.fines || [],
-        cortes: s.cortes || [],
-        winnerSlot: (typeof g.winnerSlot === 'number') ? g.winnerSlot : null,
-        winnerPlayerId: g.winnerPlayerId || null,
-        seasonId: g.seasonId || null,
+        gameId: r.gameId,
+        finishedAt: r.finishedAt && r.finishedAt.toMillis ? r.finishedAt.toMillis() : (r.finishedAt || 0),
+        maxPoints: r.maxPoints || 0,
+        venue: r.venue || '',
+        hostId: r.hostId || null,
+        participants: r.participants || [],
+        absentees: r.absentees || [],
+        rounds: unwrap2d(r.rounds),
+        fines: unwrap2d(r.fines),
+        cortes: unwrap2d(r.cortes),
+        winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
+        winnerPlayerId: r.winnerPlayerId || null,
+        seasonId: r.seasonId || null,
         finished: true
       };
     });
-    gamesPromise = Promise.resolve(mapped);
-  }
+  });
 
-  var seasonsPromise = (window.LDU_READY && window.LDU && window.LDU.getSeasons)
+  var seasonsPromise = (window.LDU && window.LDU.getSeasons)
     ? window.LDU.getSeasons().catch(function() { return []; })
     : Promise.resolve([]);
 
