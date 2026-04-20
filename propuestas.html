@@ -2260,57 +2260,6 @@ window._modH2H = function() {
 // DRAWS:USUARIOS:START
 window._modUsuarios = function() {
 
-  // ---------- PROPUESTA: EL QUE MÁS FECHAS PARTICIPÓ ----------
-  // Propuesta Firestore ID: rhfqFgoLYWR8rHnvgFoU
-  registerIdea({
-    id: 'mas-fechas',
-    module: 'usuarios',
-    title: '📅 El Más Pelma del Grupo',
-    desc: 'El jugador que más fechas participó. Nunca falta. Literalmente nunca. ¿No tiene vida?',
-    pick: function(ctx) {
-      let best = null, bestGP = -1;
-      for (const pid of ctx.PLAYERS_WITH_DATA) {
-        const ps = ctx.ALL_STATS[pid];
-        if ((ps.gamesPlayed || 0) > bestGP) { bestGP = ps.gamesPlayed; best = ps; }
-      }
-      if (!best) return null;
-      const rk = ctx.annualRanking();
-      const rival = rk.find(r => r.id !== best.id) || rk[0] || { id: best.id, name: best.name };
-      return { protagonist: { id: best.id, name: best.name }, rival: { id: rival.id, name: rival.name }, facts: { gamesPlayed: bestGP } };
-    },
-    copies: { nachi: [
-      '{protagonist}: {gamesPlayed} fechas jugadas. No tiene vida, pero tiene récord.',
-      'Si {protagonist} faltara una vez, el mundo se acabaría. {gamesPlayed} partidas y contando.',
-      '{protagonist}, ¿nunca te cansás? {gamesPlayed} fechas. Conseguite un hobby, en serio.',
-      'El más fiel del grupo: {protagonist}. {gamesPlayed} partidas. Podrías usar ese tiempo para algo útil.'
-    ]},
-    draw: async function(canvas, opts) {
-      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
-      gradBG(c, w, h, '#0a2a0a', '#0f1a0f');
-      c.strokeStyle = '#00A651'; c.lineWidth = w * 0.012;
-      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 20); c.stroke();
-      c.fillStyle = '#00A651'; c.font = `700 ${w*0.062}px Fredoka One`; c.textAlign = 'center';
-      c.fillText('📅 EL MÁS PELMA', w/2, h*0.1);
-      c.fillStyle = 'rgba(0,166,81,0.6)'; c.font = `500 ${w*0.026}px Inter`;
-      c.fillText('nunca falta · siempre está · insoportable', w/2, h*0.14);
-      const you = STATE.you, youId = (you||'').toLowerCase(), ps = ALL_STATS[youId], gp = ps?.gamesPlayed||0;
-      let img; try { img = await loadFace(youId); } catch(e) {}
-      const r = w*0.2, cx2 = w/2, cy2 = h*0.38;
-      if (img) drawFaceCircle(c, img, cx2, cy2, r);
-      else { c.fillStyle='#00A651';c.beginPath();c.arc(cx2,cy2,r,0,Math.PI*2);c.fill(); }
-      c.font=`${w*0.1}px serif`;c.textAlign='center';c.fillText('🏅',cx2,cy2-r-4);
-      c.fillStyle='#fff';c.font=`700 ${w*0.055}px Fredoka One`;c.fillText(you,cx2,cy2+r+w*0.055);
-      const numY=h*0.66;
-      c.fillStyle='rgba(0,166,81,0.15)';roundRect(c,w*0.1,numY,w*0.8,h*0.15,16);c.fill();
-      c.strokeStyle='rgba(0,166,81,0.5)';c.lineWidth=2;c.stroke();
-      c.fillStyle='#00A651';c.font=`700 ${w*0.11}px Fredoka One`;c.fillText(String(gp),w/2,numY+h*0.1);
-      c.fillStyle='rgba(255,255,255,0.6)';c.font=`500 ${w*0.026}px Inter`;c.fillText('fechas jugadas',w/2,numY+h*0.135);
-      c.fillStyle='rgba(255,255,255,0.45)';c.font=`italic 500 ${w*0.026}px Inter`;
-      c.fillText(`${ps?.W||0}V · ${ps?.L||0}D · ¿valió la pena?`,w/2,h*0.86);
-      footer(c, w, h);
-    }
-  });
-
   // ---------- PROPUESTA: ODA AL ACTUAL CAMPEÓN ----------
   // Propuesta Firestore ID: JUcNZbNye5s6vwiMaytG
   registerIdea({
