@@ -2772,6 +2772,129 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: NACHI EL DEUDOR ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍰 Se Busca: Nachi el Deudor',
+    desc: 'Nachi debe un postre y todavía no pagó. Se lo busca. Vivo o con el postre.',
+    pick: function(ctx) {
+      const nachiId = 'nachi';
+      const nachiStats = ctx.ALL_STATS[nachiId];
+      const rk = ctx.annualRanking();
+      const rival = rk.find(r => r.id !== nachiId) || rk[0] || { id: nachiId, name: 'el grupo' };
+      return {
+        protagonist: { id: nachiId, name: ctx.NAME_BY_ID[nachiId] || 'Nachi' },
+        rival: { id: rival.id, name: rival.name },
+        facts: {
+          wins: nachiStats?.W || 0,
+          losses: nachiStats?.L || 0,
+          gamesPlayed: nachiStats?.gamesPlayed || 0
+        }
+      };
+    },
+    copies: { nachi: [
+      '🍰 NACHI DEBE UN POSTRE. Acumuló {wins} victorias y todavía no cumplió. Justicia dulce.',
+      '🎂 {wins} victorias, {losses} derrotas, y 0 postres pagados. El récord vergonzoso de Nachi.',
+      '🍮 Se busca: Nachi. Delito: deuda de postre. Modus operandi: ganar al UNO y hacerse el distraído.',
+      '🧁 Nachi no trae el postre. Nachi no cumple. Pero sí tiene {wins} victorias para presumir. Interesante prioridades.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo: papel envejecido de cartel de se busca
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#2a1a00'); bg.addColorStop(1, '#1a1000');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Textura de papel (líneas sutiles)
+      c.strokeStyle = 'rgba(255,200,100,0.04)'; c.lineWidth = 1;
+      for (let i = 0; i < h; i += 8) {
+        c.beginPath(); c.moveTo(0, i); c.lineTo(w, i); c.stroke();
+      }
+
+      // Borde doble estilo western
+      c.strokeStyle = '#c8861a'; c.lineWidth = w * 0.018;
+      roundRect(c, w*0.03, h*0.03, w*0.94, h*0.94, 10); c.stroke();
+      c.strokeStyle = '#8b5e0a'; c.lineWidth = w * 0.006;
+      roundRect(c, w*0.045, h*0.043, w*0.91, h*0.915, 6); c.stroke();
+
+      // Header: SE BUSCA
+      c.fillStyle = '#f0c040';
+      c.font = `700 ${w*0.11}px Fredoka One`;
+      c.textAlign = 'center';
+      c.fillText('⚠️ SE BUSCA ⚠️', w/2, h*0.1);
+
+      c.fillStyle = 'rgba(240,192,64,0.55)';
+      c.font = `700 ${w*0.032}px Inter`;
+      c.fillText('POR DEUDA IMPAGADA DE POSTRE', w/2, h*0.145);
+
+      // Cara de Nachi
+      const nachiId = 'nachi';
+      const ps = ALL_STATS[nachiId];
+      let img; try { img = await loadFace(nachiId); } catch(e) {}
+
+      const r = w * 0.2, cx2 = w/2, cy2 = h * 0.36;
+
+      // Marco de la foto estilo fichero policial
+      c.fillStyle = '#5a3d10';
+      roundRect(c, cx2-r-w*0.04, cy2-r-h*0.02, r*2+w*0.08, r*2+h*0.07, 8);
+      c.fill();
+      c.strokeStyle = '#c8861a'; c.lineWidth = 3; c.stroke();
+
+      if (img) {
+        // Efecto rojo encima para "DEUDOR"
+        drawFaceCircle(c, img, cx2, cy2, r);
+        c.save();
+        c.globalAlpha = 0.18;
+        c.fillStyle = '#ff0000';
+        c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI*2); c.fill();
+        c.globalAlpha = 1; c.restore();
+      } else {
+        c.fillStyle = '#8b5e0a';
+        c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI*2); c.fill();
+        c.fillStyle = '#f0c040'; c.font = `${w*0.08}px serif`; c.textAlign = 'center';
+        c.fillText('🕵️', cx2, cy2 + w*0.04);
+      }
+
+      // Nombre
+      c.fillStyle = '#f0c040'; c.font = `700 ${w*0.065}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('NACHI', cx2, cy2 + r + w*0.065);
+      c.fillStyle = 'rgba(240,192,64,0.55)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText(`alias "El Distraído" · alias "Ya lo traigo"`, cx2, cy2 + r + w*0.095);
+
+      // Caja de stats / crimen
+      const sy = h * 0.67;
+      c.fillStyle = 'rgba(200,134,26,0.12)';
+      roundRect(c, w*0.07, sy, w*0.86, h*0.18, 10); c.fill();
+      c.strokeStyle = 'rgba(200,134,26,0.5)'; c.lineWidth = 2; c.stroke();
+
+      c.fillStyle = '#f0c040'; c.font = `700 ${w*0.032}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('DELITO: 1 POSTRE SIN PAGAR', w/2, sy + h*0.038);
+
+      const wins = ps?.W || 0, losses = ps?.L || 0, gp = ps?.gamesPlayed || 0;
+      c.fillStyle = 'rgba(255,220,100,0.75)'; c.font = `500 ${w*0.024}px Inter`;
+      c.fillText(`Partidas: ${gp}  ·  Victorias: ${wins}  ·  Derrotas: ${losses}`, w/2, sy + h*0.075);
+      c.fillStyle = 'rgba(255,100,100,0.8)'; c.font = `700 ${w*0.026}px Inter`;
+      c.fillText('Postres pagados: 0  (CERO  NINGUNO  NADA)', w/2, sy + h*0.112);
+      c.fillStyle = 'rgba(240,192,64,0.5)'; c.font = `italic 500 ${w*0.021}px Inter`;
+      c.fillText('Peligrosidad: media · Peligro para el freezer: alta', w/2, sy + h*0.148);
+
+      // Sello DEUDOR
+      c.save();
+      c.translate(w * 0.78, h * 0.27);
+      c.rotate(0.35);
+      c.strokeStyle = 'rgba(255,40,40,0.75)'; c.lineWidth = w*0.014;
+      roundRect(c, -w*0.14, -h*0.048, w*0.28, h*0.096, 6); c.stroke();
+      c.fillStyle = 'rgba(255,40,40,0.75)'; c.font = `700 ${w*0.038}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('DEUDOR', 0, h*0.018);
+      c.restore();
+
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
