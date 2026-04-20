@@ -2772,6 +2772,131 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: NACHI DEBE UN POSTRE ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍮 Deuda Impaga: Nachi Debe un Postre',
+    desc: 'Nachi prometió un postre y el grupo todavía espera. Factura en camino.',
+    pick: function(ctx) {
+      const nachiId = 'nachi';
+      const nachiStats = ctx.ALL_STATS[nachiId];
+      const rk = ctx.annualRanking();
+      const otros = rk.filter(r => r.id !== nachiId);
+      const denunciante = otros[0] || { id: 'pt', name: 'PT' };
+      return {
+        protagonist: { id: nachiId, name: 'Nachi' },
+        rival: { id: denunciante.id, name: denunciante.name },
+        facts: {
+          wins: nachiStats ? nachiStats.W : 0,
+          losses: nachiStats ? nachiStats.L : 0
+        }
+      };
+    },
+    copies: { nachi: [
+      '🍮 Nachi debe un postre. La deuda prescribe en 80 años. El grupo tiene paciencia.',
+      'Nachi: {wins} victorias, {losses} derrotas, 1 postre pendiente desde siempre. Las matemáticas no mienten.',
+      'El postre de Nachi existe en la misma dimensión que sus victorias: raramente, y con mucha espera.',
+      '"El postre ya viene" — Nachi, hace rato, sin fecha estimada de entrega.',
+      'Grupo: 🍮? Nachi: "síiiii, obvio, re pronto". Semanas después: 🦗🦗🦗'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo: crema envejecida, estilo factura
+      const bg = c.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#1a1200'); bg.addColorStop(0.5, '#110e00'); bg.addColorStop(1, '#0d0900');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Textura de líneas horizontales finas (papel viejo)
+      c.strokeStyle = 'rgba(255,220,100,0.04)'; c.lineWidth = 1;
+      for (let i = 0; i < h; i += 10) { c.beginPath(); c.moveTo(0, i); c.lineTo(w, i); c.stroke(); }
+
+      // Borde exterior tipo factura
+      c.strokeStyle = '#c9950a'; c.lineWidth = w * 0.016;
+      roundRect(c, w*0.04, h*0.03, w*0.92, h*0.94, 8); c.stroke();
+      // Borde interior
+      c.strokeStyle = 'rgba(201,149,10,0.35)'; c.lineWidth = 1.5;
+      roundRect(c, w*0.055, h*0.043, w*0.89, h*0.917, 5); c.stroke();
+
+      // Encabezado: "COBRO EXTRAJUDICIAL"
+      c.fillStyle = '#f5c518'; c.font = `700 ${w*0.063}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('⚖️ COBRO EXTRAJUDICIAL', w/2, h * 0.095);
+      c.fillStyle = 'rgba(245,197,24,0.55)'; c.font = `500 ${w*0.026}px Inter`;
+      c.fillText('Lunes de UNO — Departamento de Deudas Morales', w/2, h * 0.132);
+
+      // Separador tipo recibo
+      c.strokeStyle = 'rgba(201,149,10,0.5)'; c.lineWidth = 1;
+      c.setLineDash([8, 5]);
+      c.beginPath(); c.moveTo(w*0.08, h*0.155); c.lineTo(w*0.92, h*0.155); c.stroke();
+      c.setLineDash([]);
+
+      // Foto de Nachi
+      const fotoX = w*0.35, fotoY = h*0.175, fotoW = w*0.30, fotoH = h*0.22;
+      c.fillStyle = '#0d0900';
+      roundRect(c, fotoX, fotoY, fotoW, fotoH, 4); c.fill();
+      c.strokeStyle = '#c9950a'; c.lineWidth = 3; c.stroke();
+
+      let img; try { img = await loadFace('nachi'); } catch(e) {}
+      if (img) {
+        c.save(); roundRect(c, fotoX+4, fotoY+4, fotoW-8, fotoH-8, 2); c.clip();
+        c.drawImage(img, fotoX+4, fotoY+4, fotoW-8, fotoH-8);
+        // Tint rojo de "deudor"
+        c.fillStyle = 'rgba(180,0,0,0.18)'; c.fillRect(fotoX+4, fotoY+4, fotoW-8, fotoH-8);
+        c.restore();
+      }
+
+      // Nombre del deudor
+      c.fillStyle = '#f5c518'; c.font = `700 ${w*0.072}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('NACHI', w/2, h * 0.445);
+      c.fillStyle = 'rgba(255,80,80,0.85)'; c.font = `700 ${w*0.038}px Inter`;
+      c.fillText('DEUDOR IDENTIFICADO', w/2, h * 0.48);
+
+      // Separador
+      c.strokeStyle = 'rgba(201,149,10,0.5)'; c.lineWidth = 1; c.setLineDash([8, 5]);
+      c.beginPath(); c.moveTo(w*0.08, h*0.508); c.lineTo(w*0.92, h*0.508); c.stroke();
+      c.setLineDash([]);
+
+      // Detalle de la deuda (estilo factura)
+      const items = [
+        { label: 'Concepto', val: '1x Postre prometido', color: '#fff' },
+        { label: 'Fecha promesa', val: 'Hace tiempo ya', color: '#aaa' },
+        { label: 'Entregado', val: '0 (CERO)', color: '#ff6b6b' },
+        { label: 'Estado', val: '🚨 MORA TOTAL', color: '#ff6b6b' },
+      ];
+      const baseY = h * 0.535;
+      items.forEach((item, i) => {
+        const y = baseY + i * h * 0.073;
+        c.fillStyle = 'rgba(255,255,255,0.08)';
+        roundRect(c, w*0.07, y - h*0.022, w*0.86, h*0.058, 6); c.fill();
+        c.fillStyle = 'rgba(201,149,10,0.6)'; c.font = `600 ${w*0.027}px Inter`; c.textAlign = 'left';
+        c.fillText(item.label + ':', w*0.1, y + h*0.018);
+        c.fillStyle = item.color; c.font = `700 ${w*0.028}px Inter`; c.textAlign = 'right';
+        c.fillText(item.val, w*0.9, y + h*0.018);
+      });
+
+      // Total
+      const totY = baseY + 4 * h * 0.073 + h*0.02;
+      c.fillStyle = 'rgba(255,80,80,0.15)';
+      roundRect(c, w*0.07, totY - h*0.022, w*0.86, h*0.065, 8); c.fill();
+      c.strokeStyle = '#ff4444'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = '#ff6b6b'; c.font = `700 ${w*0.04}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('DEUDA: 1 POSTRE 🍮 + VERGÜENZA ETERNA', w/2, totY + h*0.026);
+
+      // Sello "IMPAGO"
+      c.save();
+      c.translate(w*0.78, h*0.28); c.rotate(0.4);
+      c.strokeStyle = 'rgba(255,0,0,0.6)'; c.lineWidth = w*0.013;
+      roundRect(c, -w*0.16, -h*0.045, w*0.32, h*0.09, 6); c.stroke();
+      c.fillStyle = 'rgba(255,0,0,0.6)'; c.font = `700 ${w*0.045}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('IMPAGO', 0, h*0.018);
+      c.restore();
+
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
