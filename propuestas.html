@@ -2267,6 +2267,8 @@ window._modH2H = function() {
 // "faltantes", NO significa que falten: el usuario los borró a propósito.
 // Firestore IDs de propuestas eliminadas (implementadas y luego removidas):
 //   rhfqFgoLYWR8rHnvgFoU JUcNZbNye5s6vwiMaytG GDOTJfRYiadK2kLAoRy9 jMCTLhnlv8tlHOZyJr8F
+// Firestore IDs de propuestas implementadas:
+//   ZoXceLwdgslfnuezW1G4 → nachi-postre
 window._modUsuarios = function() {
 
   // ---------- PROPUESTA: POEMA AL SEGUNDO ----------
@@ -2767,6 +2769,108 @@ window._modUsuarios = function() {
 
       c.fillStyle = 'rgba(126,203,149,0.45)'; c.font = `500 ${w*0.022}px Inter`;
       c.fillText('— Lunes de UNO, con algo de respeto (poco, pero algo)', w/2, h*0.878);
+
+      footer(c, w, h);
+    }
+  });
+
+  // ---------- PROPUESTA: NACHI DEBE UN POSTRE ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍰 Se Busca: Deudor de Postre',
+    desc: 'Nachi debe un postre y hay que recordárselo con un cartel oficial de deuda. Sin piedad.',
+    pick: function(ctx) {
+      const nachiStats = ctx.ALL_STATS['nachi'];
+      const rk = ctx.annualRanking();
+      const best = rk[0] || { id: 'pt', name: ctx.NAME_BY_ID['pt'] || 'PT' };
+      return {
+        protagonist: { id: 'nachi', name: ctx.NAME_BY_ID['nachi'] || 'Nachi' },
+        rival: { id: best.id, name: best.name },
+        facts: { wins: nachiStats ? nachiStats.W || 0 : 0, losses: nachiStats ? nachiStats.L || 0 : 0 }
+      };
+    },
+    copies: { nachi: [
+      '🍰 SE BUSCA: Nachi. Debe un postre desde quién sabe cuándo. Se lo busca. Con tenedor.',
+      '⚠️ DEUDA OFICIAL: Nachi nos debe un postre. Aún no pagó. Sigue viniendo igual. El descaro.',
+      '🎂 Nachi: postre pendiente. Los intereses ya superaron el valor del postre original.',
+      '🍮 ALERTA: el postre de Nachi sigue sin aparecer. Si lo ven, avisen. Recompensa: el postre mismo.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo estilo cartel de deuda: crema amarillenta
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#2a1800'); bg.addColorStop(1, '#1a1000');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Líneas de fondo como papel viejo
+      c.strokeStyle = 'rgba(180,130,40,0.06)'; c.lineWidth = 1;
+      for (let i = 0; i < h; i += 18) { c.beginPath(); c.moveTo(0, i); c.lineTo(w, i); c.stroke(); }
+
+      // Borde doble naranja-dorado
+      c.strokeStyle = '#d4a017'; c.lineWidth = w * 0.016;
+      roundRect(c, w*0.04, h*0.03, w*0.92, h*0.94, 12); c.stroke();
+      c.strokeStyle = '#ff8c00'; c.lineWidth = w * 0.005;
+      roundRect(c, w*0.056, h*0.044, w*0.888, h*0.912, 8); c.stroke();
+
+      // Título
+      c.fillStyle = '#ff8c00'; c.font = `700 ${w*0.09}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('SE BUSCA', w/2, h * 0.11);
+      c.fillStyle = '#d4a017'; c.font = `600 ${w*0.034}px Inter`;
+      c.fillText('DEUDOR DE POSTRE OFICIAL', w/2, h * 0.155);
+
+      // Foto de Nachi en marco
+      const fotoX = w*0.24, fotoY = h*0.20, fotoW = w*0.52, fotoH = h*0.30;
+      c.fillStyle = '#1a1000';
+      roundRect(c, fotoX, fotoY, fotoW, fotoH, 6); c.fill();
+      c.strokeStyle = '#d4a017'; c.lineWidth = 4; c.stroke();
+
+      let img; try { img = await loadFace('nachi'); } catch(e) {}
+      if (img) {
+        c.save(); roundRect(c, fotoX+5, fotoY+5, fotoW-10, fotoH-10, 3); c.clip();
+        c.drawImage(img, fotoX+5, fotoY+5, fotoW-10, fotoH-10);
+        // Tinte sepia
+        c.fillStyle = 'rgba(120,70,0,0.22)'; c.fillRect(fotoX+5, fotoY+5, fotoW-10, fotoH-10);
+        c.restore();
+      } else {
+        c.fillStyle = '#d4a017'; c.font = `${fotoH*0.5}px serif`; c.textAlign = 'center';
+        c.fillText('🧑', fotoX + fotoW/2, fotoY + fotoH*0.7);
+      }
+
+      // Nombre
+      c.fillStyle = '#ff8c00'; c.font = `700 ${w*0.075}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('NACHI', w/2, h * 0.565);
+
+      // Alias con ironía
+      c.fillStyle = 'rgba(212,160,23,0.65)'; c.font = `italic 500 ${w*0.026}px Inter`;
+      c.fillText('"El que olvidó el postre"', w/2, h * 0.605);
+
+      // Caja de deuda
+      c.fillStyle = 'rgba(255,140,0,0.12)';
+      roundRect(c, w*0.08, h*0.635, w*0.84, h*0.175, 10); c.fill();
+      c.strokeStyle = 'rgba(255,140,0,0.5)'; c.lineWidth = 2; c.stroke();
+
+      c.fillStyle = '#FF6B6B'; c.font = `700 ${w*0.042}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('DEUDA PENDIENTE: 1 POSTRE', w/2, h * 0.7);
+      c.fillStyle = 'rgba(255,200,100,0.8)'; c.font = `500 ${w*0.025}px Inter`;
+      c.fillText('Vencimiento: hace rato. Intereses: el doble.', w/2, h * 0.74);
+      c.fillStyle = 'rgba(255,255,255,0.45)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText('Último avistamiento: comiendo algo dulce ajeno.', w/2, h * 0.776);
+
+      // Sello "MOROSO"
+      c.save(); c.translate(w*0.81, h*0.25); c.rotate(0.32);
+      c.strokeStyle = '#c00'; c.lineWidth = 4;
+      c.beginPath(); c.arc(0, 0, w*0.1, 0, Math.PI*2); c.stroke();
+      c.beginPath(); c.arc(0, 0, w*0.086, 0, Math.PI*2); c.stroke();
+      c.fillStyle = '#c00'; c.font = `700 ${w*0.03}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('MOROSO', 0, -4); c.fillText('OFICIAL', 0, 20);
+      c.restore();
+
+      // Pie de página
+      c.fillStyle = 'rgba(212,160,23,0.5)'; c.font = `italic 500 ${w*0.021}px Inter`; c.textAlign = 'center';
+      c.fillText('Recompensa: el postre prometido. Denuncia con tenedor.', w/2, h * 0.84);
 
       footer(c, w, h);
     }
