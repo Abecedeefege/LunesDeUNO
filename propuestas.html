@@ -2676,6 +2676,114 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: NACHI DEBE UN POSTRE ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍮 SE BUSCA: Nachi debe un postre',
+    desc: 'Nachi prometió un postre. Nachi no trajo el postre. Nachi se lo busca.',
+    pick: function(ctx) {
+      const nachiId = 'nachi';
+      const nachiStats = ctx.ALL_STATS[nachiId];
+      if (!nachiStats) return null;
+      const rk = ctx.annualRanking();
+      const worst = rk[rk.length - 1] || { id: nachiId, name: 'Nachi' };
+      return {
+        protagonist: { id: nachiId, name: ctx.NAME_BY_ID[nachiId] || 'Nachi' },
+        rival: { id: worst.id, name: worst.name },
+        facts: { wins: nachiStats.W || 0, losses: nachiStats.L || 0, gp: nachiStats.gamesPlayed || 0 }
+      };
+    },
+    copies: { nachi: [
+      '🍮 NACHI DEBE UN POSTRE. Esto no es un chiste. Exigimos justicia dulce.',
+      'Nachi prometió un postre. Nachi jugó {gp} partidas y en ninguna apareció el postre. INACEPTABLE.',
+      'Se busca a Nachi por incumplimiento postre-contractual. Recompensa: el postre que debe.',
+      '🚨 ALERTA GRUPAL: Nachi debe un postre desde hace tiempo. El grupo no olvida. El grupo nunca olvida.',
+      'Nachi ganó {wins} partidas. ¿Trajo postre? No. ¿Merece ganar? Tampoco. Justicia ya.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo papier amarillo envejecido tipo cartel policial
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#2a1800'); bg.addColorStop(0.5, '#1f1200'); bg.addColorStop(1, '#2a1800');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Textura horizontal vieja
+      c.strokeStyle = 'rgba(200,140,30,0.05)'; c.lineWidth = 1;
+      for (let i = 0; i < h; i += 12) { c.beginPath(); c.moveTo(0, i); c.lineTo(w, i); c.stroke(); }
+
+      // Borde doble estilo cartel se busca
+      c.strokeStyle = '#d4a017'; c.lineWidth = w * 0.016;
+      roundRect(c, w*0.04, h*0.03, w*0.92, h*0.94, 8); c.stroke();
+      c.strokeStyle = 'rgba(212,160,23,0.4)'; c.lineWidth = w * 0.005;
+      roundRect(c, w*0.056, h*0.042, w*0.888, h*0.922, 5); c.stroke();
+
+      // Título "SE BUSCA"
+      c.fillStyle = '#f5c842'; c.font = `700 ${w*0.115}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('SE BUSCA', w/2, h * 0.11);
+
+      // Subtítulo dramático
+      c.fillStyle = 'rgba(245,200,66,0.65)'; c.font = `500 ${w*0.034}px Inter`; c.textAlign = 'center';
+      c.fillText('DEUDOR POSTRE-CONTRACTUAL', w/2, h * 0.155);
+
+      // Foto cuadrada con filtro sepia de Nachi
+      const fotoX = w*0.2, fotoY = h*0.19, fotoW = w*0.6, fotoH = h*0.33;
+      c.fillStyle = '#1a0e00';
+      roundRect(c, fotoX, fotoY, fotoW, fotoH, 4); c.fill();
+      c.strokeStyle = '#8B5E1A'; c.lineWidth = 4; c.stroke();
+
+      let img; try { img = await loadFace('nachi'); } catch(e) {}
+      if (img) {
+        c.save();
+        roundRect(c, fotoX+4, fotoY+4, fotoW-8, fotoH-8, 2); c.clip();
+        c.drawImage(img, fotoX+4, fotoY+4, fotoW-8, fotoH-8);
+        // Overlay sepia/naranja
+        c.fillStyle = 'rgba(180,100,0,0.22)'; c.fillRect(fotoX+4, fotoY+4, fotoW-8, fotoH-8);
+        c.restore();
+      } else {
+        c.fillStyle = '#8B5E1A'; c.font = `${fotoH*0.5}px serif`; c.textAlign = 'center';
+        c.fillText('🍮', fotoX + fotoW/2, fotoY + fotoH*0.67);
+      }
+
+      // Sello rojo "DEBE POSTRE"
+      c.save();
+      c.translate(w*0.73, h*0.44); c.rotate(0.42);
+      c.strokeStyle = '#cc0000'; c.lineWidth = 3;
+      c.beginPath(); c.arc(0, 0, w*0.11, 0, Math.PI*2); c.stroke();
+      c.beginPath(); c.arc(0, 0, w*0.095, 0, Math.PI*2); c.stroke();
+      c.fillStyle = '#cc0000'; c.font = `700 ${w*0.033}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('DEBE', 0, -8); c.fillText('POSTRE', 0, 24);
+      c.restore();
+
+      // Nombre
+      const ps = ALL_STATS['nachi'];
+      const wins = ps?.W || 0, losses = ps?.L || 0, gp = ps?.gamesPlayed || 0;
+      c.fillStyle = '#f5c842'; c.font = `700 ${w*0.082}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('NACHI', w/2, h * 0.615);
+      c.fillStyle = 'rgba(245,200,66,0.55)'; c.font = `500 ${w*0.024}px Inter`;
+      c.fillText(`${gp} partidas jugadas · ${wins}V · ${losses}D`, w/2, h * 0.653);
+
+      // Cargos
+      c.fillStyle = 'rgba(212,160,23,0.15)';
+      roundRect(c, w*0.08, h*0.675, w*0.84, h*0.13, 10); c.fill();
+      c.strokeStyle = 'rgba(212,160,23,0.45)'; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = '#FF6B6B'; c.font = `700 ${w*0.042}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('CARGOS:', w/2, h * 0.73);
+      c.fillStyle = 'rgba(255,255,255,0.82)'; c.font = `italic 500 ${w*0.028}px Inter`;
+      c.fillText('Promesa de postre no cumplida. Reincidente.', w/2, h * 0.772);
+
+      // Recompensa
+      c.fillStyle = 'rgba(245,200,66,0.55)'; c.font = `italic 500 ${w*0.027}px Inter`;
+      c.fillText('🍮 Recompensa: el postre prometido + intereses.', w/2, h * 0.83);
+      c.fillStyle = 'rgba(255,255,255,0.35)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText('Último avistamiento: sin postre. Como siempre.', w/2, h * 0.866);
+
+      footer(c, w, h);
+    }
+  });
+
   // ---------- PROPUESTA: POEMA AL PT ----------
   // Propuesta Firestore ID: 8R0rU79jSeg3NwYG3NQD
   registerIdea({
