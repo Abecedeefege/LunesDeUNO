@@ -2772,6 +2772,110 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: NACHI DEBE UN POSTRE ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍮 SE BUSCA: El Postre de Nachi',
+    desc: 'Registro oficial e irrefutable de la deuda más grave del grupo. El postre prometido que nunca llegó.',
+    pick: function(ctx) {
+      const nachiStats = ctx.ALL_STATS['nachi'];
+      if (!nachiStats) return null;
+      return {
+        protagonist: { id: 'nachi', name: ctx.NAME_BY_ID['nachi'] || 'Nachi' },
+        rival: { id: 'nachi', name: ctx.NAME_BY_ID['nachi'] || 'Nachi' },
+        facts: { gamesPlayed: nachiStats.gamesPlayed || 0, wins: nachiStats.W || 0 }
+      };
+    },
+    copies: { nachi: [
+      '🍮 Nachi debe un postre. Lleva {gamesPlayed} fechas. Los intereses ya superan el precio del postre.',
+      '🚨 ALERTA MÁXIMA: El postre de Nachi sigue siendo una leyenda urbana. {gamesPlayed} partidas sin señales.',
+      '🔍 SE BUSCA: postre prometido por Nachi. Recompensa: que lo traiga. Paradoja total.',
+      '🍮 {wins} victorias tiene Nachi, pero cero postres entregados. Las prioridades hablan solas.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo: estilo cartel policial + peligro
+      const bg = c.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, '#1a0800'); bg.addColorStop(0.5, '#2a1000'); bg.addColorStop(1, '#1a0500');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Líneas de alerta diagonal (estilo cinta de peligro)
+      c.save();
+      for (let i = -h; i < w + h; i += 38) {
+        c.fillStyle = i % 76 < 38 ? 'rgba(255,180,0,0.06)' : 'rgba(0,0,0,0)';
+        c.fillRect(i, 0, 38, h);
+      }
+      c.restore();
+
+      // Borde exterior grueso — rojo peligro
+      c.strokeStyle = '#ff3300'; c.lineWidth = w * 0.014;
+      roundRect(c, w * 0.03, h * 0.03, w * 0.94, h * 0.94, 18); c.stroke();
+      // Borde interior amarillo
+      c.strokeStyle = '#FFDE00'; c.lineWidth = w * 0.005;
+      roundRect(c, w * 0.045, h * 0.043, w * 0.91, h * 0.915, 13); c.stroke();
+
+      // Encabezado: "SE BUSCA"
+      c.fillStyle = '#ff3300'; c.font = `700 ${w * 0.095}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('🔍 SE BUSCA', w / 2, h * 0.105);
+
+      // Subtítulo urgente
+      c.fillStyle = '#FFDE00'; c.font = `700 ${w * 0.032}px Inter`; c.textAlign = 'center';
+      c.fillText('UN POSTRE QUE NACHI PROMETIÓ', w / 2, h * 0.148);
+
+      // Cara de Nachi con círculo estilo ficha policial
+      const you = STATE.you; // = 'Nachi'
+      const youId = (you || 'nachi').toLowerCase();
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w * 0.175, cx2 = w / 2, cy2 = h * 0.33;
+
+      // Círculo de fondo: naranja sospechoso
+      const ringGrad = c.createRadialGradient(cx2, cy2, r * 0.3, cx2, cy2, r);
+      ringGrad.addColorStop(0, 'rgba(255,100,0,0.3)'); ringGrad.addColorStop(1, 'rgba(255,0,0,0)');
+      c.fillStyle = ringGrad; c.beginPath(); c.arc(cx2, cy2, r * 1.2, 0, Math.PI * 2); c.fill();
+
+      if (img) drawFaceCircle(c, img, cx2, cy2, r);
+      else { c.fillStyle = '#ff6600'; c.beginPath(); c.arc(cx2, cy2, r, 0, Math.PI * 2); c.fill(); }
+
+      // Emojis de acusación alrededor
+      c.font = `${w * 0.065}px serif`; c.textAlign = 'center';
+      c.fillText('🍮', cx2 - r * 1.25, cy2 + w * 0.02);
+      c.fillText('🍮', cx2 + r * 1.25, cy2 + w * 0.02);
+      c.fillText('⚠️', cx2, cy2 - r - 8);
+
+      // Nombre del acusado
+      c.fillStyle = '#FFDE00'; c.font = `700 ${w * 0.065}px Fredoka One`; c.textAlign = 'center';
+      c.fillText(you, cx2, cy2 + r + w * 0.058);
+      c.fillStyle = 'rgba(255,80,0,0.75)'; c.font = `700 ${w * 0.026}px Inter`;
+      c.fillText('DEUDOR OFICIAL · PELIGRO GASTRONÓMICO', cx2, cy2 + r + w * 0.088);
+
+      // Sección de cargos
+      const nachiId = youId;
+      const ps = ALL_STATS[nachiId];
+      const gp = ps?.gamesPlayed || 0, wins = ps?.W || 0;
+      const chargesY = h * 0.66;
+      c.fillStyle = 'rgba(255,80,0,0.12)'; roundRect(c, w * 0.07, chargesY, w * 0.86, h * 0.21, 12); c.fill();
+      c.strokeStyle = 'rgba(255,80,0,0.4)'; c.lineWidth = 1.5; c.stroke();
+
+      c.fillStyle = '#ff6600'; c.font = `700 ${w * 0.028}px Inter`; c.textAlign = 'center';
+      c.fillText('CARGOS:', cx2, chargesY + h * 0.04);
+      const charges = [
+        `🍮 ${gp} lunes asistidos — postre prometido: 0`,
+        `⚖️ ${wins} victorias ganadas — postres traídos: 0`,
+        `🕵️ Última excusa registrada: "lo traigo la próxima"`
+      ];
+      c.fillStyle = 'rgba(255,255,255,0.8)'; c.font = `500 ${w * 0.024}px Inter`;
+      charges.forEach((ch, i) => c.fillText(ch, cx2, chargesY + h * 0.072 + i * h * 0.048));
+
+      // Footer de urgencia
+      c.fillStyle = 'rgba(255,80,0,0.5)'; c.font = `italic 500 ${w * 0.022}px Inter`;
+      c.fillText('Se ofrece recompensa: que traiga el postre.', cx2, h * 0.907);
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
