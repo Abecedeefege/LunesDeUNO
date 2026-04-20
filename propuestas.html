@@ -2772,6 +2772,103 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: NACHI DEBE UN POSTRE ----------
+  // Propuesta Firestore ID: ZoXceLwdgslfnuezW1G4
+  registerIdea({
+    id: 'nachi-postre',
+    module: 'usuarios',
+    title: '🍰 SE BUSCA: Nachi (por postre)',
+    desc: 'Nachi debe un postre. Prometió. No trajo. El grupo recuerda. Siempre.',
+    pick: function(ctx) {
+      const rk = ctx.annualRanking();
+      if (!rk.length) return null;
+      const nachiStats = ctx.ALL_STATS['nachi'];
+      const victim = rk.find(r => r.id !== 'nachi') || rk[0];
+      return {
+        protagonist: { id: 'nachi', name: ctx.NAME_BY_ID['nachi'] || 'Nachi' },
+        rival: { id: victim.id, name: victim.name },
+        facts: { wins: nachiStats?.W || 0, losses: nachiStats?.L || 0 }
+      };
+    },
+    copies: { nachi: [
+      '🍰 {protagonist} prometió un postre. Ya no recordamos cuándo. Sigue sin traerlo.',
+      '⚠️ AVISO: {protagonist} tiene una deuda pendiente con el grupo. La moneda: un postre.',
+      '🔍 SE BUSCA a {protagonist} para cobrar el postre prometido. Última vez visto: comiendo sin traer nada.',
+      '📋 Estimado {protagonist}: el postre no se olvida. El grupo tampoco. Atentamente, todos.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo: naranja oscuro de "DEUDA URGENTE"
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#1a0800'); bg.addColorStop(1, '#180a1a');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Textura rayada estilo advertencia
+      c.strokeStyle = 'rgba(255,100,0,0.05)'; c.lineWidth = 1.5;
+      for (let i = -h; i < w+h; i += 22) {
+        c.beginPath(); c.moveTo(i, 0); c.lineTo(i+h, h); c.stroke();
+      }
+
+      // Borde estilo "URGENTE"
+      c.strokeStyle = '#cc4400'; c.lineWidth = w*0.014;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 14); c.stroke();
+      c.strokeStyle = 'rgba(255,120,0,0.35)'; c.lineWidth = 2;
+      roundRect(c, w*0.057, h*0.055, w*0.886, h*0.895, 10); c.stroke();
+
+      // Título
+      c.fillStyle = '#ff5500'; c.font = `700 ${w*0.073}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('🍰 DEUDA PENDIENTE', w/2, h*0.1);
+      c.fillStyle = 'rgba(255,120,0,0.6)'; c.font = `italic 500 ${w*0.024}px Inter`;
+      c.fillText('el postre que prometió y nunca trajo', w/2, h*0.14);
+
+      // Badge "⚠️ IMPAGO"
+      c.fillStyle = '#aa2200';
+      roundRect(c, w*0.33, h*0.158, w*0.34, h*0.052, 8); c.fill();
+      c.fillStyle = '#ffffff'; c.font = `700 ${w*0.025}px Inter`;
+      c.fillText('⚠️  IMPAGO  ⚠️', w/2, h*0.191);
+
+      // Cara del protagonista (Nachi)
+      const you = STATE.you, youId = (you||'').toLowerCase();
+      const ps = ALL_STATS[youId];
+      const wins = ps?.W||0, losses = ps?.L||0;
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w*0.16, cx2 = w/2, cy2 = h*0.36;
+      if (img) drawFaceCircle(c, img, cx2, cy2, r);
+      else { c.fillStyle='#cc4400'; c.beginPath(); c.arc(cx2,cy2,r,0,Math.PI*2); c.fill(); }
+
+      // Emojis alrededor de la cara
+      c.font = `${w*0.055}px serif`; c.textAlign = 'center';
+      c.fillText('😤', cx2 - r - w*0.03, cy2 - r*0.3);
+      c.fillText('🍰', cx2 + r + w*0.03, cy2 - r*0.3);
+
+      c.fillStyle = '#ff6633'; c.font = `700 ${w*0.052}px Fredoka One`;
+      c.fillText(you, cx2, cy2 + r + w*0.05);
+      c.fillStyle = 'rgba(255,150,80,0.65)'; c.font = `500 ${w*0.021}px Inter`;
+      c.fillText('DEUDOR OFICIAL — POSTRE IMPAGO', cx2, cy2+r+w*0.08);
+
+      // Ficha de deuda
+      const dy = h*0.635;
+      c.fillStyle = 'rgba(170,34,0,0.15)';
+      roundRect(c, w*0.07, dy, w*0.86, h*0.215, 14); c.fill();
+      c.strokeStyle = 'rgba(255,100,0,0.35)'; c.lineWidth = 1.5; c.stroke();
+
+      const items = [
+        `📋  Concepto: un postre (prometido solemnemente)`,
+        `📅  Fecha de vencimiento: hace mucho tiempo`,
+        `🤝  Testigos: todos (y lo niegan igual)`,
+        `⚡  Estado: ${losses > wins ? 'doble vergüenza' : 'vergüenza simple'}`
+      ];
+      c.fillStyle = 'rgba(255,190,130,0.88)'; c.font = `500 ${w*0.026}px Inter`;
+      items.forEach((item, i) => c.fillText(item, w/2, dy + h*0.04 + i*h*0.046));
+
+      c.fillStyle = 'rgba(255,100,0,0.5)'; c.font = `italic 500 ${w*0.021}px Inter`;
+      c.fillText('— el grupo sabe, el grupo no olvida, el grupo ESPERA el postre', w/2, h*0.877);
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
