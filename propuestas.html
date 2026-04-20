@@ -2888,6 +2888,102 @@ window._modUsuarios = function() {
     }
   });
 
+  // ---------- PROPUESTA: POEMA AL PT ----------
+  // Propuesta Firestore ID: 8R0rU79jSeg3NwYG3NQD
+  registerIdea({
+    id: 'poema-al-pt',
+    module: 'usuarios',
+    title: '📜 Poema al PT',
+    desc: 'Una oda especial para PT. Con respeto. Bueno, casi.',
+    pick: function(ctx) {
+      const ptId = 'pt';
+      const ptStats = ctx.ALL_STATS[ptId];
+      if (!ptStats) return null;
+      const victims = Object.entries(ptStats.defeatedCount || {}).sort((a,b) => b[1]-a[1]);
+      const rival = victims.length
+        ? { id: victims[0][0], name: ctx.NAME_BY_ID[victims[0][0]] || victims[0][0] }
+        : ctx.annualRanking().find(r => r.id !== ptId) || { id: ptId, name: 'todos' };
+      return {
+        protagonist: { id: ptId, name: ctx.NAME_BY_ID[ptId] || 'PT' },
+        rival: { id: rival.id, name: rival.name },
+        facts: { wins: ptStats.W || 0, losses: ptStats.L || 0, gamesPlayed: ptStats.gamesPlayed || 0 }
+      };
+    },
+    copies: { nachi: [
+      '🎖 PT, el patriarca silencioso. Gana sin avisar, pierde sin excusas. Un señor.',
+      '"PT no habla mucho. Pero sus {wins} victorias hablan por él." — poema corto, muy directo.',
+      'Oda al PT: {wins}V, {losses}D, {gamesPlayed} partidas. Hay que respetarlo aunque a veces cueste.',
+      'PT juega como come: tranquilo, sin drama y a veces sorprendiendo a todos. Poética pura.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, c = canvas.getContext('2d');
+
+      // Fondo: azul marino elegante
+      const bg = c.createLinearGradient(0, 0, w, h);
+      bg.addColorStop(0, '#0a0e2a'); bg.addColorStop(1, '#0e1a0a');
+      c.fillStyle = bg; c.fillRect(0, 0, w, h);
+
+      // Líneas diagonales sutiles (estilo pergamino viejo)
+      c.strokeStyle = 'rgba(255,255,255,0.03)'; c.lineWidth = 1;
+      for (let i = -h; i < w+h; i += 30) {
+        c.beginPath(); c.moveTo(i, 0); c.lineTo(i+h, h); c.stroke();
+      }
+
+      // Borde doble
+      c.strokeStyle = '#4a7c59'; c.lineWidth = w*0.013;
+      roundRect(c, w*0.04, h*0.04, w*0.92, h*0.92, 20); c.stroke();
+      c.strokeStyle = 'rgba(74,124,89,0.4)'; c.lineWidth = 1.5;
+      roundRect(c, w*0.056, h*0.053, w*0.888, h*0.9, 14); c.stroke();
+
+      // Título
+      c.fillStyle = '#7ecb95'; c.font = `700 ${w*0.068}px Fredoka One`; c.textAlign = 'center';
+      c.fillText('📜 ODA AL PT', w/2, h*0.1);
+      c.fillStyle = 'rgba(126,203,149,0.5)'; c.font = `italic 500 ${w*0.025}px Inter`;
+      c.fillText('poema en su honor · con matices', w/2, h*0.14);
+
+      // Cara
+      const you = STATE.you, youId = (you||'').toLowerCase();
+      const ps = ALL_STATS[youId];
+      const wins = ps?.W||0, losses = ps?.L||0, gp = ps?.gamesPlayed||0;
+
+      let img; try { img = await loadFace(youId); } catch(e) {}
+      const r = w*0.16, cx2 = w/2, cy2 = h*0.33;
+      if (img) drawFaceCircle(c, img, cx2, cy2, r);
+      else { c.fillStyle='#4a7c59'; c.beginPath(); c.arc(cx2,cy2,r,0,Math.PI*2); c.fill(); }
+
+      // Laureles
+      c.font = `${w*0.075}px serif`; c.textAlign = 'center';
+      c.fillText('🌿', cx2 - r - w*0.02, cy2 + w*0.02);
+      c.fillText('🌿', cx2 + r + w*0.02, cy2 + w*0.02);
+      c.font = `${w*0.06}px serif`;
+      c.fillText('🎖', cx2, cy2 - r - 5);
+
+      c.fillStyle = '#7ecb95'; c.font = `700 ${w*0.055}px Fredoka One`;
+      c.fillText(you, cx2, cy2 + r + w*0.052);
+      c.fillStyle = 'rgba(126,203,149,0.55)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText(`${gp} partidas · ${wins}V · ${losses}D`, cx2, cy2+r+w*0.08);
+
+      // Poema
+      const verses = [
+        `${you} juega sin drama ni excusa,`,
+        `${wins} victorias acumuladas ya tiene,`,
+        `tranquilo, certero, sin prisa,`,
+        `el respeto del grupo le viene.`
+      ];
+      const py = h*0.63;
+      c.fillStyle = 'rgba(74,124,89,0.12)';
+      roundRect(c, w*0.08, py-h*0.025, w*0.84, h*0.24, 14); c.fill();
+      c.strokeStyle = 'rgba(74,124,89,0.35)'; c.lineWidth = 1; c.stroke();
+      c.fillStyle = 'rgba(255,255,255,0.85)'; c.font = `italic 500 ${w*0.029}px Inter`;
+      verses.forEach((v, i) => c.fillText(v, w/2, py + i*h*0.052));
+
+      c.fillStyle = 'rgba(126,203,149,0.45)'; c.font = `500 ${w*0.022}px Inter`;
+      c.fillText('— Lunes de UNO, con algo de respeto (poco, pero algo)', w/2, h*0.878);
+
+      footer(c, w, h);
+    }
+  });
+
 };
 // DRAWS:USUARIOS:END
 
