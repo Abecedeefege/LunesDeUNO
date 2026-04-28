@@ -1332,6 +1332,18 @@
     </div>
   </div>
 
+  <!-- Modal genérico para reemplazar alert/confirm nativos. Usado por
+       customAlert() y customConfirm(). -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <p id="confirmModalMessage" style="margin:0 0 1.25rem 0;line-height:1.45;font-size:.95rem;"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-small" id="confirmModalCancel" type="button"></button>
+        <button class="btn btn-primary btn-small" id="confirmModalOk" type="button"></button>
+      </div>
+    </div>
+  </div>
+
 <!-- ============ FIREBASE FIRESTORE (module) ============ -->
 <!--
   To enable cloud sync + stats, create a Firebase project (free tier)
@@ -1624,6 +1636,9 @@ const STRINGS = {
     modal_edit_round: 'Editar Ronda',
     modal_cancel: 'Na, dejá',
     modal_save: 'Guardar',
+    modal_ok: 'Listo',
+    modal_yes: 'Sí, dale',
+    modal_no: 'No',
     player_placeholder: 'Jugador',
     preset_names_label: 'Nombres rápidos',
     games_title: 'Partidos guardados',
@@ -1790,6 +1805,9 @@ const STRINGS = {
     modal_edit_round: 'Edit Round',
     modal_cancel: 'Cancel',
     modal_save: 'Save',
+    modal_ok: 'OK',
+    modal_yes: 'Yes',
+    modal_no: 'No',
     player_placeholder: 'Player',
     preset_names_label: 'Quick names',
     games_title: 'Saved Games',
@@ -2511,13 +2529,20 @@ function selectPoints(btn, val) {
   validateSetup();
 }
 
+var _customPointsDebounce = null;
 function onCustomPoints() {
+  // El cambio de maxPoints es inmediato; el re-render (validateSetup) se
+  // debounce-ea a 180 ms para evitar lag en celulares de gama baja.
   const v = parseInt(document.getElementById('customPoints').value);
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
   if (v && v >= 50) {
     state.maxPoints = v;
   }
-  validateSetup();
+  if (_customPointsDebounce) clearTimeout(_customPointsDebounce);
+  _customPointsDebounce = setTimeout(function() {
+    _customPointsDebounce = null;
+    validateSetup();
+  }, 180);
 }
 
 function validateSetup() {
@@ -2901,7 +2926,7 @@ function submitRound() {
   });
 
   if (scores.every(s => s === 0)) {
-    alert(t('game_alert_no_scores'));
+    customAlert(t('game_alert_no_scores'));
     return;
   }
 
@@ -3024,13 +3049,50 @@ function closeEditModal() {
   editingRound = -1;
 }
 
-// Esc cierra el modal abierto (edit round o edit max points).
+// ============ MODAL GENÉRICO (alert / confirm custom) ============
+// Reemplaza confirm()/alert() nativos. En iOS Safari (sobre todo en modo
+// PWA) los nativos a veces no aparecen y devuelven false silenciosamente.
+var _confirmModalCallback = null;
+function _hideConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('active');
+  _confirmModalCallback = null;
+}
+function customAlert(message, opts) {
+  opts = opts || {};
+  var modal = document.getElementById('confirmModal');
+  document.getElementById('confirmModalMessage').textContent = message;
+  document.getElementById('confirmModalOk').textContent = opts.okText || t('modal_ok');
+  document.getElementById('confirmModalCancel').style.display = 'none';
+  _confirmModalCallback = opts.onOk || null;
+  modal.classList.add('active');
+}
+function customConfirm(message, onYes, opts) {
+  opts = opts || {};
+  var modal = document.getElementById('confirmModal');
+  document.getElementById('confirmModalMessage').textContent = message;
+  document.getElementById('confirmModalOk').textContent = opts.yesText || t('modal_yes');
+  var cancel = document.getElementById('confirmModalCancel');
+  cancel.textContent = opts.noText || t('modal_no');
+  cancel.style.display = '';
+  _confirmModalCallback = onYes || null;
+  modal.classList.add('active');
+}
+document.getElementById('confirmModalOk').addEventListener('click', function() {
+  var cb = _confirmModalCallback;
+  _hideConfirmModal();
+  if (cb) try { cb(); } catch (e) { console.warn(e); }
+});
+document.getElementById('confirmModalCancel').addEventListener('click', _hideConfirmModal);
+
+// Esc cierra el modal abierto (edit round, edit max points, o confirm custom).
 document.addEventListener('keydown', function(e) {
   if (e.key !== 'Escape') return;
   var editOpen = document.getElementById('editModal');
   if (editOpen && editOpen.classList.contains('active')) { closeEditModal(); return; }
   var maxOpen = document.getElementById('editMaxPointsModal');
   if (maxOpen && maxOpen.classList.contains('active')) { closeEditMaxPoints(); return; }
+  var confirmOpen = document.getElementById('confirmModal');
+  if (confirmOpen && confirmOpen.classList.contains('active')) { _hideConfirmModal(); return; }
 });
 
 // ============ EDIT MAX POINTS MODAL ============
@@ -3047,7 +3109,7 @@ function closeEditMaxPoints() {
 
 function saveEditMaxPoints() {
   const val = parseInt(document.getElementById('newMaxPointsInput').value);
-  if (!val || val < 50) { alert(t('edit_limit_label')); return; }
+  if (!val || val < 50) { customAlert(t('edit_limit_label')); return; }
   var oldMaxPoints = state.maxPoints;
   state.maxPoints = val;
   closeEditMaxPoints();
@@ -3073,6 +3135,12 @@ function saveEditMaxPoints() {
 
 function saveEditRound() {
   if (editingRound < 0) return;
+  // Defensa contra editar una ronda fuera de cota (race con borrado de
+  // ronda, o estado corrupto). Cerrar modal sin tocar nada.
+  if (editingRound >= (state.rounds || []).length) {
+    closeEditModal();
+    return;
+  }
   var editedRoundIdx = editingRound;
   var beforeSnapshot = _snapshotRound(editedRoundIdx);
   if (!state.fines[editingRound]) state.fines[editingRound] = state.players.map(function() { return 0; });
@@ -3276,14 +3344,14 @@ function goHome() {
 }
 
 function confirmQuit() {
-  if (confirm(t('game_confirm_quit'))) {
+  customConfirm(t('game_confirm_quit'), function() {
     saveCurrentGame();
     state = {
       playerCount: 2, maxPoints: 500,
       players: [], rounds: [], fines: [], cortes: [], participants: [], absentees: [], hostId: null, currentRound: 0, gameOver: false, gameId: null, venue: ''
     };
     showScreen('home');
-  }
+  });
 }
 
 // ============ +4 SOUND BOARD ============
@@ -4116,7 +4184,11 @@ function resumeGame(gameId) {
   state.currentRound = g.state.currentRound;
   state.gameOver = g.state.gameOver;
   state.gameId = g.state.gameId;
-  state.fines = g.state.fines || [];
+  // Tanto fines como cortes deben tener misma forma que rounds para que las
+  // ediciones de rondas viejas no caigan en arrays sub-dimensionados.
+  state.fines = (g.state.fines && g.state.fines.length)
+    ? g.state.fines
+    : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return 0; }); });
   state.cortes = (g.state.cortes && g.state.cortes.length)
     ? g.state.cortes
     : (g.state.rounds || []).map(function(r) { return (r || []).map(function() { return false; }); });
@@ -4132,14 +4204,15 @@ function resumeGame(gameId) {
 }
 
 function deleteGame(gameId) {
-  if (!confirm(t('games_confirm_delete'))) return;
-  var games = loadGames();
-  games = games.filter(function(g) { return g.id !== gameId; });
-  saveGames(games);
-  if (window.LDU_READY && window.LDU && window.LDU.deleteGame) {
-    window.LDU.deleteGame(gameId).catch(function(err) { console.warn('[LDU] deleteGame failed:', err); });
-  }
-  renderGamesList();
+  customConfirm(t('games_confirm_delete'), function() {
+    var games = loadGames();
+    games = games.filter(function(g) { return g.id !== gameId; });
+    saveGames(games);
+    if (window.LDU_READY && window.LDU && window.LDU.deleteGame) {
+      window.LDU.deleteGame(gameId).catch(function(err) { console.warn('[LDU] deleteGame failed:', err); });
+    }
+    renderGamesList();
+  });
 }
 
 // Firestore wraps rows as { v: [...] }; unwrap back to a plain 2-D array.
@@ -4301,13 +4374,76 @@ function maybeComputeSeason() {
         losers: losers
       };
 
-      return window.LDU.writeSeason(seasonDoc).then(function() {
-        var updates = fourGames.map(function(g) { return window.LDU.updateGameSeason(g.gameId, seasonNumber); });
-        return Promise.all(updates);
+      // Antes de escribir el doc de season, re-fetch los juegos terminados y
+      // confirmar que los 4 gameIds siguen existiendo. Si alguno desapareció
+      // (raro pero ya pasó: un game borrado durante el cierre) abortamos para
+      // no escribir un seasonDoc apuntando a IDs fantasma.
+      return window.LDU.getAllFinishedGames().then(function(verify) {
+        var existing = {};
+        (verify || []).forEach(function(g) { if (g && g.gameId) existing[g.gameId] = true; });
+        var allPresent = seasonDoc.gameIds.every(function(id) { return !!existing[id]; });
+        if (!allPresent) {
+          console.warn('[LDU] maybeComputeSeason: algún gameId desapareció antes de writeSeason; abortando.');
+          return;
+        }
+        return window.LDU.writeSeason(seasonDoc).then(function() {
+          // Cada updateGameSeason que falle queda encolado para retry futuro
+          // (en `online`, `visibilitychange === visible`, o `ldu-ready`). Esto
+          // evita el escenario "season escrita pero juegos sin seasonId" — la
+          // raíz del fantasma de la S2 que tuvimos que arreglar a mano.
+          return Promise.all(fourGames.map(function(g) {
+            return window.LDU.updateGameSeason(g.gameId, seasonNumber)
+              .catch(function(err) {
+                console.warn('[LDU] updateGameSeason falló, encolando retry:', g.gameId, err);
+                _addPendingSeasonLink(g.gameId, seasonNumber);
+              });
+          }));
+        });
       });
     });
   }).catch(function(err) { console.warn('[LDU] maybeComputeSeason failed:', err); });
 }
+
+// ============ COLA DE LINKS DE TEMPORADA (retry) ============
+// Si writeSeason() tuvo éxito pero algún updateGameSeason() falló, dejamos
+// el (gameId, seasonNumber) en localStorage y reintentamos más tarde.
+var SEASON_LINKS_KEY = 'lunesdeuno_pendingSeasonLinks';
+function _loadPendingSeasonLinks() {
+  try {
+    var raw = localStorage.getItem(SEASON_LINKS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function _persistPendingSeasonLinks(arr) {
+  try { localStorage.setItem(SEASON_LINKS_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function _addPendingSeasonLink(gameId, seasonNumber) {
+  if (!gameId) return;
+  var arr = _loadPendingSeasonLinks().filter(function(l) { return l.gameId !== gameId; });
+  arr.push({ gameId: gameId, seasonNumber: seasonNumber });
+  _persistPendingSeasonLinks(arr);
+}
+function _removePendingSeasonLink(gameId) {
+  var arr = _loadPendingSeasonLinks().filter(function(l) { return l.gameId !== gameId; });
+  _persistPendingSeasonLinks(arr);
+}
+function flushPendingSeasonLinks() {
+  if (!window.LDU_READY || !window.LDU || !window.LDU.updateGameSeason) return;
+  var arr = _loadPendingSeasonLinks();
+  if (!arr.length) return;
+  arr.forEach(function(link) {
+    window.LDU.updateGameSeason(link.gameId, link.seasonNumber)
+      .then(function() { _removePendingSeasonLink(link.gameId); })
+      .catch(function(err) {
+        console.warn('[LDU] season-link retry sigue fallando para', link.gameId, err);
+      });
+  });
+}
+window.addEventListener('online', flushPendingSeasonLinks);
+window.addEventListener('ldu-ready', flushPendingSeasonLinks);
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') flushPendingSeasonLinks();
+});
 
 // ============ STATS ============
 var _statsData = { games: [], seasons: [], computed: null, computedBySeason: {}, loaded: false };
