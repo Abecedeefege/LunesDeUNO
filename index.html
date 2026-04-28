@@ -1198,6 +1198,10 @@
     </div>
 
     <div id="statsTab_leaderboardSeason" class="stats-tab-panel">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_season_selector_label"></label>
+        <select id="leaderboardSeasonSelector" onchange="onLeaderboardSeasonChange(this.value)"></select>
+      </div>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
         <select id="leaderboardSortSeason" onchange="renderLeaderboard(this.value, 'season')"></select>
@@ -1430,7 +1434,8 @@ const STRINGS = {
     stats_title: '📊 Estadísticas',
     stats_tab_player: 'Jugador',
     stats_tab_leaderboard: 'Ranking anual',
-    stats_tab_leaderboard_season: 'Ranking temporada',
+    stats_tab_leaderboard_season: 'Ranking temporadas',
+    stats_season_selector_label: 'Temporada:',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
     stats_player_label: 'Jugador:',
@@ -1590,7 +1595,8 @@ const STRINGS = {
     stats_title: '📊 Stats',
     stats_tab_player: 'Player',
     stats_tab_leaderboard: 'Annual ranking',
-    stats_tab_leaderboard_season: 'Season ranking',
+    stats_tab_leaderboard_season: 'Seasons ranking',
+    stats_season_selector_label: 'Season:',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
     stats_player_label: 'Player:',
@@ -1819,6 +1825,9 @@ function setLang(lang) {
   if (document.getElementById('game').classList.contains('active')) renderGame();
   if (document.getElementById('results').classList.contains('active')) renderResults();
   if (typeof _updateSeasonTabLabel === 'function') _updateSeasonTabLabel();
+  if (typeof populateSeasonSelector === 'function' && _statsData && _statsData.loaded) {
+    populateSeasonSelector();
+  }
 }
 
 // ============ STATE ============
@@ -4113,20 +4122,15 @@ function maybeComputeSeason() {
 }
 
 // ============ STATS ============
-var _statsData = { games: [], seasons: [], computed: null, loaded: false };
+var _statsData = { games: [], seasons: [], computed: null, computedBySeason: {}, loaded: false };
+var _selectedSeasonNumber = 'ongoing';
 
 function initStats() {
   document.getElementById('statsMeta').textContent = t('stats_meta');
   renderStatsLoadingState();
   loadStatsData().then(function() {
     _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
-    // Build a season-scoped stats snapshot for Ranking Temporada using only
-    // the games that belong to the in-progress season.
-    var ongoingGames = _ongoingSeasonGames(_statsData.games, _statsData.seasons);
-    // Pass the full seasons list so "Temp. ganadas" reflects the running
-    // yearly total of finished seasons a player has won, even in the
-    // season-scoped leaderboard (which only counts games from the ongoing season).
-    _statsData.computedSeason = computeAllStats(ongoingGames, _statsData.seasons);
+    _statsData.computedBySeason = {};
     // Refresh season-winner set (also used for face badges site-wide).
     SEASON_WINNERS = new Set();
     (_statsData.seasons || []).forEach(function(s) {
@@ -4134,6 +4138,7 @@ function initStats() {
     });
     populatePlayerDropdown();
     populateLeaderboardSort();
+    populateSeasonSelector();
     switchStatsTab('player');
     var presetSlugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
     var defaultSlug = presetSlugs.find(function(s) { return _statsData.computed.byPlayer[s] && _statsData.computed.byPlayer[s].gamesPlayed > 0; }) || presetSlugs[0];
@@ -4141,7 +4146,9 @@ function initStats() {
     if (sel) sel.value = defaultSlug;
     renderPlayerStats(defaultSlug);
     renderLeaderboard('gamesWon', 'annual');
-    renderLeaderboard('gamesWon', 'season');
+    var seasonSortSel = document.getElementById('leaderboardSortSeason');
+    if (seasonSortSel) seasonSortSel.value = 'totalScore';
+    renderLeaderboard('totalScore', 'season');
     renderSeasonsTable();
     renderH2HMatrix();
     _updateSeasonTabLabel();
@@ -4154,22 +4161,14 @@ function _currentSeasonNumber() {
   return (_statsData.seasons || []).length + 1;
 }
 
-// Returns the tab/share label for a stats section, suffixed with the current
-// season number when referring to the ongoing-season ranking.
 function _statsTabLabel(key) {
-  var base = t(key);
-  if (key === 'stats_tab_leaderboard_season') {
-    var n = _currentSeasonNumber();
-    if (n) return base + ' ' + n;
-  }
-  return base;
+  return t(key);
 }
 
 function _updateSeasonTabLabel() {
   document.querySelectorAll('[data-i18n="stats_tab_leaderboard_season"]').forEach(function(el) {
-    // Only the tab button gets the season number suffix; the share button keeps its own i18n key.
     if (el.classList.contains('stats-tab-btn')) {
-      el.textContent = _statsTabLabel('stats_tab_leaderboard_season');
+      el.textContent = t('stats_tab_leaderboard_season');
     }
   });
 }
@@ -4181,6 +4180,70 @@ function _ongoingSeasonGames(games, finishedSeasons) {
     .sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
   var skip = (finishedSeasons || []).length * 4;
   return finished.slice(skip);
+}
+
+function _gamesForFinishedSeason(seasonNumber) {
+  var seasonDoc = (_statsData.seasons || []).find(function(s) { return s && s.seasonNumber === seasonNumber; });
+  if (!seasonDoc) return [];
+  var ids = seasonDoc.gameIds || [];
+  var idSet = {};
+  ids.forEach(function(id) { idSet[id] = true; });
+  return (_statsData.games || []).filter(function(g) { return g && idSet[g.gameId]; });
+}
+
+function getSeasonComputed(sel) {
+  var key = (sel === 'ongoing' || sel == null) ? 'ongoing' : String(sel);
+  if (_statsData.computedBySeason[key]) return _statsData.computedBySeason[key];
+  var games;
+  if (key === 'ongoing') {
+    games = _ongoingSeasonGames(_statsData.games, _statsData.seasons);
+  } else {
+    games = _gamesForFinishedSeason(Number(sel));
+  }
+  // Pass the full seasons list so "Temp. ganadas" reflects the running yearly
+  // total of finished seasons a player has won, regardless of which season is
+  // currently selected.
+  var computed = computeAllStats(games, _statsData.seasons);
+  _statsData.computedBySeason[key] = computed;
+  return computed;
+}
+
+function populateSeasonSelector() {
+  var sel = document.getElementById('leaderboardSeasonSelector');
+  if (!sel) return;
+  var opts = [];
+  var ongoingGames = _ongoingSeasonGames(_statsData.games, _statsData.seasons);
+  if (ongoingGames.length > 0) {
+    var n = (_statsData.seasons || []).length + 1;
+    var ongoingLabel = (currentLang === 'en')
+      ? ('Season ' + n + ' (in progress)')
+      : ('Temporada ' + n + ' (en curso)');
+    opts.push(['ongoing', ongoingLabel]);
+  }
+  var finished = (_statsData.seasons || []).slice().sort(function(a, b) {
+    return (b.seasonNumber || 0) - (a.seasonNumber || 0);
+  });
+  finished.forEach(function(s) {
+    var label = (currentLang === 'en' ? 'Season ' : 'Temporada ') + (s.seasonNumber || '?');
+    opts.push([String(s.seasonNumber), label]);
+  });
+  if (!opts.length) {
+    sel.innerHTML = '';
+    return;
+  }
+  sel.innerHTML = opts.map(function(o) {
+    return '<option value="' + o[0] + '">' + o[1] + '</option>';
+  }).join('');
+  var hasSelected = opts.some(function(o) { return o[0] === String(_selectedSeasonNumber); });
+  sel.value = hasSelected ? String(_selectedSeasonNumber) : opts[0][0];
+  _selectedSeasonNumber = sel.value === 'ongoing' ? 'ongoing' : Number(sel.value);
+}
+
+function onLeaderboardSeasonChange(value) {
+  _selectedSeasonNumber = (value === 'ongoing') ? 'ongoing' : Number(value);
+  var sortSel = document.getElementById('leaderboardSortSeason');
+  var sortKey = (sortSel && sortSel.value) || 'totalScore';
+  renderLeaderboard(sortKey, 'season');
 }
 
 function renderStatsLoadingState() {
@@ -4621,7 +4684,7 @@ function renderLeaderboard(sortKey, scope) {
   var tableId = isSeason ? 'leaderboardTableSeason' : 'leaderboardTable';
   var table = document.getElementById(tableId);
   if (!table) return;
-  var computed = isSeason ? _statsData.computedSeason : _statsData.computed;
+  var computed = isSeason ? getSeasonComputed(_selectedSeasonNumber) : _statsData.computed;
   if (!computed) return;
 
   var rows = Object.values(computed.byPlayer)
