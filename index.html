@@ -502,15 +502,28 @@
     }
 
     .round-history h3 { font-size: 1rem; margin-bottom: .75rem; color: var(--text-muted); }
+    /* Wrapper que aísla el scroll lateral de la tabla. Con muchos jugadores
+       la tabla se extiende fuera del wrapper y se scrollea sólo ella, sin
+       arrastrar el resto de la pantalla. */
+    .round-history-scroll {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+    }
     .round-history-table {
-      width: 100%; border-collapse: separate; border-spacing: 0;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
+      width: 100%;
+      min-width: max-content;
+      border-collapse: separate; border-spacing: 0;
       font-size: .85rem;
     }
     .round-history-table th, .round-history-table td {
       padding: .5rem .6rem; text-align: center;
       border-bottom: 1px solid var(--border);
+      white-space: nowrap;
     }
     .round-history-table th {
       background: var(--surface-2); font-size: .7rem;
@@ -518,8 +531,22 @@
       color: var(--text-muted); font-weight: 600;
     }
     .round-history-table tr:last-child td { border-bottom: none; }
-    .round-history-table td:first-child { font-weight: 600; text-align: left; padding-left: .75rem; }
-    .round-history-table th:first-child { text-align: left; padding-left: .75rem; }
+    /* Primera columna (R#, Total, Cortes...) sticky para que siempre se vea
+       a qué fila corresponde el dato cuando se hace scroll lateral. */
+    .round-history-table th:first-child,
+    .round-history-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      font-weight: 600;
+      text-align: left;
+      padding-left: .75rem;
+      background: var(--surface);
+    }
+    .round-history-table th:first-child { background: var(--surface-2); }
+    /* Sobre filas con fondo destacado (Total / Multas / Cortes) la sticky
+       cell debe pintar el mismo color para no quedar transparente. */
+    .round-history-table tr.hist-summary td:first-child { background: var(--surface-2); }
     .round-history-table .edit-cell {
       cursor: pointer; color: var(--uno-blue); font-weight: 600;
     }
@@ -1097,9 +1124,8 @@
         <label data-i18n="setup_points_label"></label>
         <div class="points-presets" id="pointsPresets">
           <button class="preset-btn" data-val="200" onclick="selectPoints(this, 200)">200</button>
-          <button class="preset-btn" data-val="300" onclick="selectPoints(this, 300)">300</button>
-          <button class="preset-btn selected" data-val="500" onclick="selectPoints(this, 500)">500</button>
-          <button class="preset-btn" data-val="1000" onclick="selectPoints(this, 1000)">1000</button>
+          <button class="preset-btn selected" data-val="400" onclick="selectPoints(this, 400)">400</button>
+          <button class="preset-btn" data-val="600" onclick="selectPoints(this, 600)">600</button>
         </div>
         <div style="display:flex; align-items:center; gap:.5rem; margin-top:.75rem;">
           <input type="number" id="customPoints" inputmode="numeric" pattern="[0-9]*" placeholder="" data-i18n-ph="setup_custom_placeholder" min="50" style="flex:1;" oninput="onCustomPoints()">
@@ -1169,7 +1195,9 @@
     <!-- Round History -->
     <div class="round-history" id="roundHistoryContainer" style="display:none;">
       <h3 data-i18n="game_round_history"></h3>
-      <table class="round-history-table" id="roundHistoryTable"></table>
+      <div class="round-history-scroll">
+        <table class="round-history-table" id="roundHistoryTable"></table>
+      </div>
     </div>
 
     <div style="display:flex;gap:.75rem;margin-top:.5rem;" class="no-print">
@@ -1929,7 +1957,7 @@ function setLang(lang) {
 // ============ STATE ============
 let state = {
   playerCount: 2,
-  maxPoints: 500,
+  maxPoints: 400,
   players: [],
   rounds: [],
   fines: [],
@@ -2986,20 +3014,20 @@ function renderRoundHistory() {
   });
 
   const totals = getTotals();
-  html += `<tr style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
+  html += `<tr class="hist-summary" style="font-weight:700; background:var(--surface-2);"><td>${t('game_total')}</td>`;
   totals.forEach(t => { html += `<td>${t}</td>`; });
   html += '<td class="no-print"></td></tr>';
 
   var totalFinesH = getTotalFines();
   if (totalFinesH.some(function(f) { return f > 0; })) {
-    html += '<tr style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
+    html += '<tr class="hist-summary" style="background:var(--surface-2);"><td>' + t('game_fines') + '</td>';
     totalFinesH.forEach(function(f) { html += '<td>' + (f > 0 ? '<span class="fine-total-badge">+' + f + '</span>' : '—') + '</td>'; });
     html += '<td class="no-print"></td></tr>';
   }
 
   var totalCortesH = getTotalCortes();
   if (totalCortesH.some(function(c) { return c < 0; })) {
-    html += '<tr style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
+    html += '<tr class="hist-summary" style="background:var(--surface-2);"><td>' + t('game_cortes') + '</td>';
     totalCortesH.forEach(function(c) { html += '<td>' + (c < 0 ? '<span class="corte-total-badge">' + c + '</span>' : '—') + '</td>'; });
     html += '<td class="no-print"></td></tr>';
   }
@@ -3332,7 +3360,7 @@ function printResults() {
 
 function newGame() {
   state = {
-    playerCount: 2, maxPoints: 500,
+    playerCount: 2, maxPoints: 400,
     players: [], rounds: [], fines: [], cortes: [], participants: [], absentees: [], hostId: null, currentRound: 0, gameOver: false, gameId: null, venue: ''
   };
   showScreen('home');
@@ -3347,7 +3375,7 @@ function confirmQuit() {
   customConfirm(t('game_confirm_quit'), function() {
     saveCurrentGame();
     state = {
-      playerCount: 2, maxPoints: 500,
+      playerCount: 2, maxPoints: 400,
       players: [], rounds: [], fines: [], cortes: [], participants: [], absentees: [], hostId: null, currentRound: 0, gameOver: false, gameId: null, venue: ''
     };
     showScreen('home');
