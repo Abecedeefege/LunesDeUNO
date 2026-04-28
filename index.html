@@ -101,11 +101,16 @@
       text-decoration: none; color: var(--text);
       height: 100%;
     }
-    .header-logo svg {
+    .header-logo svg, .header-logo img {
       height: 80%;
       width: auto;
       max-height: 20vh;
       display: block;
+    }
+    /* Drop shadow blanco suave para que la galera negra se distinga del
+       fondo oscuro del header. */
+    .tophat-img {
+      filter: drop-shadow(0 0 4px rgba(255,255,255,.25));
     }
     .lang-switcher {
       display: flex; gap: .4rem;
@@ -234,20 +239,14 @@
     .logo-sub { color: var(--text-muted); font-size: 1rem; margin-top: .5rem; }
 
     .uno-cards {
-      display: flex; gap: .5rem; justify-content: center; margin-bottom: .5rem;
+      display: flex; justify-content: center; margin-bottom: .5rem;
     }
-    .uno-card-mini {
-      width: clamp(56px, 15vw, 80px);
-      display: block;
-      transform: rotate(var(--rot, 0deg));
-      border-radius: 8px;
-      box-shadow: 0 4px 16px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.2);
-    }
-    .uno-card-mini img {
-      width: 100%;
+    .home-tophat {
+      width: clamp(160px, 45vw, 240px);
       height: auto;
       display: block;
-      border-radius: 8px;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,.5))
+              drop-shadow(0 0 6px rgba(255,255,255,.18));
     }
 
     /* ---- SETUP SCREEN ---- */
@@ -1043,13 +1042,7 @@
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
     <button type="button" class="header-logo" id="headerLogo" onclick="playNextSound()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
-      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Galera (top hat): white for contrast on dark header -->
-        <ellipse cx="20" cy="28" rx="14" ry="4" fill="#fff"/>
-        <path d="M8 28 L8 12 Q8 6 20 6 Q32 6 32 12 L32 28 Z" fill="#fff"/>
-        <ellipse cx="20" cy="12" rx="12" ry="3" fill="#f0f0f5"/>
-        <rect x="10" y="12" width="20" height="16" fill="#fff"/>
-      </svg>
+      <img class="tophat-img" src="assets/tophat-logo.png" alt="" aria-hidden="true">
     </button>
     <div class="lang-switcher">
       <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">
@@ -1075,10 +1068,7 @@
   <div id="home" class="screen active">
     <div>
       <div class="uno-cards">
-        <div class="uno-card-mini" style="--rot:-8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:-3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:3deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
-        <div class="uno-card-mini" style="--rot:8deg;"><img src="assets/uno-plus4.png" alt="" width="160" height="232"></div>
+        <img class="home-tophat" src="assets/tophat-logo.png" alt="" width="512" height="512">
       </div>
       <h1 class="logo-title">Lunes de UNO</h1>
     </div>
