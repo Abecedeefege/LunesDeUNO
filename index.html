@@ -2,7 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ED1C24">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lunes de UNO">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
   <title>Lunes de UNO</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,7 +43,48 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
+      min-height: 100dvh;
     }
+
+    /* ---- Offline banner (firebase no cargó) ---- */
+    .offline-banner {
+      display: none;
+      position: fixed;
+      left: 1rem; right: 1rem;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+      z-index: 250;
+      background: rgba(255, 222, 0, .96);
+      color: #1a1a1a;
+      text-align: center;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: .55rem .9rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    }
+    .offline-banner.visible { display: block; }
+
+    /* ---- Indicador de guardado (sync con Firestore) ---- */
+    .save-indicator {
+      display: none;
+      position: fixed;
+      top: calc(20vh + .5rem); right: .75rem;
+      z-index: 240;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: .3rem .7rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,.4);
+      user-select: none;
+      pointer-events: none;
+    }
+    .save-indicator.visible { display: inline-block; }
+    .save-indicator.saving { color: var(--uno-yellow); }
+    .save-indicator.saved { color: var(--uno-green); }
+    .save-indicator.pending { color: var(--uno-yellow); border-color: var(--uno-yellow); }
 
     /* ---- Header (logo + flags) ---- */
     .app-header {
@@ -92,6 +140,7 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      min-height: 100dvh;
       width: 100%;
       max-width: 100vw;
       padding: 2rem 1rem;
@@ -226,6 +275,10 @@
       width: 70px; padding: .4rem; border-radius: 10px;
       border: 1px solid var(--border); background: var(--surface-2);
       cursor: pointer; transition: all .2s; gap: .25rem;
+      font: inherit; color: inherit; text-align: center;
+    }
+    .preset-chip:focus-visible {
+      outline: 2px solid var(--uno-yellow); outline-offset: 2px;
     }
     .preset-chip img {
       width: 52px; height: 52px; border-radius: 6px; object-fit: cover;
@@ -516,8 +569,10 @@
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,.6); backdrop-filter: blur(4px);
-      z-index: 100; align-items: center; justify-content: center;
+      z-index: 100; align-items: flex-start; justify-content: center;
       padding: 1rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
     .modal-overlay.active { display: flex; }
     .modal {
@@ -526,6 +581,9 @@
       border-radius: 18px;
       padding: 1.75rem;
       width: 100%; max-width: 400px;
+      max-height: calc(100dvh - 2rem);
+      overflow-y: auto;
+      margin: auto 0;
       animation: fadeIn .25s ease;
     }
     .modal h3 { margin-bottom: 1rem; font-size: 1.15rem; }
@@ -976,6 +1034,16 @@
     </div>
   </header>
 
+  <!-- Banner de modo offline: se muestra cuando Firebase no carga en 8 s -->
+  <div id="offlineBanner" class="offline-banner" role="status" aria-live="polite">
+    <span data-i18n="offline_banner"></span>
+  </div>
+
+  <!-- Indicador de sync con Firestore: guardando / guardado / pendientes -->
+  <div id="saveIndicator" class="save-indicator" role="status" aria-live="polite">
+    <span id="saveIndicatorText"></span>
+  </div>
+
   <!-- ============ HOME ============ -->
   <div id="home" class="screen active">
     <div>
@@ -1034,7 +1102,7 @@
           <button class="preset-btn" data-val="1000" onclick="selectPoints(this, 1000)">1000</button>
         </div>
         <div style="display:flex; align-items:center; gap:.5rem; margin-top:.75rem;">
-          <input type="number" id="customPoints" placeholder="" data-i18n-ph="setup_custom_placeholder" min="50" style="flex:1;" oninput="onCustomPoints()">
+          <input type="number" id="customPoints" inputmode="numeric" pattern="[0-9]*" placeholder="" data-i18n-ph="setup_custom_placeholder" min="50" style="flex:1;" oninput="onCustomPoints()">
         </div>
       </div>
     </div>
@@ -1242,7 +1310,7 @@
       <div class="modal-inputs">
         <div class="modal-input-row">
           <label data-i18n="edit_limit_label"></label>
-          <input type="number" id="newMaxPointsInput" min="50" style="width:100px;text-align:center;font-weight:600;">
+          <input type="number" id="newMaxPointsInput" inputmode="numeric" pattern="[0-9]*" min="50" style="width:100px;text-align:center;font-weight:600;">
         </div>
       </div>
       <div class="modal-actions">
@@ -1422,6 +1490,11 @@ const STRINGS = {
   es: {
     home_sub: '',
     home_start: 'Arrancar partido',
+    offline_banner: '📡 Sin conexión a la base — anotando local',
+    save_saving: 'Guardando…',
+    save_saved: 'Guardado',
+    save_pending_one: '1 cambio pendiente',
+    save_pending_many: '{n} cambios pendientes',
     setup_title: 'Partida nueva',
     setup_players_label: '¿Cuántos juegan?',
     setup_roster_label: '¿Quiénes vinieron?',
@@ -1583,6 +1656,11 @@ const STRINGS = {
   en: {
     home_sub: 'Score Tracker',
     home_start: 'Start New Game',
+    offline_banner: '📡 No connection — saving locally',
+    save_saving: 'Saving…',
+    save_saved: 'Saved',
+    save_pending_one: '1 change pending',
+    save_pending_many: '{n} changes pending',
     setup_title: 'New Game',
     setup_players_label: 'Number of Players',
     setup_roster_label: 'Who showed up?',
@@ -2358,10 +2436,10 @@ function renderAttendanceRoster() {
     const face = PRESET_FACES[slug];
     const faceImg = `<img src="${face}" alt="${name}">`;
     const wrapped = _withSeasonStar(faceImg, slug, 'lg');
-    html += `<span class="preset-chip ${attending ? 'attending' : ''} ${isHost ? 'host-chip' : ''}" onclick="toggleAttending('${slug}')">
+    html += `<button type="button" class="preset-chip ${attending ? 'attending' : ''} ${isHost ? 'host-chip' : ''}" aria-pressed="${attending}" onclick="toggleAttending('${slug}')">
       ${wrapped}
       <span class="chip-name">${name}</span>
-    </span>`;
+    </button>`;
   });
   container.innerHTML = html;
 }
@@ -2778,7 +2856,7 @@ function renderRoundInputs() {
       </div>
       <div class="fine-input-row" id="fineRow_${i}">
         <span class="fine-label">⚠️ ${t('game_fine')}:</span>
-        <input type="number" id="roundFine_${i}" placeholder="0" min="0">
+        <input type="number" id="roundFine_${i}" inputmode="numeric" pattern="[0-9]*" placeholder="0" min="0">
       </div>`;
   });
   container.innerHTML = html;
@@ -2929,17 +3007,31 @@ function openEditModal(roundIdx) {
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
         <label style="color:var(--uno-yellow);font-size:.8rem;">⚠️ ${t('game_fine')}</label>
-        <input type="number" id="editFine_${i}" value="${fineVal}" min="0" style="width:70px;">
+        <input type="number" id="editFine_${i}" inputmode="numeric" pattern="[0-9]*" value="${fineVal}" min="0" style="width:70px;">
       </div>`;
   });
   container.innerHTML = html;
   document.getElementById('editModal').classList.add('active');
+  // Foco al primer input para que Esc/Enter funcionen y para teclado bluetooth.
+  // En iOS no abre el teclado virtual (debe ser respuesta a un evento de input),
+  // así que es seguro hacerlo siempre.
+  var firstInput = document.querySelector('#editModal input');
+  if (firstInput) firstInput.focus();
 }
 
 function closeEditModal() {
   document.getElementById('editModal').classList.remove('active');
   editingRound = -1;
 }
+
+// Esc cierra el modal abierto (edit round o edit max points).
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  var editOpen = document.getElementById('editModal');
+  if (editOpen && editOpen.classList.contains('active')) { closeEditModal(); return; }
+  var maxOpen = document.getElementById('editMaxPointsModal');
+  if (maxOpen && maxOpen.classList.contains('active')) { closeEditMaxPoints(); return; }
+});
 
 // ============ EDIT MAX POINTS MODAL ============
 function openEditMaxPoints() {
@@ -3782,15 +3874,111 @@ function saveCurrentGame() {
   if (idx >= 0) { games[idx] = entry; } else { games.push(entry); }
   saveGames(games);
 
-  if (window.LDU_READY && window.LDU && window.LDU.saveGame) {
-    window.LDU.saveGame(entry).then(function() {
-      if (state.gameOver && typeof maybeComputeSeason === 'function') {
-        var wasFinalized = priorFinishedAt && existing && existing.finished;
-        if (!wasFinalized) maybeComputeSeason();
-      }
-    }).catch(function(err) { console.warn('[LDU] saveGame failed:', err); });
+  // El save a Firestore va por la cola (con retry + indicador). Si LDU_READY
+  // todavía no llegó, queda en cola y se intenta cuando dispara el evento.
+  var wasFinalized = priorFinishedAt && existing && existing.finished;
+  var shouldComputeSeason = state.gameOver && !wasFinalized;
+  enqueueSaveGame(entry, shouldComputeSeason);
+}
+
+// ============ COLA DE SAVE (retry + indicador) ============
+// Cada save a Firestore pasa por la cola: si Firestore está caído o lento,
+// el entry queda persistido en localStorage y se reintenta cuando llega el
+// evento `online`, cuando vuelve a foreground (`visibilitychange`), o cuando
+// dispara `ldu-ready`. Idempotencia: la cola se deduplica por gameId, siempre
+// nos quedamos con la última versión del partido.
+var SAVE_QUEUE_KEY = 'lunesdeuno_saveQueue';
+var _saveInFlight = false;
+var _saveRetryTimer = null;
+var _saveSeasonTriggers = {};   // gameId → bool (¿hay que llamar maybeComputeSeason al éxito?)
+
+function _loadSaveQueue() {
+  try {
+    var raw = localStorage.getItem(SAVE_QUEUE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+function _persistSaveQueue(q) {
+  try { localStorage.setItem(SAVE_QUEUE_KEY, JSON.stringify(q)); } catch (e) {}
+}
+function _setSaveIndicator(stateName, count) {
+  var el = document.getElementById('saveIndicator');
+  var txt = document.getElementById('saveIndicatorText');
+  if (!el || !txt) return;
+  el.classList.remove('visible', 'saving', 'saved', 'pending');
+  if (stateName === 'hidden') return;
+  el.classList.add('visible', stateName);
+  if (stateName === 'saving') txt.textContent = t('save_saving');
+  else if (stateName === 'saved') txt.textContent = t('save_saved');
+  else if (stateName === 'pending') {
+    var key = (count === 1) ? 'save_pending_one' : 'save_pending_many';
+    txt.textContent = t(key).replace('{n}', String(count || 0));
   }
 }
+
+function enqueueSaveGame(entry, shouldComputeSeason) {
+  if (!entry || !entry.id) return;
+  var q = _loadSaveQueue();
+  // Deduplicar por id: la última versión del mismo partido pisa a la previa.
+  q = q.filter(function(e) { return e.id !== entry.id; });
+  q.push(entry);
+  _persistSaveQueue(q);
+  if (shouldComputeSeason) _saveSeasonTriggers[entry.id] = true;
+  _setSaveIndicator('pending', q.length);
+  flushSaveQueue();
+}
+
+function flushSaveQueue() {
+  if (_saveInFlight) return;
+  if (!window.LDU_READY || !window.LDU || !window.LDU.saveGame) return;
+  var q = _loadSaveQueue();
+  if (!q.length) { _setSaveIndicator('hidden'); return; }
+  _saveInFlight = true;
+  _setSaveIndicator('saving');
+  var head = q[0];
+  window.LDU.saveGame(head)
+    .then(function() {
+      var fresh = _loadSaveQueue();
+      var i = fresh.findIndex(function(e) { return e.id === head.id; });
+      // Sólo borramos esa entrada si el timestamp coincide con la que mandamos.
+      // Si entre tanto se push'eó una versión más nueva del mismo partido,
+      // preservamos la nueva (queda como pendiente).
+      if (i >= 0 && fresh[i].timestamp === head.timestamp) fresh.splice(i, 1);
+      _persistSaveQueue(fresh);
+      _saveInFlight = false;
+      // Disparar maybeComputeSeason si correspondía para este gameId (sólo
+      // la primera vez que el partido cierra).
+      if (_saveSeasonTriggers[head.id]) {
+        delete _saveSeasonTriggers[head.id];
+        if (typeof maybeComputeSeason === 'function') {
+          try { maybeComputeSeason(); } catch (e) { console.warn(e); }
+        }
+      }
+      if (fresh.length === 0) {
+        _setSaveIndicator('saved');
+        setTimeout(function() {
+          // Sólo escondemos si todavía no hay nuevos pendientes.
+          if (_loadSaveQueue().length === 0) _setSaveIndicator('hidden');
+        }, 1500);
+      } else {
+        _setSaveIndicator('pending', fresh.length);
+        flushSaveQueue();
+      }
+    })
+    .catch(function(err) {
+      console.warn('[LDU] saveGame failed (kept in queue):', err);
+      _saveInFlight = false;
+      _setSaveIndicator('pending', _loadSaveQueue().length);
+      if (_saveRetryTimer) clearTimeout(_saveRetryTimer);
+      _saveRetryTimer = setTimeout(flushSaveQueue, 30000);
+    });
+}
+
+window.addEventListener('online', flushSaveQueue);
+window.addEventListener('ldu-ready', flushSaveQueue);
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') flushSaveQueue();
+});
 
 function formatTimestamp(ts) {
   var d = new Date(ts);
@@ -4261,9 +4449,23 @@ function loadStatsData() {
   // Ya no se cae a localStorage — las stats tienen que reflejar solo partidas reales.
   if (!(window.LDU_READY && window.LDU && window.LDU.getAllFinishedGames)) {
     return new Promise(function(resolve) {
-      document.addEventListener('ldu-ready', function onReady() {
+      var settled = false;
+      var onReady = function() {
+        if (settled) return;
+        settled = true;
         loadStatsData().then(resolve);
-      }, { once: true });
+      };
+      document.addEventListener('ldu-ready', onReady, { once: true });
+      // Si pasan 8 s y Firebase no respondió, no colgamos la pestaña Stats.
+      // Resolvemos sin datos y dejamos que la UI muestre "no hay datos" más
+      // el banner offline global (data-i18n="offline_banner").
+      setTimeout(function() {
+        if (settled) return;
+        settled = true;
+        document.removeEventListener('ldu-ready', onReady);
+        _statsData.loaded = true;
+        resolve();
+      }, 8000);
     });
   }
 
@@ -4366,7 +4568,11 @@ function computeAllStats(games, seasons) {
   var byPlayer = {};
   presetSlugs.forEach(function(s) { byPlayer[s] = _emptyPlayerStats(s); });
 
-  var sorted = games.slice().sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
+  // Defensa en profundidad: stats y rankings sólo cuentan partidas terminadas.
+  // Los callers ya suelen pasar arrays filtrados (getAllFinishedGames), pero
+  // garantizamos la regla acá también.
+  var finishedGames = (games || []).filter(function(g) { return g && g.finished === true; });
+  var sorted = finishedGames.slice().sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
 
   sorted.forEach(function(g) {
     var participants = g.participants || [];
@@ -5081,6 +5287,36 @@ if (window.LDU_READY) {
 } else {
   window.addEventListener('ldu-ready', lduBootstrap, { once: true });
 }
+
+// Si Firebase no termina de inicializar en 8 s mostramos un banner indicando
+// modo offline. Si llega después, lo escondemos.
+var _offlineBannerTimer = setTimeout(function() {
+  if (!window.LDU_READY) {
+    var b = document.getElementById('offlineBanner');
+    if (b) b.classList.add('visible');
+  }
+}, 8000);
+window.addEventListener('ldu-ready', function() {
+  clearTimeout(_offlineBannerTimer);
+  var b = document.getElementById('offlineBanner');
+  if (b) b.classList.remove('visible');
+});
+
+// Antes de que iOS suspenda la pestaña en background (o antes de cerrar el tab),
+// forzamos un saveCurrentGame para que el último estado del partido en curso
+// quede en localStorage y se intente flushear a Firestore.
+function _flushOnHide() {
+  try {
+    if (typeof state !== 'undefined' && state && state.gameId && !state.gameOver
+        && typeof saveCurrentGame === 'function') {
+      saveCurrentGame();
+    }
+  } catch (e) { /* swallow: never break navigation */ }
+}
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') _flushOnHide();
+});
+window.addEventListener('pagehide', _flushOnHide);
 </script>
 </body>
 </html>
