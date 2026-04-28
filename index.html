@@ -1221,7 +1221,7 @@
 
     <div class="results-actions no-print">
       <button class="btn btn-secondary" onclick="goHome()" data-i18n="game_go_home"></button>
-      <button class="btn btn-secondary" onclick="printResults()"><span>&#128424;</span> <span data-i18n="results_print"></span></button>
+      <button class="btn btn-secondary" id="shareResultsImgBtn" onclick="shareResultsImage(this)"><span>📜</span> <span data-i18n="results_print"></span></button>
       <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
       <button class="btn btn-secondary" onclick="openEditMaxPoints()" data-i18n="results_edit_limit"></button>
       <button class="btn btn-secondary" onclick="shareToWhatsApp()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
@@ -1633,7 +1633,7 @@ const STRINGS = {
     shame_title: 'Walk of Shame',
     shame_round_lost: 'ronda perdida',
     shame_rounds_lost: 'rondas perdidas',
-    share_whatsapp: 'Mandale al grupo',
+    share_whatsapp: 'Compartir resultado (TXT)',
     share_copied: '¡Copiado al portapapeles!',
     stats_share_wa: '📲 Compartir a WhatsApp',
     stats_share_preparing: 'Preparando imagen...',
@@ -1652,7 +1652,7 @@ const STRINGS = {
     asado_mode: 'Modo Asado 🥩',
     results_winner_sub: '¡ganó con menos puntos, qué crack!',
     results_breakdown: 'Ronda por ronda',
-    results_print: 'Imprimir',
+    results_print: 'Compartir resultado (IMG)',
     results_edit: 'Editar puntajes',
     results_new_game: 'Otra partidita',
     modal_edit_round: 'Editar Ronda',
@@ -1802,7 +1802,7 @@ const STRINGS = {
     shame_title: 'Walk of Shame',
     shame_round_lost: 'round lost',
     shame_rounds_lost: 'rounds lost',
-    share_whatsapp: 'Share to group',
+    share_whatsapp: 'Share result (TXT)',
     share_copied: 'Copied to clipboard!',
     stats_share_wa: '📲 Share to WhatsApp',
     stats_share_preparing: 'Preparing image...',
@@ -1821,7 +1821,7 @@ const STRINGS = {
     asado_mode: 'BBQ Mode 🥩',
     results_winner_sub: 'wins with the lowest score!',
     results_breakdown: 'Round Breakdown',
-    results_print: 'Print Scores',
+    results_print: 'Share result (IMG)',
     results_edit: 'Edit Scores',
     results_new_game: 'New Game',
     modal_edit_round: 'Edit Round',
@@ -3348,8 +3348,188 @@ function showEditableHistory() {
   table.innerHTML = html;
 }
 
-function printResults() {
-  window.print();
+// Genera una "acta notarial" con apariencia de certificado moderno y la
+// comparte vía Web Share API (móvil) o descarga en escritorio.
+async function shareResultsImage(btn) {
+  if (typeof html2canvas === 'undefined') {
+    if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_error'));
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.dataset._label = btn.textContent; btn.textContent = '⏳ ' + t('stats_share_preparing'); }
+
+  // Preparar datos del partido
+  var finalTotals = getFinalTotals();
+  var totalFinesC = (typeof getTotalFines === 'function') ? getTotalFines() : state.players.map(function(){return 0;});
+  var totalCortesC = (typeof getTotalCortes === 'function') ? getTotalCortes() : state.players.map(function(){return 0;});
+  var standings = state.players.map(function(p, i) {
+    return { name: p.name, slug: (p.playerId || (p.name||'').toLowerCase()), face: p.face,
+             total: finalTotals[i], fines: totalFinesC[i], cortes: totalCortesC[i] };
+  }).sort(function(a, b) { return a.total - b.total; });
+  var winner = standings[0];
+  var loser = standings[standings.length - 1];
+
+  var d = new Date();
+  var dateStr = d.getDate() + ' de ' + ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][d.getMonth()] + ' de ' + d.getFullYear();
+  var fojas = (state.gameId || ('game_' + Date.now())).replace('game_', '').slice(-6).toUpperCase();
+  var venueText = state.venue ? '"' + state.venue + '"' : 'un local sin nombre conocido';
+  var hostName = '';
+  if (state.hostId) {
+    var hp = (state.players || []).find(function(p) { return (p.playerId || (p.name||'').toLowerCase()) === state.hostId; });
+    hostName = hp ? hp.name : state.hostId;
+  }
+  var hostText = hostName ? ('bajo la atenta mirada del anfitrión <em>' + hostName + '</em>') : 'sin un anfitrión declarado';
+
+  // Construir el HTML del certificado
+  var rowsHtml = standings.map(function(p, i) {
+    var faceImg = p.face ? '<img src="' + p.face + '" class="cert-face">' : '<span class="cert-face cert-face-blank"></span>';
+    var medal = (i === 0) ? '🥇' : (i === 1) ? '🥈' : (i === 2) ? '🥉' : '';
+    var extras = [];
+    if (p.fines > 0) extras.push('+' + p.fines + ' multas');
+    if (p.cortes < 0) extras.push(p.cortes + ' cortes');
+    var extraStr = extras.length ? ' <span class="cert-extras">(' + extras.join(', ') + ')</span>' : '';
+    return '<tr>'
+      + '<td class="cert-pos">' + (i + 1) + (medal ? ' ' + medal : '') + '</td>'
+      + '<td class="cert-player">' + faceImg + '<span class="cert-pname">' + p.name + '</span>' + extraStr + '</td>'
+      + '<td class="cert-pts">' + p.total + '</td>'
+      + '</tr>';
+  }).join('');
+
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;top:-100000px;left:0;z-index:-1;';
+  wrap.innerHTML = ''
+    + '<style>'
+    +   '.cert{position:relative;width:760px;padding:64px 72px;'
+    +   "background:radial-gradient(ellipse at top,rgba(212,175,55,.08),transparent 60%),linear-gradient(135deg,#fdf8ee 0%,#f5ebd3 100%);"
+    +   "color:#2a1d05;font-family:'Inter',-apple-system,sans-serif;"
+    +   'border:6px double #c9a44c;outline:1px solid #2a1d05;outline-offset:-12px;'
+    +   'box-shadow:0 20px 60px rgba(0,0,0,.3);box-sizing:border-box;}'
+    +   '.cert-corner{position:absolute;width:54px;height:54px;font-size:28px;'
+    +   'display:flex;align-items:center;justify-content:center;'
+    +   'background:#c9a44c;color:#fff;border-radius:6px;'
+    +   "box-shadow:0 2px 6px rgba(0,0,0,.25);}"
+    +   '.c-tl{top:18px;left:18px;transform:rotate(-10deg);}'
+    +   '.c-tr{top:18px;right:18px;transform:rotate(10deg);}'
+    +   '.c-bl{bottom:18px;left:18px;transform:rotate(10deg);}'
+    +   '.c-br{bottom:18px;right:18px;transform:rotate(-10deg);}'
+    +   '.cert-brand{display:flex;align-items:center;gap:14px;justify-content:center;margin-bottom:16px;}'
+    +   '.cert-brand img{width:72px;height:72px;}'
+    +   ".cert-brand .bn{font-family:'Fredoka One',cursive;font-size:34px;color:#2a1d05;line-height:1;}"
+    +   '.cert-eyebrow{font-style:italic;color:#8a6a1f;letter-spacing:.18em;font-size:13px;text-transform:uppercase;text-align:center;margin-top:8px;}'
+    +   ".cert-title{font-family:'Times New Roman',serif;font-size:54px;letter-spacing:.1em;margin:8px 0 4px;color:#2a1d05;text-align:center;font-weight:700;}"
+    +   '.cert-fojas{color:#6e5a2a;font-size:13px;text-align:center;letter-spacing:.05em;margin-bottom:24px;}'
+    +   '.cert-divider{height:1px;background:linear-gradient(90deg,transparent,#c9a44c,transparent);margin:18px 0;}'
+    +   '.cert-body{font-size:17px;line-height:1.65;text-align:justify;color:#2a1d05;margin:8px 0;}'
+    +   '.cert-body em{font-style:italic;font-weight:600;color:#1a1a1a;}'
+    +   '.cert-body strong{color:#1a1a1a;font-weight:700;}'
+    +   '.win-card{text-align:center;background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(212,175,55,.05));'
+    +   'border:2px solid #c9a44c;border-radius:14px;padding:22px 24px;margin:22px 0;}'
+    +   '.win-medal{font-size:44px;line-height:1;}'
+    +   '.win-label{letter-spacing:.28em;color:#8a6a1f;font-size:12px;margin:6px 0 4px;font-weight:700;}'
+    +   ".win-name{font-family:'Fredoka One',cursive;font-size:38px;color:#2a1d05;line-height:1.1;}"
+    +   '.win-score{color:#6e5a2a;font-size:15px;margin-top:4px;letter-spacing:.04em;}'
+    +   '.cert-table{width:100%;border-collapse:collapse;font-size:15px;margin:14px 0;}'
+    +   '.cert-table th{padding:10px 12px;text-align:left;color:#8a6a1f;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid #c9a44c;}'
+    +   '.cert-table td{padding:10px 12px;border-bottom:1px solid rgba(26,29,5,.12);vertical-align:middle;}'
+    +   '.cert-pos{font-weight:700;width:64px;color:#2a1d05;}'
+    +   '.cert-player{display:flex;align-items:center;gap:10px;}'
+    +   '.cert-face{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid rgba(26,29,5,.2);}'
+    +   '.cert-face-blank{background:#c9a44c;display:inline-block;}'
+    +   '.cert-pname{font-weight:600;}'
+    +   '.cert-extras{color:#8a6a1f;font-size:12px;font-style:italic;}'
+    +   '.cert-pts{font-weight:700;text-align:right;font-size:18px;color:#2a1d05;width:80px;font-variant-numeric:tabular-nums;}'
+    +   '.lose-card{text-align:center;background:linear-gradient(180deg,rgba(237,28,36,.10),rgba(237,28,36,.02));'
+    +   'border:2px dashed rgba(237,28,36,.65);border-radius:12px;padding:14px 18px;margin:18px 0 8px;}'
+    +   '.lose-label{color:#ED1C24;font-weight:800;font-size:13px;letter-spacing:.18em;}'
+    +   ".lose-name{font-family:'Fredoka One',cursive;font-size:22px;color:#2a1d05;margin:2px 0;line-height:1.15;}"
+    +   '.lose-curse{font-size:13px;color:#6e5a2a;font-style:italic;}'
+    +   '.cert-foot{display:flex;align-items:center;gap:24px;margin-top:32px;padding-top:14px;}'
+    +   '.cert-seal{width:118px;height:118px;border-radius:50%;flex-shrink:0;'
+    +   'background:radial-gradient(circle,#ED1C24 0%,#a8141a 100%);'
+    +   'border:4px double #fff;outline:3px solid #c9a44c;outline-offset:-2px;'
+    +   'display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;'
+    +   'font-weight:800;font-size:13px;letter-spacing:.12em;line-height:1.25;'
+    +   'transform:rotate(-9deg);box-shadow:0 6px 14px rgba(237,28,36,.45);}'
+    +   '.cert-sig{flex:1;text-align:center;padding-top:24px;}'
+    +   '.cert-sig-line{height:1px;background:#2a1d05;margin:0 0 6px 0;}'
+    +   ".cert-sig-name{font-family:'Times New Roman',serif;font-style:italic;font-size:14px;color:#2a1d05;letter-spacing:.04em;}"
+    +   '.cert-fine{margin-top:22px;padding-top:14px;border-top:1px solid rgba(26,29,5,.15);font-size:10.5px;color:#6e5a2a;text-align:center;font-style:italic;line-height:1.6;letter-spacing:.02em;}'
+    + '</style>'
+    + '<div class="cert">'
+    +   '<div class="cert-corner c-tl">🎴</div>'
+    +   '<div class="cert-corner c-tr">🎴</div>'
+    +   '<div class="cert-corner c-bl">🎴</div>'
+    +   '<div class="cert-corner c-br">🎴</div>'
+    +   '<div class="cert-brand"><img src="assets/tophat-logo.png" alt=""><div class="bn">Lunes de UNO</div></div>'
+    +   '<div class="cert-eyebrow">— Tribunal Supremo del UNO —</div>'
+    +   '<h1 class="cert-title">ACTA NOTARIAL</h1>'
+    +   '<div class="cert-fojas">Fojas N.º ' + fojas + ' · ' + dateStr + '</div>'
+    +   '<div class="cert-divider"></div>'
+    +   '<p class="cert-body">Por la presente, este honorable tribunal hace constar y certifica '
+    +     'que en el día <strong>' + dateStr + '</strong>, en el establecimiento ' + venueText + ' '
+    +     hostText + ', se llevó a cabo la sagrada partida de <strong>' + state.rounds.length + ' rondas</strong> '
+    +     'con un límite oficial de <strong>' + state.maxPoints + ' puntos</strong>, '
+    +     'cuyos resultados se asientan a continuación con el peso de la verdad.</p>'
+    +   '<div class="win-card">'
+    +     '<div class="win-medal">🏆</div>'
+    +     '<div class="win-label">VICTORIA OFICIAL</div>'
+    +     '<div class="win-name">' + winner.name + '</div>'
+    +     '<div class="win-score">' + winner.total + ' puntos · campeón legítimo de la jornada</div>'
+    +   '</div>'
+    +   '<table class="cert-table">'
+    +     '<thead><tr><th>Posición</th><th>Jugador</th><th style="text-align:right;">Pts</th></tr></thead>'
+    +     '<tbody>' + rowsHtml + '</tbody>'
+    +   '</table>'
+    +   '<div class="lose-card">'
+    +     '<div class="lose-label">⚠️ WALK OF SHAME</div>'
+    +     '<div class="lose-name">' + loser.name + '</div>'
+    +     '<div class="lose-curse">paga el 🍮 postre o la 🧀 picada — penalización oficial e inapelable del UNO</div>'
+    +   '</div>'
+    +   '<div class="cert-foot">'
+    +     '<div class="cert-seal"><span>VERIFICADO<br>POR EL UNO</span></div>'
+    +     '<div class="cert-sig">'
+    +       '<div class="cert-sig-line"></div>'
+    +       '<div class="cert-sig-name">El Honorable Tribunal del UNO</div>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="cert-fine">Firmado, sellado y homologado el ' + dateStr + '. '
+    +     'Cualquier reclamo deberá presentarse por escrito en papel manteca y envuelto en tres copias. '
+    +     'No se reembolsan los puntos perdidos. La picada es ley.</div>'
+    + '</div>';
+  document.body.appendChild(wrap);
+
+  try {
+    if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+    var canvas = await html2canvas(wrap.querySelector('.cert'), {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      logging: false
+    });
+    var blob = await new Promise(function(r) { canvas.toBlob(r, 'image/png'); });
+    if (!blob) throw new Error('blob-null');
+    var filename = 'lunesdeuno-acta-' + fojas + '.png';
+    var file = new File([blob], filename, { type: 'image/png' });
+    var shareData = { files: [file], title: 'Lunes de UNO — Acta', text: 'Acta notarial: ganó ' + winner.name };
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      try { await navigator.share(shareData); }
+      catch (e) { if (!(e && e.name === 'AbortError')) throw e; }
+    } else {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(a.href); }, 5000);
+      if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_downloaded'));
+    }
+  } catch (err) {
+    console.warn('[shareResultsImage]', err);
+    if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_error'));
+  } finally {
+    if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+    if (btn) { btn.disabled = false; btn.textContent = btn.dataset._label || ''; }
+  }
 }
 
 function newGame() {
