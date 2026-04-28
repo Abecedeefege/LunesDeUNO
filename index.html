@@ -998,9 +998,13 @@
     .h2h-matrix td, .h2h-matrix th {
       text-align: center; padding: .3rem .35rem; min-width: 44px;
     }
-    .h2h-good { background: rgba(0,166,81,.2); }
-    .h2h-bad { background: rgba(237,28,36,.18); }
-    .h2h-diag { background: var(--surface-2); color: var(--text-muted); }
+    /* Mano-a-mano: tres únicos colores válidos para celdas con datos.
+       VERDE: ganó más de la mitad. ROJO: perdió más de la mitad.
+       GRIS: empate / sin partidas juntos / diagonal (uno consigo). */
+    .h2h-good { background: rgba(0,166,81,.20); color: var(--uno-green); font-weight: 600; }
+    .h2h-bad  { background: rgba(237,28,36,.18); color: var(--uno-red); font-weight: 600; }
+    .h2h-neutral { background: rgba(136,136,168,.12); color: var(--text-muted); }
+    .h2h-diag { background: rgba(136,136,168,.20); color: var(--text-muted); }
 
     /* ---- Nachi credit button ---- */
     .btn-nachi {
@@ -4487,7 +4491,9 @@ function initStats() {
     var sel = document.getElementById('statsPlayerSelect');
     if (sel) sel.value = defaultSlug;
     renderPlayerStats(defaultSlug);
-    renderLeaderboard('gamesWon', 'annual');
+    var annualSortSel = document.getElementById('leaderboardSort');
+    if (annualSortSel) annualSortSel.value = 'totalScore';
+    renderLeaderboard('totalScore', 'annual');
     var seasonSortSel = document.getElementById('leaderboardSortSeason');
     if (seasonSortSel) seasonSortSel.value = 'totalScore';
     renderLeaderboard('totalScore', 'season');
@@ -5050,8 +5056,11 @@ function renderLeaderboard(sortKey, scope) {
   var rows = Object.values(computed.byPlayer)
     .filter(function(p) { return p.gamesPlayed > 0 || (isSeason && p.absences > 0); })
     .sort(function(a, b) {
-      // "lower is better" for these keys.
-      if (sortKey === 'avgPosition' || sortKey === 'totalScore' || sortKey === 'lowestGameScore') {
+      // En temporada el ganador es el de menor puntaje (regla UNO clásica
+      // sobre 4 partidos), en anual el orden default es de mayor a menor.
+      var lowerIsBetter = (sortKey === 'avgPosition' || sortKey === 'lowestGameScore'
+        || (sortKey === 'totalScore' && isSeason));
+      if (lowerIsBetter) {
         var av = (a[sortKey] == null) ? Infinity : a[sortKey];
         var bv = (b[sortKey] == null) ? Infinity : b[sortKey];
         return av - bv;
@@ -5068,6 +5077,7 @@ function renderLeaderboard(sortKey, scope) {
   var html = '<thead><tr>'
     + '<th>#</th>'
     + '<th>' + t('leaderboard_player') + '</th>'
+    + '<th>' + t('leaderboard_score') + '</th>'
     + '<th>' + t('leaderboard_games') + '</th>'
     + '<th>' + t('leaderboard_wins') + '</th>'
     + '<th>' + t('leaderboard_losses') + '</th>'
@@ -5078,7 +5088,6 @@ function renderLeaderboard(sortKey, scope) {
     + '<th>' + t('leaderboard_absences') + '</th>'
     + '<th>' + t('leaderboard_best_game') + '</th>'
     + '<th>' + t('leaderboard_worst_game') + '</th>'
-    + '<th>' + t('leaderboard_score') + '</th>'
     + '</tr></thead><tbody>';
   rows.forEach(function(p, i) {
     var face = PRESET_FACES[p.slug];
@@ -5089,6 +5098,7 @@ function renderLeaderboard(sortKey, scope) {
     html += '<tr>'
       + '<td>' + (i + 1) + '</td>'
       + '<td>' + faceImg + _presetName(p.slug) + '</td>'
+      + '<td>' + p.totalScore + '</td>'
       + '<td>' + p.gamesPlayed + '</td>'
       + '<td>' + p.gamesWon + '</td>'
       + '<td>' + p.gamesLost + '</td>'
@@ -5099,7 +5109,6 @@ function renderLeaderboard(sortKey, scope) {
       + '<td>' + p.absences + '</td>'
       + '<td>' + (p.lowestGameScore == null ? '—' : p.lowestGameScore) + '</td>'
       + '<td>' + (p.worstGameScore || '—') + '</td>'
-      + '<td>' + p.totalScore + '</td>'
       + '</tr>';
   });
   html += '</tbody>';
@@ -5243,9 +5252,10 @@ function renderH2HMatrix() {
     slugs.forEach(function(colSlug) {
       if (rowSlug === colSlug) { html += '<td class="h2h-diag">—</td>'; return; }
       var rec = byPlayer[rowSlug].h2h[colSlug];
-      if (!rec || !rec.together) { html += '<td style="color:var(--text-muted);">·</td>'; return; }
+      if (!rec || !rec.together) { html += '<td class="h2h-neutral">·</td>'; return; }
       var rate = rec.wins / rec.together;
-      var cls = rate > 0.5 ? 'h2h-good' : (rate < 0.5 ? 'h2h-bad' : '');
+      // Empate exacto (rate === 0.5) cae en neutral, igual que "no jugaron".
+      var cls = rate > 0.5 ? 'h2h-good' : (rate < 0.5 ? 'h2h-bad' : 'h2h-neutral');
       html += '<td class="' + cls + '" title="' + rec.wins + '-' + rec.losses + ' (' + rec.together + ')">' + rec.wins + '/' + rec.together + '</td>';
     });
     html += '</tr>';
