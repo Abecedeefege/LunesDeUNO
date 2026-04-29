@@ -32,66 +32,204 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ---- Marco TV antigua HD ---- */
-    /* Ocupa el 98% del viewport. El bezel exterior es plástico negro
-       con gradient sutil (textura de TV CRT moderna), border-radius
-       chico, sombra interior para que se sienta encajado. La pantalla
-       interior ocupa el espacio restante (la mayoría). */
+    /* ---- Marco TV antigua CRT ---- */
+    /* TV vintage de plástico gris oscuro/negro, marcos GRUESOS, esquinas
+       redondeadas suaves, parrilla de altavoz horizontal abajo, perilla
+       de volumen circular a la derecha, marca grabada al frente, dos
+       antenas saliendo arriba. Ocupa el 98% del viewport — la pantalla
+       sigue siendo la mayoría del espacio (~80%). */
     .tv-cabinet {
       position: relative;
-      width: 99vw; height: 98vh;
-      margin: 1vh auto;
-      padding: 1.4vh 1.4vw;
+      width: 98vw; height: 96vh;
+      margin: 2vh auto;
+      padding: 5vh 8vw 9vh 5vw;       /* extra padding a la derecha para la perilla y abajo para la parrilla */
       background:
-        linear-gradient(135deg, #1a1a1f 0%, #0a0a0c 50%, #1a1a1f 100%);
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.04);
+        radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
+        linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.08);
       box-shadow:
-        0 0 0 2px #050507,
-        0 12px 40px rgba(0,0,0,.6),
-        inset 0 0 24px rgba(0,0,0,.55),
-        inset 0 1px 0 rgba(255,255,255,.05);
+        0 0 0 4px #0a0a0c,
+        0 24px 70px rgba(0,0,0,.7),
+        inset 0 4px 20px rgba(255,255,255,.05),
+        inset 0 -4px 20px rgba(0,0,0,.6);
     }
-    /* LED rojo de "encendido" en el bezel inferior derecho */
-    .tv-cabinet::after {
+    /* Antenas saliendo de arriba (rabbit ears) */
+    .tv-antennae {
+      position: absolute;
+      left: 0; right: 0; top: -7vh;
+      height: 7vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .tv-antennae::before,
+    .tv-antennae::after {
       content: '';
       position: absolute;
-      bottom: .7vh; right: 1vw;
-      width: .55vw; height: .55vw;
-      min-width: 6px; min-height: 6px;
+      bottom: 0;
+      width: 3px;
+      height: 7vh;
+      background: linear-gradient(180deg, #d8d8d8, #777);
+      border-radius: 2px;
+      transform-origin: bottom center;
+      box-shadow: 0 0 4px rgba(0,0,0,.5);
+    }
+    .tv-antennae::before {
+      left: calc(50% - 3vw);
+      transform: rotate(-22deg);
+    }
+    .tv-antennae::after {
+      left: calc(50% + 3vw);
+      transform: rotate(22deg);
+    }
+    .tv-antennae-base {
+      position: absolute;
+      left: 50%; bottom: 0;
+      transform: translateX(-50%);
+      width: 7vw; height: 1.2vh;
+      background: linear-gradient(180deg, #3a3a3e, #1a1a1c);
+      border-radius: 6px 6px 0 0;
+    }
+
+    /* Marca del frente */
+    .tv-brand-plate {
+      position: absolute;
+      bottom: 1.6vh; left: 5vw;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(.7rem, 1.3vw, 1.2rem);
+      letter-spacing: .35em;
+      color: #d8b550;       /* dorado tipo placa metálica */
+      text-shadow:
+        0 1px 0 #6a4f1a,
+        0 -1px 0 rgba(255,255,255,.18);
+      pointer-events: none;
+    }
+    .tv-brand-plate small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: .55em;
+      letter-spacing: .25em;
+      color: rgba(216,181,80,.6);
+      margin-top: .2vh;
+    }
+
+    /* Parrilla horizontal del altavoz (rectángulo con stripes) */
+    .tv-speaker {
+      position: absolute;
+      bottom: 1.6vh; right: 6vw;
+      width: 18vw; max-width: 280px;
+      height: 4.5vh; min-height: 30px;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          #0a0a0c 0px,
+          #0a0a0c 2px,
+          rgba(255,255,255,.04) 2px,
+          rgba(255,255,255,.04) 4px
+        );
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 4px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+    }
+
+    /* Perilla de volumen / canal a la derecha */
+    .tv-knob {
+      position: absolute;
+      right: 1.5vw;
+      width: 4vw; max-width: 56px; min-width: 32px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 50%),
+        linear-gradient(135deg, #3a3a3e, #16161a);
+      border: 2px solid #0a0a0c;
+      box-shadow:
+        inset 0 0 8px rgba(0,0,0,.7),
+        0 2px 6px rgba(0,0,0,.4);
+    }
+    .tv-knob::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 18%;
+      transform: translateX(-50%);
+      width: 8%; height: 28%;
+      background: linear-gradient(180deg, #d8b550, #6a4f1a);
+      border-radius: 1px;
+    }
+    .tv-knob.tv-knob-top { top: 7vh; }
+    .tv-knob.tv-knob-bot { top: 16vh; }
+
+    /* LED de power */
+    .tv-led {
+      position: absolute;
+      right: 2.6vw;
+      bottom: 3vh;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: #ff3344;
-      box-shadow: 0 0 8px #ff3344, inset 0 0 2px rgba(255,255,255,.4);
+      box-shadow: 0 0 10px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
     }
-    /* Marca chica del fabricante en el bezel inferior izquierdo */
-    .tv-cabinet::before {
-      content: 'LUNES TV';
+    .tv-led-label {
       position: absolute;
-      bottom: .35vh; left: 1.4vw;
-      color: rgba(255,255,255,.18);
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(.55rem, .9vw, .85rem);
-      letter-spacing: .35em;
+      right: 1.2vw;
+      bottom: 1.6vh;
+      color: rgba(255,255,255,.35);
+      font-size: clamp(.5rem, .8vw, .8rem);
+      letter-spacing: .2em;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
     }
+
     .tv-screen {
       width: 100%; height: 100%;
       background: var(--bg);
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       position: relative;
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.03),
-        inset 0 0 60px rgba(0,0,0,.7);
+        inset 0 0 0 2px rgba(255,255,255,.04),
+        inset 0 0 80px rgba(0,0,0,.8),
+        0 0 0 6px #050507;        /* "vidrio" oscuro alrededor del CRT */
     }
-    /* Highlight diagonal sutil simulando reflejo de pantalla */
+    /* Highlight diagonal sutil simulando reflejo de pantalla CRT */
     .tv-screen::before {
       content: '';
       position: absolute; inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 12% 8%, rgba(255,255,255,.04) 0%, transparent 28%),
+        radial-gradient(circle at 12% 8%, rgba(255,255,255,.05) 0%, transparent 30%),
         radial-gradient(circle at 88% 92%, rgba(255,255,255,.025) 0%, transparent 35%);
       z-index: 1;
+    }
+    /* Scanlines tenues para look CRT */
+    .tv-screen::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,0,0,.08) 2px,
+        rgba(0,0,0,.08) 3px
+      );
+      z-index: 1;
+      opacity: .35;
+    }
+
+    /* Layout reducido: en celular el bezel se hace más fino */
+    @media (max-width: 700px) {
+      .tv-cabinet {
+        padding: 3vh 4vw 5vh 4vw;
+        border-radius: 14px;
+      }
+      .tv-antennae { display: none; }
+      .tv-speaker { width: 12vw; height: 3vh; }
+      .tv-knob { width: 5vw; min-width: 24px; }
+      .tv-knob.tv-knob-top { top: 4vh; }
+      .tv-knob.tv-knob-bot { top: 9vh; }
+      .tv-brand-plate { font-size: .55rem; left: 3vw; }
     }
 
     /* ---- Layout principal ---- */
@@ -300,6 +438,15 @@
 
 <!-- Marco "TV antigua HD". Todo el contenido vive dentro del .tv-screen. -->
 <div class="tv-cabinet">
+  <!-- Detalles vintage decorativos: antenas, perillas, parrilla, marca, LED -->
+  <div class="tv-antennae" aria-hidden="true"><div class="tv-antennae-base"></div></div>
+  <div class="tv-knob tv-knob-top" aria-hidden="true"></div>
+  <div class="tv-knob tv-knob-bot" aria-hidden="true"></div>
+  <div class="tv-led" aria-hidden="true"></div>
+  <span class="tv-led-label" aria-hidden="true">PWR</span>
+  <div class="tv-speaker" aria-hidden="true"></div>
+  <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>CRT-1985</small></div>
+
   <div class="tv-screen">
 
     <div class="tv" id="tvRoot">
@@ -621,38 +768,75 @@
     requestAnimationFrame(() => requestAnimationFrame(autoFitTables));
   }
 
-  // Mide cada panel y reduce el font-size del tbody si las filas no entran
-  // todas en el alto disponible. Además ajusta el tamaño de los avatares.
+  // Mide cada panel y reduce el font-size del tbody + padding de los td
+  // si las filas no entran todas en el alto disponible. Si tras un ajuste
+  // sigue habiendo overflow, repite hasta convergir (máx 4 iteraciones).
   function autoFitTables() {
     document.querySelectorAll('.tv-panel').forEach(panel => {
       const tbody = panel.querySelector('tbody');
       if (!tbody) return;
       const rows = tbody.querySelectorAll('tr').length;
       if (!rows) return;
-      // Reset al default antes de medir
+      // Reset
       tbody.style.fontSize = '';
-      const tbodyRect = tbody.getBoundingClientRect();
-      const panelRect = panel.getBoundingClientRect();
-      const header = panel.querySelector('thead');
-      const h2 = panel.querySelector('h2');
-      const usedAbove = (header ? header.getBoundingClientRect().height : 0)
-                     + (h2 ? h2.getBoundingClientRect().height + parseFloat(getComputedStyle(h2).marginBottom || 0) : 0);
-      const padTop = parseFloat(getComputedStyle(panel).paddingTop || 0);
-      const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
-      const availableForBody = panelRect.height - usedAbove - padTop - padBot;
-      const targetRowHeight = availableForBody / rows;
-      // El font ocupa ~50% de la altura de fila (resto: padding del td).
-      // Lo clampeo entre 11px y 36px para no desproporcionar.
-      const fontPx = Math.max(11, Math.min(36, Math.floor(targetRowHeight * 0.42)));
-      tbody.style.fontSize = fontPx + 'px';
-      // Avatares ~1.6× el font
+      panel.querySelectorAll('tbody td').forEach(td => {
+        td.style.paddingTop = ''; td.style.paddingBottom = '';
+      });
       panel.querySelectorAll('tbody .tv-player img').forEach(img => {
-        const sz = Math.max(28, Math.round(fontPx * 1.6));
+        img.style.width = ''; img.style.height = '';
+        img.style.minWidth = ''; img.style.minHeight = '';
+      });
+
+      // Disponible para tbody: bottom del panel menos top real del tbody
+      // menos padding-bottom del panel. Esto contempla h2, thead y padding.
+      const panelBox = panel.getBoundingClientRect();
+      const tbodyTop = tbody.getBoundingClientRect().top;
+      const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
+      const availableForBody = panelBox.bottom - tbodyTop - padBot - 4;
+      if (availableForBody <= 0) return;
+
+      const targetRowHeight = availableForBody / rows;
+      // font ~42% del row_height, padding vertical ~18% por lado.
+      const fontPx = Math.max(10, Math.min(36, Math.floor(targetRowHeight * 0.42)));
+      const padPx = Math.max(1, Math.floor(targetRowHeight * 0.18));
+
+      tbody.style.fontSize = fontPx + 'px';
+      panel.querySelectorAll('tbody td').forEach(td => {
+        td.style.paddingTop = padPx + 'px';
+        td.style.paddingBottom = padPx + 'px';
+      });
+      panel.querySelectorAll('tbody .tv-player img').forEach(img => {
+        const sz = Math.max(18, Math.round(fontPx * 1.4));
         img.style.width = sz + 'px';
         img.style.height = sz + 'px';
         img.style.minWidth = sz + 'px';
         img.style.minHeight = sz + 'px';
       });
+
+      // Segunda pasada: si el contenido sigue overflowing (porque alguna
+      // celda con texto largo no se redujo bien), reducimos un poco más.
+      const lastRow = tbody.lastElementChild;
+      if (lastRow) {
+        const lastBottom = lastRow.getBoundingClientRect().bottom;
+        const overflow = lastBottom - (panelBox.bottom - padBot);
+        if (overflow > 1) {
+          const factor = Math.max(0.6, (availableForBody - overflow) / availableForBody);
+          const newFont = Math.max(9, Math.floor(fontPx * factor));
+          const newPad = Math.max(0, Math.floor(padPx * factor));
+          tbody.style.fontSize = newFont + 'px';
+          panel.querySelectorAll('tbody td').forEach(td => {
+            td.style.paddingTop = newPad + 'px';
+            td.style.paddingBottom = newPad + 'px';
+          });
+          panel.querySelectorAll('tbody .tv-player img').forEach(img => {
+            const sz = Math.max(16, Math.round(newFont * 1.4));
+            img.style.width = sz + 'px';
+            img.style.height = sz + 'px';
+            img.style.minWidth = sz + 'px';
+            img.style.minHeight = sz + 'px';
+          });
+        }
+      }
     });
   }
   window.addEventListener('resize', () => {
@@ -711,62 +895,141 @@
   (function setupCast() {
     const btn = document.getElementById('castBtn');
     if (!btn) return;
-    const supported = typeof window.PresentationRequest === 'function';
-    let request = null;
-    let session = null;
+    btn.hidden = false;  // siempre visible: el modal explica cómo castear si la API falla
 
-    if (supported) {
-      try {
-        request = new PresentationRequest([location.href]);
-        // Disparamos disponibilidad: `value` es true cuando hay al menos
-        // 1 receiver descubierto (Chromecast prendido en la red, etc.).
-        request.getAvailability().then(avail => {
-          btn.hidden = false;
-          btn.disabled = !avail.value;
-          avail.addEventListener('change', () => {
-            btn.disabled = !avail.value;
-          });
-        }).catch(err => {
-          // getAvailability puede fallar si la API existe pero el permiso
-          // está restringido (no-https iframes, etc). Mostramos el botón
-          // igual y dejamos que el click intente.
-          btn.hidden = false;
-        });
-      } catch (e) {
-        console.warn('[cast] PresentationRequest no disponible:', e);
-        btn.hidden = false;  // mostramos igual con fallback al click
-      }
-    } else {
-      // Mostramos el botón y al click damos instrucciones manuales.
-      btn.hidden = false;
+    // Detectar device para mostrar la instrucción correcta arriba del modal.
+    const ua = navigator.userAgent || '';
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    const isAndroid = /Android/i.test(ua);
+    const isFirefox = /Firefox\//.test(ua);
+    const isMobile = isIOS || isAndroid || /Mobi/.test(ua);
+
+    // PresentationRequest sólo dispara el selector nativo de Chromecast en
+    // Chrome desktop. En Android Chrome el método existe pero rara vez
+    // muestra UI: el "Cast tab" se hace siempre desde el menú del browser.
+    // Por eso lo intentamos sólo como bonus.
+    let request = null;
+    if (typeof window.PresentationRequest === 'function') {
+      try { request = new PresentationRequest([location.href]); }
+      catch (e) { /* ignorar */ }
     }
 
-    btn.addEventListener('click', () => {
-      if (request) {
+    function deviceTip() {
+      if (isIOS) {
+        return {
+          title: '🍎 iPhone / iPad',
+          steps: [
+            'Deslizá desde la esquina superior derecha → abrí el <b>Centro de Control</b>.',
+            'Tocá <b>Duplicar pantalla</b> (⊟).',
+            'Elegí tu <b>Apple TV</b> o <b>Chromecast con AirPlay</b> en la lista.',
+            'La pestaña con <code>tv.html</code> aparece en la TV. Volvé a esta pestaña en el cel.'
+          ]
+        };
+      }
+      if (isAndroid) {
+        return {
+          title: '🤖 Android / Chrome',
+          steps: [
+            'Tocá el menú <b>⋮</b> (tres puntos) arriba a la derecha en Chrome.',
+            'Tocá <b>Transmitir...</b> (Cast).',
+            'Elegí tu <b>Chromecast</b> y luego <b>"Transmitir pestaña"</b>.',
+            'La pestaña actual aparece en la TV en vivo.'
+          ]
+        };
+      }
+      if (isFirefox) {
+        return {
+          title: '🦊 Firefox',
+          steps: [
+            'Firefox no soporta cast nativo en esta computadora.',
+            'Probá desde Chrome o Edge en la misma compu.',
+            'O conectá la laptop por <b>HDMI</b> a la TV y poné esta pestaña en pantalla completa (F11).'
+          ]
+        };
+      }
+      return {
+        title: '💻 Chrome / Edge en escritorio',
+        steps: [
+          'Click en el menú <b>⋮</b> → <b>Transmitir...</b> (Cast).',
+          'Elegí tu Chromecast y al lado de "Fuentes" seleccioná <b>Pestaña</b>.',
+          'La pestaña actual se proyecta en la TV en vivo.'
+        ]
+      };
+    }
+
+    function openCastModal() {
+      // Si la API estuviera disponible, intentamos primero. Si falla con
+      // NotFoundError o el user cancela, mostramos el modal igual.
+      if (request && typeof request.start === 'function') {
         request.start().then(s => {
-          session = s;
           btn.classList.add('casting');
           btn.lastElementChild.textContent = 'Casteando';
           s.addEventListener('terminate', () => {
-            session = null;
             btn.classList.remove('casting');
             btn.lastElementChild.textContent = 'Castear';
           });
         }).catch(err => {
-          // El usuario canceló o no hay receivers. AbortError es benigno.
-          if (err && err.name === 'NotFoundError') {
-            alert('No hay dispositivos disponibles. Asegurate de que el Chromecast/AppleTV esté en la misma red Wi-Fi.');
-          } else if (err && err.name !== 'AbortError') {
-            alert('No se pudo iniciar el cast.\n\nProbá desde el menú del navegador → "Transmitir" / "Cast".');
-          }
+          if (err && err.name === 'AbortError') return;  // user canceló — silencioso
+          showInstructionsModal();
         });
       } else {
-        // Browser sin Presentation API: explicamos cómo castear manual.
-        alert('Tu navegador no expone el botón Cast.\n\n' +
-          'En Chrome (Android/PC): menú (⋮) → "Transmitir" → "Transmitir pestaña".\n' +
-          'En iPhone: Centro de Control → Replicación → AirPlay al Apple TV.');
+        showInstructionsModal();
       }
-    });
+    }
+
+    function showInstructionsModal() {
+      const tip = deviceTip();
+      // El modal vive directo en body con position: fixed; se borra al cerrar.
+      const wrap = document.createElement('div');
+      wrap.id = 'castInstrModal';
+      wrap.innerHTML = ''
+        + '<style>'
+        + '#castInstrModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);'
+        + 'display:flex;align-items:center;justify-content:center;padding:1rem;'
+        + 'font-family:Inter,-apple-system,sans-serif;color:#f0f0f5;}'
+        + '#castInstrModal .ci-card{background:#1a1a2e;border:2px solid #FFDE00;'
+        + 'border-radius:18px;max-width:520px;width:100%;padding:1.5rem 1.5rem 1rem;'
+        + 'box-shadow:0 20px 60px rgba(0,0,0,.6);}'
+        + '#castInstrModal h3{font-family:"Fredoka One",cursive;color:#FFDE00;'
+        + 'font-size:1.3rem;margin:0 0 .25rem 0;}'
+        + '#castInstrModal .ci-sub{color:#8888a8;font-size:.85rem;margin-bottom:1rem;}'
+        + '#castInstrModal ol{margin:0 0 1rem 0;padding-left:1.4rem;line-height:1.6;font-size:.95rem;}'
+        + '#castInstrModal ol li{margin:.4rem 0;}'
+        + '#castInstrModal code{background:#0d0d12;padding:.1rem .4rem;border-radius:4px;'
+        + 'font-size:.85em;color:#FFDE00;}'
+        + '#castInstrModal .ci-url{display:flex;gap:.5rem;background:#0d0d12;padding:.6rem .75rem;'
+        + 'border:1px solid #3a3a5c;border-radius:10px;font-size:.8rem;color:#8888a8;margin-bottom:1rem;'
+        + 'word-break:break-all;align-items:center;}'
+        + '#castInstrModal .ci-url code{background:transparent;color:#f0f0f5;padding:0;flex:1;}'
+        + '#castInstrModal .ci-url button{background:#FFDE00;color:#1a1a1a;border:none;padding:.35rem .7rem;'
+        + 'border-radius:6px;font-weight:700;cursor:pointer;font-size:.75rem;flex-shrink:0;}'
+        + '#castInstrModal .ci-actions{display:flex;justify-content:flex-end;gap:.5rem;margin-top:1rem;}'
+        + '#castInstrModal .ci-actions button{background:#FFDE00;color:#1a1a1a;border:none;padding:.55rem 1.2rem;'
+        + 'border-radius:999px;font-weight:700;cursor:pointer;}'
+        + '#castInstrModal .ci-actions button.ghost{background:transparent;color:#8888a8;border:1px solid #3a3a5c;}'
+        + '</style>'
+        + '<div class="ci-card" role="dialog" aria-labelledby="ci-title">'
+        +   '<h3 id="ci-title">📡 ' + tip.title + '</h3>'
+        +   '<div class="ci-sub">Cómo proyectar esta pantalla en la TV</div>'
+        +   '<div class="ci-url"><code>' + location.href + '</code><button id="ciCopy">Copiar</button></div>'
+        +   '<ol>' + tip.steps.map(s => '<li>' + s + '</li>').join('') + '</ol>'
+        +   '<div class="ci-actions"><button class="ghost" id="ciClose">Listo</button></div>'
+        + '</div>';
+      document.body.appendChild(wrap);
+      wrap.addEventListener('click', e => { if (e.target === wrap) wrap.remove(); });
+      wrap.querySelector('#ciClose').addEventListener('click', () => wrap.remove());
+      wrap.querySelector('#ciCopy').addEventListener('click', () => {
+        try {
+          navigator.clipboard.writeText(location.href).then(() => {
+            wrap.querySelector('#ciCopy').textContent = '✓';
+          });
+        } catch (e) {
+          wrap.querySelector('#ciCopy').textContent = '✓';
+        }
+      });
+    }
+
+    btn.addEventListener('click', openCastModal);
   })();
 
   // Boot
