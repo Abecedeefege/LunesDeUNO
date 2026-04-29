@@ -45,23 +45,23 @@
       position: relative;
       width: 98vw; height: 96vh;
       margin: 2vh auto;
-      padding: 13vh 16vw 15vh 13vw;       /* ~2× el padding de tv.html para alojar stickers en el bezel */
+      padding: 6.5vh 8vw 7.5vh 6.5vw;     /* 1/2 del padding original — más slim, deja franja para stickers */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
-      border-radius: 32px;
+      border-radius: 28px;
       border: 1px solid rgba(255,255,255,.08);
       box-shadow:
-        0 0 0 5px #0a0a0c,
-        0 28px 80px rgba(0,0,0,.7),
-        inset 0 6px 24px rgba(255,255,255,.06),
-        inset 0 -6px 24px rgba(0,0,0,.65);
+        0 0 0 4px #0a0a0c,
+        0 24px 64px rgba(0,0,0,.7),
+        inset 0 4px 16px rgba(255,255,255,.05),
+        inset 0 -4px 16px rgba(0,0,0,.6);
     }
     /* Antenas saliendo de arriba (rabbit ears) */
     .tv-antennae {
       position: absolute;
-      left: 0; right: 0; top: -7vh;
-      height: 7vh;
+      left: 0; right: 0; top: -5vh;
+      height: 5vh;
       pointer-events: none;
       z-index: 1;
     }
@@ -70,42 +70,43 @@
       content: '';
       position: absolute;
       bottom: 0;
-      width: 3px;
-      height: 7vh;
+      width: 2px;
+      height: 5vh;
       background: linear-gradient(180deg, #d8d8d8, #777);
       border-radius: 2px;
       transform-origin: bottom center;
       box-shadow: 0 0 4px rgba(0,0,0,.5);
     }
     .tv-antennae::before {
-      left: calc(50% - 3vw);
+      left: calc(50% - 2.5vw);
       transform: rotate(-22deg);
     }
     .tv-antennae::after {
-      left: calc(50% + 3vw);
+      left: calc(50% + 2.5vw);
       transform: rotate(22deg);
     }
     .tv-antennae-base {
       position: absolute;
       left: 50%; bottom: 0;
       transform: translateX(-50%);
-      width: 7vw; height: 1.2vh;
+      width: 5vw; height: 1vh;
       background: linear-gradient(180deg, #3a3a3e, #1a1a1c);
-      border-radius: 6px 6px 0 0;
+      border-radius: 5px 5px 0 0;
     }
 
-    /* Marca del frente — vintage placa dorada (igual a tv.html) */
+    /* Marca del frente — vintage placa dorada */
     .tv-brand-plate {
       position: absolute;
-      bottom: 1.6vh; left: 5vw;
+      bottom: .9vh; left: 2.4vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.7rem, 1.3vw, 1.2rem);
-      letter-spacing: .35em;
+      font-size: clamp(.6rem, 1vw, 1rem);
+      letter-spacing: .3em;
       color: #d8b550;
       text-shadow:
         0 1px 0 #6a4f1a,
         0 -1px 0 rgba(255,255,255,.18);
       pointer-events: none;
+      line-height: 1.05;
     }
     .tv-brand-plate small {
       display: block;
@@ -114,15 +115,15 @@
       font-size: .55em;
       letter-spacing: .25em;
       color: rgba(216,181,80,.6);
-      margin-top: .2vh;
+      margin-top: .15vh;
     }
 
     /* Parrilla horizontal del altavoz — vintage CRT */
     .tv-speaker {
       position: absolute;
-      bottom: 1.6vh; right: 6vw;
-      width: 18vw; max-width: 280px;
-      height: 4.5vh; min-height: 30px;
+      bottom: 1vh; right: 11vw;
+      width: 13vw; max-width: 220px;
+      height: 3.2vh; min-height: 22px;
       background:
         repeating-linear-gradient(
           to bottom,
@@ -139,8 +140,8 @@
     /* Perilla de volumen / canal a la derecha — vintage CRT */
     .tv-knob {
       position: absolute;
-      right: 1.5vw;
-      width: 4vw; max-width: 56px; min-width: 32px;
+      right: .8vw;
+      width: 3.4vw; max-width: 44px; min-width: 24px;
       aspect-ratio: 1;
       border-radius: 50%;
       background:
@@ -148,8 +149,8 @@
         linear-gradient(135deg, #3a3a3e, #16161a);
       border: 2px solid #0a0a0c;
       box-shadow:
-        inset 0 0 8px rgba(0,0,0,.7),
-        0 2px 6px rgba(0,0,0,.4);
+        inset 0 0 6px rgba(0,0,0,.7),
+        0 2px 4px rgba(0,0,0,.4);
     }
     .tv-knob::before {
       content: '';
@@ -160,25 +161,25 @@
       background: linear-gradient(180deg, #d8b550, #6a4f1a);
       border-radius: 1px;
     }
-    .tv-knob.tv-knob-top { top: 7vh; }
-    .tv-knob.tv-knob-bot { top: 16vh; }
+    .tv-knob.tv-knob-top { top: 9vh; }
+    .tv-knob.tv-knob-bot { top: 14vh; }
 
     /* LED de power */
     .tv-led {
       position: absolute;
-      right: 2.6vw;
-      bottom: 3vh;
-      width: 8px; height: 8px;
+      right: 2.2vw;
+      bottom: 2vh;
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: #ff3344;
-      box-shadow: 0 0 10px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
+      box-shadow: 0 0 8px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
     }
     .tv-led-label {
       position: absolute;
-      right: 1.2vw;
-      bottom: 1.6vh;
+      right: 1vw;
+      bottom: 1vh;
       color: rgba(255,255,255,.35);
-      font-size: clamp(.5rem, .8vw, .8rem);
+      font-size: clamp(.45rem, .7vw, .7rem);
       letter-spacing: .2em;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
@@ -221,20 +222,20 @@
       opacity: .35;
     }
 
-    /* Layout reducido: en celular el bezel se hace más fino */
+    /* Layout reducido: en celular el bezel sigue dejando un poco de franja para stickers */
     @media (max-width: 700px) {
       .tv-cabinet {
-        padding: 3vh 5vw 5vh 5vw;
-        border-radius: 18px;
-        border-width: 3px;
+        padding: 2vh 3vw 3vh 2vw;
+        border-radius: 14px;
       }
       .tv-antennae { display: none; }
-      .tv-speaker { width: 14vw; height: 3vh; }
-      .tv-knob { width: 6vw; min-width: 26px; }
-      .tv-knob.tv-knob-top { top: 4vh; }
-      .tv-knob.tv-knob-bot { top: 9vh; }
-      .tv-brand-plate { font-size: .65rem; left: 3vw; }
-      .tv90-sticker { font-size: .85rem !important; padding: .3rem .55rem !important; }
+      .tv-speaker { width: 9vw; height: 2vh; right: 6vw; }
+      .tv-knob { width: 4vw; min-width: 18px; right: .4vw; }
+      .tv-knob.tv-knob-top { top: 3vh; }
+      .tv-knob.tv-knob-bot { top: 6.4vh; }
+      .tv-brand-plate { font-size: .5rem; left: 1.5vw; }
+      .tv-led { right: 1.4vw; bottom: 1vh; }
+      .tv-led-label { display: none; }
     }
 
     /* ---- Stickers pegados al bezel (look papel pegado) ---- */
@@ -248,13 +249,13 @@
     .tv90-sticker {
       position: absolute;
       z-index: 5;
-      width: clamp(60px, 8vw, 120px);
-      padding: 5px;
+      width: clamp(44px, 5vw, 78px);          /* tamaño chico — el bezel es slim */
+      padding: 4px;
       background: #fff;
       border-radius: 14px 6px 18px 8px;       /* esquinas levemente irregulares */
       box-shadow:
         0 2px 0 rgba(0,0,0,.22),
-        0 10px 22px rgba(0,0,0,.55),
+        0 8px 18px rgba(0,0,0,.55),
         inset 0 -2px 0 rgba(0,0,0,.06);
       transform-origin: center;
       pointer-events: none;
@@ -273,29 +274,30 @@
       content: '';
       position: absolute;
       bottom: -3px; right: -3px;
-      width: 14px; height: 14px;
+      width: 12px; height: 12px;
       background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.35) 50%);
       border-radius: 0 0 8px 0;
       pointer-events: none;
     }
 
-    /* 12 slots de posición sobre el bezel (relativos al .tv-cabinet).
-       Pensados para no tapar antenas, perillas, parrilla, marca ni LED. */
-    .tv90-st-1  { top:  1.2vh;  left:  1.2vw; transform: rotate(-9deg); }
-    .tv90-st-2  { top:  1.6vh;  left: 22vw;   transform: rotate(7deg); }
-    .tv90-st-3  { top:  2vh;    right: 22vw;  transform: rotate(-5deg); }
-    .tv90-st-4  { top:  1.2vh;  right: 1.2vw; transform: rotate(11deg); }
-    .tv90-st-5  { top: 28vh;    left:  .6vw;  transform: rotate(-12deg); }
-    .tv90-st-6  { top: 30vh;    right: .6vw;  transform: rotate(8deg); }
-    .tv90-st-7  { top: 58vh;    left:  .8vw;  transform: rotate(6deg); }
-    .tv90-st-8  { top: 60vh;    right: .8vw;  transform: rotate(-4deg); }
-    .tv90-st-9  { bottom: 9vh;  left:  1vw;   transform: rotate(-7deg); }
-    .tv90-st-10 { bottom: 9.5vh; left: 28vw;  transform: rotate(10deg); }
-    .tv90-st-11 { bottom: 9vh;  right: 28vw;  transform: rotate(-9deg); }
-    .tv90-st-12 { bottom: 9vh;  right: 1vw;   transform: rotate(5deg); }
+    /* 12 slots de posición sobre el bezel slim. Algunas posiciones rozan el
+       borde del .tv-screen — eso es a propósito, queda como sticker pegado
+       que se monta sobre el vidrio (look auténtico de TV con stickers). */
+    .tv90-st-1  { top: -.4vh;  left:  1vw;  transform: rotate(-9deg); }
+    .tv90-st-2  { top: -.2vh;  left: 26vw;  transform: rotate(7deg); }
+    .tv90-st-3  { top: -.6vh;  right:26vw;  transform: rotate(-5deg); }
+    .tv90-st-4  { top: -.3vh;  right: 1vw;  transform: rotate(11deg); }
+    .tv90-st-5  { top: 30vh;   left: .4vw;  transform: rotate(-12deg); }
+    .tv90-st-6  { top: 32vh;   right: .8vw; transform: rotate(8deg); }
+    .tv90-st-7  { top: 60vh;   left: .6vw;  transform: rotate(6deg); }
+    .tv90-st-8  { top: 62vh;   right: .6vw; transform: rotate(-4deg); }
+    .tv90-st-9  { bottom: 5.5vh; left:  1.5vw; transform: rotate(-7deg); }
+    .tv90-st-10 { bottom: 5.5vh; left: 26vw;   transform: rotate(10deg); }
+    .tv90-st-11 { bottom: 5.5vh; right:26vw;   transform: rotate(-9deg); }
+    .tv90-st-12 { bottom: 5.5vh; right: 1vw;   transform: rotate(5deg); }
 
     @media (max-width: 700px) {
-      .tv90-sticker { width: clamp(44px, 13vw, 70px); padding: 3px; }
+      .tv90-sticker { width: clamp(36px, 11vw, 60px); padding: 3px; }
       /* En celulares mantenemos sólo las 4 esquinas + 4 laterales para no saturar */
       .tv90-st-2, .tv90-st-3, .tv90-st-10, .tv90-st-11 { display: none; }
     }
@@ -389,8 +391,8 @@
     }
     .tv-panel h2 {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.2rem, 2.4vw, 2.2rem);
-      margin: 0 0 1.2vh 0;
+      font-size: clamp(1.5rem, 3vw, 3rem);
+      margin: 0 0 1vh 0;
       color: var(--uno-yellow);
       letter-spacing: .04em;
     }
@@ -398,7 +400,7 @@
       color: var(--text-muted);
       font-family: 'Inter', sans-serif;
       font-weight: 500;
-      font-size: .55em;
+      font-size: .5em;
       margin-left: .8vw;
       letter-spacing: 0;
     }
@@ -407,18 +409,18 @@
     .tv-table {
       width: 100%;
       border-collapse: separate; border-spacing: 0;
-      font-size: clamp(.85rem, 1.6vw, 1.6rem);
+      font-size: clamp(1.1rem, 2.2vw, 2.4rem);
       flex: 1; min-height: 0;
       table-layout: fixed;
     }
     .tv-table th {
       text-align: left;
       color: var(--text-muted);
-      font-size: clamp(.65rem, 1vw, 1rem);
+      font-size: clamp(.8rem, 1.3vw, 1.4rem);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .12em;
-      padding: .6vh .8vw;
+      padding: .5vh .8vw;
       border-bottom: 2px solid var(--border);
     }
     .tv-table td {
@@ -871,8 +873,10 @@
       if (availableForBody <= 0) return;
 
       const targetRowHeight = availableForBody / rows;
-      // font ~42% del row_height, padding vertical ~18% por lado.
-      const fontPx = Math.max(10, Math.min(36, Math.floor(targetRowHeight * 0.42)));
+      // font ~42% del row_height, padding vertical ~18% por lado. Cap subido a
+      // 56 px (un poco menor que tv.html porque el bezel es algo más grueso
+      // por los stickers).
+      const fontPx = Math.max(10, Math.min(56, Math.floor(targetRowHeight * 0.42)));
       const padPx = Math.max(1, Math.floor(targetRowHeight * 0.18));
 
       tbody.style.fontSize = fontPx + 'px';

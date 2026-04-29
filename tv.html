@@ -42,23 +42,23 @@
       position: relative;
       width: 98vw; height: 96vh;
       margin: 2vh auto;
-      padding: 7vh 11vw 11vh 7vw;       /* bezel un poco más grueso para destacar la TV vintage */
+      padding: 2.4vh 4vw 4vh 2.4vw;     /* bezel slim: la pantalla ocupa ~92% × ~90% del viewport */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
-      border-radius: 32px;
+      border-radius: 22px;
       border: 1px solid rgba(255,255,255,.08);
       box-shadow:
-        0 0 0 5px #0a0a0c,
-        0 28px 80px rgba(0,0,0,.7),
-        inset 0 6px 24px rgba(255,255,255,.06),
-        inset 0 -6px 24px rgba(0,0,0,.65);
+        0 0 0 4px #0a0a0c,
+        0 24px 64px rgba(0,0,0,.7),
+        inset 0 4px 16px rgba(255,255,255,.05),
+        inset 0 -4px 16px rgba(0,0,0,.6);
     }
-    /* Antenas saliendo de arriba (rabbit ears) */
+    /* Antenas saliendo de arriba (rabbit ears) — más chicas para el bezel slim */
     .tv-antennae {
       position: absolute;
-      left: 0; right: 0; top: -7vh;
-      height: 7vh;
+      left: 0; right: 0; top: -4vh;
+      height: 4vh;
       pointer-events: none;
       z-index: 1;
     }
@@ -67,59 +67,60 @@
       content: '';
       position: absolute;
       bottom: 0;
-      width: 3px;
-      height: 7vh;
+      width: 2px;
+      height: 4vh;
       background: linear-gradient(180deg, #d8d8d8, #777);
       border-radius: 2px;
       transform-origin: bottom center;
       box-shadow: 0 0 4px rgba(0,0,0,.5);
     }
     .tv-antennae::before {
-      left: calc(50% - 3vw);
+      left: calc(50% - 2vw);
       transform: rotate(-22deg);
     }
     .tv-antennae::after {
-      left: calc(50% + 3vw);
+      left: calc(50% + 2vw);
       transform: rotate(22deg);
     }
     .tv-antennae-base {
       position: absolute;
       left: 50%; bottom: 0;
       transform: translateX(-50%);
-      width: 7vw; height: 1.2vh;
+      width: 5vw; height: .8vh;
       background: linear-gradient(180deg, #3a3a3e, #1a1a1c);
-      border-radius: 6px 6px 0 0;
+      border-radius: 4px 4px 0 0;
     }
 
-    /* Marca del frente */
+    /* Marca del frente — chiquita en el bezel slim */
     .tv-brand-plate {
       position: absolute;
-      bottom: 1.6vh; left: 5vw;
+      bottom: .5vh; left: 1.5vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.7rem, 1.3vw, 1.2rem);
-      letter-spacing: .35em;
-      color: #d8b550;       /* dorado tipo placa metálica */
+      font-size: clamp(.55rem, .9vw, .85rem);
+      letter-spacing: .25em;
+      color: #d8b550;
       text-shadow:
         0 1px 0 #6a4f1a,
         0 -1px 0 rgba(255,255,255,.18);
       pointer-events: none;
+      line-height: 1.05;
     }
     .tv-brand-plate small {
       display: block;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: .55em;
-      letter-spacing: .25em;
+      letter-spacing: .2em;
       color: rgba(216,181,80,.6);
-      margin-top: .2vh;
+      margin-top: .1vh;
     }
 
-    /* Parrilla horizontal del altavoz (rectángulo con stripes) */
+    /* Parrilla horizontal del altavoz — chiquita en el bezel slim */
     .tv-speaker {
       position: absolute;
-      bottom: 1.6vh; right: 6vw;
-      width: 18vw; max-width: 280px;
-      height: 4.5vh; min-height: 30px;
+      bottom: .6vh; right: 7vw;
+      width: 10vw; max-width: 160px;
+      height: 2.4vh; min-height: 16px;
       background:
         repeating-linear-gradient(
           to bottom,
@@ -129,24 +130,24 @@
           rgba(255,255,255,.04) 4px
         );
       border: 1px solid rgba(255,255,255,.06);
-      border-radius: 4px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+      border-radius: 3px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,.6);
     }
 
-    /* Perilla de volumen / canal a la derecha */
+    /* Perilla de volumen / canal a la derecha — chiquita y pegada al borde */
     .tv-knob {
       position: absolute;
-      right: 1.5vw;
-      width: 4vw; max-width: 56px; min-width: 32px;
+      right: .35vw;
+      width: 2vw; max-width: 26px; min-width: 16px;
       aspect-ratio: 1;
       border-radius: 50%;
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 50%),
         linear-gradient(135deg, #3a3a3e, #16161a);
-      border: 2px solid #0a0a0c;
+      border: 1px solid #0a0a0c;
       box-shadow:
-        inset 0 0 8px rgba(0,0,0,.7),
-        0 2px 6px rgba(0,0,0,.4);
+        inset 0 0 4px rgba(0,0,0,.7),
+        0 1px 3px rgba(0,0,0,.4);
     }
     .tv-knob::before {
       content: '';
@@ -157,25 +158,25 @@
       background: linear-gradient(180deg, #d8b550, #6a4f1a);
       border-radius: 1px;
     }
-    .tv-knob.tv-knob-top { top: 7vh; }
-    .tv-knob.tv-knob-bot { top: 16vh; }
+    .tv-knob.tv-knob-top { top: 3.5vh; }
+    .tv-knob.tv-knob-bot { top: 7.2vh; }
 
-    /* LED de power */
+    /* LED de power — junto al speaker en el bezel inferior */
     .tv-led {
       position: absolute;
-      right: 2.6vw;
-      bottom: 3vh;
-      width: 8px; height: 8px;
+      right: 2.4vw;
+      bottom: 1.4vh;
+      width: 6px; height: 6px;
       border-radius: 50%;
       background: #ff3344;
-      box-shadow: 0 0 10px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
+      box-shadow: 0 0 8px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
     }
     .tv-led-label {
       position: absolute;
-      right: 1.2vw;
-      bottom: 1.6vh;
+      right: .9vw;
+      bottom: .8vh;
       color: rgba(255,255,255,.35);
-      font-size: clamp(.5rem, .8vw, .8rem);
+      font-size: clamp(.45rem, .7vw, .7rem);
       letter-spacing: .2em;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
@@ -218,18 +219,20 @@
       opacity: .35;
     }
 
-    /* Layout reducido: en celular el bezel se hace más fino */
+    /* Layout reducido: en celular el bezel se hace todavía más fino */
     @media (max-width: 700px) {
       .tv-cabinet {
-        padding: 3vh 4vw 5vh 4vw;
-        border-radius: 14px;
+        padding: 1vh 1.5vw 1.7vh 1vw;
+        border-radius: 10px;
       }
       .tv-antennae { display: none; }
-      .tv-speaker { width: 12vw; height: 3vh; }
-      .tv-knob { width: 5vw; min-width: 24px; }
-      .tv-knob.tv-knob-top { top: 4vh; }
-      .tv-knob.tv-knob-bot { top: 9vh; }
-      .tv-brand-plate { font-size: .55rem; left: 3vw; }
+      .tv-speaker { width: 8vw; height: 1.6vh; right: 4vw; }
+      .tv-knob { width: 2.6vw; min-width: 14px; right: .2vw; }
+      .tv-knob.tv-knob-top { top: 1.5vh; }
+      .tv-knob.tv-knob-bot { top: 3.4vh; }
+      .tv-brand-plate { font-size: .5rem; left: 1vw; }
+      .tv-led { right: 1.2vw; bottom: .6vh; }
+      .tv-led-label { display: none; }
     }
 
     /* ---- Layout principal ---- */
@@ -321,8 +324,8 @@
     }
     .tv-panel h2 {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.2rem, 2.4vw, 2.2rem);
-      margin: 0 0 1.2vh 0;
+      font-size: clamp(1.6rem, 3.2vw, 3.4rem);
+      margin: 0 0 1vh 0;
       color: var(--uno-yellow);
       letter-spacing: .04em;
     }
@@ -330,7 +333,7 @@
       color: var(--text-muted);
       font-family: 'Inter', sans-serif;
       font-weight: 500;
-      font-size: .55em;
+      font-size: .5em;
       margin-left: .8vw;
       letter-spacing: 0;
     }
@@ -339,18 +342,18 @@
     .tv-table {
       width: 100%;
       border-collapse: separate; border-spacing: 0;
-      font-size: clamp(.85rem, 1.6vw, 1.6rem);
+      font-size: clamp(1.2rem, 2.4vw, 2.8rem);
       flex: 1; min-height: 0;
       table-layout: fixed;
     }
     .tv-table th {
       text-align: left;
       color: var(--text-muted);
-      font-size: clamp(.65rem, 1vw, 1rem);
+      font-size: clamp(.85rem, 1.4vw, 1.5rem);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .12em;
-      padding: .6vh .8vw;
+      padding: .5vh .8vw;
       border-bottom: 2px solid var(--border);
     }
     .tv-table td {
@@ -796,8 +799,10 @@
       if (availableForBody <= 0) return;
 
       const targetRowHeight = availableForBody / rows;
-      // font ~42% del row_height, padding vertical ~18% por lado.
-      const fontPx = Math.max(10, Math.min(36, Math.floor(targetRowHeight * 0.42)));
+      // font ~42% del row_height, padding vertical ~18% por lado. Cap subido a
+      // 64 px para aprovechar pantallas grandes (Smart TV / monitor) ahora que
+      // el bezel es slim y la pantalla ocupa ~90% del viewport.
+      const fontPx = Math.max(10, Math.min(64, Math.floor(targetRowHeight * 0.42)));
       const padPx = Math.max(1, Math.floor(targetRowHeight * 0.18));
 
       tbody.style.fontSize = fontPx + 'px';
