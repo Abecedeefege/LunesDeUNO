@@ -27,9 +27,71 @@
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      background: var(--bg); color: var(--text);
+      background: #050507; color: var(--text);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Marco TV antigua HD ---- */
+    /* Ocupa el 98% del viewport. El bezel exterior es plástico negro
+       con gradient sutil (textura de TV CRT moderna), border-radius
+       chico, sombra interior para que se sienta encajado. La pantalla
+       interior ocupa el espacio restante (la mayoría). */
+    .tv-cabinet {
+      position: relative;
+      width: 99vw; height: 98vh;
+      margin: 1vh auto;
+      padding: 1.4vh 1.4vw;
+      background:
+        linear-gradient(135deg, #1a1a1f 0%, #0a0a0c 50%, #1a1a1f 100%);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.04);
+      box-shadow:
+        0 0 0 2px #050507,
+        0 12px 40px rgba(0,0,0,.6),
+        inset 0 0 24px rgba(0,0,0,.55),
+        inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    /* LED rojo de "encendido" en el bezel inferior derecho */
+    .tv-cabinet::after {
+      content: '';
+      position: absolute;
+      bottom: .7vh; right: 1vw;
+      width: .55vw; height: .55vw;
+      min-width: 6px; min-height: 6px;
+      border-radius: 50%;
+      background: #ff3344;
+      box-shadow: 0 0 8px #ff3344, inset 0 0 2px rgba(255,255,255,.4);
+    }
+    /* Marca chica del fabricante en el bezel inferior izquierdo */
+    .tv-cabinet::before {
+      content: 'LUNES TV';
+      position: absolute;
+      bottom: .35vh; left: 1.4vw;
+      color: rgba(255,255,255,.18);
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(.55rem, .9vw, .85rem);
+      letter-spacing: .35em;
+    }
+    .tv-screen {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.03),
+        inset 0 0 60px rgba(0,0,0,.7);
+    }
+    /* Highlight diagonal sutil simulando reflejo de pantalla */
+    .tv-screen::before {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255,255,255,.04) 0%, transparent 28%),
+        radial-gradient(circle at 88% 92%, rgba(255,255,255,.025) 0%, transparent 35%);
+      z-index: 1;
     }
 
     /* ---- Layout principal ---- */
@@ -37,8 +99,10 @@
       width: 100%; height: 100%;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 1.2vw;
-      padding: 2vh 2vw;
+      gap: 1vh;
+      padding: 1.5vh 1.5vw;
+      position: relative;
+      z-index: 2;
     }
     .tv-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -60,6 +124,26 @@
       -webkit-background-clip: text; background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .tv-controls {
+      display: flex; align-items: center; gap: 1.2vw;
+    }
+    .tv-cast-btn {
+      display: inline-flex; align-items: center; gap: .5vw;
+      background: var(--uno-yellow); color: #1a1a1a;
+      border: 2px solid var(--uno-yellow);
+      padding: .8vh 1.2vw;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(.8rem, 1.3vw, 1.2rem);
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255,222,0,.25);
+      transition: transform .15s ease;
+    }
+    .tv-cast-btn:hover { transform: translateY(-1px); }
+    .tv-cast-btn:active { transform: scale(.97); }
+    .tv-cast-btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .tv-cast-btn.casting { background: var(--uno-green); border-color: var(--uno-green); color: #fff; }
     .tv-status {
       display: flex; align-items: center; gap: .8vw;
       font-size: clamp(.8rem, 1.4vw, 1.4rem);
@@ -137,7 +221,18 @@
       vertical-align: middle;
     }
     .tv-table tr:last-child td { border-bottom: none; }
-    .tv-table .col-pos { width: 5%; text-align: center; color: var(--text-muted); font-weight: 700; }
+    .tv-table .col-pos {
+      width: 8%; text-align: center; color: var(--text-muted); font-weight: 700;
+      white-space: nowrap;
+    }
+    .tv-rank-arrow {
+      display: inline-block; margin-left: .25em;
+      font-size: .85em; font-weight: 800; line-height: 1;
+      vertical-align: middle;
+    }
+    .tv-rank-arrow.up   { color: var(--uno-green); text-shadow: 0 0 8px rgba(0,166,81,.5); }
+    .tv-rank-arrow.down { color: var(--uno-red);   text-shadow: 0 0 8px rgba(237,28,36,.5); }
+    .tv-rank-arrow.same { color: var(--text-muted); opacity: .4; }
     .tv-table .col-player { width: auto; }
     .tv-table .col-num { width: 13%; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
     .tv-table .col-num.col-mute { color: var(--text-muted); font-weight: 500; }
@@ -203,27 +298,39 @@
 </head>
 <body>
 
-<div class="tv" id="tvRoot">
-  <div class="tv-header">
-    <div class="tv-brand">
-      <img src="assets/tophat-logo.png" alt="">
-      <div>
-        <div class="tv-brand-name">Lunes de UNO</div>
-        <div class="tv-meta" id="gameMeta">— Modo TV en vivo —</div>
+<!-- Marco "TV antigua HD". Todo el contenido vive dentro del .tv-screen. -->
+<div class="tv-cabinet">
+  <div class="tv-screen">
+
+    <div class="tv" id="tvRoot">
+      <div class="tv-header">
+        <div class="tv-brand">
+          <img src="assets/tophat-logo.png" alt="">
+          <div>
+            <div class="tv-brand-name">Lunes de UNO</div>
+            <div class="tv-meta" id="gameMeta">— Modo TV en vivo —</div>
+          </div>
+        </div>
+        <div class="tv-controls">
+          <button id="castBtn" class="tv-cast-btn" type="button" hidden>
+            <span aria-hidden="true">📡</span><span>Castear</span>
+          </button>
+          <div class="tv-status" id="tvStatus">
+            <span class="tv-live-dot"></span>
+            <span id="statusText">EN VIVO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tv-body" id="tvBody">
+        <div class="tv-empty" id="tvEmpty">
+          <div class="tv-empty-icon">🎴</div>
+          <h2>Esperá a que arranque el partido…</h2>
+          <p>Cuando alguien empiece a anotar desde el celular, los puntajes parciales aparecen acá en vivo.</p>
+        </div>
       </div>
     </div>
-    <div class="tv-status" id="tvStatus">
-      <span class="tv-live-dot"></span>
-      <span id="statusText">EN VIVO</span>
-    </div>
-  </div>
 
-  <div class="tv-body" id="tvBody">
-    <div class="tv-empty" id="tvEmpty">
-      <div class="tv-empty-icon">🎴</div>
-      <h2>Esperá a que arranque el partido…</h2>
-      <p>Cuando alguien empiece a anotar desde el celular, los puntajes parciales aparecen acá en vivo.</p>
-    </div>
   </div>
 </div>
 
@@ -334,6 +441,33 @@
   }
 
   // Tabla del partido en curso: pos | jugador | base | mul | cor | total
+  // Helper: rank de un game omitiendo las últimas N rondas. Devuelve un mapa
+  // { playerId: posición (1-indexed) } basado en totales menor→mayor.
+  function rankFor(g, omitLastRounds) {
+    if (!g || !Array.isArray(g.participants)) return {};
+    const N = (g.rounds || []).length - (omitLastRounds || 0);
+    if (N < 0) return {};
+    const slim = Object.assign({}, g, {
+      rounds: (g.rounds || []).slice(0, N),
+      fines:  (g.fines  || []).slice(0, N),
+      cortes: (g.cortes || []).slice(0, N),
+    });
+    const breakdown = gameScoreBreakdown(slim);
+    return Object.keys(breakdown)
+      .map(id => ({ id, total: breakdown[id].total }))
+      .sort((a, b) => a.total - b.total)
+      .reduce((acc, p, i) => { acc[p.id] = i + 1; return acc; }, {});
+  }
+
+  // Helper: HTML de la flecha de movimiento. Verde si subió (posición numérica
+  // bajó), rojo si bajó. Devuelve '' si no hay previa o si no cambió.
+  function arrowHTML(prevPos, currPos) {
+    if (prevPos == null || currPos == null) return '';
+    if (prevPos === currPos) return '<span class="tv-rank-arrow same">·</span>';
+    if (currPos < prevPos) return `<span class="tv-rank-arrow up" title="Subió ${prevPos - currPos} puesto${prevPos - currPos === 1 ? '' : 's'}">▲</span>`;
+    return `<span class="tv-rank-arrow down" title="Bajó ${currPos - prevPos} puesto${currPos - prevPos === 1 ? '' : 's'}">▼</span>`;
+  }
+
   function renderCurrent(g) {
     if (!g || !Array.isArray(g.participants) || !g.participants.length) {
       return `<div class="tv-empty"><div class="tv-empty-icon">⏳</div><h2>Sin participantes todavía</h2></div>`;
@@ -346,6 +480,12 @@
     })).sort((a, b) => a.total - b.total);
     const winnerSlug = rows[0]?.slug;
     const loserSlug  = rows[rows.length - 1]?.slug;
+
+    // Posición previa (con la última ronda omitida) sólo si ya hay ≥2 rondas.
+    // Antes de la 2da ronda no tiene sentido hablar de "subió/bajó".
+    const totalRounds = (g.rounds || []).length;
+    const prevPos = totalRounds >= 2 ? rankFor(g, 1) : null;
+    const currPos = rankFor(g, 0);
 
     return `
       <div class="tv-panel">
@@ -362,7 +502,7 @@
           <tbody>
             ${rows.map((r, i) => `
               <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
-                <td class="col-pos">${i + 1}</td>
+                <td class="col-pos">${i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
                 <td><div class="tv-player">
                   <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
                   <span class="tv-player-name">${r.name}</span>
@@ -400,23 +540,46 @@
       </div>`;
     }
 
-    const totals = {};
-    const partidos = {};
-    all.forEach(g => {
-      const scores = gameTotalScores(g);
-      Object.keys(scores).forEach(pid => {
-        totals[pid] = (totals[pid] || 0) + scores[pid];
-        partidos[pid] = (partidos[pid] || 0) + 1;
+    // Computamos totales con dos snapshots: actual y previo (omitiendo la
+    // última ronda del partido en curso). El previo sólo tiene sentido si
+    // hay un partido en curso con ≥2 rondas.
+    function totalsFor(games) {
+      const t = {}, p = {};
+      games.forEach(g => {
+        const scores = gameTotalScores(g);
+        Object.keys(scores).forEach(pid => {
+          t[pid] = (t[pid] || 0) + scores[pid];
+          p[pid] = (p[pid] || 0) + 1;
+        });
       });
-    });
-    const rows = Object.keys(totals).map(id => ({
+      return { t, p };
+    }
+    const cur = totalsFor(all);
+    const totalRoundsInCurrent = currentGame ? (currentGame.rounds || []).length : 0;
+    let prevPos = null;
+    if (currentGame && totalRoundsInCurrent >= 2) {
+      const prevCurrent = Object.assign({}, currentGame, {
+        rounds: (currentGame.rounds || []).slice(0, -1),
+        fines:  (currentGame.fines  || []).slice(0, -1),
+        cortes: (currentGame.cortes || []).slice(0, -1),
+      });
+      const prevAll = seasonGames.concat([prevCurrent]);
+      const { t: pt } = totalsFor(prevAll);
+      prevPos = Object.keys(pt)
+        .map(id => ({ id, total: pt[id] }))
+        .sort((a, b) => a.total - b.total)
+        .reduce((acc, p, i) => { acc[p.id] = i + 1; return acc; }, {});
+    }
+
+    const rows = Object.keys(cur.t).map(id => ({
       slug: id,
       name: NAME_BY_ID[id] || id,
-      total: totals[id],
-      partidos: partidos[id] || 0,
+      total: cur.t[id],
+      partidos: cur.p[id] || 0,
     })).sort((a, b) => a.total - b.total);
     const winnerSlug = rows[0]?.slug;
     const loserSlug  = rows[rows.length - 1]?.slug;
+    const currPos = rows.reduce((acc, r, i) => { acc[r.slug] = i + 1; return acc; }, {});
 
     return `
       <div class="tv-panel">
@@ -431,7 +594,7 @@
           <tbody>
             ${rows.map((r, i) => `
               <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
-                <td class="col-pos">${i + 1}</td>
+                <td class="col-pos">${i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
                 <td><div class="tv-player">
                   <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
                   <span class="tv-player-name">${r.name}</span>
@@ -452,7 +615,49 @@
     }
     setMeta(TV.currentGame);
     body.innerHTML = renderCurrent(TV.currentGame) + renderSeason(TV.currentGame, TV.finishedGames);
+    // Ajustar font-size después de que el browser pintó el layout para que
+    // todas las filas entren sin scroll. requestAnimationFrame nos da el size
+    // real del tbody.
+    requestAnimationFrame(() => requestAnimationFrame(autoFitTables));
   }
+
+  // Mide cada panel y reduce el font-size del tbody si las filas no entran
+  // todas en el alto disponible. Además ajusta el tamaño de los avatares.
+  function autoFitTables() {
+    document.querySelectorAll('.tv-panel').forEach(panel => {
+      const tbody = panel.querySelector('tbody');
+      if (!tbody) return;
+      const rows = tbody.querySelectorAll('tr').length;
+      if (!rows) return;
+      // Reset al default antes de medir
+      tbody.style.fontSize = '';
+      const tbodyRect = tbody.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const header = panel.querySelector('thead');
+      const h2 = panel.querySelector('h2');
+      const usedAbove = (header ? header.getBoundingClientRect().height : 0)
+                     + (h2 ? h2.getBoundingClientRect().height + parseFloat(getComputedStyle(h2).marginBottom || 0) : 0);
+      const padTop = parseFloat(getComputedStyle(panel).paddingTop || 0);
+      const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
+      const availableForBody = panelRect.height - usedAbove - padTop - padBot;
+      const targetRowHeight = availableForBody / rows;
+      // El font ocupa ~50% de la altura de fila (resto: padding del td).
+      // Lo clampeo entre 11px y 36px para no desproporcionar.
+      const fontPx = Math.max(11, Math.min(36, Math.floor(targetRowHeight * 0.42)));
+      tbody.style.fontSize = fontPx + 'px';
+      // Avatares ~1.6× el font
+      panel.querySelectorAll('tbody .tv-player img').forEach(img => {
+        const sz = Math.max(28, Math.round(fontPx * 1.6));
+        img.style.width = sz + 'px';
+        img.style.height = sz + 'px';
+        img.style.minWidth = sz + 'px';
+        img.style.minHeight = sz + 'px';
+      });
+    });
+  }
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(() => requestAnimationFrame(autoFitTables));
+  });
 
   // ----- Suscripciones a Firestore (read-only) -----
   function subscribeToGames() {
@@ -496,6 +701,73 @@
       setStatus('SIN CONEXIÓN', true);
     });
   }
+
+  // ----- Cast / Presentation API -----
+  // Usamos la Web Presentation API (soportada por Chrome desde HTTPS) para
+  // que el botón "Castear" muestre la lista nativa de Chromecast / dispositivos
+  // de presentación. La página receiver es la propia URL de tv.html.
+  // En browsers sin soporte (iOS Safari, Firefox), el botón queda escondido y
+  // se muestra una explicación al tocarlo.
+  (function setupCast() {
+    const btn = document.getElementById('castBtn');
+    if (!btn) return;
+    const supported = typeof window.PresentationRequest === 'function';
+    let request = null;
+    let session = null;
+
+    if (supported) {
+      try {
+        request = new PresentationRequest([location.href]);
+        // Disparamos disponibilidad: `value` es true cuando hay al menos
+        // 1 receiver descubierto (Chromecast prendido en la red, etc.).
+        request.getAvailability().then(avail => {
+          btn.hidden = false;
+          btn.disabled = !avail.value;
+          avail.addEventListener('change', () => {
+            btn.disabled = !avail.value;
+          });
+        }).catch(err => {
+          // getAvailability puede fallar si la API existe pero el permiso
+          // está restringido (no-https iframes, etc). Mostramos el botón
+          // igual y dejamos que el click intente.
+          btn.hidden = false;
+        });
+      } catch (e) {
+        console.warn('[cast] PresentationRequest no disponible:', e);
+        btn.hidden = false;  // mostramos igual con fallback al click
+      }
+    } else {
+      // Mostramos el botón y al click damos instrucciones manuales.
+      btn.hidden = false;
+    }
+
+    btn.addEventListener('click', () => {
+      if (request) {
+        request.start().then(s => {
+          session = s;
+          btn.classList.add('casting');
+          btn.lastElementChild.textContent = 'Casteando';
+          s.addEventListener('terminate', () => {
+            session = null;
+            btn.classList.remove('casting');
+            btn.lastElementChild.textContent = 'Castear';
+          });
+        }).catch(err => {
+          // El usuario canceló o no hay receivers. AbortError es benigno.
+          if (err && err.name === 'NotFoundError') {
+            alert('No hay dispositivos disponibles. Asegurate de que el Chromecast/AppleTV esté en la misma red Wi-Fi.');
+          } else if (err && err.name !== 'AbortError') {
+            alert('No se pudo iniciar el cast.\n\nProbá desde el menú del navegador → "Transmitir" / "Cast".');
+          }
+        });
+      } else {
+        // Browser sin Presentation API: explicamos cómo castear manual.
+        alert('Tu navegador no expone el botón Cast.\n\n' +
+          'En Chrome (Android/PC): menú (⋮) → "Transmitir" → "Transmitir pestaña".\n' +
+          'En iPhone: Centro de Control → Replicación → AirPlay al Apple TV.');
+      }
+    });
+  })();
 
   // Boot
   setStatus('EN VIVO', false);
