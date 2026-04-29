@@ -963,6 +963,34 @@
       font-size: .75rem; text-transform: uppercase; letter-spacing: .06em;
       color: var(--text-muted); font-weight: 700; margin: 1rem 0 .4rem;
     }
+
+    /* ---- Hijos / Papis ---- */
+    .family-empty { color: var(--text-muted); font-size: .85rem; padding: .5rem .25rem; font-style: italic; }
+    .family-list { display: flex; flex-direction: column; gap: .5rem; }
+    .family-row {
+      display: flex; align-items: center; gap: .65rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: .55rem .7rem;
+    }
+    .family-face {
+      width: 44px; height: 44px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid var(--border);
+    }
+    .family-face-blank { background: var(--surface-2); }
+    .family-info { flex: 1; min-width: 0; }
+    .family-name { font-weight: 600; color: var(--text); font-size: .95rem; }
+    .family-rec { color: var(--text-muted); font-size: .75rem; margin-top: 2px; }
+    .family-cta {
+      flex-shrink: 0;
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: .4rem .8rem; font-size: .72rem; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+      max-width: 120px; line-height: 1.15;
+    }
+    .family-cta:hover { background: var(--uno-yellow); color: #1a1a1a; border-color: var(--uno-yellow); }
+    .family-cta:active { transform: scale(.97); }
     .stats-table {
       width: 100%; border-collapse: collapse; font-size: .85rem; background: var(--surface);
     }
@@ -1671,6 +1699,13 @@ const STRINGS = {
     stat_worst_game: 'Peor partida',
     stat_unfinished: 'Abandonadas',
     stat_pos_dist: 'Posiciones finales',
+    family_hijos: 'Hijos',
+    family_papis: 'Papis',
+    family_hijos_empty: 'Sin hijos por ahora. Hay que hacer huevos.',
+    family_papis_empty: 'Ningún papi todavía. Sigue así.',
+    family_games: 'partidas',
+    family_cta_birth: 'Emitir certificado de nacimiento',
+    family_cta_paternity: 'Emitir certificado de paternidad',
     stat_day_perf: 'Mejor día',
     stat_rounds_played: 'Rondas jugadas',
     stat_none: 'ninguna',
@@ -1848,6 +1883,13 @@ const STRINGS = {
     stat_worst_game: 'Worst game',
     stat_unfinished: 'Abandoned',
     stat_pos_dist: 'Finish positions',
+    family_hijos: 'Children',
+    family_papis: 'Daddies',
+    family_hijos_empty: 'No children yet. Time to get cooking.',
+    family_papis_empty: 'No daddies yet. Keep it up.',
+    family_games: 'games',
+    family_cta_birth: 'Issue birth certificate',
+    family_cta_paternity: 'Issue paternity certificate',
     stat_day_perf: 'Best day',
     stat_rounds_played: 'Rounds played',
     stat_none: 'none',
@@ -3087,6 +3129,13 @@ function submitRound() {
     logEdit('submit_round', submittedRoundIndex, { after: submittedSnapshot });
     logEdit('finish_game', null, { totals: totals.slice(), maxPoints: state.maxPoints });
     showScreen('results');
+    // Re-cómputo de stats (tablas anuales, H2H, Hijos/Papis) en background
+    // para no interrumpir la transición a results. Usa requestIdleCallback
+    // con fallback a setTimeout. Da un par de segundos para que el save a
+    // Firestore se procese antes de re-leer.
+    if (typeof scheduleStatsBackgroundRefresh === 'function') {
+      scheduleStatsBackgroundRefresh(2000);
+    }
     return;
   }
 
@@ -3460,6 +3509,203 @@ function showEditableHistory() {
 
   html += '</tbody>';
   table.innerHTML = html;
+}
+
+// ============ FAMILY CERTIFICATE (recibo serio) ============
+async function emitFamilyCertificate(playerSlug, opponentSlug, kind, btn) {
+  if (typeof html2canvas === 'undefined') {
+    if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_error'));
+    return;
+  }
+  if (btn) {
+    btn.disabled = true;
+    btn.dataset._label = btn.textContent;
+    btn.textContent = '⏳…';
+  }
+
+  var computed = (typeof _statsData !== 'undefined' && _statsData) ? _statsData.computed : null;
+  var ps = computed && computed.byPlayer ? computed.byPlayer[playerSlug] : null;
+  var rec = ps && ps.h2h ? ps.h2h[opponentSlug] : null;
+  if (!ps || !rec) {
+    if (btn) { btn.disabled = false; btn.textContent = btn.dataset._label || ''; }
+    return;
+  }
+
+  // Roles según kind:
+  //   'hijos' → playerSlug es PADRE, opponentSlug es HIJO
+  //   'papis' → playerSlug es HIJO, opponentSlug es PADRE
+  var isHijos = (kind === 'hijos');
+  var padreSlug = isHijos ? playerSlug : opponentSlug;
+  var hijoSlug  = isHijos ? opponentSlug : playerSlug;
+  var padreName = _presetName(padreSlug);
+  var hijoName  = _presetName(hijoSlug);
+
+  // Wins/losses normalizados desde la perspectiva del padre.
+  var padreWins, padreLosses;
+  if (isHijos) { padreWins = rec.wins || 0; padreLosses = rec.losses || 0; }
+  else         { padreWins = rec.losses || 0; padreLosses = rec.wins || 0; }
+  var totalGames = rec.together || 0;
+  var winRate = totalGames ? Math.round((padreWins / totalGames) * 100) : 0;
+  var diff = padreWins - padreLosses;
+
+  var d = new Date();
+  var dateStr = d.toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
+  var hourStr = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  var folio = 'TX-' + Date.now().toString(36).toUpperCase();
+  var docTitle = isHijos ? 'CERTIFICADO DE PATERNIDAD' : 'CERTIFICADO DE NACIMIENTO';
+  var emoji = isHijos ? '👨‍👦' : '👶';
+
+  var padreFace = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[padreSlug] : null) || '';
+  var hijoFace  = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[hijoSlug]  : null) || '';
+
+  var narrative = isHijos
+    ? ('Habiendo prevalecido en ' + padreWins + ' de ' + totalGames + ' partidas registradas (' + winRate + '%), '
+        + 'el Sr. ' + padreName + ' queda formalmente reconocido como progenitor legítimo de ' + hijoName + '. '
+        + 'Esta filiación se asienta de forma firme, definitiva e inapelable en los registros del Tribunal del UNO.')
+    : ('Por insuficiencia de victorias frente al Sr. ' + padreName + ' (apenas ' + padreLosses + ' de ' + totalGames + ' partidas, '
+        + (100 - winRate) + '%), se hace constar que ' + hijoName + ' ostenta la condición de hijo registral. '
+        + 'El presente acto surte efectos inmediatos en la vida UNO de ambas partes.');
+
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;top:-100000px;left:0;z-index:-1;';
+  wrap.innerHTML = ''
+    + '<style>'
+    +   ".receipt{position:relative;width:540px;padding:30px 36px 24px;background:#fdfdfb;color:#1a1a1a;"
+    +   "font-family:'Inter',-apple-system,sans-serif;border:2px solid #1a1a1a;box-sizing:border-box;"
+    +   'box-shadow:0 8px 24px rgba(0,0,0,.35);}'
+    +   '.receipt::before,.receipt::after{content:"";position:absolute;left:0;right:0;height:14px;'
+    +   "background:linear-gradient(135deg,transparent 33%,#1a1a1a 33%,#1a1a1a 50%,transparent 50%,"
+    +   "transparent 83%,#1a1a1a 83%,#1a1a1a 100%);background-size:18px 14px;}"
+    +   '.receipt::before{top:-14px;}.receipt::after{bottom:-14px;}'
+    +   '.r-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}'
+    +   '.r-top img{width:42px;height:42px;flex-shrink:0;}'
+    +   ".r-org{font-family:'Fredoka One',cursive;font-size:20px;line-height:1;}"
+    +   '.r-org-sub{font-size:11px;color:#666;letter-spacing:.18em;text-transform:uppercase;margin-top:3px;}'
+    +   '.r-divider{border-top:1px solid #1a1a1a;margin:12px 0;}'
+    +   '.r-divider-dash{border-top:1px dashed #888;margin:10px 0;}'
+    +   '.r-title{text-align:center;font-size:18px;font-weight:800;letter-spacing:.18em;margin:6px 0 2px;}'
+    +   '.r-meta{display:flex;justify-content:space-between;font-size:11px;color:#666;'
+    +   "font-family:'Courier New',monospace;letter-spacing:.04em;}"
+    +   '.r-intro{font-size:13px;line-height:1.55;text-align:justify;margin:14px 0 12px;color:#2a2a2a;}'
+    +   '.r-parties{display:flex;gap:14px;margin:10px 0;}'
+    +   '.r-party{flex:1;display:flex;align-items:center;gap:10px;padding:10px;'
+    +   'background:#f4f1ea;border:1px solid #ccc;border-radius:6px;}'
+    +   '.r-party img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #1a1a1a;}'
+    +   '.r-party-info{min-width:0;}'
+    +   '.r-party-role{font-size:9px;letter-spacing:.2em;color:#666;font-weight:700;text-transform:uppercase;}'
+    +   ".r-party-name{font-family:'Fredoka One',cursive;font-size:18px;line-height:1.1;color:#1a1a1a;}"
+    +   ".r-stats{font-family:'Courier New',monospace;font-size:13px;line-height:1.7;}"
+    +   ".r-stat-row{display:flex;justify-content:space-between;border-bottom:1px dotted #aaa;}"
+    +   '.r-stat-label{color:#444;letter-spacing:.04em;}'
+    +   '.r-stat-val{font-weight:700;color:#1a1a1a;}'
+    +   '.r-stat-row.r-total{border-bottom:2px solid #1a1a1a;border-top:1px solid #1a1a1a;'
+    +   'padding:6px 0;margin-top:4px;font-size:14px;}'
+    +   '.r-narrative{font-size:12px;line-height:1.6;text-align:justify;color:#333;margin:14px 0;font-style:italic;}'
+    +   '.r-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-top:14px;}'
+    +   '.r-stamp{width:96px;height:96px;border:2px solid #ED1C24;color:#ED1C24;border-radius:50%;'
+    +   'display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;'
+    +   'font-size:10px;letter-spacing:.12em;line-height:1.3;transform:rotate(-8deg);flex-shrink:0;}'
+    +   '.r-sig{flex:1;text-align:center;}'
+    +   '.r-sig-line{border-top:1px solid #1a1a1a;margin-bottom:4px;}'
+    +   ".r-sig-name{font-style:italic;font-size:11px;color:#444;font-family:'Times New Roman',serif;}"
+    +   '.r-bottom{margin-top:14px;padding-top:10px;border-top:1px dashed #aaa;'
+    +   "font-family:'Courier New',monospace;font-size:9.5px;color:#666;text-align:center;line-height:1.55;letter-spacing:.04em;}"
+    +   '.r-bottom .r-asterisks{font-weight:700;color:#1a1a1a;letter-spacing:.3em;margin-bottom:6px;}'
+    + '</style>'
+    + '<div class="receipt">'
+    +   '<div class="r-top">'
+    +     '<img src="assets/icon-192.png" alt="">'
+    +     '<div>'
+    +       '<div class="r-org">Lunes de UNO</div>'
+    +       '<div class="r-org-sub">Registro Civil del UNO</div>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="r-divider"></div>'
+    +   '<div class="r-title">' + emoji + '  ' + docTitle + '</div>'
+    +   '<div class="r-meta">'
+    +     '<span>FOLIO ' + folio + '</span>'
+    +     '<span>' + dateStr.toUpperCase() + ' · ' + hourStr + '</span>'
+    +   '</div>'
+    +   '<div class="r-divider"></div>'
+    +   '<p class="r-intro">Por medio del presente comprobante, el Registro Civil del UNO '
+    +     'deja constancia formal de la filiación que se asienta a continuación, '
+    +     'computada sobre las partidas registradas en sistema:</p>'
+    +   '<div class="r-parties">'
+    +     '<div class="r-party">'
+    +       (padreFace ? '<img src="' + padreFace + '" alt="">' : '<div style="width:46px;height:46px;border-radius:50%;background:#ccc;flex-shrink:0;"></div>')
+    +       '<div class="r-party-info">'
+    +         '<div class="r-party-role">Padre</div>'
+    +         '<div class="r-party-name">' + padreName + '</div>'
+    +       '</div>'
+    +     '</div>'
+    +     '<div class="r-party">'
+    +       (hijoFace ? '<img src="' + hijoFace + '" alt="">' : '<div style="width:46px;height:46px;border-radius:50%;background:#ccc;flex-shrink:0;"></div>')
+    +       '<div class="r-party-info">'
+    +         '<div class="r-party-role">Hijo</div>'
+    +         '<div class="r-party-name">' + hijoName + '</div>'
+    +       '</div>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="r-divider-dash"></div>'
+    +   '<div class="r-stats">'
+    +     '<div class="r-stat-row"><span class="r-stat-label">VICTORIAS DEL PADRE</span><span class="r-stat-val">' + padreWins + '</span></div>'
+    +     '<div class="r-stat-row"><span class="r-stat-label">VICTORIAS DEL HIJO</span><span class="r-stat-val">' + padreLosses + '</span></div>'
+    +     '<div class="r-stat-row"><span class="r-stat-label">PARTIDAS JUNTAS</span><span class="r-stat-val">' + totalGames + '</span></div>'
+    +     '<div class="r-stat-row"><span class="r-stat-label">DIFERENCIAL A FAVOR DEL PADRE</span><span class="r-stat-val">+' + Math.abs(diff) + '</span></div>'
+    +     '<div class="r-stat-row r-total"><span class="r-stat-label">DOMINIO PATERNO</span><span class="r-stat-val">' + winRate + '%</span></div>'
+    +   '</div>'
+    +   '<p class="r-narrative">' + narrative + '</p>'
+    +   '<div class="r-foot">'
+    +     '<div class="r-stamp">' + (isHijos ? 'PATERNIDAD<br>VERIFICADA' : 'NACIMIENTO<br>REGISTRADO') + '</div>'
+    +     '<div class="r-sig">'
+    +       '<div class="r-sig-line"></div>'
+    +       '<div class="r-sig-name">Registrador Civil del UNO</div>'
+    +     '</div>'
+    +   '</div>'
+    +   '<div class="r-bottom">'
+    +     '<div class="r-asterisks">*** FIN DEL COMPROBANTE ***</div>'
+    +     'Este documento es constancia oficial de filiación dentro del<br>'
+    +     'Tribunal del UNO. Carece de validez fuera del lunes a la noche.<br>'
+    +     'Conserve este recibo. No se reimprime.'
+    +   '</div>'
+    + '</div>';
+  document.body.appendChild(wrap);
+
+  try {
+    if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
+    var canvas = await html2canvas(wrap.querySelector('.receipt'), {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+    var blob = await new Promise(function(r) { canvas.toBlob(r, 'image/png'); });
+    if (!blob) throw new Error('blob-null');
+    var filename = 'lunesdeuno-' + (isHijos ? 'paternidad' : 'nacimiento') + '-'
+      + padreSlug + '-' + hijoSlug + '.png';
+    var file = new File([blob], filename, { type: 'image/png' });
+    var shareTitle = isHijos ? 'Certificado de paternidad' : 'Certificado de nacimiento';
+    var shareData = { files: [file], title: 'Lunes de UNO — ' + shareTitle, text: shareTitle + ': ' + padreName + ' / ' + hijoName };
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      try { await navigator.share(shareData); }
+      catch (e) { if (!(e && e.name === 'AbortError')) throw e; }
+    } else {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(a.href); }, 5000);
+      if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_downloaded'));
+    }
+  } catch (err) {
+    console.warn('[emitFamilyCertificate]', err);
+    if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_error'));
+  } finally {
+    if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+    if (btn) { btn.disabled = false; btn.textContent = btn.dataset._label || ''; }
+  }
 }
 
 // Genera una "acta notarial" con apariencia de certificado moderno y la
@@ -4961,6 +5207,45 @@ function loadStatsData() {
   });
 }
 
+// Re-carga stats en background sin bloquear la UX. Usado tras cerrar un
+// partido para que cuando el usuario abra Stats vea Hijos/Papis al día.
+// Si la pantalla Stats está activa al momento del refresh, re-renderiza
+// solo los módulos derivados (player stats, leaderboards, h2h, rainbow).
+var _statsBgRefreshTimer = null;
+function scheduleStatsBackgroundRefresh(delayMs) {
+  if (_statsBgRefreshTimer) clearTimeout(_statsBgRefreshTimer);
+  _statsBgRefreshTimer = setTimeout(function() {
+    _statsBgRefreshTimer = null;
+    var run = function() {
+      if (!window.LDU_READY || !window.LDU || !window.LDU.getAllFinishedGames) return;
+      loadStatsData().then(function() {
+        _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
+        _statsData.computedBySeason = {};
+        // Re-renderizar lo que el usuario tenga en pantalla. Stats está
+        // detrás de varias subtabs: solo refrescamos las activas.
+        var statsActive = document.getElementById('stats') && document.getElementById('stats').classList.contains('active');
+        if (!statsActive) return;
+        try {
+          var sel = document.getElementById('statsPlayerSelect');
+          if (sel && typeof renderPlayerStats === 'function') renderPlayerStats(sel.value);
+          if (typeof renderLeaderboard === 'function') {
+            renderLeaderboard(document.getElementById('leaderboardSort')?.value || 'totalScore', 'annual');
+            renderLeaderboard(document.getElementById('leaderboardSortSeason')?.value || 'totalScore', 'season');
+          }
+          if (typeof renderSeasonsTable === 'function') renderSeasonsTable();
+          if (typeof renderH2HMatrix === 'function') renderH2HMatrix();
+          if (typeof renderRainbowZone === 'function') renderRainbowZone();
+        } catch (e) { console.warn('[bg refresh render]', e); }
+      }).catch(function(err) { console.warn('[bg refresh load]', err); });
+    };
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(run, { timeout: 1500 });
+    } else {
+      setTimeout(run, 50);
+    }
+  }, Math.max(0, delayMs || 0));
+}
+
 function switchStatsTab(tab) {
   document.querySelectorAll('.stats-tab-btn').forEach(function(b) {
     b.classList.toggle('active', b.dataset.tab === tab);
@@ -5334,15 +5619,61 @@ function renderPlayerStats(slug) {
   html += _tile(t('stat_day_perf'), ps.bestDay === null ? '—' : _dayLabel(ps.bestDay));
   html += '</div>';
 
-  html += '<div class="stat-section-label">' + t('stat_pos_dist') + '</div>';
-  html += '<div class="stats-grid">';
-  Object.keys(ps.positionDist).sort().forEach(function(k) {
-    var label = (k === 'last') ? '🪦 ' + t('stat_pos_dist') : '#' + k;
-    html += _tile(label, ps.positionDist[k]);
-  });
-  html += '</div>';
+  // Hijos (H2H positivos: el jugador ganó más partidos que perdió contra ellos)
+  // y Papis (H2H negativos: el jugador perdió más partidos que ganó contra ellos).
+  html += _renderFamilyModule(slug, ps, 'hijos');
+  html += _renderFamilyModule(slug, ps, 'papis');
 
   container.innerHTML = html;
+}
+
+// ============ HIJOS / PAPIS (mano-a-mano agregados) ============
+function _renderFamilyModule(slug, ps, kind) {
+  // kind === 'hijos' → opponents donde wins > losses (este jugador domina)
+  // kind === 'papis' → opponents donde losses > wins (este jugador es dominado)
+  var opps = Object.keys(ps.h2h || {})
+    .map(function(other) {
+      var rec = ps.h2h[other];
+      if (!rec || !rec.together) return null;
+      var diff = (rec.wins || 0) - (rec.losses || 0);
+      return { slug: other, wins: rec.wins || 0, losses: rec.losses || 0, together: rec.together, diff: diff };
+    })
+    .filter(function(o) {
+      if (!o) return false;
+      return kind === 'hijos' ? o.diff > 0 : o.diff < 0;
+    })
+    .sort(function(a, b) {
+      // hijos: mayor dominancia primero. papis: mayor sumisión primero.
+      return kind === 'hijos' ? (b.diff - a.diff) : (a.diff - b.diff);
+    });
+
+  var headerKey = kind === 'hijos' ? 'family_hijos' : 'family_papis';
+  var emptyKey  = kind === 'hijos' ? 'family_hijos_empty' : 'family_papis_empty';
+  var ctaKey    = kind === 'hijos' ? 'family_cta_birth' : 'family_cta_paternity';
+  var emoji     = kind === 'hijos' ? '👶' : '👨‍👦';
+
+  var html = '<div class="stat-section-label">' + emoji + ' ' + t(headerKey) + '</div>';
+  if (!opps.length) {
+    html += '<div class="family-empty">' + t(emptyKey) + '</div>';
+    return html;
+  }
+  html += '<div class="family-list">';
+  opps.forEach(function(o) {
+    var face = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[o.slug] : null) || '';
+    var faceImg = face ? '<img src="' + face + '" class="family-face" alt="">' : '<div class="family-face family-face-blank"></div>';
+    html += '<div class="family-row">'
+      + faceImg
+      + '<div class="family-info">'
+      +   '<div class="family-name">' + _presetName(o.slug) + '</div>'
+      +   '<div class="family-rec">' + o.wins + '–' + o.losses + ' (' + o.together + ' ' + t('family_games') + ')</div>'
+      + '</div>'
+      + '<button type="button" class="family-cta" onclick="emitFamilyCertificate(\'' + slug + '\',\'' + o.slug + '\',\'' + kind + '\', this)">'
+      +   t(ctaKey)
+      + '</button>'
+      + '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
 function renderLeaderboard(sortKey, scope) {
