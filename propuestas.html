@@ -902,7 +902,8 @@ const DISABLED_IDEA_IDS = new Set([
   'stickers',                  // Sticker Pack del Perdedor
   'felicitacion-sorpresa',     // Felicitación Sorpresa
   'poema-al-pt',               // Poema al PT
-  'poema-al-penultimo'         // Poema al Penúltimo
+  'poema-al-penultimo',        // Poema al Penúltimo
+  'nft-ultimo'                 // NFT del Último Actual (dinámico) — reemplazado por uno por jugador
 ]);
 
 function registerIdea(idea) {
@@ -1908,25 +1909,24 @@ window._modAnual = function() {
     }
   });
 
-  // ---------- 5) NFT del Último — Tano (histórico) ----------
-  // Pieza vintage: muestra a Tano con la última fecha conocida en la que
-  // terminó como último de la mesa. Esa data se calcula on-the-fly
-  // recorriendo RAW_GAMES y buscando el game finished más reciente donde
-  // Tano tuvo el peor totalScore entre sus participantes.
+  // ---------- 5) NFT del Último — Tano (cerrado) ----------
+  // Hay un NFT por cada jugador que reinó como último. Tano fue el último
+  // durante las primeras 6 fechas. Su reinado ya cerró: lo mintea con esa
+  // duración como dato único.
   registerIdea({
     id: 'nft-ultimo-tano', module: 'anual',
     pick: function(ctx) {
       return {
         protagonist: { id: 'tano', name: NAME_BY_ID['tano'] || 'Tano' },
         rival: { id: 'tano', name: NAME_BY_ID['tano'] || 'Tano' },
-        facts: {}
+        facts: { fechas: 6 }
       };
     },
-    title: 'NFT del Último — Tano (histórico)',
-    desc: 'Pieza vintage del antiguo último de la tabla. Se mintea con la fecha exacta de su reinado.',
+    title: 'NFT del Ultimo',
+    desc: 'Edición vintage: Tano reinando como último, cerrado y minteado tras 6 fechas.',
     copies: { nachi: [
-      'Tano #LAST, edición histórica. Antes del cambio de era.',
-      'NFT vintage del reinado de Tano: la fecha queda asentada en blockchain del asado.'
+      'Tano #LAST: 6 fechas reinando como último. Edición cerrada.',
+      'NFT vintage del reinado de Tano. Sello: 6 fechas en el fondo de la tabla.'
     ]},
     draw: async function(canvas, opts) {
       const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
@@ -1935,10 +1935,10 @@ window._modAnual = function() {
       ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
       ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = w*0.01;
       ctx.strokeRect(w*0.05, h*0.05, w*0.9, h*0.9);
-      ctx.fillStyle = '#ffaa00'; ctx.font = `700 ${w*0.054}px Fredoka One`; ctx.textAlign = 'center';
-      ctx.fillText('ÚLTIMO HISTÓRICO', w/2, h*0.115);
+      ctx.fillStyle = '#ffaa00'; ctx.font = `700 ${w*0.058}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('NFT DEL ULTIMO', w/2, h*0.115);
       ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.04}px Fredoka One`;
-      ctx.fillText('Edición vintage · 1/1', w/2, h*0.165);
+      ctx.fillText('Reinado cerrado · 1/1', w/2, h*0.165);
       try {
         const img = await loadFace('tano');
         const size = w*0.38;
@@ -1952,39 +1952,66 @@ window._modAnual = function() {
         ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = 4;
         ctx.strokeRect((w-size)/2, h*0.22, size, size);
       } catch(e){}
-      // Nombre + fecha del último reinado
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.055}px Fredoka One`;
-      ctx.fillText('TANO', w/2, h*0.7);
-      const reignDate = (function() {
-        if (!Array.isArray(RAW_GAMES)) return null;
-        const sorted = RAW_GAMES.slice()
-          .filter(g => g && (g.finished !== false))
-          .sort(function(a, b) {
-            return (b.finishedAt || b.timestamp || 0) - (a.finishedAt || a.timestamp || 0);
-          });
-        for (const g of sorted) {
-          let scores;
-          try { scores = gameTotalScores(g); } catch (e) { continue; }
-          const slugs = Object.keys(scores || {});
-          if (!slugs.includes('tano')) continue;
-          let max = -Infinity, lastSlug = null;
-          slugs.forEach(s => {
-            if (scores[s] > max) { max = scores[s]; lastSlug = s; }
-          });
-          if (lastSlug === 'tano') return new Date(g.finishedAt || g.timestamp || 0);
-        }
-        return null;
-      })();
-      const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-      const reignStr = reignDate
-        ? (reignDate.getDate() + ' ' + meses[reignDate.getMonth()] + ' ' + reignDate.getFullYear())
-        : 'fecha en archivo';
-      ctx.fillStyle = '#ffaa00'; ctx.font = `600 ${w*0.03}px Inter`;
-      ctx.fillText('Reinó como último hasta', w/2, h*0.78);
-      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.038}px Fredoka One`;
-      ctx.fillText(reignStr, w/2, h*0.825);
-      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.032}px Fredoka One`;
-      ctx.fillText('1/1 EDITION · BLOCKCHAIN DEL ASADO', w/2, h*0.88);
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.07}px Fredoka One`;
+      ctx.fillText('TANO', w/2, h*0.71);
+      ctx.fillStyle = '#ffaa00'; ctx.font = `600 ${w*0.034}px Inter`;
+      ctx.fillText('Reinó como último durante', w/2, h*0.795);
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.062}px Fredoka One`;
+      ctx.fillText('6 FECHAS', w/2, h*0.86);
+      footer(ctx, w, h);
+    }
+  });
+
+  // ---------- 6) NFT del Último — Nachi (activo) ----------
+  // Nachi tomó el cetro tras la fecha 6 y lleva 2 fechas como último.
+  // Reinado en curso, así que el NFT muestra "lleva N fechas" en vez de
+  // un total cerrado. La cifra es manual por ahora; cuando se vuelva
+  // dinámica, actualizamos `facts.fechas` y la línea del draw.
+  registerIdea({
+    id: 'nft-ultimo-nachi', module: 'anual',
+    pick: function(ctx) {
+      return {
+        protagonist: { id: 'nachi', name: NAME_BY_ID['nachi'] || 'Nachi' },
+        rival: { id: 'nachi', name: NAME_BY_ID['nachi'] || 'Nachi' },
+        facts: { fechas: 2 }
+      };
+    },
+    title: 'NFT del Ultimo',
+    desc: 'Reinado en curso: Nachi como último de la tabla anual, 2 fechas y contando.',
+    copies: { nachi: [
+      'Nachi #LAST en vivo. Reinado en curso, 2 fechas asentadas.',
+      'Edición LIVE del último: Nachi acumula 2 fechas y la cuenta sigue.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,w,h);
+      g.addColorStop(0, '#2b0b3a'); g.addColorStop(0.5, '#0b2b5a'); g.addColorStop(1, '#0f0f1a');
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle = '#00ffe1'; ctx.lineWidth = w*0.01;
+      ctx.strokeRect(w*0.05, h*0.05, w*0.9, h*0.9);
+      ctx.fillStyle = '#00ffe1'; ctx.font = `700 ${w*0.058}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('NFT DEL ULTIMO', w/2, h*0.115);
+      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText('Reinado activo · LIVE', w/2, h*0.165);
+      try {
+        const img = await loadFace('nachi');
+        const size = w*0.38;
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        const tmp = document.createElement('canvas');
+        tmp.width = 32; tmp.height = 32;
+        tmp.getContext('2d').drawImage(img, 0, 0, 32, 32);
+        ctx.drawImage(tmp, (w-size)/2, h*0.22, size, size);
+        ctx.restore();
+        ctx.strokeStyle = '#ff00e6'; ctx.lineWidth = 4;
+        ctx.strokeRect((w-size)/2, h*0.22, size, size);
+      } catch(e){}
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.07}px Fredoka One`;
+      ctx.fillText('NACHI', w/2, h*0.71);
+      ctx.fillStyle = '#00ffe1'; ctx.font = `600 ${w*0.034}px Inter`;
+      ctx.fillText('Su reinado está activo y lleva', w/2, h*0.795);
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.062}px Fredoka One`;
+      ctx.fillText('2 FECHAS', w/2, h*0.86);
       footer(ctx, w, h);
     }
   });
