@@ -27,19 +27,7 @@
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      /* Pattern de fondo Memphis-style típico 90s: zigzags + dots + splash */
-      background-color: #ff70a6;
-      background-image:
-        radial-gradient(circle at 12% 18%, #fdca40 0 6px, transparent 7px),
-        radial-gradient(circle at 88% 24%, #58c4dc 0 6px, transparent 7px),
-        radial-gradient(circle at 22% 78%, #61f0ad 0 6px, transparent 7px),
-        radial-gradient(circle at 78% 88%, #ffe066 0 6px, transparent 7px),
-        radial-gradient(circle at 50% 50%, #b388ff 0 6px, transparent 7px),
-        repeating-linear-gradient(45deg, transparent 0 18px, rgba(255,255,255,.06) 18px 19px),
-        repeating-linear-gradient(-45deg, transparent 0 14px, rgba(0,0,0,.04) 14px 15px),
-        linear-gradient(135deg, #ff70a6 0%, #fdca40 35%, #58c4dc 70%, #b388ff 100%);
-      background-size: 100% 100%;
-      color: var(--text);
+      background: #050507; color: var(--text);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -50,27 +38,24 @@
        de volumen circular a la derecha, marca grabada al frente, dos
        antenas saliendo arriba. Ocupa el 98% del viewport — la pantalla
        sigue siendo la mayoría del espacio (~80%). */
-    /* Cabinet 90s: TV de plástico colorido (turquesa con detalles violeta y
-       splash amarillos), border-radius más exagerado, zigzag stripes
-       internas. Fondo del room: pattern Memphis. */
+    /* Cabinet base CRT vintage (igual a tv.html) pero con padding extra
+       grueso para que haya superficie de bezel donde "pegar" los stickers
+       posicionados en .tv90-sticker. */
     .tv-cabinet {
       position: relative;
       width: 98vw; height: 96vh;
       margin: 2vh auto;
-      padding: 7vh 11vw 11vh 7vw;
+      padding: 13vh 16vw 15vh 13vw;       /* ~2× el padding de tv.html para alojar stickers en el bezel */
       background:
-        repeating-linear-gradient(135deg, transparent 0 16px, rgba(255,255,255,.06) 16px 17px),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,.18) 0%, transparent 35%),
-        linear-gradient(160deg, #2dd4bf 0%, #14b8a6 35%, #0f766e 70%, #115e59 100%);
-      border-radius: 38px;
-      border: 4px solid #fff;
+        radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
+        linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,.08);
       box-shadow:
-        0 0 0 6px #b388ff,
-        0 0 0 12px #ff70a6,
-        0 0 0 14px #fff,
-        0 32px 90px rgba(0,0,0,.5),
-        inset 0 8px 26px rgba(255,255,255,.18),
-        inset 0 -8px 26px rgba(0,0,0,.4);
+        0 0 0 5px #0a0a0c,
+        0 28px 80px rgba(0,0,0,.7),
+        inset 0 6px 24px rgba(255,255,255,.06),
+        inset 0 -6px 24px rgba(0,0,0,.65);
     }
     /* Antenas saliendo de arriba (rabbit ears) */
     .tv-antennae {
@@ -109,32 +94,30 @@
       border-radius: 6px 6px 0 0;
     }
 
-    /* Marca del frente — versión chillona 90s */
+    /* Marca del frente — vintage placa dorada (igual a tv.html) */
     .tv-brand-plate {
       position: absolute;
       bottom: 1.6vh; left: 5vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.8rem, 1.4vw, 1.4rem);
-      letter-spacing: .12em;
-      color: #fff;
+      font-size: clamp(.7rem, 1.3vw, 1.2rem);
+      letter-spacing: .35em;
+      color: #d8b550;
       text-shadow:
-        2px 2px 0 #ff70a6,
-        4px 4px 0 #b388ff;
+        0 1px 0 #6a4f1a,
+        0 -1px 0 rgba(255,255,255,.18);
       pointer-events: none;
-      transform: rotate(-2deg);
     }
     .tv-brand-plate small {
       display: block;
       font-family: 'Inter', sans-serif;
-      font-weight: 800;
+      font-weight: 700;
       font-size: .55em;
-      letter-spacing: .35em;
-      color: #fdca40;
-      text-shadow: 1px 1px 0 #0f766e;
+      letter-spacing: .25em;
+      color: rgba(216,181,80,.6);
       margin-top: .2vh;
     }
 
-    /* Parrilla horizontal del altavoz — colorida 90s */
+    /* Parrilla horizontal del altavoz — vintage CRT */
     .tv-speaker {
       position: absolute;
       bottom: 1.6vh; right: 6vw;
@@ -143,42 +126,39 @@
       background:
         repeating-linear-gradient(
           to bottom,
-          #b388ff 0px,
-          #b388ff 3px,
-          #ff70a6 3px,
-          #ff70a6 6px,
-          #fdca40 6px,
-          #fdca40 9px
+          #0a0a0c 0px,
+          #0a0a0c 2px,
+          rgba(255,255,255,.04) 2px,
+          rgba(255,255,255,.04) 4px
         );
-      border: 3px solid #fff;
-      border-radius: 8px;
-      box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 4px;
+      box-shadow: inset 0 0 8px rgba(0,0,0,.6);
     }
 
-    /* Perilla de volumen / canal a la derecha — colores chillones 90s */
+    /* Perilla de volumen / canal a la derecha — vintage CRT */
     .tv-knob {
       position: absolute;
       right: 1.5vw;
-      width: 5vw; max-width: 70px; min-width: 36px;
+      width: 4vw; max-width: 56px; min-width: 32px;
       aspect-ratio: 1;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 30% 30%, #fff 0%, transparent 35%),
-        radial-gradient(circle at 50% 50%, #fdca40 0%, #ff70a6 100%);
-      border: 3px solid #fff;
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 50%),
+        linear-gradient(135deg, #3a3a3e, #16161a);
+      border: 2px solid #0a0a0c;
       box-shadow:
-        inset 0 -3px 6px rgba(0,0,0,.3),
-        0 4px 8px rgba(0,0,0,.4),
-        0 0 0 2px #b388ff;
+        inset 0 0 8px rgba(0,0,0,.7),
+        0 2px 6px rgba(0,0,0,.4);
     }
     .tv-knob::before {
       content: '';
       position: absolute;
-      left: 50%; top: 14%;
+      left: 50%; top: 18%;
       transform: translateX(-50%);
-      width: 12%; height: 30%;
-      background: #b388ff;
-      border-radius: 2px;
+      width: 8%; height: 28%;
+      background: linear-gradient(180deg, #d8b550, #6a4f1a);
+      border-radius: 1px;
     }
     .tv-knob.tv-knob-top { top: 7vh; }
     .tv-knob.tv-knob-bot { top: 16vh; }
@@ -257,49 +237,67 @@
       .tv90-sticker { font-size: .85rem !important; padding: .3rem .55rem !important; }
     }
 
-    /* ---- Stickers 90s alrededor del marco ---- */
-    /* Cada sticker es un span con clase .tv90-sticker. Posicionados en
-       absoluto sobre el viewport (no sobre el cabinet) para que floten
-       en los márgenes alrededor de la TV. Se ocultan en pantallas muy
-       chicas para no estorbar. Son referencias TEXTUALES a shows 90s
-       (no logos oficiales) más algunos emojis temáticos. */
+    /* ---- Stickers pegados al bezel (look papel pegado) ---- */
+    /* Cada sticker es un wrapper con un <img> dentro. Vive como hijo del
+       .tv-cabinet (position: absolute) para que se vea PEGADO al bezel,
+       no flotando en el viewport. El PNG queda con un canto blanco
+       irregular alrededor (papel) + sombra fuerte abajo (despegue) +
+       una mini esquina doblada (peel). Las imágenes vienen de
+       assets/stickers/ y son provistas por el usuario; si un PNG falla
+       en cargar, el slot se quita silenciosamente. */
     .tv90-sticker {
-      position: fixed;
-      z-index: 50;
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(.85rem, 1.5vw, 1.6rem);
-      padding: .4rem .8rem;
-      border-radius: 12px;
+      position: absolute;
+      z-index: 5;
+      width: clamp(60px, 8vw, 120px);
+      padding: 5px;
+      background: #fff;
+      border-radius: 14px 6px 18px 8px;       /* esquinas levemente irregulares */
       box-shadow:
-        0 4px 0 rgba(0,0,0,.25),
-        0 6px 14px rgba(0,0,0,.3),
-        inset 0 -2px 0 rgba(0,0,0,.15),
-        inset 0 2px 0 rgba(255,255,255,.4);
-      letter-spacing: .04em;
-      pointer-events: none;
-      white-space: nowrap;
+        0 2px 0 rgba(0,0,0,.22),
+        0 10px 22px rgba(0,0,0,.55),
+        inset 0 -2px 0 rgba(0,0,0,.06);
       transform-origin: center;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,.25));
     }
-    .tv90-sticker.tv90-rugrats   { top:  4vh;  left:  1.5vw; transform: rotate(-12deg); background: #ff70a6; color: #2b0036; border: 3px solid #fff; }
-    .tv90-sticker.tv90-friends   { top:  3vh;  right: 1.5vw; transform: rotate(8deg);   background: #fdca40; color: #5a3300; border: 3px solid #fff; }
-    .tv90-sticker.tv90-arnold    { top: 30vh;  left:  .8vw;  transform: rotate(-6deg);  background: #58c4dc; color: #003a47; border: 3px solid #fff; }
-    .tv90-sticker.tv90-pokemon   { top: 28vh;  right: 1vw;   transform: rotate(10deg);  background: #ffe066; color: #4a3500; border: 3px solid #1a1a3a; }
-    .tv90-sticker.tv90-doug      { top: 56vh;  left:  2vw;   transform: rotate(-15deg); background: #61f0ad; color: #0a3a1f; border: 3px solid #fff; }
-    .tv90-sticker.tv90-daria     { top: 56vh;  right: 1.2vw; transform: rotate(7deg);   background: #b388ff; color: #2a1a4a; border: 3px solid #fff; }
-    .tv90-sticker.tv90-power     { bottom: 14vh; left:  2vw; transform: rotate(-9deg);  background: #ff70a6; color: #fff;    border: 3px solid #fdca40; }
-    .tv90-sticker.tv90-fresh     { bottom: 13vh; right: 1.5vw; transform: rotate(-8deg); background: #fff;    color: #ff3366; border: 3px solid #58c4dc; }
-    .tv90-sticker.tv90-tmnt      { bottom:  4vh; left:  18vw; transform: rotate(5deg);   background: #61f0ad; color: #0a3a1f; border: 3px solid #ff70a6; }
-    .tv90-sticker.tv90-cowabunga { bottom:  3vh; right: 18vw; transform: rotate(-6deg);  background: #fdca40; color: #5a3300; border: 3px solid #b388ff; }
-    .tv90-sticker.tv90-vhs       { top: 14vh;  left: 35vw;   transform: rotate(-3deg);  background: #1a1a3a; color: #fff;    border: 3px solid #fdca40; }
-    .tv90-sticker.tv90-radical   { top: 13vh;  right: 32vw;  transform: rotate(4deg);   background: #ff70a6; color: #fff;    border: 3px solid #fff; }
+    .tv90-sticker img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px 4px 14px 6px;
+      pointer-events: none;
+    }
+    /* Peel chiquito (esquina doblada) en una esquina inferior */
+    .tv90-sticker::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; right: -3px;
+      width: 14px; height: 14px;
+      background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.35) 50%);
+      border-radius: 0 0 8px 0;
+      pointer-events: none;
+    }
+
+    /* 12 slots de posición sobre el bezel (relativos al .tv-cabinet).
+       Pensados para no tapar antenas, perillas, parrilla, marca ni LED. */
+    .tv90-st-1  { top:  1.2vh;  left:  1.2vw; transform: rotate(-9deg); }
+    .tv90-st-2  { top:  1.6vh;  left: 22vw;   transform: rotate(7deg); }
+    .tv90-st-3  { top:  2vh;    right: 22vw;  transform: rotate(-5deg); }
+    .tv90-st-4  { top:  1.2vh;  right: 1.2vw; transform: rotate(11deg); }
+    .tv90-st-5  { top: 28vh;    left:  .6vw;  transform: rotate(-12deg); }
+    .tv90-st-6  { top: 30vh;    right: .6vw;  transform: rotate(8deg); }
+    .tv90-st-7  { top: 58vh;    left:  .8vw;  transform: rotate(6deg); }
+    .tv90-st-8  { top: 60vh;    right: .8vw;  transform: rotate(-4deg); }
+    .tv90-st-9  { bottom: 9vh;  left:  1vw;   transform: rotate(-7deg); }
+    .tv90-st-10 { bottom: 9.5vh; left: 28vw;  transform: rotate(10deg); }
+    .tv90-st-11 { bottom: 9vh;  right: 28vw;  transform: rotate(-9deg); }
+    .tv90-st-12 { bottom: 9vh;  right: 1vw;   transform: rotate(5deg); }
+
     @media (max-width: 700px) {
-      /* En celulares mantenemos sólo unos pocos stickers para no saturar */
-      .tv90-sticker.tv90-arnold,
-      .tv90-sticker.tv90-doug,
-      .tv90-sticker.tv90-vhs,
-      .tv90-sticker.tv90-radical,
-      .tv90-sticker.tv90-tmnt,
-      .tv90-sticker.tv90-cowabunga { display: none; }
+      .tv90-sticker { width: clamp(44px, 13vw, 70px); padding: 3px; }
+      /* En celulares mantenemos sólo las 4 esquinas + 4 laterales para no saturar */
+      .tv90-st-2, .tv90-st-3, .tv90-st-10, .tv90-st-11 { display: none; }
     }
 
     /* ---- Layout principal ---- */
@@ -506,22 +504,9 @@
 </head>
 <body>
 
-<!-- Stickers 90s/2000s flotando alrededor del marco. Son referencias
-     textuales a shows clásicos (no logos oficiales) en estilo Memphis. -->
-<span class="tv90-sticker tv90-rugrats"   aria-hidden="true">👶 RUGRATS</span>
-<span class="tv90-sticker tv90-friends"   aria-hidden="true">☕ FRIENDS</span>
-<span class="tv90-sticker tv90-arnold"    aria-hidden="true">🏈 HEY ARNOLD!</span>
-<span class="tv90-sticker tv90-pokemon"   aria-hidden="true">⚡ POKÉMON</span>
-<span class="tv90-sticker tv90-doug"      aria-hidden="true">📔 DOUG</span>
-<span class="tv90-sticker tv90-daria"     aria-hidden="true">😒 DARIA</span>
-<span class="tv90-sticker tv90-power"     aria-hidden="true">🦖 POWER RANGERS</span>
-<span class="tv90-sticker tv90-fresh"     aria-hidden="true">🤴 FRESH PRINCE</span>
-<span class="tv90-sticker tv90-tmnt"      aria-hidden="true">🐢 TMNT</span>
-<span class="tv90-sticker tv90-cowabunga" aria-hidden="true">🤙 COWABUNGA</span>
-<span class="tv90-sticker tv90-vhs"       aria-hidden="true">📼 VHS</span>
-<span class="tv90-sticker tv90-radical"   aria-hidden="true">⭐ RADICAL</span>
-
-<!-- Marco "TV 90s coloridita". Todo el contenido vive dentro del .tv-screen. -->
+<!-- Marco TV CRT vintage (igual a tv.html, pero con bezel más grueso para
+     alojar stickers). Los stickers viven DENTRO del .tv-cabinet (position:
+     absolute) para que se vean pegados al bezel, no flotando en el viewport. -->
 <div class="tv-cabinet">
   <!-- Detalles vintage decorativos: antenas, perillas, parrilla, marca, LED -->
   <div class="tv-antennae" aria-hidden="true"><div class="tv-antennae-base"></div></div>
@@ -530,7 +515,12 @@
   <div class="tv-led" aria-hidden="true"></div>
   <span class="tv-led-label" aria-hidden="true">PWR</span>
   <div class="tv-speaker" aria-hidden="true"></div>
-  <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>NICKELODEON · MTV · 90s</small></div>
+  <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>CRT-1985</small></div>
+
+  <!-- Contenedor de stickers pegados al bezel. Se rellena por JS desde
+       el array STICKERS (ver script abajo). Si la carpeta assets/stickers/
+       está vacía, este div queda vacío y la TV se ve limpia. -->
+  <div id="tv90-stickers" aria-hidden="true"></div>
 
   <div class="tv-screen">
 
@@ -1115,6 +1105,44 @@
     }
 
     btn.addEventListener('click', openCastModal);
+  })();
+
+  // ---------- Stickers pegados al bezel ----------
+  // Catálogo editable a mano. Cada entrada es un PNG en assets/stickers/.
+  // El INDEX (0..11) define el slot en el cabinet (.tv90-st-1 ... .tv90-st-12).
+  // Si un PNG no carga (404 / falta el archivo), el slot se quita y nada
+  // más se rompe. Para cambiar/sumar/sacar stickers: editar este array.
+  const STICKERS = [
+    // Slots vacíos por defecto. Drop-in: poner los archivos en assets/stickers/
+    // y descomentar las líneas correspondientes (o reemplazar la ruta).
+    // { src: 'assets/stickers/01.png', alt: '' },
+    // { src: 'assets/stickers/02.png', alt: '' },
+    // { src: 'assets/stickers/03.png', alt: '' },
+    // { src: 'assets/stickers/04.png', alt: '' },
+    // { src: 'assets/stickers/05.png', alt: '' },
+    // { src: 'assets/stickers/06.png', alt: '' },
+    // { src: 'assets/stickers/07.png', alt: '' },
+    // { src: 'assets/stickers/08.png', alt: '' },
+    // { src: 'assets/stickers/09.png', alt: '' },
+    // { src: 'assets/stickers/10.png', alt: '' },
+    // { src: 'assets/stickers/11.png', alt: '' },
+    // { src: 'assets/stickers/12.png', alt: '' },
+  ];
+  (function mountStickers() {
+    const host = document.getElementById('tv90-stickers');
+    if (!host) return;
+    STICKERS.slice(0, 12).forEach((s, i) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'tv90-sticker tv90-st-' + (i + 1);
+      const img = document.createElement('img');
+      img.src = s.src;
+      img.alt = s.alt || '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.onerror = () => wrap.remove();
+      wrap.appendChild(img);
+      host.appendChild(wrap);
+    });
   })();
 
   // Boot
