@@ -65,18 +65,34 @@
 
     /* Acceso al Modo TV: card destacada antes del Gallery. No toca el flujo
        de scoring; sólo es un link a tv.html. */
+    .tv-cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 720px) { .tv-cta-grid { grid-template-columns: 1fr; } }
     .tv-cta {
       display: flex; align-items: center; gap: 1rem;
       background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
       border: 2px solid var(--uno-yellow);
       border-radius: 16px;
       padding: 1rem 1.25rem;
-      margin-top: 1.5rem;
       text-decoration: none;
       color: var(--text);
       box-shadow: 0 4px 18px rgba(255,222,0,.18);
       transition: transform .2s ease, box-shadow .2s ease;
     }
+    .tv-cta-90s {
+      border-color: #ff70a6;
+      background: linear-gradient(135deg, #2dd4bf 0%, #b388ff 100%);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(255,112,166,.35);
+    }
+    .tv-cta-90s:hover { box-shadow: 0 8px 24px rgba(255,112,166,.5); }
+    .tv-cta-90s .tv-cta-text strong { color: #fff; text-shadow: 1px 1px 0 #ff70a6; font-family: 'Fredoka One', cursive; }
+    .tv-cta-90s .tv-cta-text small  { color: rgba(255,255,255,.85); }
+    .tv-cta-90s .tv-cta-go          { color: #fff; }
     .tv-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,222,0,.32); }
     .tv-cta .tv-cta-icon {
       font-size: 2.25rem; line-height: 1; flex-shrink: 0;
@@ -298,14 +314,24 @@
     </div>
   </div>
 
-  <a href="tv.html" target="_blank" rel="noopener" class="tv-cta">
-    <span class="tv-cta-icon">📺</span>
-    <span class="tv-cta-text">
-      <strong>Modo TV</strong>
-      <small>Abrí esta URL en la pantalla grande para ver los puntajes parciales y el ranking de la temporada en vivo.</small>
-    </span>
-    <span class="tv-cta-go">→</span>
-  </a>
+  <div class="tv-cta-grid">
+    <a href="tv.html" target="_blank" rel="noopener" class="tv-cta">
+      <span class="tv-cta-icon">📺</span>
+      <span class="tv-cta-text">
+        <strong>Modo TV (clásico)</strong>
+        <small>Marco CRT vintage, dark. Puntajes parciales + ranking de temporada en vivo.</small>
+      </span>
+      <span class="tv-cta-go">→</span>
+    </a>
+    <a href="tv90s.html" target="_blank" rel="noopener" class="tv-cta tv-cta-90s">
+      <span class="tv-cta-icon">📼</span>
+      <span class="tv-cta-text">
+        <strong>Modo TV 90s</strong>
+        <small>Marco coloridito Memphis con stickers de Rugrats, Friends, Hey Arnold, Pokémon y más.</small>
+      </span>
+      <span class="tv-cta-go">→</span>
+    </a>
+  </div>
 
   <section class="gallery-section">
     <div class="gallery-header">

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0d0d12">
-  <title>Lunes de UNO — Modo TV</title>
+  <title>Lunes de UNO — Modo TV 90s</title>
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +27,19 @@
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      background: #050507; color: var(--text);
+      /* Pattern de fondo Memphis-style típico 90s: zigzags + dots + splash */
+      background-color: #ff70a6;
+      background-image:
+        radial-gradient(circle at 12% 18%, #fdca40 0 6px, transparent 7px),
+        radial-gradient(circle at 88% 24%, #58c4dc 0 6px, transparent 7px),
+        radial-gradient(circle at 22% 78%, #61f0ad 0 6px, transparent 7px),
+        radial-gradient(circle at 78% 88%, #ffe066 0 6px, transparent 7px),
+        radial-gradient(circle at 50% 50%, #b388ff 0 6px, transparent 7px),
+        repeating-linear-gradient(45deg, transparent 0 18px, rgba(255,255,255,.06) 18px 19px),
+        repeating-linear-gradient(-45deg, transparent 0 14px, rgba(0,0,0,.04) 14px 15px),
+        linear-gradient(135deg, #ff70a6 0%, #fdca40 35%, #58c4dc 70%, #b388ff 100%);
+      background-size: 100% 100%;
+      color: var(--text);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
@@ -38,21 +50,27 @@
        de volumen circular a la derecha, marca grabada al frente, dos
        antenas saliendo arriba. Ocupa el 98% del viewport — la pantalla
        sigue siendo la mayoría del espacio (~80%). */
+    /* Cabinet 90s: TV de plástico colorido (turquesa con detalles violeta y
+       splash amarillos), border-radius más exagerado, zigzag stripes
+       internas. Fondo del room: pattern Memphis. */
     .tv-cabinet {
       position: relative;
       width: 98vw; height: 96vh;
       margin: 2vh auto;
-      padding: 7vh 11vw 11vh 7vw;       /* bezel un poco más grueso para destacar la TV vintage */
+      padding: 7vh 11vw 11vh 7vw;
       background:
-        radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
-        linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
-      border-radius: 32px;
-      border: 1px solid rgba(255,255,255,.08);
+        repeating-linear-gradient(135deg, transparent 0 16px, rgba(255,255,255,.06) 16px 17px),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,.18) 0%, transparent 35%),
+        linear-gradient(160deg, #2dd4bf 0%, #14b8a6 35%, #0f766e 70%, #115e59 100%);
+      border-radius: 38px;
+      border: 4px solid #fff;
       box-shadow:
-        0 0 0 5px #0a0a0c,
-        0 28px 80px rgba(0,0,0,.7),
-        inset 0 6px 24px rgba(255,255,255,.06),
-        inset 0 -6px 24px rgba(0,0,0,.65);
+        0 0 0 6px #b388ff,
+        0 0 0 12px #ff70a6,
+        0 0 0 14px #fff,
+        0 32px 90px rgba(0,0,0,.5),
+        inset 0 8px 26px rgba(255,255,255,.18),
+        inset 0 -8px 26px rgba(0,0,0,.4);
     }
     /* Antenas saliendo de arriba (rabbit ears) */
     .tv-antennae {
@@ -91,30 +109,32 @@
       border-radius: 6px 6px 0 0;
     }
 
-    /* Marca del frente */
+    /* Marca del frente — versión chillona 90s */
     .tv-brand-plate {
       position: absolute;
       bottom: 1.6vh; left: 5vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.7rem, 1.3vw, 1.2rem);
-      letter-spacing: .35em;
-      color: #d8b550;       /* dorado tipo placa metálica */
+      font-size: clamp(.8rem, 1.4vw, 1.4rem);
+      letter-spacing: .12em;
+      color: #fff;
       text-shadow:
-        0 1px 0 #6a4f1a,
-        0 -1px 0 rgba(255,255,255,.18);
+        2px 2px 0 #ff70a6,
+        4px 4px 0 #b388ff;
       pointer-events: none;
+      transform: rotate(-2deg);
     }
     .tv-brand-plate small {
       display: block;
       font-family: 'Inter', sans-serif;
-      font-weight: 700;
+      font-weight: 800;
       font-size: .55em;
-      letter-spacing: .25em;
-      color: rgba(216,181,80,.6);
+      letter-spacing: .35em;
+      color: #fdca40;
+      text-shadow: 1px 1px 0 #0f766e;
       margin-top: .2vh;
     }
 
-    /* Parrilla horizontal del altavoz (rectángulo con stripes) */
+    /* Parrilla horizontal del altavoz — colorida 90s */
     .tv-speaker {
       position: absolute;
       bottom: 1.6vh; right: 6vw;
@@ -123,39 +143,42 @@
       background:
         repeating-linear-gradient(
           to bottom,
-          #0a0a0c 0px,
-          #0a0a0c 2px,
-          rgba(255,255,255,.04) 2px,
-          rgba(255,255,255,.04) 4px
+          #b388ff 0px,
+          #b388ff 3px,
+          #ff70a6 3px,
+          #ff70a6 6px,
+          #fdca40 6px,
+          #fdca40 9px
         );
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 4px;
-      box-shadow: inset 0 0 8px rgba(0,0,0,.6);
+      border: 3px solid #fff;
+      border-radius: 8px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,.4);
     }
 
-    /* Perilla de volumen / canal a la derecha */
+    /* Perilla de volumen / canal a la derecha — colores chillones 90s */
     .tv-knob {
       position: absolute;
       right: 1.5vw;
-      width: 4vw; max-width: 56px; min-width: 32px;
+      width: 5vw; max-width: 70px; min-width: 36px;
       aspect-ratio: 1;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), transparent 50%),
-        linear-gradient(135deg, #3a3a3e, #16161a);
-      border: 2px solid #0a0a0c;
+        radial-gradient(circle at 30% 30%, #fff 0%, transparent 35%),
+        radial-gradient(circle at 50% 50%, #fdca40 0%, #ff70a6 100%);
+      border: 3px solid #fff;
       box-shadow:
-        inset 0 0 8px rgba(0,0,0,.7),
-        0 2px 6px rgba(0,0,0,.4);
+        inset 0 -3px 6px rgba(0,0,0,.3),
+        0 4px 8px rgba(0,0,0,.4),
+        0 0 0 2px #b388ff;
     }
     .tv-knob::before {
       content: '';
       position: absolute;
-      left: 50%; top: 18%;
+      left: 50%; top: 14%;
       transform: translateX(-50%);
-      width: 8%; height: 28%;
-      background: linear-gradient(180deg, #d8b550, #6a4f1a);
-      border-radius: 1px;
+      width: 12%; height: 30%;
+      background: #b388ff;
+      border-radius: 2px;
     }
     .tv-knob.tv-knob-top { top: 7vh; }
     .tv-knob.tv-knob-bot { top: 16vh; }
@@ -221,15 +244,62 @@
     /* Layout reducido: en celular el bezel se hace más fino */
     @media (max-width: 700px) {
       .tv-cabinet {
-        padding: 3vh 4vw 5vh 4vw;
-        border-radius: 14px;
+        padding: 3vh 5vw 5vh 5vw;
+        border-radius: 18px;
+        border-width: 3px;
       }
       .tv-antennae { display: none; }
-      .tv-speaker { width: 12vw; height: 3vh; }
-      .tv-knob { width: 5vw; min-width: 24px; }
+      .tv-speaker { width: 14vw; height: 3vh; }
+      .tv-knob { width: 6vw; min-width: 26px; }
       .tv-knob.tv-knob-top { top: 4vh; }
       .tv-knob.tv-knob-bot { top: 9vh; }
-      .tv-brand-plate { font-size: .55rem; left: 3vw; }
+      .tv-brand-plate { font-size: .65rem; left: 3vw; }
+      .tv90-sticker { font-size: .85rem !important; padding: .3rem .55rem !important; }
+    }
+
+    /* ---- Stickers 90s alrededor del marco ---- */
+    /* Cada sticker es un span con clase .tv90-sticker. Posicionados en
+       absoluto sobre el viewport (no sobre el cabinet) para que floten
+       en los márgenes alrededor de la TV. Se ocultan en pantallas muy
+       chicas para no estorbar. Son referencias TEXTUALES a shows 90s
+       (no logos oficiales) más algunos emojis temáticos. */
+    .tv90-sticker {
+      position: fixed;
+      z-index: 50;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(.85rem, 1.5vw, 1.6rem);
+      padding: .4rem .8rem;
+      border-radius: 12px;
+      box-shadow:
+        0 4px 0 rgba(0,0,0,.25),
+        0 6px 14px rgba(0,0,0,.3),
+        inset 0 -2px 0 rgba(0,0,0,.15),
+        inset 0 2px 0 rgba(255,255,255,.4);
+      letter-spacing: .04em;
+      pointer-events: none;
+      white-space: nowrap;
+      transform-origin: center;
+    }
+    .tv90-sticker.tv90-rugrats   { top:  4vh;  left:  1.5vw; transform: rotate(-12deg); background: #ff70a6; color: #2b0036; border: 3px solid #fff; }
+    .tv90-sticker.tv90-friends   { top:  3vh;  right: 1.5vw; transform: rotate(8deg);   background: #fdca40; color: #5a3300; border: 3px solid #fff; }
+    .tv90-sticker.tv90-arnold    { top: 30vh;  left:  .8vw;  transform: rotate(-6deg);  background: #58c4dc; color: #003a47; border: 3px solid #fff; }
+    .tv90-sticker.tv90-pokemon   { top: 28vh;  right: 1vw;   transform: rotate(10deg);  background: #ffe066; color: #4a3500; border: 3px solid #1a1a3a; }
+    .tv90-sticker.tv90-doug      { top: 56vh;  left:  2vw;   transform: rotate(-15deg); background: #61f0ad; color: #0a3a1f; border: 3px solid #fff; }
+    .tv90-sticker.tv90-daria     { top: 56vh;  right: 1.2vw; transform: rotate(7deg);   background: #b388ff; color: #2a1a4a; border: 3px solid #fff; }
+    .tv90-sticker.tv90-power     { bottom: 14vh; left:  2vw; transform: rotate(-9deg);  background: #ff70a6; color: #fff;    border: 3px solid #fdca40; }
+    .tv90-sticker.tv90-fresh     { bottom: 13vh; right: 1.5vw; transform: rotate(-8deg); background: #fff;    color: #ff3366; border: 3px solid #58c4dc; }
+    .tv90-sticker.tv90-tmnt      { bottom:  4vh; left:  18vw; transform: rotate(5deg);   background: #61f0ad; color: #0a3a1f; border: 3px solid #ff70a6; }
+    .tv90-sticker.tv90-cowabunga { bottom:  3vh; right: 18vw; transform: rotate(-6deg);  background: #fdca40; color: #5a3300; border: 3px solid #b388ff; }
+    .tv90-sticker.tv90-vhs       { top: 14vh;  left: 35vw;   transform: rotate(-3deg);  background: #1a1a3a; color: #fff;    border: 3px solid #fdca40; }
+    .tv90-sticker.tv90-radical   { top: 13vh;  right: 32vw;  transform: rotate(4deg);   background: #ff70a6; color: #fff;    border: 3px solid #fff; }
+    @media (max-width: 700px) {
+      /* En celulares mantenemos sólo unos pocos stickers para no saturar */
+      .tv90-sticker.tv90-arnold,
+      .tv90-sticker.tv90-doug,
+      .tv90-sticker.tv90-vhs,
+      .tv90-sticker.tv90-radical,
+      .tv90-sticker.tv90-tmnt,
+      .tv90-sticker.tv90-cowabunga { display: none; }
     }
 
     /* ---- Layout principal ---- */
@@ -436,7 +506,22 @@
 </head>
 <body>
 
-<!-- Marco "TV antigua HD". Todo el contenido vive dentro del .tv-screen. -->
+<!-- Stickers 90s/2000s flotando alrededor del marco. Son referencias
+     textuales a shows clásicos (no logos oficiales) en estilo Memphis. -->
+<span class="tv90-sticker tv90-rugrats"   aria-hidden="true">👶 RUGRATS</span>
+<span class="tv90-sticker tv90-friends"   aria-hidden="true">☕ FRIENDS</span>
+<span class="tv90-sticker tv90-arnold"    aria-hidden="true">🏈 HEY ARNOLD!</span>
+<span class="tv90-sticker tv90-pokemon"   aria-hidden="true">⚡ POKÉMON</span>
+<span class="tv90-sticker tv90-doug"      aria-hidden="true">📔 DOUG</span>
+<span class="tv90-sticker tv90-daria"     aria-hidden="true">😒 DARIA</span>
+<span class="tv90-sticker tv90-power"     aria-hidden="true">🦖 POWER RANGERS</span>
+<span class="tv90-sticker tv90-fresh"     aria-hidden="true">🤴 FRESH PRINCE</span>
+<span class="tv90-sticker tv90-tmnt"      aria-hidden="true">🐢 TMNT</span>
+<span class="tv90-sticker tv90-cowabunga" aria-hidden="true">🤙 COWABUNGA</span>
+<span class="tv90-sticker tv90-vhs"       aria-hidden="true">📼 VHS</span>
+<span class="tv90-sticker tv90-radical"   aria-hidden="true">⭐ RADICAL</span>
+
+<!-- Marco "TV 90s coloridita". Todo el contenido vive dentro del .tv-screen. -->
 <div class="tv-cabinet">
   <!-- Detalles vintage decorativos: antenas, perillas, parrilla, marca, LED -->
   <div class="tv-antennae" aria-hidden="true"><div class="tv-antennae-base"></div></div>
@@ -445,7 +530,7 @@
   <div class="tv-led" aria-hidden="true"></div>
   <span class="tv-led-label" aria-hidden="true">PWR</span>
   <div class="tv-speaker" aria-hidden="true"></div>
-  <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>CRT-1985</small></div>
+  <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>NICKELODEON · MTV · 90s</small></div>
 
   <div class="tv-screen">
 
