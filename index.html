@@ -1494,6 +1494,9 @@
     collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
     query, where, orderBy, serverTimestamp, Timestamp
   } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+  import {
+    getStorage, ref as storageRef, uploadBytes, getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM",
@@ -1525,6 +1528,7 @@
 
       const gamesCol = () => collection(db, 'games');
       const seasonsCol = () => collection(db, 'seasons');
+      const storage = getStorage(app);
       const playersCol = () => collection(db, 'players');
 
       window.LDU = {
@@ -1610,6 +1614,16 @@
             addDoc(editsRef, payload).catch((e) => { console.warn('[LDU] logEdit addDoc failed:', e); }),
             setDoc(gameRef, { lastEdit: payload }, { merge: true }).catch((e) => { console.warn('[LDU] logEdit setDoc failed:', e); })
           ]);
+        },
+        async uploadGamePhoto(gameId, blob) {
+          // Sube la foto del partido a Storage en games/{gameId}.png y
+          // devuelve la URL pública para guardarla en el doc del juego.
+          const r = storageRef(storage, 'games/' + gameId + '.png');
+          const result = await uploadBytes(r, blob, { contentType: 'image/png' });
+          return await getDownloadURL(result.ref);
+        },
+        async setGamePhotoUrl(gameId, photoUrl) {
+          await setDoc(doc(db, 'games', gameId), { photoUrl: photoUrl, photoUpdatedAt: serverTimestamp() }, { merge: true });
         }
       };
 
@@ -4084,6 +4098,54 @@ function showCopyToast() {
 // ============ SHARE: Photo with scores ============
 let sharePhotoState = { originalDataUrl: null };
 
+// Persiste la foto compuesta de un partido. Estrategia dual:
+//   - localStorage["lunesdeuno_photo_{gameId}"] con el dataURL: visible
+//     instantáneo en el dispositivo. Si excede el quota, no es fatal: se
+//     pierde el atajo local pero queda la copia en Storage.
+//   - Firebase Storage en games/{gameId}.png + photoUrl en el game doc:
+//     persistencia cross-device, asíncrona, no bloquea la UX.
+function persistGamePhoto(gameId, dataUrl, canvas) {
+  if (!gameId || !dataUrl) return;
+  var KEY = 'lunesdeuno_photo_' + gameId;
+  try { localStorage.setItem(KEY, dataUrl); }
+  catch (e) {
+    // Quota excedida: limpiar fotos viejas (excepto esta) y reintentar.
+    try {
+      var keys = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('lunesdeuno_photo_') === 0 && k !== KEY) keys.push(k);
+      }
+      keys.forEach(function(k) { try { localStorage.removeItem(k); } catch (e2) {} });
+      try { localStorage.setItem(KEY, dataUrl); }
+      catch (e3) { console.warn('[photo] localStorage insuficiente:', e3); }
+    } catch (eAll) { console.warn('[photo] cleanup falló:', eAll); }
+  }
+  // Subida a Firebase Storage en background. Sólo intentamos si LDU está
+  // listo y expone los métodos. Si falla, el localStorage local sigue
+  // siendo el respaldo.
+  if (!(window.LDU_READY && window.LDU && window.LDU.uploadGamePhoto)) return;
+  var run = function() {
+    var blobP = canvas && canvas.toBlob
+      ? new Promise(function(res) { canvas.toBlob(res, 'image/png'); })
+      : fetch(dataUrl).then(function(r) { return r.blob(); });
+    blobP.then(function(blob) {
+      if (!blob) throw new Error('blob-null');
+      return window.LDU.uploadGamePhoto(gameId, blob).then(function(url) {
+        if (!url || !window.LDU.setGamePhotoUrl) return;
+        return window.LDU.setGamePhotoUrl(gameId, url);
+      });
+    }).catch(function(err) {
+      console.warn('[photo] upload falló (queda copia local):', err);
+    });
+  };
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(run, { timeout: 3000 });
+  } else {
+    setTimeout(run, 50);
+  }
+}
+
 // ---- Composite share image ----
 function wrapTextLines(ctx, text, maxWidth) {
   const words = String(text || '').split(' ');
@@ -4362,6 +4424,14 @@ function onSharePhotoChange(ev) {
         elO.src = sharePhotoState.originalDataUrl;
         row.style.display = 'flex';
         ev.target.value = '';
+        // Persistir la foto compuesta para que aparezca en la Rainbow Zone:
+        //   1) inmediato en localStorage (visible al instante en el mismo
+        //      dispositivo)
+        //   2) en background a Firebase Storage + photoUrl en el game doc
+        //      (cross-device, persistente)
+        if (typeof persistGamePhoto === 'function' && state.gameId) {
+          persistGamePhoto(state.gameId, sharePhotoState.originalDataUrl, canvas);
+        }
       });
     };
     img.src = reader.result;
@@ -5191,6 +5261,7 @@ function loadStatsData() {
         winnerSlot: (typeof r.winnerSlot === 'number') ? r.winnerSlot : null,
         winnerPlayerId: r.winnerPlayerId || null,
         seasonId: r.seasonId || null,
+        photoUrl: r.photoUrl || null,
         finished: true
       };
     });
@@ -5936,11 +6007,21 @@ function _renderRainbowCard(g, seasonNum, partidoNum) {
   var loserFace = loser.face ? '<img src="' + loser.face + '">' : '';
   var winnerFace = winner.face ? '<img src="' + winner.face + '">' : '';
 
-  // Si existe assets/games/{gameId}.png, lo mostramos entero (es la share
-  // image del partido). Si no, la imagen falla onerror y queda la versión
-  // compact (header + lista + tag, sin placeholder grande).
-  var imgPath = 'assets/games/' + g.gameId + '.png';
-  var imgTag = '<img class="rz-card-fullimg" src="' + imgPath + '" alt=""'
+  // Cadena de fallback de la imagen del partido:
+  //   1) localStorage del propio dispositivo (si el usuario subió una foto
+  //      en este browser).
+  //   2) photoUrl del doc en Firestore (sube por Storage al cerrar el
+  //      partido — visible cross-device).
+  //   3) asset estático /assets/games/{gameId}.png (legacy / curado).
+  // Si todas fallan onerror remueve el <img> y queda la versión compact.
+  var imgPath = null;
+  try {
+    var localPhoto = localStorage.getItem('lunesdeuno_photo_' + g.gameId);
+    if (localPhoto) imgPath = localPhoto;
+  } catch (e) {}
+  if (!imgPath && g.photoUrl) imgPath = g.photoUrl;
+  if (!imgPath) imgPath = 'assets/games/' + g.gameId + '.png';
+  var imgTag = '<img class="rz-card-fullimg" src="' + imgPath + '" alt="" crossorigin="anonymous"'
     + ' onload="this.parentNode.classList.add(\'rz-has-img\')"'
     + ' onerror="this.remove()">';
   return '<div class="rz-card">'
