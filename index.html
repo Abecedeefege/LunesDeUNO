@@ -997,6 +997,7 @@
     .rz-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
     @media (max-width: 480px) { .rz-grid { grid-template-columns: 1fr; } }
     .rz-card {
+      position: relative;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -1005,43 +1006,47 @@
       transition: transform .2s, border-color .2s;
     }
     .rz-card:hover { transform: translateY(-2px); border-color: var(--uno-yellow); }
+    /* Cards SIN foto del partido se compactan: sólo header + lista + tag.
+       Cards CON foto del partido (cuando existe assets/games/{id}.png)
+       muestran la imagen entera y ocultan el detalle compact. */
+    .rz-card-fullimg {
+      display: none;
+      width: 100%; height: auto;
+    }
+    .rz-card.rz-has-img .rz-card-fullimg { display: block; }
+    .rz-card.rz-has-img .rz-card-top,
+    .rz-card.rz-has-img .rz-card-mid { display: none; }
     .rz-card-top {
       display: flex; align-items: center; gap: .6rem;
-      padding: .6rem .75rem;
+      padding: .55rem .7rem;
       background: linear-gradient(180deg, rgba(255,222,0,.08), transparent);
       border-bottom: 1px solid var(--border);
     }
-    .rz-card-top img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--uno-yellow); }
+    .rz-card-top img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--uno-yellow); }
     .rz-card-top .rz-winner-info { flex: 1; min-width: 0; }
     .rz-card-top .rz-winner-name {
       color: var(--uno-yellow); font-family: 'Fredoka One', cursive;
-      font-size: 1rem; line-height: 1; margin-bottom: .15rem;
+      font-size: .95rem; line-height: 1; margin-bottom: .15rem;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .rz-card-top .rz-winner-score { color: var(--text); font-size: .8rem; font-weight: 600; }
-    .rz-photo {
-      aspect-ratio: 4/3;
-      background: linear-gradient(135deg, #fafafa 0%, #e5e5e5 100%);
-      display: flex; align-items: center; justify-content: center;
-      color: #999; font-size: .9rem; letter-spacing: .04em;
-    }
+    .rz-card-top .rz-winner-score { color: var(--text); font-size: .75rem; font-weight: 600; }
     .rz-card-mid {
-      padding: .55rem .75rem;
-      font-size: .75rem; color: var(--text-muted);
+      padding: .45rem .7rem;
+      font-size: .7rem; color: var(--text-muted);
     }
     .rz-card-mid .rz-row {
-      display: flex; align-items: center; gap: .4rem;
-      padding: .15rem 0;
+      display: flex; align-items: center; gap: .35rem;
+      padding: .1rem 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .rz-card-mid .rz-row img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .rz-card-mid .rz-row img { width: 16px; height: 16px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
     .rz-card-mid .rz-row.rz-loser { color: var(--uno-red); font-weight: 600; }
     .rz-card-mid .rz-row.rz-loser img { border: 1px solid var(--uno-red); }
     .rz-card-bottom {
       display: flex; justify-content: space-between; align-items: center;
-      padding: .45rem .75rem;
+      padding: .35rem .7rem;
       border-top: 1px solid var(--border);
-      font-size: .7rem; color: var(--text-muted);
+      font-size: .65rem; color: var(--text-muted);
       letter-spacing: .03em;
     }
     .rz-card-bottom .rz-tag {
@@ -3681,10 +3686,11 @@ function speakPlayerRanking() {
   var computed = (typeof _statsData !== 'undefined' && _statsData) ? _statsData.computed : null;
   if (!computed || !computed.byPlayer) return;
 
-  // Ranking anual: solo jugadores con partidas, ordenado por totalScore desc.
+  // Ranking anual: solo jugadores con partidas, ordenado por totalScore asc
+  // (regla UNO: menor puntaje = posición 1).
   var ranking = Object.values(computed.byPlayer)
     .filter(function(p) { return p.gamesPlayed > 0; })
-    .sort(function(a, b) { return (b.totalScore || 0) - (a.totalScore || 0); });
+    .sort(function(a, b) { return (a.totalScore || 0) - (b.totalScore || 0); });
   if (!ranking.length) return;
 
   // Rotación: filtrar a los que aún no nombramos en esta vuelta. Si ya
@@ -5354,8 +5360,10 @@ function renderLeaderboard(sortKey, scope) {
     .sort(function(a, b) {
       // En temporada el ganador es el de menor puntaje (regla UNO clásica
       // sobre 4 partidos), en anual el orden default es de mayor a menor.
+      // En cualquier ranking (anual o temporada) totalScore se ordena
+      // ascendente: menor puntaje = mejor (regla UNO).
       var lowerIsBetter = (sortKey === 'avgPosition' || sortKey === 'lowestGameScore'
-        || (sortKey === 'totalScore' && isSeason));
+        || sortKey === 'totalScore');
       if (lowerIsBetter) {
         var av = (a[sortKey] == null) ? Infinity : a[sortKey];
         var bv = (b[sortKey] == null) ? Infinity : b[sortKey];
@@ -5597,7 +5605,15 @@ function _renderRainbowCard(g, seasonNum, partidoNum) {
   var loserFace = loser.face ? '<img src="' + loser.face + '">' : '';
   var winnerFace = winner.face ? '<img src="' + winner.face + '">' : '';
 
+  // Si existe assets/games/{gameId}.png, lo mostramos entero (es la share
+  // image del partido). Si no, la imagen falla onerror y queda la versión
+  // compact (header + lista + tag, sin placeholder grande).
+  var imgPath = 'assets/games/' + g.gameId + '.png';
+  var imgTag = '<img class="rz-card-fullimg" src="' + imgPath + '" alt=""'
+    + ' onload="this.parentNode.classList.add(\'rz-has-img\')"'
+    + ' onerror="this.remove()">';
   return '<div class="rz-card">'
+    + imgTag
     + '<div class="rz-card-top">'
     +   winnerFace
     +   '<div class="rz-winner-info">'
@@ -5605,7 +5621,6 @@ function _renderRainbowCard(g, seasonNum, partidoNum) {
     +     '<div class="rz-winner-score">' + winner.score + ' pts</div>'
     +   '</div>'
     + '</div>'
-    + '<div class="rz-photo">' + t('rainbow_no_photo') + '</div>'
     + '<div class="rz-card-mid">'
     +   midRowsHtml
     +   '<div class="rz-row rz-loser">' + loserFace + '<span>💀 ' + loser.name + ' — ' + loser.score + '</span></div>'
