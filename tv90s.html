@@ -1117,25 +1117,27 @@
   // Si un PNG no carga (404 / falta el archivo), el slot se quita y nada
   // más se rompe. Para cambiar/sumar/sacar stickers: editar este array.
   const STICKERS = [
-    // Slots vacíos por defecto. Drop-in: poner los archivos en assets/stickers/
-    // y descomentar las líneas correspondientes (o reemplazar la ruta).
-    // { src: 'assets/stickers/01.png', alt: '' },
-    // { src: 'assets/stickers/02.png', alt: '' },
-    // { src: 'assets/stickers/03.png', alt: '' },
-    // { src: 'assets/stickers/04.png', alt: '' },
-    // { src: 'assets/stickers/05.png', alt: '' },
-    // { src: 'assets/stickers/06.png', alt: '' },
-    // { src: 'assets/stickers/07.png', alt: '' },
-    // { src: 'assets/stickers/08.png', alt: '' },
-    // { src: 'assets/stickers/09.png', alt: '' },
-    // { src: 'assets/stickers/10.png', alt: '' },
-    // { src: 'assets/stickers/11.png', alt: '' },
-    // { src: 'assets/stickers/12.png', alt: '' },
+    // 4 PNGs distribuidos a las 4 esquinas. Las posiciones intermedias quedan
+    // como `null` y se saltan. Para ocupar más slots: reemplazar `null` por
+    // { src: 'assets/stickers/...png' } en el orden que queramos.
+    { src: 'assets/stickers/file_0000000033a471fb815b981a0123e355.png', alt: '' },     // 1: top-left
+    null,                                                                              // 2: top-mid-left (vacío)
+    null,                                                                              // 3: top-mid-right (vacío)
+    { src: 'assets/stickers/file_000000005fd871fb979d00ee0a0281cc.png', alt: '' },     // 4: top-right
+    null,                                                                              // 5
+    null,                                                                              // 6
+    null,                                                                              // 7
+    null,                                                                              // 8
+    { src: 'assets/stickers/file_00000000a1a0720e8da7663b7de28753.png', alt: '' },     // 9: bottom-left
+    null,                                                                              // 10
+    null,                                                                              // 11
+    { src: 'assets/stickers/file_00000000b87c720ea91340cbf7a085c8.png', alt: '' },     // 12: bottom-right
   ];
   (function mountStickers() {
     const host = document.getElementById('tv90-stickers');
     if (!host) return;
     STICKERS.slice(0, 12).forEach((s, i) => {
+      if (!s || !s.src) return;
       const wrap = document.createElement('div');
       wrap.className = 'tv90-sticker tv90-st-' + (i + 1);
       const img = document.createElement('img');
