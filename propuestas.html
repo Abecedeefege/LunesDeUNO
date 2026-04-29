@@ -63,6 +63,42 @@
     .request-form input[type="text"] { flex: 1; min-width: 220px; }
     .request-send { flex: 0 0 auto; padding: .6rem 1.2rem; border-radius: 10px; }
 
+    /* Acceso al Modo TV: card destacada antes del Gallery. No toca el flujo
+       de scoring; sólo es un link a tv.html. */
+    .tv-cta {
+      display: flex; align-items: center; gap: 1rem;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 2px solid var(--uno-yellow);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      margin-top: 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 0 4px 18px rgba(255,222,0,.18);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .tv-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,222,0,.32); }
+    .tv-cta .tv-cta-icon {
+      font-size: 2.25rem; line-height: 1; flex-shrink: 0;
+    }
+    .tv-cta .tv-cta-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+    .tv-cta .tv-cta-text strong {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      color: var(--uno-yellow);
+      letter-spacing: .04em;
+    }
+    .tv-cta .tv-cta-text small {
+      color: var(--text-muted);
+      font-size: .8rem;
+      line-height: 1.4;
+    }
+    .tv-cta .tv-cta-go {
+      font-size: 1.5rem; color: var(--uno-yellow); flex-shrink: 0;
+      transition: transform .2s ease;
+    }
+    .tv-cta:hover .tv-cta-go { transform: translateX(4px); }
+
     .gallery-section { margin-top: 2rem; }
     .gallery-header {
       display: flex; align-items: center; gap: .75rem;
@@ -261,6 +297,15 @@
       Esta página <strong>no inventa datos</strong>: todos los previews se generan con stats reales.
     </div>
   </div>
+
+  <a href="tv.html" target="_blank" rel="noopener" class="tv-cta">
+    <span class="tv-cta-icon">📺</span>
+    <span class="tv-cta-text">
+      <strong>Modo TV</strong>
+      <small>Abrí esta URL en la pantalla grande para ver los puntajes parciales y el ranking de la temporada en vivo.</small>
+    </span>
+    <span class="tv-cta-go">→</span>
+  </a>
 
   <section class="gallery-section">
     <div class="gallery-header">

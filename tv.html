@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d12">
+  <title>Lunes de UNO — Modo TV</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --uno-red: #ED1C24;
+      --uno-yellow: #FFDE00;
+      --uno-green: #00A651;
+      --uno-blue: #0072BC;
+      --bg: #0d0d12;
+      --surface: #1a1a2e;
+      --surface-2: #242442;
+      --surface-3: #2d2d52;
+      --border: #3a3a5c;
+      --text: #f0f0f5;
+      --text-muted: #8888a8;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background: var(--bg); color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Layout principal ---- */
+    .tv {
+      width: 100%; height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 1.2vw;
+      padding: 2vh 2vw;
+    }
+    .tv-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5vw;
+      padding: 1.2vh 2vw;
+      background: var(--surface);
+      border-radius: 1.2vw;
+      border: 1px solid var(--border);
+    }
+    .tv-brand {
+      display: flex; align-items: center; gap: 1.2vw;
+    }
+    .tv-brand img { height: 6vh; width: auto; }
+    .tv-brand-name {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 3.5vw, 3rem);
+      line-height: 1;
+      background: linear-gradient(135deg, var(--uno-red) 0%, var(--uno-yellow) 35%, var(--uno-green) 70%, var(--uno-blue) 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tv-status {
+      display: flex; align-items: center; gap: .8vw;
+      font-size: clamp(.8rem, 1.4vw, 1.4rem);
+      font-weight: 700; letter-spacing: .12em;
+      color: var(--text);
+    }
+    .tv-live-dot {
+      width: 1.1vw; height: 1.1vw; min-width: 12px; min-height: 12px;
+      border-radius: 50%; background: #ff3344;
+      box-shadow: 0 0 14px #ff3344;
+      animation: pulse 1.4s infinite;
+    }
+    .tv-status.offline .tv-live-dot { background: var(--text-muted); box-shadow: none; animation: none; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .35; transform: scale(.85); }
+    }
+    .tv-meta {
+      font-size: clamp(.7rem, 1.2vw, 1.1rem);
+      color: var(--text-muted);
+      letter-spacing: .04em;
+    }
+
+    .tv-body {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1.2vw;
+      min-height: 0;
+    }
+    .tv-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.5vw;
+      padding: 1.8vh 1.5vw;
+      display: flex; flex-direction: column;
+      min-height: 0;
+    }
+    .tv-panel h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.2rem, 2.4vw, 2.2rem);
+      margin: 0 0 1.2vh 0;
+      color: var(--uno-yellow);
+      letter-spacing: .04em;
+    }
+    .tv-panel h2 small {
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: .55em;
+      margin-left: .8vw;
+      letter-spacing: 0;
+    }
+
+    /* ---- Tablas ---- */
+    .tv-table {
+      width: 100%;
+      border-collapse: separate; border-spacing: 0;
+      font-size: clamp(.85rem, 1.6vw, 1.6rem);
+      flex: 1; min-height: 0;
+      table-layout: fixed;
+    }
+    .tv-table th {
+      text-align: left;
+      color: var(--text-muted);
+      font-size: clamp(.65rem, 1vw, 1rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: .6vh .8vw;
+      border-bottom: 2px solid var(--border);
+    }
+    .tv-table td {
+      padding: 1vh .8vw;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      vertical-align: middle;
+    }
+    .tv-table tr:last-child td { border-bottom: none; }
+    .tv-table .col-pos { width: 5%; text-align: center; color: var(--text-muted); font-weight: 700; }
+    .tv-table .col-player { width: auto; }
+    .tv-table .col-num { width: 13%; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .tv-table .col-num.col-mute { color: var(--text-muted); font-weight: 500; }
+    .tv-table .col-total { color: var(--uno-yellow); font-size: 1.1em; }
+
+    .tv-player {
+      display: flex; align-items: center; gap: 1vw;
+      min-width: 0;
+    }
+    .tv-player img {
+      width: 5.5vh; height: 5.5vh; min-width: 36px; min-height: 36px;
+      border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+    }
+    .tv-player .tv-player-name {
+      font-weight: 700; font-size: 1em;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .tv-table tr.tv-leader td { background: linear-gradient(90deg, rgba(255,222,0,.10), transparent); }
+    .tv-table tr.tv-leader .tv-player-name { color: var(--uno-yellow); }
+    .tv-table tr.tv-leader .col-pos { color: var(--uno-yellow); }
+    .tv-table tr.tv-trail td { background: linear-gradient(90deg, rgba(237,28,36,.08), transparent); }
+    .tv-table tr.tv-trail .col-pos { color: var(--uno-red); }
+    .tv-cortes-cell { color: var(--uno-green); }
+    .tv-fines-cell { color: var(--uno-yellow); }
+
+    /* ---- Estado: esperando partido ---- */
+    .tv-empty {
+      grid-column: 1 / -1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2vh;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 4vh;
+    }
+    .tv-empty-icon {
+      font-size: clamp(3rem, 8vw, 8rem);
+      opacity: .5;
+    }
+    .tv-empty h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 3.2vw, 3rem);
+      margin: 0;
+      color: var(--text);
+    }
+    .tv-empty p {
+      margin: 0;
+      font-size: clamp(.9rem, 1.6vw, 1.4rem);
+      max-width: 60vw;
+    }
+
+    /* ---- Layout reducido para pantallas chicas (TVs HD-ready) ---- */
+    @media (max-aspect-ratio: 4/3) {
+      .tv-body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+    }
+    @media (max-width: 800px) {
+      .tv-body { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+      .tv-table .col-num { width: 18%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="tv" id="tvRoot">
+  <div class="tv-header">
+    <div class="tv-brand">
+      <img src="assets/tophat-logo.png" alt="">
+      <div>
+        <div class="tv-brand-name">Lunes de UNO</div>
+        <div class="tv-meta" id="gameMeta">— Modo TV en vivo —</div>
+      </div>
+    </div>
+    <div class="tv-status" id="tvStatus">
+      <span class="tv-live-dot"></span>
+      <span id="statusText">EN VIVO</span>
+    </div>
+  </div>
+
+  <div class="tv-body" id="tvBody">
+    <div class="tv-empty" id="tvEmpty">
+      <div class="tv-empty-icon">🎴</div>
+      <h2>Esperá a que arranque el partido…</h2>
+      <p>Cuando alguien empiece a anotar desde el celular, los puntajes parciales aparecen acá en vivo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FIREBASE FIRESTORE (module) ============ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+  import {
+    getFirestore, collection, doc, getDocs, onSnapshot
+  } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+  // ----- Mismos identificadores y firebaseConfig que index.html / propuestas.html -----
+  const PRESET_NAMES = ['PT','Mac','Mata','Gael','Nachi','Carucha','Negro','Naso','Tano','Gordo','Cobra'];
+  const NAME_BY_ID = Object.fromEntries(PRESET_NAMES.map(n => [n.toLowerCase(), n]));
+  const FACE_PATH = id => `assets/faces/${id}.png`;
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM",
+    authDomain: "lunesdeuno.firebaseapp.com",
+    projectId: "lunesdeuno",
+    storageBucket: "lunesdeuno.firebasestorage.app",
+    messagingSenderId: "694296428363",
+    appId: "1:694296428363:web:fb8cc52a4a5c58e24372ce",
+    measurementId: "G-BL6BEJ39C1"
+  };
+  const _fbApp = initializeApp(firebaseConfig);
+  const _db = getFirestore(_fbApp);
+
+  // ----- Helpers puros copiados de propuestas.html (gameTotalScores / unwrap2d) -----
+  // Los inlineamos en lugar de importar para no crear dependencias entre páginas.
+  function unwrap2d(arr) {
+    if (!Array.isArray(arr)) return [];
+    return arr.map(row => {
+      if (row && Array.isArray(row.v)) return row.v;
+      if (Array.isArray(row)) return row;
+      return [];
+    });
+  }
+  // Normaliza un doc tal cual viene de Firestore (con `{v:[...]}` y Timestamps).
+  function normalizeGame(g) {
+    if (!g) return null;
+    const out = Object.assign({}, g);
+    out.rounds = unwrap2d(g.rounds);
+    out.fines  = unwrap2d(g.fines);
+    out.cortes = unwrap2d(g.cortes);
+    out.finishedAt = (g.finishedAt && g.finishedAt.toMillis) ? g.finishedAt.toMillis() : (g.finishedAt || 0);
+    out.updatedAt  = (g.updatedAt  && g.updatedAt.toMillis ) ? g.updatedAt.toMillis()  : (g.updatedAt  || 0);
+    return out;
+  }
+  // Devuelve { playerId: { base, fines, cortes, total } } para un game ya normalizado.
+  function gameScoreBreakdown(g) {
+    const out = {};
+    const parts = (g && g.participants) || [];
+    parts.forEach(p => {
+      if (!p || !p.playerId) return;
+      const slot = p.slot;
+      const base = (g.rounds || []).reduce((s, r) => s + ((r && r[slot]) || 0), 0);
+      const fines = (g.fines || []).reduce((s, r) => s + ((r && r[slot]) || 0), 0);
+      const cortesCount = (g.cortes || []).reduce((s, r) => s + ((r && r[slot]) ? 1 : 0), 0);
+      const cortes = cortesCount * -50;
+      out[p.playerId] = { base, fines, cortes, total: base + fines + cortes, slot };
+    });
+    return out;
+  }
+  function gameTotalScores(g) {
+    const breakdown = gameScoreBreakdown(g);
+    const out = {};
+    Object.keys(breakdown).forEach(k => out[k] = breakdown[k].total);
+    return out;
+  }
+
+  // ----- Estado interno de la TV -----
+  const TV = {
+    currentGameId: null,
+    currentGame: null,        // doc del partido en vivo (normalizado)
+    finishedGames: [],        // games finalizados (normalizados)
+    unsubscribeGame: null,
+    unsubscribeGames: null,
+  };
+
+  // ----- Render -----
+  function renderEmpty(message) {
+    const body = document.getElementById('tvBody');
+    body.innerHTML = `
+      <div class="tv-empty">
+        <div class="tv-empty-icon">🎴</div>
+        <h2>${message || 'Esperá a que arranque el partido…'}</h2>
+        <p>Cuando alguien empiece a anotar desde el celular, los puntajes parciales aparecen acá en vivo.</p>
+      </div>`;
+  }
+
+  function setStatus(text, offline) {
+    const txt = document.getElementById('statusText');
+    const wrap = document.getElementById('tvStatus');
+    if (txt) txt.textContent = text;
+    if (wrap) wrap.classList.toggle('offline', !!offline);
+  }
+
+  function setMeta(g) {
+    const el = document.getElementById('gameMeta');
+    if (!el || !g) return;
+    const d = g.finishedAt ? new Date(g.finishedAt) : new Date();
+    const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    const dateStr = `${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+    const venue = g.venue ? `📍 ${g.venue} · ` : '';
+    const rondas = (g.rounds || []).length;
+    const rndLabel = rondas > 0 ? `Ronda ${rondas}` : 'Por arrancar';
+    el.textContent = `${venue}${dateStr} · ${rndLabel}`;
+  }
+
+  // Tabla del partido en curso: pos | jugador | base | mul | cor | total
+  function renderCurrent(g) {
+    if (!g || !Array.isArray(g.participants) || !g.participants.length) {
+      return `<div class="tv-empty"><div class="tv-empty-icon">⏳</div><h2>Sin participantes todavía</h2></div>`;
+    }
+    const breakdown = gameScoreBreakdown(g);
+    const rows = g.participants.map(p => ({
+      slug: p.playerId,
+      name: p.name || NAME_BY_ID[p.playerId] || p.playerId,
+      ...breakdown[p.playerId] || { base: 0, fines: 0, cortes: 0, total: 0 }
+    })).sort((a, b) => a.total - b.total);
+    const winnerSlug = rows[0]?.slug;
+    const loserSlug  = rows[rows.length - 1]?.slug;
+
+    return `
+      <div class="tv-panel">
+        <h2>Partido en curso <small>${g.maxPoints ? '· hasta ' + g.maxPoints + ' pts' : ''}</small></h2>
+        <table class="tv-table">
+          <thead><tr>
+            <th class="col-pos">#</th>
+            <th>Jugador</th>
+            <th class="col-num">Base</th>
+            <th class="col-num">Multas</th>
+            <th class="col-num">Cortes</th>
+            <th class="col-num">Total</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map((r, i) => `
+              <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
+                <td class="col-pos">${i + 1}</td>
+                <td><div class="tv-player">
+                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
+                  <span class="tv-player-name">${r.name}</span>
+                </div></td>
+                <td class="col-num col-mute">${r.base || 0}</td>
+                <td class="col-num tv-fines-cell">${r.fines > 0 ? '+' + r.fines : '—'}</td>
+                <td class="col-num tv-cortes-cell">${r.cortes < 0 ? r.cortes : '—'}</td>
+                <td class="col-num col-total">${r.total}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  // Tabla de la temporada: pos | jugador | partidos | total acumulado
+  // Los puntos de la temporada incluyen: partidos previos finalizados de la
+  // temporada en curso + el parcial del partido en vivo.
+  function renderSeason(currentGame, finishedGames) {
+    // Regla de la app: una temporada cierra cada 4 finalizados. Los partidos
+    // de la temporada en curso son los últimos N que no llegaron a 4 todavía.
+    const finished = (finishedGames || [])
+      .slice()
+      .sort((a, b) => (a.finishedAt || 0) - (b.finishedAt || 0));
+    const seasonGames = finished.slice(Math.floor(finished.length / 4) * 4);
+    const includedCurrent = currentGame && currentGame.gameId ? [currentGame] : [];
+    const all = seasonGames.concat(includedCurrent);
+
+    if (!all.length) {
+      return `<div class="tv-panel">
+        <h2>Temporada en curso</h2>
+        <div class="tv-empty" style="padding:2vh">
+          <div class="tv-empty-icon">🏁</div>
+          <p>Empieza una temporada nueva con este partido.</p>
+        </div>
+      </div>`;
+    }
+
+    const totals = {};
+    const partidos = {};
+    all.forEach(g => {
+      const scores = gameTotalScores(g);
+      Object.keys(scores).forEach(pid => {
+        totals[pid] = (totals[pid] || 0) + scores[pid];
+        partidos[pid] = (partidos[pid] || 0) + 1;
+      });
+    });
+    const rows = Object.keys(totals).map(id => ({
+      slug: id,
+      name: NAME_BY_ID[id] || id,
+      total: totals[id],
+      partidos: partidos[id] || 0,
+    })).sort((a, b) => a.total - b.total);
+    const winnerSlug = rows[0]?.slug;
+    const loserSlug  = rows[rows.length - 1]?.slug;
+
+    return `
+      <div class="tv-panel">
+        <h2>Temporada en curso <small>· ${all.length} partido${all.length === 1 ? '' : 's'} (incluye parcial)</small></h2>
+        <table class="tv-table">
+          <thead><tr>
+            <th class="col-pos">#</th>
+            <th>Jugador</th>
+            <th class="col-num">PJ</th>
+            <th class="col-num col-total">Pts</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map((r, i) => `
+              <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
+                <td class="col-pos">${i + 1}</td>
+                <td><div class="tv-player">
+                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
+                  <span class="tv-player-name">${r.name}</span>
+                </div></td>
+                <td class="col-num col-mute">${r.partidos}</td>
+                <td class="col-num col-total">${r.total}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  function renderAll() {
+    const body = document.getElementById('tvBody');
+    if (!TV.currentGame) {
+      renderEmpty('Esperá a que arranque el partido…');
+      return;
+    }
+    setMeta(TV.currentGame);
+    body.innerHTML = renderCurrent(TV.currentGame) + renderSeason(TV.currentGame, TV.finishedGames);
+  }
+
+  // ----- Suscripciones a Firestore (read-only) -----
+  function subscribeToGames() {
+    // onSnapshot a la colección entera. Cada vez que cambia algo, recomputamos:
+    //   - cuál es el partido in-progress más reciente
+    //   - lista de games finalizados (para el ranking de temporada)
+    if (TV.unsubscribeGames) { try { TV.unsubscribeGames(); } catch (e) {} }
+    TV.unsubscribeGames = onSnapshot(collection(_db, 'games'), snap => {
+      const all = snap.docs.map(d => normalizeGame(d.data())).filter(Boolean);
+      TV.finishedGames = all.filter(g => g.finished);
+      // Partido in-progress: el de updatedAt más reciente con finished===false
+      const open = all.filter(g => !g.finished)
+        .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      const next = open[0] || null;
+
+      // Si cambió el partido activo, re-suscribirse al doc. Cualquier rama
+      // termina en renderAll() para reflejar el cambio (incluyendo cuando se
+      // pasa de tener un partido in-progress a no tener ninguno).
+      const prevId = TV.currentGameId;
+      const nextId = next ? next.gameId : null;
+      if (nextId !== prevId) {
+        TV.currentGameId = nextId;
+        TV.currentGame = next;
+        if (TV.unsubscribeGame) { try { TV.unsubscribeGame(); } catch (e) {} TV.unsubscribeGame = null; }
+        if (nextId) {
+          TV.unsubscribeGame = onSnapshot(doc(_db, 'games', nextId), s => {
+            if (!s.exists()) {
+              TV.currentGame = null; TV.currentGameId = null; renderAll(); return;
+            }
+            TV.currentGame = normalizeGame(s.data());
+            renderAll();
+          }, err => { console.warn('[tv] game listener error', err); });
+        }
+      }
+      // Siempre rerendereamos para que el ranking de temporada se mantenga
+      // sincronizado con la lista de finalizados, incluso cuando no hay
+      // partido in-progress.
+      renderAll();
+    }, err => {
+      console.error('[tv] games listener error', err);
+      setStatus('SIN CONEXIÓN', true);
+    });
+  }
+
+  // Boot
+  setStatus('EN VIVO', false);
+  subscribeToGames();
+  // Aviso si Firestore tarda > 8 s en responder (network mala, etc).
+  setTimeout(() => {
+    if (!TV.currentGame && TV.finishedGames.length === 0) {
+      // Mantener la pantalla "esperando"; sólo cambiamos status si ni siquiera
+      // vino el primer snapshot.
+      if (!TV.unsubscribeGames || !document.querySelector('#tvBody .tv-panel')) {
+        setStatus('SIN DATOS', true);
+      }
+    }
+  }, 8000);
+
+  // Para tests: exponemos algunos handlers e info de estado
+  window.__TV_BOOT_OK__ = true;
+  window.__TV_HELPERS = { unwrap2d, normalizeGame, gameScoreBreakdown, gameTotalScores };
+</script>
+
+</body>
+</html>
