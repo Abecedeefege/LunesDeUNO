@@ -3525,7 +3525,7 @@ function showEditableHistory() {
   table.innerHTML = html;
 }
 
-// ============ FAMILY CERTIFICATE (recibo serio) ============
+// ============ FAMILY CARD (figurita coleccionable) ============
 async function emitFamilyCertificate(playerSlug, opponentSlug, kind, btn) {
   if (typeof html2canvas === 'undefined') {
     if (typeof _showStatsToast === 'function') _showStatsToast(t('stats_share_error'));
@@ -3545,149 +3545,137 @@ async function emitFamilyCertificate(playerSlug, opponentSlug, kind, btn) {
     return;
   }
 
-  // Roles según kind:
-  //   'hijos' → playerSlug es PADRE, opponentSlug es HIJO
-  //   'papis' → playerSlug es HIJO, opponentSlug es PADRE
+  // En el módulo "Hijos" (kind=hijos) → emitimos cert de NACIMIENTO. La cara
+  //   gigante de la figurita es la del oponente (el hijo); el playerSlug es
+  //   el padre y aparece sólo como referencia textual.
+  // En el módulo "Papis" (kind=papis) → emitimos cert de PATERNIDAD. La cara
+  //   gigante es la del oponente (el padre); el playerSlug es el hijo y va
+  //   como referencia textual.
   var isHijos = (kind === 'hijos');
-  var padreSlug = isHijos ? playerSlug : opponentSlug;
-  var hijoSlug  = isHijos ? opponentSlug : playerSlug;
-  var padreName = _presetName(padreSlug);
-  var hijoName  = _presetName(hijoSlug);
+  var subjectSlug = opponentSlug;            // protagonista de la figurita
+  var counterpartSlug = playerSlug;
+  var subjectName = _presetName(subjectSlug);
+  var counterpartName = _presetName(counterpartSlug);
 
-  // Wins/losses normalizados desde la perspectiva del padre.
+  // Stats vistos desde el padre.
   var padreWins, padreLosses;
   if (isHijos) { padreWins = rec.wins || 0; padreLosses = rec.losses || 0; }
   else         { padreWins = rec.losses || 0; padreLosses = rec.wins || 0; }
   var totalGames = rec.together || 0;
   var winRate = totalGames ? Math.round((padreWins / totalGames) * 100) : 0;
-  var diff = padreWins - padreLosses;
+
+  // Record desde la perspectiva del subject (en hijos el subject es el hijo
+  // perdedor; en papis el subject es el padre ganador).
+  var subjectWins  = isHijos ? padreLosses : padreWins;
+  var subjectLosses = isHijos ? padreWins  : padreLosses;
 
   var d = new Date();
-  var dateStr = d.toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' });
-  var hourStr = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-  var folio = 'TX-' + Date.now().toString(36).toUpperCase();
-  var docTitle = isHijos ? 'CERTIFICADO DE PATERNIDAD' : 'CERTIFICADO DE NACIMIENTO';
-  var emoji = isHijos ? '👨‍👦' : '👶';
+  var dateStr = d.toLocaleDateString('es-AR', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase();
+  var folio = '#' + Date.now().toString(36).toUpperCase().slice(-5);
 
-  var padreFace = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[padreSlug] : null) || '';
-  var hijoFace  = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[hijoSlug]  : null) || '';
+  var ribbonText = isHijos ? 'HIJO LEGÍTIMO' : 'PADRE OFICIAL';
+  var ribbonSub  = isHijos ? 'CERTIFICADO DE NACIMIENTO' : 'CERTIFICADO DE PATERNIDAD';
+  var subjectFace = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[subjectSlug] : null) || '';
+  var counterFace = (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[counterpartSlug] : null) || '';
 
   var narrative = isHijos
-    ? ('Habiendo prevalecido en ' + padreWins + ' de ' + totalGames + ' partidas registradas (' + winRate + '%), '
-        + 'el Sr. ' + padreName + ' queda formalmente reconocido como progenitor legítimo de ' + hijoName + '. '
-        + 'Esta filiación se asienta de forma firme, definitiva e inapelable en los registros del Tribunal del UNO.')
-    : ('Por insuficiencia de victorias frente al Sr. ' + padreName + ' (apenas ' + padreLosses + ' de ' + totalGames + ' partidas, '
-        + (100 - winRate) + '%), se hace constar que ' + hijoName + ' ostenta la condición de hijo registral. '
-        + 'El presente acto surte efectos inmediatos en la vida UNO de ambas partes.');
+    ? (subjectName + ' fue derrotado en ' + padreWins + ' de ' + totalGames + ' partidas (' + winRate + '%) por ' + counterpartName + '. '
+        + 'Filiación inscripta en el Tribunal del UNO. La picada es ley.')
+    : (subjectName + ' venció en ' + padreWins + ' de ' + totalGames + ' partidas (' + winRate + '%) a ' + counterpartName + '. '
+        + 'Su paternidad queda inscripta en el Tribunal del UNO. Inapelable.');
+
+  // Paleta por tipo:
+  //   PADRE OFICIAL → rojo + dorado, imponente.
+  //   HIJO LEGÍTIMO → celeste + amarillo, juvenil.
+  var palette = isHijos
+    ? { bgA: '#FFE873', bgB: '#7ECBF7', accent: '#0072BC', accentDark: '#004B7F', tag: '#0072BC' }
+    : { bgA: '#FF6B72', bgB: '#FFD400', accent: '#ED1C24', accentDark: '#8a0d12', tag: '#8a0d12' };
 
   var wrap = document.createElement('div');
   wrap.style.cssText = 'position:fixed;top:-100000px;left:0;z-index:-1;';
   wrap.innerHTML = ''
     + '<style>'
-    +   ".receipt{position:relative;width:540px;padding:30px 36px 24px;background:#fdfdfb;color:#1a1a1a;"
-    +   "font-family:'Inter',-apple-system,sans-serif;border:2px solid #1a1a1a;box-sizing:border-box;"
-    +   'box-shadow:0 8px 24px rgba(0,0,0,.35);}'
-    +   '.receipt::before,.receipt::after{content:"";position:absolute;left:0;right:0;height:14px;'
-    +   "background:linear-gradient(135deg,transparent 33%,#1a1a1a 33%,#1a1a1a 50%,transparent 50%,"
-    +   "transparent 83%,#1a1a1a 83%,#1a1a1a 100%);background-size:18px 14px;}"
-    +   '.receipt::before{top:-14px;}.receipt::after{bottom:-14px;}'
-    +   '.r-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}'
-    +   '.r-top img{width:42px;height:42px;flex-shrink:0;}'
-    +   ".r-org{font-family:'Fredoka One',cursive;font-size:20px;line-height:1;}"
-    +   '.r-org-sub{font-size:11px;color:#666;letter-spacing:.18em;text-transform:uppercase;margin-top:3px;}'
-    +   '.r-divider{border-top:1px solid #1a1a1a;margin:12px 0;}'
-    +   '.r-divider-dash{border-top:1px dashed #888;margin:10px 0;}'
-    +   '.r-title{text-align:center;font-size:18px;font-weight:800;letter-spacing:.18em;margin:6px 0 2px;}'
-    +   '.r-meta{display:flex;justify-content:space-between;font-size:11px;color:#666;'
-    +   "font-family:'Courier New',monospace;letter-spacing:.04em;}"
-    +   '.r-intro{font-size:13px;line-height:1.55;text-align:justify;margin:14px 0 12px;color:#2a2a2a;}'
-    +   '.r-parties{display:flex;gap:14px;margin:10px 0;}'
-    +   '.r-party{flex:1;display:flex;align-items:center;gap:10px;padding:10px;'
-    +   'background:#f4f1ea;border:1px solid #ccc;border-radius:6px;}'
-    +   '.r-party img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid #1a1a1a;}'
-    +   '.r-party-info{min-width:0;}'
-    +   '.r-party-role{font-size:9px;letter-spacing:.2em;color:#666;font-weight:700;text-transform:uppercase;}'
-    +   ".r-party-name{font-family:'Fredoka One',cursive;font-size:18px;line-height:1.1;color:#1a1a1a;}"
-    +   ".r-stats{font-family:'Courier New',monospace;font-size:13px;line-height:1.7;}"
-    +   ".r-stat-row{display:flex;justify-content:space-between;border-bottom:1px dotted #aaa;}"
-    +   '.r-stat-label{color:#444;letter-spacing:.04em;}'
-    +   '.r-stat-val{font-weight:700;color:#1a1a1a;}'
-    +   '.r-stat-row.r-total{border-bottom:2px solid #1a1a1a;border-top:1px solid #1a1a1a;'
-    +   'padding:6px 0;margin-top:4px;font-size:14px;}'
-    +   '.r-narrative{font-size:12px;line-height:1.6;text-align:justify;color:#333;margin:14px 0;font-style:italic;}'
-    +   '.r-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-top:14px;}'
-    +   '.r-stamp{width:96px;height:96px;border:2px solid #ED1C24;color:#ED1C24;border-radius:50%;'
-    +   'display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;'
-    +   'font-size:10px;letter-spacing:.12em;line-height:1.3;transform:rotate(-8deg);flex-shrink:0;}'
-    +   '.r-sig{flex:1;text-align:center;}'
-    +   '.r-sig-line{border-top:1px solid #1a1a1a;margin-bottom:4px;}'
-    +   ".r-sig-name{font-style:italic;font-size:11px;color:#444;font-family:'Times New Roman',serif;}"
-    +   '.r-bottom{margin-top:14px;padding-top:10px;border-top:1px dashed #aaa;'
-    +   "font-family:'Courier New',monospace;font-size:9.5px;color:#666;text-align:center;line-height:1.55;letter-spacing:.04em;}"
-    +   '.r-bottom .r-asterisks{font-weight:700;color:#1a1a1a;letter-spacing:.3em;margin-bottom:6px;}'
+    +   '.tcard{position:relative;width:540px;height:756px;box-sizing:border-box;'
+    +     'padding:18px;border-radius:28px;overflow:hidden;'
+    +     'background:'
+    +       'radial-gradient(circle at 20% 18%, rgba(255,255,255,.55), transparent 38%),'
+    +       'radial-gradient(circle at 80% 82%, rgba(255,255,255,.35), transparent 45%),'
+    +       'linear-gradient(135deg, ' + palette.bgA + ' 0%, ' + palette.bgB + ' 100%);'
+    +     'box-shadow:0 22px 60px rgba(0,0,0,.45), inset 0 0 0 6px rgba(255,255,255,.55), inset 0 0 0 9px ' + palette.accent + ';'
+    +     "font-family:'Inter',-apple-system,sans-serif;color:#1a1a1a;}"
+    +   ".tcard::before{content:'';position:absolute;inset:14px;border-radius:22px;border:2px dashed rgba(0,0,0,.12);pointer-events:none;}"
+    +   '.tc-ribbon{position:absolute;top:30px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:2px;z-index:2;}'
+    +   '.tc-ribbon-pill{background:' + palette.accent + ';color:#fff;'
+    +     'padding:8px 22px;border-radius:999px;font-family:\'Fredoka One\',cursive;'
+    +     'font-size:22px;letter-spacing:.18em;box-shadow:0 4px 14px rgba(0,0,0,.25);'
+    +     'border:3px solid #fff;}'
+    +   '.tc-ribbon-sub{font-size:10px;font-weight:700;color:' + palette.accentDark + ';'
+    +     'letter-spacing:.32em;text-transform:uppercase;background:rgba(255,255,255,.7);'
+    +     'padding:3px 10px;border-radius:999px;margin-top:4px;}'
+    +   '.tc-photo-wrap{position:absolute;top:115px;left:50%;transform:translateX(-50%);'
+    +     'width:290px;height:290px;border-radius:50%;display:flex;align-items:center;justify-content:center;'
+    +     'background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.7) 80%,transparent 100%);'
+    +     'box-shadow:0 0 0 8px rgba(255,255,255,.85), 0 0 0 14px ' + palette.accent + ', 0 18px 40px rgba(0,0,0,.35);}'
+    +   '.tc-photo{width:270px;height:270px;border-radius:50%;object-fit:cover;'
+    +     'border:4px solid #fff;background:#ddd;}'
+    +   '.tc-photo-blank{width:270px;height:270px;border-radius:50%;background:#ddd;}'
+    +   '.tc-name{position:absolute;top:425px;left:0;right:0;text-align:center;'
+    +     "font-family:'Fredoka One',cursive;font-size:62px;line-height:1;color:#1a1a1a;"
+    +     'text-shadow:0 4px 0 #fff, 0 6px 16px rgba(0,0,0,.18);letter-spacing:.02em;}'
+    +   '.tc-pills{position:absolute;top:508px;left:0;right:0;display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}'
+    +   '.tc-pill{background:rgba(255,255,255,.92);border:2px solid ' + palette.accent + ';'
+    +     'padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;color:#1a1a1a;'
+    +     "letter-spacing:.04em;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;}"
+    +   '.tc-pill b{font-size:18px;color:' + palette.accentDark + ';font-weight:800;}'
+    +   '.tc-pill img{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1px solid ' + palette.accent + ';}'
+    +   '.tc-narrative{position:absolute;top:560px;left:30px;right:30px;text-align:center;'
+    +     'font-size:12.5px;line-height:1.4;color:#1a1a1a;font-style:italic;font-weight:600;'
+    +     'background:rgba(255,255,255,.55);padding:12px 14px;border-radius:14px;'
+    +     'border:1px dashed rgba(0,0,0,.22);}'
+    +   '.tc-foot{position:absolute;bottom:18px;left:24px;right:24px;}'
+    +   '.tc-foot{position:absolute;bottom:24px;left:30px;right:30px;display:flex;'
+    +     "align-items:center;justify-content:space-between;font-family:'Courier New',monospace;"
+    +     'font-size:10px;color:#1a1a1a;letter-spacing:.05em;font-weight:700;}'
+    +   '.tc-foot-brand{display:flex;align-items:center;gap:6px;}'
+    +   '.tc-foot-brand img{width:22px;height:22px;}'
+    +   '.tc-foot .tc-folio{background:rgba(0,0,0,.08);padding:3px 8px;border-radius:6px;}'
+    +   '.tc-corner{position:absolute;width:42px;height:42px;display:flex;align-items:center;justify-content:center;'
+    +     'background:rgba(255,255,255,.9);border-radius:50%;font-size:22px;'
+    +     'box-shadow:0 2px 8px rgba(0,0,0,.2);}'
+    +   '.tc-c-tl{top:30px;left:30px;}.tc-c-tr{top:30px;right:30px;}'
     + '</style>'
-    + '<div class="receipt">'
-    +   '<div class="r-top">'
-    +     '<img src="assets/icon-192.png" alt="">'
-    +     '<div>'
-    +       '<div class="r-org">Lunes de UNO</div>'
-    +       '<div class="r-org-sub">Registro Civil del UNO</div>'
+    + '<div class="tcard">'
+    +   '<div class="tc-corner tc-c-tl">' + (isHijos ? '👶' : '👑') + '</div>'
+    +   '<div class="tc-corner tc-c-tr">🎴</div>'
+    +   '<div class="tc-ribbon">'
+    +     '<div class="tc-ribbon-pill">' + ribbonText + '</div>'
+    +     '<div class="tc-ribbon-sub">' + ribbonSub + '</div>'
+    +   '</div>'
+    +   '<div class="tc-photo-wrap">'
+    +     (subjectFace
+        ? '<img class="tc-photo" src="' + subjectFace + '" alt="">'
+        : '<div class="tc-photo-blank"></div>')
+    +   '</div>'
+    +   '<div class="tc-name">' + subjectName.toUpperCase() + '</div>'
+    +   '<div class="tc-pills">'
+    +     '<div class="tc-pill"><b>' + subjectWins + '–' + subjectLosses + '</b>récord</div>'
+    +     '<div class="tc-pill"><b>' + winRate + '%</b>dominio</div>'
+    +     '<div class="tc-pill">'
+    +       (counterFace ? '<img src="' + counterFace + '" alt="">' : '')
+    +       (isHijos ? ' vs ' : ' vs ') + counterpartName
     +     '</div>'
     +   '</div>'
-    +   '<div class="r-divider"></div>'
-    +   '<div class="r-title">' + emoji + '  ' + docTitle + '</div>'
-    +   '<div class="r-meta">'
-    +     '<span>FOLIO ' + folio + '</span>'
-    +     '<span>' + dateStr.toUpperCase() + ' · ' + hourStr + '</span>'
-    +   '</div>'
-    +   '<div class="r-divider"></div>'
-    +   '<p class="r-intro">Por medio del presente comprobante, el Registro Civil del UNO '
-    +     'deja constancia formal de la filiación que se asienta a continuación, '
-    +     'computada sobre las partidas registradas en sistema:</p>'
-    +   '<div class="r-parties">'
-    +     '<div class="r-party">'
-    +       (padreFace ? '<img src="' + padreFace + '" alt="">' : '<div style="width:46px;height:46px;border-radius:50%;background:#ccc;flex-shrink:0;"></div>')
-    +       '<div class="r-party-info">'
-    +         '<div class="r-party-role">Padre</div>'
-    +         '<div class="r-party-name">' + padreName + '</div>'
-    +       '</div>'
-    +     '</div>'
-    +     '<div class="r-party">'
-    +       (hijoFace ? '<img src="' + hijoFace + '" alt="">' : '<div style="width:46px;height:46px;border-radius:50%;background:#ccc;flex-shrink:0;"></div>')
-    +       '<div class="r-party-info">'
-    +         '<div class="r-party-role">Hijo</div>'
-    +         '<div class="r-party-name">' + hijoName + '</div>'
-    +       '</div>'
-    +     '</div>'
-    +   '</div>'
-    +   '<div class="r-divider-dash"></div>'
-    +   '<div class="r-stats">'
-    +     '<div class="r-stat-row"><span class="r-stat-label">VICTORIAS DEL PADRE</span><span class="r-stat-val">' + padreWins + '</span></div>'
-    +     '<div class="r-stat-row"><span class="r-stat-label">VICTORIAS DEL HIJO</span><span class="r-stat-val">' + padreLosses + '</span></div>'
-    +     '<div class="r-stat-row"><span class="r-stat-label">PARTIDAS JUNTAS</span><span class="r-stat-val">' + totalGames + '</span></div>'
-    +     '<div class="r-stat-row"><span class="r-stat-label">DIFERENCIAL A FAVOR DEL PADRE</span><span class="r-stat-val">+' + Math.abs(diff) + '</span></div>'
-    +     '<div class="r-stat-row r-total"><span class="r-stat-label">DOMINIO PATERNO</span><span class="r-stat-val">' + winRate + '%</span></div>'
-    +   '</div>'
-    +   '<p class="r-narrative">' + narrative + '</p>'
-    +   '<div class="r-foot">'
-    +     '<div class="r-stamp">' + (isHijos ? 'PATERNIDAD<br>VERIFICADA' : 'NACIMIENTO<br>REGISTRADO') + '</div>'
-    +     '<div class="r-sig">'
-    +       '<div class="r-sig-line"></div>'
-    +       '<div class="r-sig-name">Registrador Civil del UNO</div>'
-    +     '</div>'
-    +   '</div>'
-    +   '<div class="r-bottom">'
-    +     '<div class="r-asterisks">*** FIN DEL COMPROBANTE ***</div>'
-    +     'Este documento es constancia oficial de filiación dentro del<br>'
-    +     'Tribunal del UNO. Carece de validez fuera del lunes a la noche.<br>'
-    +     'Conserve este recibo. No se reimprime.'
+    +   '<p class="tc-narrative">' + narrative + '</p>'
+    +   '<div class="tc-foot">'
+    +     '<span class="tc-folio">' + folio + ' · ' + dateStr + '</span>'
+    +     '<span class="tc-foot-brand"><img src="assets/icon-192.png" alt="">LUNES DE UNO</span>'
     +   '</div>'
     + '</div>';
   document.body.appendChild(wrap);
 
   try {
     if (document.fonts && document.fonts.ready) { try { await document.fonts.ready; } catch (e) {} }
-    var canvas = await html2canvas(wrap.querySelector('.receipt'), {
+    var canvas = await html2canvas(wrap.querySelector('.tcard'), {
       backgroundColor: null,
       scale: 2,
       useCORS: true,
@@ -3695,11 +3683,11 @@ async function emitFamilyCertificate(playerSlug, opponentSlug, kind, btn) {
     });
     var blob = await new Promise(function(r) { canvas.toBlob(r, 'image/png'); });
     if (!blob) throw new Error('blob-null');
-    var filename = 'lunesdeuno-' + (isHijos ? 'paternidad' : 'nacimiento') + '-'
-      + padreSlug + '-' + hijoSlug + '.png';
+    var filename = 'lunesdeuno-figurita-' + (isHijos ? 'nacimiento' : 'paternidad') + '-'
+      + subjectSlug + '.png';
     var file = new File([blob], filename, { type: 'image/png' });
-    var shareTitle = isHijos ? 'Certificado de paternidad' : 'Certificado de nacimiento';
-    var shareData = { files: [file], title: 'Lunes de UNO — ' + shareTitle, text: shareTitle + ': ' + padreName + ' / ' + hijoName };
+    var shareTitle = isHijos ? 'Certificado de nacimiento' : 'Certificado de paternidad';
+    var shareData = { files: [file], title: 'Lunes de UNO — ' + shareTitle, text: shareTitle + ': ' + subjectName };
     if (navigator.canShare && navigator.canShare(shareData)) {
       try { await navigator.share(shareData); }
       catch (e) { if (!(e && e.name === 'AbortError')) throw e; }
