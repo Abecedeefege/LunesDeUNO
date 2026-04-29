@@ -982,6 +982,73 @@
     }
     .stats-tab-panel { width: 100%; max-width: 100%; }
 
+    /* ---- Rainbow Zone: galería de partidos por temporada ---- */
+    .rainbow-zone { display: flex; flex-direction: column; gap: 1.5rem; }
+    .rz-empty { color: var(--text-muted); text-align: center; padding: 2rem 1rem; font-size: .9rem; }
+    .rz-season-block h3 {
+      color: var(--uno-yellow); margin: 0 0 .75rem 0; font-size: 1rem;
+      letter-spacing: .04em; display: flex; align-items: center; gap: .5rem;
+    }
+    .rz-season-block h3 .rz-ongoing-badge {
+      font-size: .7rem; color: var(--text-muted); font-weight: 500;
+      background: var(--surface-2); padding: .15rem .5rem; border-radius: 999px;
+      letter-spacing: 0;
+    }
+    .rz-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+    @media (max-width: 480px) { .rz-grid { grid-template-columns: 1fr; } }
+    .rz-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .2s, border-color .2s;
+    }
+    .rz-card:hover { transform: translateY(-2px); border-color: var(--uno-yellow); }
+    .rz-card-top {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .6rem .75rem;
+      background: linear-gradient(180deg, rgba(255,222,0,.08), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .rz-card-top img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--uno-yellow); }
+    .rz-card-top .rz-winner-info { flex: 1; min-width: 0; }
+    .rz-card-top .rz-winner-name {
+      color: var(--uno-yellow); font-family: 'Fredoka One', cursive;
+      font-size: 1rem; line-height: 1; margin-bottom: .15rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .rz-card-top .rz-winner-score { color: var(--text); font-size: .8rem; font-weight: 600; }
+    .rz-photo {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #fafafa 0%, #e5e5e5 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #999; font-size: .9rem; letter-spacing: .04em;
+    }
+    .rz-card-mid {
+      padding: .55rem .75rem;
+      font-size: .75rem; color: var(--text-muted);
+    }
+    .rz-card-mid .rz-row {
+      display: flex; align-items: center; gap: .4rem;
+      padding: .15rem 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .rz-card-mid .rz-row img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .rz-card-mid .rz-row.rz-loser { color: var(--uno-red); font-weight: 600; }
+    .rz-card-mid .rz-row.rz-loser img { border: 1px solid var(--uno-red); }
+    .rz-card-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .45rem .75rem;
+      border-top: 1px solid var(--border);
+      font-size: .7rem; color: var(--text-muted);
+      letter-spacing: .03em;
+    }
+    .rz-card-bottom .rz-tag {
+      background: var(--surface-2); padding: .1rem .5rem; border-radius: 999px;
+      font-weight: 600;
+    }
+
     /* Share-to-WhatsApp button under each stats table */
     .btn-whatsapp {
       display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
@@ -1045,7 +1112,7 @@
 
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
-    <button type="button" class="header-logo" id="headerLogo" onclick="playNextSound()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
+    <button type="button" class="header-logo" id="headerLogo" onclick="speakPlayerRanking()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
       <img class="tophat-img" src="assets/tophat-logo.png" alt="" aria-hidden="true">
     </button>
     <div class="lang-switcher">
@@ -1266,6 +1333,7 @@
       <button class="stats-tab-btn" data-tab="leaderboardSeason" onclick="switchStatsTab('leaderboardSeason')" data-i18n="stats_tab_leaderboard_season"></button>
       <button class="stats-tab-btn" data-tab="seasons" onclick="switchStatsTab('seasons')" data-i18n="stats_tab_seasons"></button>
       <button class="stats-tab-btn" data-tab="h2h" onclick="switchStatsTab('h2h')" data-i18n="stats_tab_h2h"></button>
+      <button class="stats-tab-btn" data-tab="rainbow" onclick="switchStatsTab('rainbow')" data-i18n="stats_tab_rainbow"></button>
     </div>
 
     <div id="statsTab_player" class="stats-tab-panel active">
@@ -1315,6 +1383,10 @@
       </div>
       <p style="color:var(--text-muted);font-size:.75rem;margin-top:.5rem;" data-i18n="stats_h2h_help"></p>
       <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('h2hMatrix', 'stats_tab_h2h', this)" data-i18n="stats_share_wa"></button>
+    </div>
+
+    <div id="statsTab_rainbow" class="stats-tab-panel">
+      <div id="rainbowZoneContainer"></div>
     </div>
 
     <div style="margin-top:1rem; text-align:center;">
@@ -1545,6 +1617,14 @@ const STRINGS = {
     stats_season_selector_label: 'Temporada:',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
+    stats_tab_rainbow: '🏳️‍🌈 Rainbow Zone 🏳️‍🌈',
+    rainbow_empty: 'Todavía no hay temporadas con datos.',
+    rainbow_ongoing: '(en curso)',
+    rainbow_partido: 'Partido',
+    rainbow_temporada: 'Temporada',
+    rainbow_no_photo: '📷 sin foto',
+    rainbow_winner: 'Ganador:',
+    rainbow_loser: 'Perdedor:',
     stats_player_label: 'Jugador:',
     stats_sort_label: 'Ordenar por:',
     stats_h2h_help: 'Cada celda muestra victorias del jugador de la fila sobre el de la columna / partidas jugadas juntos.',
@@ -1714,6 +1794,14 @@ const STRINGS = {
     stats_season_selector_label: 'Season:',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
+    stats_tab_rainbow: '🏳️‍🌈 Rainbow Zone 🏳️‍🌈',
+    rainbow_empty: 'No seasons with data yet.',
+    rainbow_ongoing: '(in progress)',
+    rainbow_partido: 'Game',
+    rainbow_temporada: 'Season',
+    rainbow_no_photo: '📷 no photo',
+    rainbow_winner: 'Winner:',
+    rainbow_loser: 'Loser:',
     stats_player_label: 'Player:',
     stats_sort_label: 'Sort by:',
     stats_h2h_help: 'Each cell shows row-player wins over column-player / games played together.',
@@ -2445,7 +2533,28 @@ function showScreen(id) {
   if (id === 'game') renderGame();
   if (id === 'results') renderResults();
   if (id === 'stats') initStats();
+  // Override del back button: si nos estamos yendo de la home, dejamos una
+  // entrada en el history para que la próxima vez que el usuario apriete
+  // "atrás" lo intercepte popstate y lo devolvamos a la home.
+  if (id !== 'home' && !_navInternalPop) {
+    try { history.pushState({ ldu: id }, '', ''); } catch (e) {}
+  }
+  _navInternalPop = false;
 }
+
+var _navInternalPop = false;
+window.addEventListener('popstate', function() {
+  // Cualquier "atrás" mientras estemos en una pantalla distinta a home
+  // nos lleva a home. Estando en home, popstate no agrega historial nuevo
+  // y el siguiente "atrás" sale del sitio normalmente.
+  var active = ['home','setup','game','results','stats'].find(function(s) {
+    return document.getElementById(s) && document.getElementById(s).classList.contains('active');
+  });
+  if (active !== 'home') {
+    _navInternalPop = true;
+    showScreen('home');
+  }
+});
 
 // ============ SETUP ============
 function slugify(name) { return String(name || '').trim().toLowerCase(); }
@@ -3556,46 +3665,50 @@ function confirmQuit() {
   });
 }
 
-// ============ +4 SOUND BOARD ============
-let soundCtx = null;
-let soundIndex = 0;
+// ============ HEADER LOGO: nombrar jugador + posición anual ============
+// Cada tap habla el nombre de un jugador random y su posición en el ranking
+// anual. Rota: ya nombrado no se repite hasta que todos hayan sido nombrados.
+var _spokenPlayers = new Set();
 
-function playNextSound() {
-  if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (soundCtx.state === 'suspended') soundCtx.resume();
-  const sounds = [playSadTrombone, playAirHorn, playDramaticSting, playFuneralMarch];
-  sounds[soundIndex % sounds.length]();
-  soundIndex++;
-  const logo = document.querySelector('.header-logo svg');
+function speakPlayerRanking() {
+  // Pulse animation independiente del speech (siempre da feedback visual).
+  var logo = document.querySelector('.header-logo img') || document.querySelector('.header-logo svg');
   if (logo) { logo.classList.remove('hat-pulse'); void logo.offsetWidth; logo.classList.add('hat-pulse'); }
-}
 
-function playTone(freq, type, start, dur, gainVal) {
-  const osc = soundCtx.createOscillator();
-  const gain = soundCtx.createGain();
-  osc.type = type; osc.frequency.value = freq;
-  gain.gain.value = gainVal || 0.3;
-  osc.connect(gain); gain.connect(soundCtx.destination);
-  osc.start(soundCtx.currentTime + start);
-  osc.stop(soundCtx.currentTime + start + dur);
-  gain.gain.setValueAtTime(gainVal || 0.3, soundCtx.currentTime + start);
-  gain.gain.exponentialRampToValueAtTime(0.001, soundCtx.currentTime + start + dur);
-}
+  if (!('speechSynthesis' in window)) return;
+  try { window.speechSynthesis.cancel(); } catch (e) {}
 
-function playSadTrombone() {
-  [293.66, 277.18, 261.63, 246.94].forEach((f, i) => playTone(f, 'sawtooth', i * 0.3, 0.3, 0.2));
-}
-function playAirHorn() {
-  [200, 250, 200, 250].forEach((f, i) => playTone(f, 'sawtooth', i * 0.08, 0.12, 0.25));
-  playTone(220, 'sawtooth', 0.32, 0.5, 0.3);
-}
-function playDramaticSting() {
-  [440, 554, 659, 880].forEach((f, i) => playTone(f, 'square', i * 0.08, 0.15, 0.15));
-  playTone(220, 'sawtooth', 0.4, 0.6, 0.2);
-}
-function playFuneralMarch() {
-  const notes = [[261.63,0,0.5],[261.63,0.5,0.25],[261.63,0.75,0.25],[261.63,1.0,0.75],[311.13,1.0,0.75],[293.66,1.75,0.25],[293.66,2.0,0.25],[261.63,2.25,0.25],[261.63,2.5,0.5],[246.94,2.5,0.5]];
-  notes.forEach(([f, s, d]) => playTone(f, 'triangle', s, d, 0.2));
+  var computed = (typeof _statsData !== 'undefined' && _statsData) ? _statsData.computed : null;
+  if (!computed || !computed.byPlayer) return;
+
+  // Ranking anual: solo jugadores con partidas, ordenado por totalScore desc.
+  var ranking = Object.values(computed.byPlayer)
+    .filter(function(p) { return p.gamesPlayed > 0; })
+    .sort(function(a, b) { return (b.totalScore || 0) - (a.totalScore || 0); });
+  if (!ranking.length) return;
+
+  // Rotación: filtrar a los que aún no nombramos en esta vuelta. Si ya
+  // nombramos a todos, vaciamos el set y empezamos de nuevo.
+  var candidates = ranking.filter(function(p) { return !_spokenPlayers.has(p.slug); });
+  if (!candidates.length) {
+    _spokenPlayers.clear();
+    candidates = ranking;
+  }
+  var pick = candidates[Math.floor(Math.random() * candidates.length)];
+  _spokenPlayers.add(pick.slug);
+  var position = ranking.findIndex(function(p) { return p.slug === pick.slug; }) + 1;
+
+  var displayName = (typeof _presetName === 'function') ? _presetName(pick.slug) : pick.slug;
+  var phrase = (currentLang === 'es')
+    ? (displayName + ', posición ' + position + ' en el ranking anual.')
+    : (displayName + ', position ' + position + ' in the annual ranking.');
+
+  var utter = new SpeechSynthesisUtterance(phrase);
+  utter.lang = (currentLang === 'es') ? 'es-AR' : 'en-US';
+  utter.rate = 1.0;
+  utter.pitch = 1.0;
+  utter.volume = 1.0;
+  window.speechSynthesis.speak(utter);
 }
 
 // ============ MANDALE AL GRUPO ============
@@ -4679,6 +4792,7 @@ function initStats() {
     renderLeaderboard('totalScore', 'season');
     renderSeasonsTable();
     renderH2HMatrix();
+    if (typeof renderRainbowZone === 'function') renderRainbowZone();
     _updateSeasonTabLabel();
   });
 }
@@ -4848,6 +4962,8 @@ function switchStatsTab(tab) {
   document.querySelectorAll('.stats-tab-panel').forEach(function(p) {
     p.classList.toggle('active', p.id === 'statsTab_' + tab);
   });
+  // La Rainbow Zone se rende-rendera al activarse para garantizar datos frescos.
+  if (tab === 'rainbow' && typeof renderRainbowZone === 'function') renderRainbowZone();
 }
 
 function populatePlayerDropdown() {
@@ -5442,6 +5558,113 @@ function renderH2HMatrix() {
   });
   html += '</tbody>';
   table.innerHTML = html;
+}
+
+// ============ RAINBOW ZONE: galería por temporada ============
+function _formatGameDateShort(ts) {
+  if (!ts) return '';
+  var d = new Date(ts);
+  var months = currentLang === 'es'
+    ? ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    : ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function _renderRainbowCard(g, seasonNum, partidoNum) {
+  var participants = g.participants || [];
+  var scores = participants.map(function(p, idx) {
+    return {
+      name: p.name || (typeof _presetName === 'function' ? _presetName(p.playerId) : p.playerId),
+      slug: p.playerId,
+      face: p.face || (typeof PRESET_FACES !== 'undefined' ? PRESET_FACES[p.playerId] : null),
+      score: (typeof computeGameFinalScore === 'function')
+        ? computeGameFinalScore(g, p.slot != null ? p.slot : idx)
+        : 0,
+    };
+  }).sort(function(a, b) { return a.score - b.score; });
+
+  if (!scores.length) return '';
+  var winner = scores[0];
+  var loser = scores[scores.length - 1];
+  var middle = scores.slice(1, scores.length - 1);
+  var dateStr = _formatGameDateShort(g.finishedAt);
+
+  var midRowsHtml = middle.map(function(p) {
+    var faceImg = p.face ? '<img src="' + p.face + '">' : '';
+    return '<div class="rz-row">' + faceImg + '<span>' + p.name + ' — ' + p.score + '</span></div>';
+  }).join('');
+
+  var loserFace = loser.face ? '<img src="' + loser.face + '">' : '';
+  var winnerFace = winner.face ? '<img src="' + winner.face + '">' : '';
+
+  return '<div class="rz-card">'
+    + '<div class="rz-card-top">'
+    +   winnerFace
+    +   '<div class="rz-winner-info">'
+    +     '<div class="rz-winner-name">🏆 ' + winner.name + '</div>'
+    +     '<div class="rz-winner-score">' + winner.score + ' pts</div>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="rz-photo">' + t('rainbow_no_photo') + '</div>'
+    + '<div class="rz-card-mid">'
+    +   midRowsHtml
+    +   '<div class="rz-row rz-loser">' + loserFace + '<span>💀 ' + loser.name + ' — ' + loser.score + '</span></div>'
+    + '</div>'
+    + '<div class="rz-card-bottom">'
+    +   '<span class="rz-tag">' + t('rainbow_temporada') + ' ' + seasonNum + ' · ' + t('rainbow_partido') + ' ' + partidoNum + '</span>'
+    +   '<span>' + dateStr + '</span>'
+    + '</div>'
+    + '</div>';
+}
+
+function renderRainbowZone() {
+  var container = document.getElementById('rainbowZoneContainer');
+  if (!container) return;
+  var seasons = (_statsData.seasons || []).slice()
+    .sort(function(a, b) { return (b.seasonNumber || 0) - (a.seasonNumber || 0); });
+  var games = _statsData.games || [];
+
+  // Mapa rápido gameId → game
+  var gameMap = {};
+  games.forEach(function(g) { if (g && g.gameId) gameMap[g.gameId] = g; });
+
+  var html = '<div class="rainbow-zone">';
+  var hasContent = false;
+
+  // Temporada en curso primero (si tiene partidos terminados)
+  var ongoingGames = (typeof _ongoingSeasonGames === 'function')
+    ? _ongoingSeasonGames(games, _statsData.seasons || [])
+    : [];
+  if (ongoingGames.length) {
+    var nextSn = (_statsData.seasons || []).length + 1;
+    html += '<div class="rz-season-block">';
+    html += '<h3>' + t('rainbow_temporada') + ' ' + nextSn
+      + ' <span class="rz-ongoing-badge">' + t('rainbow_ongoing') + '</span></h3>';
+    html += '<div class="rz-grid">';
+    ongoingGames.forEach(function(g, idx) {
+      html += _renderRainbowCard(g, nextSn, idx + 1);
+    });
+    html += '</div></div>';
+    hasContent = true;
+  }
+
+  // Cada temporada finalizada (de mayor a menor)
+  seasons.forEach(function(season) {
+    var sgs = (season.gameIds || []).map(function(id) { return gameMap[id]; }).filter(Boolean);
+    sgs.sort(function(a, b) { return (a.finishedAt || 0) - (b.finishedAt || 0); });
+    if (!sgs.length) return;
+    html += '<div class="rz-season-block">';
+    html += '<h3>' + t('rainbow_temporada') + ' ' + season.seasonNumber + '</h3>';
+    html += '<div class="rz-grid">';
+    sgs.forEach(function(g, idx) {
+      html += _renderRainbowCard(g, season.seasonNumber, idx + 1);
+    });
+    html += '</div></div>';
+    hasContent = true;
+  });
+
+  html += '</div>';
+  container.innerHTML = hasContent ? html : '<div class="rz-empty">' + t('rainbow_empty') + '</div>';
 }
 
 // ============ SHARE STATS TABLE AS IMAGE ============
