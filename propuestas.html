@@ -94,20 +94,10 @@
       padding: .6rem .8rem; border-radius: 10px;
       font-family: inherit; font-size: .95rem;
     }
-    .module-section { margin-top: 2.5rem; }
-    .module-header {
-      display: flex; align-items: center; gap: .75rem;
-      margin-bottom: 1rem; padding-bottom: .75rem;
-      border-bottom: 2px solid var(--border);
-    }
-    .module-header .badge {
-      background: var(--surface-2);
-      color: var(--uno-yellow);
-      padding: .3rem .7rem; border-radius: 999px;
-      font-size: .7rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; border: 1px solid var(--border);
-    }
-    .module-header h2 { font-size: clamp(1.3rem, 3vw, 1.8rem); }
+    /* Las module-section son ahora simples wrappers sin separación visual:
+       toda la galería se ve como una sola grilla bajo el header "Gallery". */
+    .module-section { margin-top: 0; }
+    .module-section + .module-section .ideas-grid { margin-top: 1.25rem; }
 
     .ideas-grid {
       display: grid; gap: 1.25rem;
@@ -277,11 +267,10 @@
       <h2>Gallery</h2>
     </div>
 
-  <!-- ========== MODULO: JUGADOR ========== -->
+  <!-- Toda la galería ahora bajo un solo header "Gallery". Los grids
+       internos se mantienen para que el JS de inserción de cards no rompa,
+       pero los subtítulos por módulo se removieron. -->
   <section class="module-section" id="mod-jugador">
-    <div class="module-header">
-      <h2 id="title-jugador">Jugador &middot; stats personales</h2>
-    </div>
     <div class="ideas-grid" id="grid-jugador">
       <!-- IDEAS:JUGADOR:START -->
       <!-- IDEAS:JUGADOR:END -->
@@ -291,46 +280,25 @@
       <div class="ideas-grid" id="grid-sin-figuritas"></div>
     </details>
   </section>
-
-  <!-- ========== MODULO: RANKING ANUAL ========== -->
   <section class="module-section" id="mod-anual">
-    <div class="module-header">
-      <h2>Ranking anual</h2>
-    </div>
     <div class="ideas-grid" id="grid-anual">
       <!-- IDEAS:ANUAL:START -->
       <!-- IDEAS:ANUAL:END -->
     </div>
   </section>
-
-  <!-- ========== MODULO: TEMPORADAS ========== -->
   <section class="module-section" id="mod-temporadas">
-    <div class="module-header">
-      <h2>Temporadas (histórico)</h2>
-    </div>
     <div class="ideas-grid" id="grid-temporadas">
       <!-- IDEAS:TEMPORADAS:START -->
       <!-- IDEAS:TEMPORADAS:END -->
     </div>
   </section>
-
-  <!-- ========== MODULO: H2H ========== -->
   <section class="module-section" id="mod-h2h">
-    <div class="module-header">
-      <h2>Mano a mano (H2H)</h2>
-    </div>
     <div class="ideas-grid" id="grid-h2h">
       <!-- IDEAS:H2H:START -->
       <!-- IDEAS:H2H:END -->
     </div>
   </section>
-
-  <!-- ========== MODULO: DE LOS USUARIOS ========== -->
   <section class="module-section" id="mod-usuarios">
-    <div class="module-header" style="border-bottom-color: var(--uno-red);">
-      <h2 style="color: var(--uno-red);">💡 De los usuarios</h2>
-    </div>
-    <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: .9rem;">Propuestas enviadas por el grupo e implementadas acá.</p>
     <div class="ideas-grid" id="grid-usuarios">
       <!-- IDEAS:USUARIOS:START -->
       <!-- IDEAS:USUARIOS:END -->
@@ -924,7 +892,21 @@ function renderIdeaCard(idea) {
   withPicked(idea, () => idea.draw(canvas, { preview: true }).catch(console.error));
 }
 
+// IDs que dejamos de mostrar. El bloque registerIdea(...) en el código
+// queda como está para no rom- per nada (helpers, copies, tests futuros),
+// pero la idea no se inserta en la galería.
+const DISABLED_IDEA_IDS = new Set([
+  'timeline',                  // Timeline del Horror
+  'memes',                     // Meme Drake Oficial
+  'convocatoria',              // Convocatoria Judicial
+  'stickers',                  // Sticker Pack del Perdedor
+  'felicitacion-sorpresa',     // Felicitación Sorpresa
+  'poema-al-pt',               // Poema al PT
+  'poema-al-penultimo'         // Poema al Penúltimo
+]);
+
 function registerIdea(idea) {
+  if (idea && DISABLED_IDEA_IDS.has(idea.id)) return;
   IDEAS.push(idea);
   noteIdeaForSeeding(idea);
   renderIdeaCard(idea);
@@ -1871,8 +1853,8 @@ window._modAnual = function() {
         facts: {}
       };
     },
-    title: 'NFT del Último',
-    desc: 'Último puesto del ranking anual ' + currentYear() + ' por winRate. NFT falso con cara pixelada y dirección ETH determinística.',
+    title: 'NFT del Último Actual',
+    desc: 'Último puesto VIGENTE del ranking anual ' + currentYear() + ' por winRate. NFT pixelado con dirección ETH determinística — se actualiza solo cuando cambia el último.',
     computeFacts: function() {
       const r = annualRanking();
       const pos = (r.findIndex(x => x.id === rivalId()) + 1) || '—';
@@ -1926,6 +1908,87 @@ window._modAnual = function() {
     }
   });
 
+  // ---------- 5) NFT del Último — Tano (histórico) ----------
+  // Pieza vintage: muestra a Tano con la última fecha conocida en la que
+  // terminó como último de la mesa. Esa data se calcula on-the-fly
+  // recorriendo RAW_GAMES y buscando el game finished más reciente donde
+  // Tano tuvo el peor totalScore entre sus participantes.
+  registerIdea({
+    id: 'nft-ultimo-tano', module: 'anual',
+    pick: function(ctx) {
+      return {
+        protagonist: { id: 'tano', name: NAME_BY_ID['tano'] || 'Tano' },
+        rival: { id: 'tano', name: NAME_BY_ID['tano'] || 'Tano' },
+        facts: {}
+      };
+    },
+    title: 'NFT del Último — Tano (histórico)',
+    desc: 'Pieza vintage del antiguo último de la tabla. Se mintea con la fecha exacta de su reinado.',
+    copies: { nachi: [
+      'Tano #LAST, edición histórica. Antes del cambio de era.',
+      'NFT vintage del reinado de Tano: la fecha queda asentada en blockchain del asado.'
+    ]},
+    draw: async function(canvas, opts) {
+      const w = canvas.width, h = canvas.height, ctx = canvas.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,w,h);
+      g.addColorStop(0, '#3a1e0b'); g.addColorStop(0.5, '#2b1839'); g.addColorStop(1, '#0f0f1a');
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = w*0.01;
+      ctx.strokeRect(w*0.05, h*0.05, w*0.9, h*0.9);
+      ctx.fillStyle = '#ffaa00'; ctx.font = `700 ${w*0.054}px Fredoka One`; ctx.textAlign = 'center';
+      ctx.fillText('ÚLTIMO HISTÓRICO', w/2, h*0.115);
+      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.04}px Fredoka One`;
+      ctx.fillText('Edición vintage · 1/1', w/2, h*0.165);
+      try {
+        const img = await loadFace('tano');
+        const size = w*0.38;
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        const tmp = document.createElement('canvas');
+        tmp.width = 32; tmp.height = 32;
+        tmp.getContext('2d').drawImage(img, 0, 0, 32, 32);
+        ctx.drawImage(tmp, (w-size)/2, h*0.22, size, size);
+        ctx.restore();
+        ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = 4;
+        ctx.strokeRect((w-size)/2, h*0.22, size, size);
+      } catch(e){}
+      // Nombre + fecha del último reinado
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.055}px Fredoka One`;
+      ctx.fillText('TANO', w/2, h*0.7);
+      const reignDate = (function() {
+        if (!Array.isArray(RAW_GAMES)) return null;
+        const sorted = RAW_GAMES.slice()
+          .filter(g => g && (g.finished !== false))
+          .sort(function(a, b) {
+            return (b.finishedAt || b.timestamp || 0) - (a.finishedAt || a.timestamp || 0);
+          });
+        for (const g of sorted) {
+          let scores;
+          try { scores = gameTotalScores(g); } catch (e) { continue; }
+          const slugs = Object.keys(scores || {});
+          if (!slugs.includes('tano')) continue;
+          let max = -Infinity, lastSlug = null;
+          slugs.forEach(s => {
+            if (scores[s] > max) { max = scores[s]; lastSlug = s; }
+          });
+          if (lastSlug === 'tano') return new Date(g.finishedAt || g.timestamp || 0);
+        }
+        return null;
+      })();
+      const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+      const reignStr = reignDate
+        ? (reignDate.getDate() + ' ' + meses[reignDate.getMonth()] + ' ' + reignDate.getFullYear())
+        : 'fecha en archivo';
+      ctx.fillStyle = '#ffaa00'; ctx.font = `600 ${w*0.03}px Inter`;
+      ctx.fillText('Reinó como último hasta', w/2, h*0.78);
+      ctx.fillStyle = '#fff'; ctx.font = `700 ${w*0.038}px Fredoka One`;
+      ctx.fillText(reignStr, w/2, h*0.825);
+      ctx.fillStyle = '#ff00e6'; ctx.font = `700 ${w*0.032}px Fredoka One`;
+      ctx.fillText('1/1 EDITION · BLOCKCHAIN DEL ASADO', w/2, h*0.88);
+      footer(ctx, w, h);
+    }
+  });
+
 };
 // DRAWS:ANUAL:END
 
@@ -1933,7 +1996,7 @@ window._modAnual = function() {
 // DRAWS:TEMPORADAS:START
 window._modTemporadas = function() {
 
-  // ---------- 1) HALL OF SHAME — jugadores con 0 victorias en el año en curso ----------
+  // ---------- 1) HALL OF SHAME — TODOS los jugadores que aún no ganaron este año ----------
   (function() {
     const year = currentYear();
     const yearGames = (RAW_GAMES || []).filter(g => {
@@ -1941,10 +2004,13 @@ window._modTemporadas = function() {
       return d.getFullYear() === year;
     });
     const yearStats = computeAllStats(yearGames);
-    const allLosers = Object.values(yearStats)
-      .filter(p => p.gamesPlayed > 0 && p.W === 0)
-      .sort((a, b) => b.L - a.L);
-    if (!allLosers.length) return; // no se registra si no hay nadie con 0 victorias este año
+    // Incluimos a TODOS los preset que no tienen victorias en el año:
+    // los que jugaron y no ganaron + los que ni siquiera jugaron.
+    const allLosers = PRESET_IDS
+      .map(id => yearStats[id] || { id, name: NAME_BY_ID[id] || id, W: 0, L: 0, gamesPlayed: 0 })
+      .filter(p => (p.W || 0) === 0)
+      .sort((a, b) => (b.L || 0) - (a.L || 0) || (b.gamesPlayed || 0) - (a.gamesPlayed || 0));
+    if (!allLosers.length) return; // todos ganaron este año (improbable pero posible)
 
     registerIdea({
       id: 'hall-shame', module: 'temporadas',

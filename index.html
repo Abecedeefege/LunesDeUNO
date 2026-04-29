@@ -112,30 +112,29 @@
     .tophat-img {
       filter: drop-shadow(0 0 4px rgba(255,255,255,.25));
     }
-    .lang-switcher {
-      display: flex; gap: .4rem;
-      height: 80%;
-      align-items: center;
+    /* Botón "Descargar app" en el header (donde antes iban las flags). */
+    .install-app-btn {
+      display: inline-flex; align-items: center; gap: .35rem;
+      background: var(--uno-yellow); color: #1a1a1a;
+      border: 2px solid var(--uno-yellow);
+      padding: .4rem .8rem; border-radius: 999px;
+      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-size: .8rem; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255,222,0,.3);
+      transition: transform .15s ease, box-shadow .2s ease;
+      white-space: nowrap;
     }
-    .lang-btn {
-      width: 44px; height: 32px; border-radius: 8px; cursor: pointer;
-      border: 2px solid var(--border); overflow: hidden;
-      transition: all .2s; opacity: 1;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; line-height: 1;
-      background: var(--surface-2);
-    }
+    .install-app-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(255,222,0,.45); }
+    .install-app-btn:active { transform: scale(.97); }
+    .install-app-btn .install-app-label { font-size: .75rem; letter-spacing: .02em; }
     @media (max-width: 768px) {
       .app-header { height: 10vh; min-height: 40px; }
       .header-logo svg { max-height: 10vh; }
-      .lang-btn {
-        height: 80%; width: auto; aspect-ratio: 11 / 8;
-        max-height: 56px; padding: 3px;
-      }
-      .lang-btn svg { width: auto !important; height: 100% !important; }
+      .install-app-btn { padding: .35rem .6rem; }
+      .install-app-btn .install-app-label { display: none; }   /* sólo el ícono en pantallas chicas */
     }
-    .lang-btn:hover { border-color: var(--text-muted); background: var(--surface-3); }
-    .lang-btn.active { border-color: var(--uno-yellow); background: rgba(255,222,0,.1); box-shadow: 0 2px 12px rgba(255,222,0,.25); }
+    /* Si la app ya corre en standalone (PWA instalada) no mostramos el CTA. */
+    @media (display-mode: standalone) { .install-app-btn { display: none; } }
 
     @media print { .app-header { display: none !important; } .round-roast { display: none !important; } }
 
@@ -814,13 +813,40 @@
       z-index: 2;
     }
 
-    /* ---- Games List ---- */
+    /* ---- Games List (expandible) ---- */
     .games-list {
       width: 100%; max-width: 480px; margin-top: 1rem;
       display: flex; flex-direction: column; gap: .5rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      padding: .75rem 1rem;
     }
+    .games-list > summary {
+      cursor: pointer;
+      list-style: none;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .5rem;
+      user-select: none;
+      padding: .15rem 0;
+    }
+    .games-list > summary::-webkit-details-marker { display: none; }
+    .games-list > summary::after {
+      content: '▸';
+      color: var(--text-muted);
+      font-size: 1rem;
+      transition: transform .2s ease;
+    }
+    .games-list[open] > summary::after { transform: rotate(90deg); }
+    .games-list[open] { gap: .65rem; }
     .games-list h3 {
-      font-size: 1rem; color: var(--text-muted); margin-bottom: .25rem;
+      font-size: 1rem; color: var(--text); margin: 0;
+    }
+    .games-list .games-count {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: .8rem;
+      margin-left: .35rem;
     }
     .game-item {
       background: var(--surface);
@@ -1148,14 +1174,10 @@
     <button type="button" class="header-logo" id="headerLogo" onclick="speakPlayerRanking()" aria-label="Lunes de UNO" style="background:none;border:none;cursor:pointer;">
       <img class="tophat-img" src="assets/tophat-logo.png" alt="" aria-hidden="true">
     </button>
-    <div class="lang-switcher">
-      <button class="lang-btn active" id="langEs" onclick="setLang('es')" title="Español">
-        <svg viewBox="0 0 30 20" style="width:28px;height:18px;border-radius:3px;"><rect width="30" height="20" fill="#fff"/><rect y="0" width="30" height="2.22" fill="#001489"/><rect y="4.44" width="30" height="2.22" fill="#001489"/><rect y="8.89" width="30" height="2.22" fill="#001489"/><rect y="13.33" width="30" height="2.22" fill="#001489"/><rect y="17.78" width="30" height="2.22" fill="#001489"/><rect width="12" height="8.89" fill="#fff"/><circle cx="6" cy="4.44" r="2.8" fill="#FCD116"/><circle cx="6" cy="4.44" r="2.2" fill="#FCD116"/></svg>
-      </button>
-      <button class="lang-btn" id="langEn" onclick="setLang('en')" title="English">
-        <svg viewBox="0 0 30 20" style="width:28px;height:18px;border-radius:3px;"><rect width="30" height="20" fill="#B22234"/><rect y="1.54" width="30" height="1.54" fill="#fff"/><rect y="4.62" width="30" height="1.54" fill="#fff"/><rect y="7.69" width="30" height="1.54" fill="#fff"/><rect y="10.77" width="30" height="1.54" fill="#fff"/><rect y="13.85" width="30" height="1.54" fill="#fff"/><rect y="16.92" width="30" height="1.54" fill="#fff"/><rect width="12" height="10.77" fill="#3C3B6E"/><g fill="#fff" font-size="2" font-family="sans-serif"><text x="1.5" y="2.5">★★★★★</text><text x="2.5" y="4.5">★★★★</text><text x="1.5" y="6.5">★★★★★</text><text x="2.5" y="8.5">★★★★</text><text x="1.5" y="10.5">★★★★★</text></g></svg>
-      </button>
-    </div>
+    <button type="button" class="install-app-btn" id="installAppBtn" onclick="installApp()" title="Descargar la app">
+      <span aria-hidden="true">📲</span>
+      <span class="install-app-label">Descargar app</span>
+    </button>
   </header>
 
   <!-- Banner de modo offline: se muestra cuando Firebase no carga en 8 s -->
@@ -2058,7 +2080,10 @@ const CAROUSEL_MSGS = {
   },
 };
 
-let currentLang = localStorage.getItem('lunesdeuno_lang') || 'es';
+// App forzada a español de Uruguay. Las strings 'en' siguen en STRINGS por
+// si alguna integración futura las necesita, pero la UI no permite cambiar.
+let currentLang = 'es';
+try { document.documentElement.lang = 'es-UY'; } catch (e) {}
 let roundRoastInterval = null;
 
 function t(key) {
@@ -2070,9 +2095,12 @@ function setLang(lang) {
   localStorage.setItem('lunesdeuno_lang', lang);
   document.documentElement.lang = lang;
 
-  // Update flag buttons
-  document.getElementById('langEs').classList.toggle('active', lang === 'es');
-  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  // Las flags fueron removidas (la app corre por default en es-UY). El
+  // toggle se dejó como no-op defensivo por si quedó algún botón legacy.
+  var es = document.getElementById('langEs');
+  var en = document.getElementById('langEn');
+  if (es) es.classList.toggle('active', lang === 'es');
+  if (en) en.classList.toggle('active', lang === 'en');
 
   // Apply all data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -3918,6 +3946,38 @@ function confirmQuit() {
   });
 }
 
+// ============ INSTALL APP (PWA) ============
+// Capturamos el evento beforeinstallprompt para dispararlo desde el botón
+// del header. En iOS el evento nunca dispara, así que ahí mostramos un
+// instructivo. Si la app ya corre en standalone, el botón se oculta vía CSS.
+var _deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _deferredInstallPrompt = e;
+});
+window.addEventListener('appinstalled', function() {
+  _deferredInstallPrompt = null;
+  var btn = document.getElementById('installAppBtn');
+  if (btn) btn.style.display = 'none';
+});
+function installApp() {
+  if (_deferredInstallPrompt) {
+    _deferredInstallPrompt.prompt();
+    _deferredInstallPrompt.userChoice.then(function() {
+      _deferredInstallPrompt = null;
+    }).catch(function() {});
+    return;
+  }
+  // Fallback: instrucciones manuales según el dispositivo.
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+  var msg = isIOS
+    ? 'En iPhone: tocá el botón Compartir abajo, después "Agregar a pantalla de inicio".'
+    : 'En Chrome/Edge: abrí el menú (︙) y tocá "Instalar app". En Safari: tocá Compartir → Agregar a pantalla de inicio.';
+  if (typeof customAlert === 'function') customAlert(msg);
+  else alert(msg);
+}
+
 // ============ HEADER LOGO: nombrar jugador + posición anual ============
 // Cada tap habla el nombre de un jugador random y su posición en el ranking
 // anual. Rota: ya nombrado no se repite hasta que todos hayan sido nombrados.
@@ -4744,7 +4804,9 @@ function renderGamesList() {
   });
 
   games.sort(function(a, b) { return (b.finishedAt || b.timestamp || 0) - (a.finishedAt || a.timestamp || 0); });
-  var html = '<div class="games-list"><h3>' + t('games_title') + '</h3>';
+  // Wrap en <details> para que el módulo arranque contraído por default.
+  // El summary mantiene la jerarquía visual del título original.
+  var html = '<details class="games-list"><summary><h3 style="display:inline;margin:0;">' + t('games_title') + ' <span class="games-count">(' + games.length + ')</span></h3></summary>';
   games.forEach(function(g) {
     var s = g.state || {};
     var players = s.players || [];
@@ -4794,7 +4856,7 @@ function renderGamesList() {
       + '</div>'
     + '</div>';
   });
-  html += '</div>';
+  html += '</details>';
   container.innerHTML = html;
 }
 
