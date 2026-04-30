@@ -407,7 +407,7 @@
 
     .tv-body {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: 1fr 1.25fr;     /* Partido casi mitad; derecha (Temp+Anual) más ancha */
       gap: 1.2vw;
       min-height: 0;
     }
@@ -420,13 +420,14 @@
     .tv-table-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: .6vw;
+      gap: .3vw;
       flex: 1;
       min-height: 0;
     }
     .tv-table-split .tv-table { table-layout: fixed; }
-    .tv-table-split .tv-table .col-pos { width: 14%; }
-    .tv-table-split .tv-table .col-num { width: 16%; }
+    .tv-table-split .tv-table .col-pos { width: 13%; }
+    .tv-table-split .tv-table .col-num { width: 19%; }
+    .tv-table-split .tv-table tbody .col-total { font-size: 1em; }
     .tv-panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1009,7 +1010,11 @@
         if (availableForBody <= 0) return;
 
         const targetRowHeight = availableForBody / rows;
-        const fontPx = Math.max(10, Math.min(56, Math.floor(targetRowHeight * 0.50)));
+        // Cap más bajo en sub-tablas split para no rozar los bordes con
+        // nombres largos + scores de 4 dígitos. (Ver tv.html).
+        const inSplit = !!tbody.closest('.tv-table-split');
+        const fontCap = inSplit ? 30 : 56;
+        const fontPx = Math.max(10, Math.min(fontCap, Math.floor(targetRowHeight * 0.50)));
         const padPx = Math.max(1, Math.floor(targetRowHeight * 0.14));
 
         tbody.style.fontSize = fontPx + 'px';

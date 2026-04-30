@@ -341,7 +341,7 @@
 
     .tv-body {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: 1fr 1.25fr;     /* Partido casi mitad; columna derecha (Temp+Anual) más ancha para que el split + 4 dígitos entren */
       gap: 1.2vw;
       min-height: 0;
     }
@@ -360,15 +360,18 @@
     .tv-table-split {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: .6vw;
+      gap: .3vw;
       flex: 1;
       min-height: 0;
     }
     .tv-table-split .tv-table { table-layout: fixed; }
-    /* En split mode bumpamos col-pos para que "11▲" no se corte y col-num
-       para que 3 dígitos entren con holgura. */
-    .tv-table-split .tv-table .col-pos { width: 14%; }
-    .tv-table-split .tv-table .col-num { width: 16%; }
+    /* En split mode col-num más ancho para alojar Pts de 4 dígitos
+       (Tabla anual con muchos partidos puede llegar a 4 cifras). */
+    .tv-table-split .tv-table .col-pos { width: 13%; }
+    .tv-table-split .tv-table .col-num { width: 19%; }
+    /* En split mode el "1.15em" del col-total empuja contra el borde — lo
+       igualamos al col-num normal para que 4 dígitos entren cómodos. */
+    .tv-table-split .tv-table tbody .col-total { font-size: 1em; }
     .tv-panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -977,7 +980,17 @@
         // proporción del font (50% del row) y achicamos el padding (14% por
         // lado) para que las filas crezcan. Cap a 60 px para pantallas grandes.
         // Cara = 1.5 × fontPx.
-        const fontPx = Math.max(10, Math.min(60, Math.floor(targetRowHeight * 0.50)));
+        // En sub-tablas dentro de .tv-table-split (Temporada/Anual con >6
+        // jugadores) bajamos el cap a 48 px porque el ancho de la sub-tabla
+        // es la mitad del módulo y nombres como "Carucha" + scores de 4
+        // dígitos rozarían el borde si el font sigue creciendo.
+        const inSplit = !!tbody.closest('.tv-table-split');
+        // Cap split bajo (32 px) para que el costado con menos filas
+        // (ej. 3 jugadores ranking 7-9) no crezca tanto que las caras +
+        // gap pisen el nombre. Lado izquierdo (6 filas) queda ~27 px,
+        // derecho (3-5 filas) cap 32 px — diferencia visual pequeña.
+        const fontCap = inSplit ? 32 : 60;
+        const fontPx = Math.max(10, Math.min(fontCap, Math.floor(targetRowHeight * 0.50)));
         const padPx = Math.max(1, Math.floor(targetRowHeight * 0.14));
 
         tbody.style.fontSize = fontPx + 'px';
