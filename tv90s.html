@@ -417,6 +417,16 @@
       gap: .6vh;
       min-height: 0;
     }
+    .tv-table-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6vw;
+      flex: 1;
+      min-height: 0;
+    }
+    .tv-table-split .tv-table { table-layout: fixed; }
+    .tv-table-split .tv-table .col-pos { width: 14%; }
+    .tv-table-split .tv-table .col-num { width: 16%; }
     .tv-panel {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -788,10 +798,49 @@
   // Tabla de la temporada: pos | jugador | partidos | total acumulado
   // Los puntos de la temporada incluyen: partidos previos finalizados de la
   // temporada en curso + el parcial del partido en vivo.
+  function dedupFinished(currentGame, finishedGames) {
+    return (finishedGames || []).filter(g =>
+      !currentGame || !currentGame.gameId || g.gameId !== currentGame.gameId
+    );
+  }
+  function rankingTableHTML(rows, startIndex, prevPos, currPos, winnerSlug, loserSlug) {
+    return `<table class="tv-table">
+      <thead><tr>
+        <th class="col-pos">#</th>
+        <th>Jugador</th>
+        <th class="col-num">PJ</th>
+        <th class="col-num col-total">Pts</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map((r, i) => `
+          <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
+            <td class="col-pos">${startIndex + i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
+            <td><div class="tv-player">
+              <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
+              <span class="tv-player-name">${r.name}</span>
+            </div></td>
+            <td class="col-num col-mute">${r.partidos}</td>
+            <td class="col-num col-total">${r.total}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+  function rankingSplitHTML(rows, prevPos, currPos, winnerSlug, loserSlug) {
+    if (rows.length <= 6) {
+      return rankingTableHTML(rows, 0, prevPos, currPos, winnerSlug, loserSlug);
+    }
+    const left = rows.slice(0, 6);
+    const right = rows.slice(6, 11);
+    return `<div class="tv-table-split">
+      ${rankingTableHTML(left, 0, prevPos, currPos, winnerSlug, loserSlug)}
+      ${rankingTableHTML(right, 6, prevPos, currPos, winnerSlug, loserSlug)}
+    </div>`;
+  }
+
   function renderSeason(currentGame, finishedGames) {
     // Regla de la app: una temporada cierra cada 4 finalizados. Los partidos
     // de la temporada en curso son los últimos N que no llegaron a 4 todavía.
-    const finished = (finishedGames || [])
+    const finished = dedupFinished(currentGame, finishedGames)
       .slice()
       .sort((a, b) => (a.finishedAt || 0) - (b.finishedAt || 0));
     const seasonGames = finished.slice(Math.floor(finished.length / 4) * 4);
@@ -852,31 +901,13 @@
     return `
       <div class="tv-panel">
         <h2>Temporada en curso <small>· ${all.length} partido${all.length === 1 ? '' : 's'}</small></h2>
-        <table class="tv-table">
-          <thead><tr>
-            <th class="col-pos">#</th>
-            <th>Jugador</th>
-            <th class="col-num">PJ</th>
-            <th class="col-num col-total">Pts</th>
-          </tr></thead>
-          <tbody>
-            ${rows.map((r, i) => `
-              <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
-                <td class="col-pos">${i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
-                <td><div class="tv-player">
-                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
-                  <span class="tv-player-name">${r.name}</span>
-                </div></td>
-                <td class="col-num col-mute">${r.partidos}</td>
-                <td class="col-num col-total">${r.total}</td>
-              </tr>`).join('')}
-          </tbody>
-        </table>
+        ${rankingSplitHTML(rows, prevPos, currPos, winnerSlug, loserSlug)}
       </div>`;
   }
 
   function renderAnnual(currentGame, finishedGames) {
-    const all = (finishedGames || []).slice().concat(currentGame ? [currentGame] : []);
+    const dedupedFinished = dedupFinished(currentGame, finishedGames);
+    const all = dedupedFinished.slice().concat(currentGame && currentGame.gameId ? [currentGame] : []);
     if (!all.length) {
       return `<div class="tv-panel">
         <h2>Tabla anual</h2>
@@ -905,26 +936,7 @@
     return `
       <div class="tv-panel">
         <h2>Tabla anual <small>· ${all.length} partido${all.length === 1 ? '' : 's'}</small></h2>
-        <table class="tv-table">
-          <thead><tr>
-            <th class="col-pos">#</th>
-            <th>Jugador</th>
-            <th class="col-num">PJ</th>
-            <th class="col-num col-total">Pts</th>
-          </tr></thead>
-          <tbody>
-            ${rows.map((r, i) => `
-              <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
-                <td class="col-pos">${i + 1}</td>
-                <td><div class="tv-player">
-                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
-                  <span class="tv-player-name">${r.name}</span>
-                </div></td>
-                <td class="col-num col-mute">${r.partidos}</td>
-                <td class="col-num col-total">${r.total}</td>
-              </tr>`).join('')}
-          </tbody>
-        </table>
+        ${rankingSplitHTML(rows, null, null, winnerSlug, loserSlug)}
       </div>`;
   }
 
@@ -948,73 +960,64 @@
   // sigue habiendo overflow, repite hasta convergir (máx 4 iteraciones).
   function autoFitTables() {
     document.querySelectorAll('.tv-panel').forEach(panel => {
-      const tbody = panel.querySelector('tbody');
-      if (!tbody) return;
-      const rows = tbody.querySelectorAll('tr').length;
-      if (!rows) return;
-      // Reset
-      tbody.style.fontSize = '';
-      panel.querySelectorAll('tbody td').forEach(td => {
-        td.style.paddingTop = ''; td.style.paddingBottom = '';
-      });
-      panel.querySelectorAll('tbody .tv-player img').forEach(img => {
-        img.style.width = ''; img.style.height = '';
-        img.style.minWidth = ''; img.style.minHeight = '';
-      });
-
-      // Disponible para tbody: bottom del panel menos top real del tbody
-      // menos padding-bottom del panel. Esto contempla h2, thead y padding.
       const panelBox = panel.getBoundingClientRect();
-      const tbodyTop = tbody.getBoundingClientRect().top;
       const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
-      const availableForBody = panelBox.bottom - tbodyTop - padBot - 4;
-      if (availableForBody <= 0) return;
+      panel.querySelectorAll('tbody').forEach(tbody => {
+        const rows = tbody.querySelectorAll('tr').length;
+        if (!rows) return;
+        tbody.style.fontSize = '';
+        tbody.querySelectorAll('td').forEach(td => {
+          td.style.paddingTop = ''; td.style.paddingBottom = '';
+        });
+        tbody.querySelectorAll('.tv-player img').forEach(img => {
+          img.style.width = ''; img.style.height = '';
+          img.style.minWidth = ''; img.style.minHeight = '';
+        });
 
-      const targetRowHeight = availableForBody / rows;
-      // Nombres / caras / puntajes son el contenido más importante. Subimos la
-      // proporción del font (50% del row) y achicamos el padding (14% por
-      // lado) para que las filas crezcan. Cap a 64 px (algo menos que tv.html
-      // por el bezel un poco más grueso). Cara = 1.6 × fontPx.
-      const fontPx = Math.max(10, Math.min(56, Math.floor(targetRowHeight * 0.50)));
-      const padPx = Math.max(1, Math.floor(targetRowHeight * 0.14));
+        const tbodyTop = tbody.getBoundingClientRect().top;
+        const availableForBody = panelBox.bottom - tbodyTop - padBot - 4;
+        if (availableForBody <= 0) return;
 
-      tbody.style.fontSize = fontPx + 'px';
-      panel.querySelectorAll('tbody td').forEach(td => {
-        td.style.paddingTop = padPx + 'px';
-        td.style.paddingBottom = padPx + 'px';
-      });
-      panel.querySelectorAll('tbody .tv-player img').forEach(img => {
-        const sz = Math.max(22, Math.round(fontPx * 1.5));
-        img.style.width = sz + 'px';
-        img.style.height = sz + 'px';
-        img.style.minWidth = sz + 'px';
-        img.style.minHeight = sz + 'px';
-      });
+        const targetRowHeight = availableForBody / rows;
+        const fontPx = Math.max(10, Math.min(56, Math.floor(targetRowHeight * 0.50)));
+        const padPx = Math.max(1, Math.floor(targetRowHeight * 0.14));
 
-      // Segunda pasada: si el contenido sigue overflowing (porque alguna
-      // celda con texto largo no se redujo bien), reducimos un poco más.
-      const lastRow = tbody.lastElementChild;
-      if (lastRow) {
-        const lastBottom = lastRow.getBoundingClientRect().bottom;
-        const overflow = lastBottom - (panelBox.bottom - padBot);
-        if (overflow > 1) {
-          const factor = Math.max(0.6, (availableForBody - overflow) / availableForBody);
-          const newFont = Math.max(9, Math.floor(fontPx * factor));
-          const newPad = Math.max(0, Math.floor(padPx * factor));
-          tbody.style.fontSize = newFont + 'px';
-          panel.querySelectorAll('tbody td').forEach(td => {
-            td.style.paddingTop = newPad + 'px';
-            td.style.paddingBottom = newPad + 'px';
-          });
-          panel.querySelectorAll('tbody .tv-player img').forEach(img => {
-            const sz = Math.max(18, Math.round(newFont * 1.5));
-            img.style.width = sz + 'px';
-            img.style.height = sz + 'px';
-            img.style.minWidth = sz + 'px';
-            img.style.minHeight = sz + 'px';
-          });
+        tbody.style.fontSize = fontPx + 'px';
+        tbody.querySelectorAll('td').forEach(td => {
+          td.style.paddingTop = padPx + 'px';
+          td.style.paddingBottom = padPx + 'px';
+        });
+        tbody.querySelectorAll('.tv-player img').forEach(img => {
+          const sz = Math.max(22, Math.round(fontPx * 1.5));
+          img.style.width = sz + 'px';
+          img.style.height = sz + 'px';
+          img.style.minWidth = sz + 'px';
+          img.style.minHeight = sz + 'px';
+        });
+
+        const lastRow = tbody.lastElementChild;
+        if (lastRow) {
+          const lastBottom = lastRow.getBoundingClientRect().bottom;
+          const overflow = lastBottom - (panelBox.bottom - padBot);
+          if (overflow > 1) {
+            const factor = Math.max(0.6, (availableForBody - overflow) / availableForBody);
+            const newFont = Math.max(9, Math.floor(fontPx * factor));
+            const newPad = Math.max(0, Math.floor(padPx * factor));
+            tbody.style.fontSize = newFont + 'px';
+            tbody.querySelectorAll('td').forEach(td => {
+              td.style.paddingTop = newPad + 'px';
+              td.style.paddingBottom = newPad + 'px';
+            });
+            tbody.querySelectorAll('.tv-player img').forEach(img => {
+              const sz = Math.max(18, Math.round(newFont * 1.5));
+              img.style.width = sz + 'px';
+              img.style.height = sz + 'px';
+              img.style.minWidth = sz + 'px';
+              img.style.minHeight = sz + 'px';
+            });
+          }
         }
-      }
+      });
     });
   }
   window.addEventListener('resize', () => {
