@@ -40,9 +40,9 @@
        sigue siendo la mayoría del espacio (~80%). */
     .tv-cabinet {
       position: relative;
-      width: 98vw; height: 96vh;
-      margin: 2vh auto;
-      padding: 1.4vh 3vw 2.4vh 1.4vw;     /* bezel ultra-slim para liberar pantalla en TV real */
+      width: 98vw; height: 81vh;
+      margin: 5.5vh auto 0 auto;        /* deja ~5vh arriba para que las antenas se vean */
+      padding: 4vh 3vw 5vh 1.4vw;       /* bezel grueso arriba/abajo (consola vintage), slim laterales */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
@@ -54,11 +54,36 @@
         inset 0 4px 16px rgba(255,255,255,.05),
         inset 0 -4px 16px rgba(0,0,0,.6);
     }
-    /* Antenas saliendo de arriba (rabbit ears) — más chicas para el bezel slim */
+    /* Patas decorativas de TV vintage — debajo del cabinet */
+    .tv-legs {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -7.5vh;
+      height: 7.5vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .tv-legs::before, .tv-legs::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 5vw; max-width: 80px; min-width: 32px;
+      height: 6vh; min-height: 32px;
+      background:
+        linear-gradient(180deg, #2a2a2e 0%, #1a1a1e 60%, #0a0a0a 100%);
+      border-radius: 0 0 8px 8px;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.06),
+        0 6px 12px rgba(0,0,0,.5);
+      clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+    }
+    .tv-legs::before { left: 14%; }
+    .tv-legs::after  { right: 14%; }
+    /* Antenas saliendo de arriba (rabbit ears) — más grandes y notorias */
     .tv-antennae {
       position: absolute;
-      left: 0; right: 0; top: -4vh;
-      height: 4vh;
+      left: 0; right: 0; top: -5vh;
+      height: 5vh;
       pointer-events: none;
       z-index: 1;
     }
@@ -67,60 +92,60 @@
       content: '';
       position: absolute;
       bottom: 0;
-      width: 2px;
-      height: 4vh;
+      width: 3px;
+      height: 5vh;
       background: linear-gradient(180deg, #d8d8d8, #777);
       border-radius: 2px;
       transform-origin: bottom center;
-      box-shadow: 0 0 4px rgba(0,0,0,.5);
+      box-shadow: 0 0 6px rgba(0,0,0,.6);
     }
     .tv-antennae::before {
-      left: calc(50% - 2vw);
-      transform: rotate(-22deg);
+      left: calc(50% - 3.5vw);
+      transform: rotate(-25deg);
     }
     .tv-antennae::after {
-      left: calc(50% + 2vw);
-      transform: rotate(22deg);
+      left: calc(50% + 3.5vw);
+      transform: rotate(25deg);
     }
     .tv-antennae-base {
       position: absolute;
       left: 50%; bottom: 0;
       transform: translateX(-50%);
-      width: 5vw; height: .8vh;
+      width: 8vw; height: 1.4vh;
       background: linear-gradient(180deg, #3a3a3e, #1a1a1c);
-      border-radius: 4px 4px 0 0;
+      border-radius: 6px 6px 0 0;
     }
 
-    /* Marca del frente — chiquita en el bezel slim */
+    /* Marca del frente — más visible ahora que el bezel inferior es grueso */
     .tv-brand-plate {
       position: absolute;
-      bottom: .25vh; left: 1.2vw;
+      bottom: 1.5vh; left: 1.5vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.5rem, .8vw, .75rem);
-      letter-spacing: .22em;
+      font-size: clamp(.7rem, 1.1vw, 1.05rem);
+      letter-spacing: .3em;
       color: #d8b550;
       text-shadow:
         0 1px 0 #6a4f1a,
         0 -1px 0 rgba(255,255,255,.18);
       pointer-events: none;
-      line-height: 1;
+      line-height: 1.05;
     }
     .tv-brand-plate small {
-      display: inline;
+      display: block;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: .55em;
-      letter-spacing: .2em;
+      letter-spacing: .25em;
       color: rgba(216,181,80,.6);
-      margin-left: .4vw;
+      margin-top: .15vh;
     }
 
-    /* Parrilla horizontal del altavoz — chiquita en el bezel slim */
+    /* Parrilla horizontal del altavoz — vintage, más grande con bezel inferior grueso */
     .tv-speaker {
       position: absolute;
-      bottom: .35vh; right: 7vw;
-      width: 9vw; max-width: 140px;
-      height: 1.6vh; min-height: 12px;
+      bottom: 1.4vh; right: 7vw;
+      width: 14vw; max-width: 220px;
+      height: 3vh; min-height: 22px;
       background:
         repeating-linear-gradient(
           to bottom,
@@ -134,11 +159,11 @@
       box-shadow: inset 0 0 6px rgba(0,0,0,.6);
     }
 
-    /* Perilla de volumen / canal a la derecha — chiquita y pegada al borde */
+    /* Perilla de volumen / canal a la derecha — vintage CRT */
     .tv-knob {
       position: absolute;
-      right: .35vw;
-      width: 2vw; max-width: 26px; min-width: 16px;
+      right: .5vw;
+      width: 2.2vw; max-width: 32px; min-width: 18px;
       aspect-ratio: 1;
       border-radius: 50%;
       background:
@@ -158,26 +183,26 @@
       background: linear-gradient(180deg, #d8b550, #6a4f1a);
       border-radius: 1px;
     }
-    .tv-knob.tv-knob-top { top: 2.2vh; }
-    .tv-knob.tv-knob-bot { top: 5.4vh; }
+    .tv-knob.tv-knob-top { top: 5vh; }
+    .tv-knob.tv-knob-bot { top: 9vh; }
 
-    /* LED de power — junto al speaker en el bezel inferior */
+    /* LED de power — bezel inferior, ahora más visible */
     .tv-led {
       position: absolute;
-      right: 2vw;
-      bottom: .8vh;
-      width: 5px; height: 5px;
+      right: 2.4vw;
+      bottom: 2.4vh;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: #ff3344;
-      box-shadow: 0 0 6px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
+      box-shadow: 0 0 10px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
     }
     .tv-led-label {
       position: absolute;
-      right: .7vw;
-      bottom: .35vh;
-      color: rgba(255,255,255,.35);
-      font-size: clamp(.4rem, .6vw, .6rem);
-      letter-spacing: .2em;
+      right: 1.2vw;
+      bottom: 1.4vh;
+      color: rgba(255,255,255,.4);
+      font-size: clamp(.5rem, .8vw, .8rem);
+      letter-spacing: .25em;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
     }
@@ -378,7 +403,11 @@
     .tv-table .col-player { width: auto; }
     .tv-table .col-num { width: 10%; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
     .tv-table .col-num.col-mute { color: var(--text-muted); font-weight: 500; }
-    .tv-table .col-total { color: var(--uno-yellow); font-size: 1.15em; }
+    .tv-table tbody .col-total { color: var(--uno-yellow); font-size: 1.15em; }
+    /* En thead el header "TOTAL" / "PTS" mantiene el mismo tamaño que los
+       otros headers (la regla más específica que .tv-table .col-total
+       gana). Solo le dejamos el color amarillo de pista. */
+    .tv-table thead th.col-total { color: var(--uno-yellow); font-size: clamp(.6rem, 1vw, 1.05rem); }
 
     .tv-player {
       display: flex; align-items: center; gap: 1vw;
@@ -447,7 +476,7 @@
 
 <!-- Marco "TV antigua HD". Todo el contenido vive dentro del .tv-screen. -->
 <div class="tv-cabinet">
-  <!-- Detalles vintage decorativos: antenas, perillas, parrilla, marca, LED -->
+  <!-- Detalles vintage decorativos: antenas, perillas, parrilla, marca, LED, patas -->
   <div class="tv-antennae" aria-hidden="true"><div class="tv-antennae-base"></div></div>
   <div class="tv-knob tv-knob-top" aria-hidden="true"></div>
   <div class="tv-knob tv-knob-bot" aria-hidden="true"></div>
@@ -455,6 +484,7 @@
   <span class="tv-led-label" aria-hidden="true">PWR</span>
   <div class="tv-speaker" aria-hidden="true"></div>
   <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>CRT-1985</small></div>
+  <div class="tv-legs" aria-hidden="true"></div>
 
   <div class="tv-screen">
 

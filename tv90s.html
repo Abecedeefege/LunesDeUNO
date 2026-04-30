@@ -43,8 +43,8 @@
        posicionados en .tv90-sticker. */
     .tv-cabinet {
       position: relative;
-      width: 98vw; height: 96vh;
-      margin: 2vh auto;
+      width: 98vw; height: 81vh;
+      margin: 5.5vh auto 0 auto;          /* deja ~5vh arriba para las antenas */
       padding: 6.5vh 8vw 7.5vh 6.5vw;     /* 1/2 del padding original — más slim, deja franja para stickers */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
@@ -57,7 +57,32 @@
         inset 0 4px 16px rgba(255,255,255,.05),
         inset 0 -4px 16px rgba(0,0,0,.6);
     }
-    /* Antenas saliendo de arriba (rabbit ears) */
+    /* Patas decorativas de TV vintage — debajo del cabinet */
+    .tv-legs {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -7.5vh;
+      height: 7.5vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .tv-legs::before, .tv-legs::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 5vw; max-width: 80px; min-width: 32px;
+      height: 6vh; min-height: 32px;
+      background:
+        linear-gradient(180deg, #2a2a2e 0%, #1a1a1e 60%, #0a0a0a 100%);
+      border-radius: 0 0 8px 8px;
+      box-shadow:
+        inset 0 2px 0 rgba(255,255,255,.06),
+        0 6px 12px rgba(0,0,0,.5);
+      clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+    }
+    .tv-legs::before { left: 14%; }
+    .tv-legs::after  { right: 14%; }
+    /* Antenas saliendo de arriba (rabbit ears) — más grandes */
     .tv-antennae {
       position: absolute;
       left: 0; right: 0; top: -5vh;
@@ -70,28 +95,28 @@
       content: '';
       position: absolute;
       bottom: 0;
-      width: 2px;
+      width: 3px;
       height: 5vh;
       background: linear-gradient(180deg, #d8d8d8, #777);
       border-radius: 2px;
       transform-origin: bottom center;
-      box-shadow: 0 0 4px rgba(0,0,0,.5);
+      box-shadow: 0 0 6px rgba(0,0,0,.6);
     }
     .tv-antennae::before {
-      left: calc(50% - 2.5vw);
-      transform: rotate(-22deg);
+      left: calc(50% - 3.5vw);
+      transform: rotate(-25deg);
     }
     .tv-antennae::after {
-      left: calc(50% + 2.5vw);
-      transform: rotate(22deg);
+      left: calc(50% + 3.5vw);
+      transform: rotate(25deg);
     }
     .tv-antennae-base {
       position: absolute;
       left: 50%; bottom: 0;
       transform: translateX(-50%);
-      width: 5vw; height: 1vh;
+      width: 8vw; height: 1.4vh;
       background: linear-gradient(180deg, #3a3a3e, #1a1a1c);
-      border-radius: 5px 5px 0 0;
+      border-radius: 6px 6px 0 0;
     }
 
     /* Marca del frente — vintage placa dorada */
@@ -445,7 +470,8 @@
     .tv-table .col-player { width: auto; }
     .tv-table .col-num { width: 10%; text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
     .tv-table .col-num.col-mute { color: var(--text-muted); font-weight: 500; }
-    .tv-table .col-total { color: var(--uno-yellow); font-size: 1.15em; }
+    .tv-table tbody .col-total { color: var(--uno-yellow); font-size: 1.15em; }
+    .tv-table thead th.col-total { color: var(--uno-yellow); font-size: clamp(.6rem, 1vw, 1.05rem); }
 
     .tv-player {
       display: flex; align-items: center; gap: 1vw;
@@ -524,6 +550,7 @@
   <span class="tv-led-label" aria-hidden="true">PWR</span>
   <div class="tv-speaker" aria-hidden="true"></div>
   <div class="tv-brand-plate" aria-hidden="true">LUNES TV<small>CRT-1985</small></div>
+  <div class="tv-legs" aria-hidden="true"></div>
 
   <!-- Contenedor de stickers pegados al bezel. Se rellena por JS desde
        el array STICKERS (ver script abajo). Si la carpeta assets/stickers/
