@@ -851,15 +851,20 @@
       </div>`;
   }
 
-  // Tabla anual: pos | jugador | partidos | total acumulado de TODOS los
-  // partidos finalizados + el partido en curso. Mismo formato visual que
-  // Temporada pero spanning sin restricción de cohort de 4 partidos.
+  // Tabla anual: replica EXACTA del cálculo de la "Tabla anual" en
+  // Estadísticas (computeAllStats en index.html, campo totalScore).
+  //   - SOLO cuenta partidos con `finished === true`. NO incluye el
+  //     partido en curso.
+  //   - Para cada participante del partido: suma
+  //       computeGameFinalScore = base + fines + cortes * (-50)
+  //   - Para cada absentee del partido: suma la BASE más alta de los
+  //     participantes (penalización por faltar). Esta penalización es
+  //     la que más solía faltar en la versión anterior y desfasaba los
+  //     totales vs Estadísticas.
+  // Sortea ascendente: menor totalScore = mejor (regla UNO clásica).
   function renderAnnual(currentGame, finishedGames) {
-    // Dedup: si currentGame ya está en finishedGames (race condition), no
-    // contarlo dos veces. Bug que causaba puntajes duplicados en Anual.
-    const dedupedFinished = dedupFinished(currentGame, finishedGames);
-    const all = dedupedFinished.slice().concat(currentGame && currentGame.gameId ? [currentGame] : []);
-    if (!all.length) {
+    const finished = (finishedGames || []).filter(g => g && g.finished === true);
+    if (!finished.length) {
       return `<div class="tv-panel">
         <h2>Tabla anual</h2>
         <div class="tv-empty" style="padding:2vh">
@@ -868,26 +873,58 @@
         </div>
       </div>`;
     }
-    const t = {}, p = {};
-    all.forEach(g => {
-      const scores = gameTotalScores(g);
-      Object.keys(scores).forEach(pid => {
-        t[pid] = (t[pid] || 0) + scores[pid];
-        p[pid] = (p[pid] || 0) + 1;
+    const totals = {};   // playerId -> { total, partidos }
+    finished.forEach(g => {
+      const parts = g.participants || [];
+      if (!parts.length) return;
+      // BASE máxima del partido = penalización para los absentees.
+      let maxBase = -Infinity;
+      parts.forEach(p => {
+        const b = (g.rounds || []).reduce((s, r) => s + ((r && r[p.slot]) || 0), 0);
+        if (b > maxBase) maxBase = b;
+      });
+      const loserBase = (maxBase === -Infinity) ? 0 : maxBase;
+      // Participantes: suma de su finalScore.
+      const breakdown = gameScoreBreakdown(g);
+      parts.forEach(p => {
+        if (!p.playerId) return;
+        const finalScore = (breakdown[p.playerId] || { total: 0 }).total;
+        if (!totals[p.playerId]) totals[p.playerId] = { total: 0, partidos: 0 };
+        totals[p.playerId].total += finalScore;
+        totals[p.playerId].partidos += 1;
+      });
+      // Absentees: suma penalty (sin sumar a partidos jugados).
+      (g.absentees || []).forEach(slug => {
+        if (!slug) return;
+        if (!totals[slug]) totals[slug] = { total: 0, partidos: 0 };
+        totals[slug].total += loserBase;
       });
     });
-    const rows = Object.keys(t).map(id => ({
-      slug: id,
-      name: NAME_BY_ID[id] || id,
-      total: t[id],
-      partidos: p[id] || 0,
-    })).sort((a, b) => a.total - b.total);
+    // Mismo filtro que Estadísticas: solo jugadores con al menos 1 partido jugado.
+    const rows = Object.keys(totals)
+      .filter(id => totals[id].partidos > 0)
+      .map(id => ({
+        slug: id,
+        name: NAME_BY_ID[id] || id,
+        total: totals[id].total,
+        partidos: totals[id].partidos,
+      }))
+      .sort((a, b) => a.total - b.total);
+    if (!rows.length) {
+      return `<div class="tv-panel">
+        <h2>Tabla anual</h2>
+        <div class="tv-empty" style="padding:2vh">
+          <div class="tv-empty-icon">📅</div>
+          <p>Sin partidos finalizados todavía.</p>
+        </div>
+      </div>`;
+    }
     const winnerSlug = rows[0]?.slug;
     const loserSlug  = rows[rows.length - 1]?.slug;
 
     return `
       <div class="tv-panel">
-        <h2>Tabla anual <small>· ${all.length} partido${all.length === 1 ? '' : 's'}</small></h2>
+        <h2>Tabla anual <small>· ${finished.length} partido${finished.length === 1 ? '' : 's'}</small></h2>
         ${rankingSplitHTML(rows, null, null, winnerSlug, loserSlug)}
       </div>`;
   }
