@@ -993,7 +993,16 @@
     document.querySelectorAll('.tv-panel').forEach(panel => {
       const panelBox = panel.getBoundingClientRect();
       const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
-      panel.querySelectorAll('tbody').forEach(tbody => {
+      // Mismo razonamiento que tv.html: en split mode usamos maxRows del
+      // panel para que ambas sub-tablas queden con el mismo font/cara.
+      const tbodies = panel.querySelectorAll('tbody');
+      let maxRows = 0;
+      tbodies.forEach(tb => {
+        const r = tb.querySelectorAll('tr').length;
+        if (r > maxRows) maxRows = r;
+      });
+      if (!maxRows) return;
+      tbodies.forEach(tbody => {
         const rows = tbody.querySelectorAll('tr').length;
         if (!rows) return;
         tbody.style.fontSize = '';
@@ -1009,7 +1018,7 @@
         const availableForBody = panelBox.bottom - tbodyTop - padBot - 4;
         if (availableForBody <= 0) return;
 
-        const targetRowHeight = availableForBody / rows;
+        const targetRowHeight = availableForBody / maxRows;
         // Cap más bajo en sub-tablas split para no rozar los bordes con
         // nombres largos + scores de 4 dígitos. (Ver tv.html).
         const inSplit = !!tbody.closest('.tv-table-split');

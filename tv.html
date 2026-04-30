@@ -954,9 +954,19 @@
     document.querySelectorAll('.tv-panel').forEach(panel => {
       const panelBox = panel.getBoundingClientRect();
       const padBot = parseFloat(getComputedStyle(panel).paddingBottom || 0);
-      // Iterar tbodies independientemente: cuando hay split (1-6 / 7-11),
-      // un panel tiene 2 tbodies lado a lado, cada uno escala por su cuenta.
-      panel.querySelectorAll('tbody').forEach(tbody => {
+      // En split mode (1-6 / 7-11) un panel tiene 2 tbodies lado a lado.
+      // Si calculamos el font por tbody, el lado con MENOS filas crece más
+      // que el otro y la simetría visual se rompe. Para mantener ambas
+      // sub-tablas idénticas, calculamos targetRowHeight con el ROWS COUNT
+      // MÁS GRANDE del panel (el lado más densamente poblado).
+      const tbodies = panel.querySelectorAll('tbody');
+      let maxRows = 0;
+      tbodies.forEach(tb => {
+        const r = tb.querySelectorAll('tr').length;
+        if (r > maxRows) maxRows = r;
+      });
+      if (!maxRows) return;
+      tbodies.forEach(tbody => {
         const rows = tbody.querySelectorAll('tr').length;
         if (!rows) return;
         // Reset solo en este tbody
@@ -975,7 +985,9 @@
         const availableForBody = panelBox.bottom - tbodyTop - padBot - 4;
         if (availableForBody <= 0) return;
 
-        const targetRowHeight = availableForBody / rows;
+        // Usar maxRows (no `rows`) garantiza que el lado con menos filas
+        // del split renderee con el mismo font / cara que su gemelo.
+        const targetRowHeight = availableForBody / maxRows;
         // Nombres / caras / puntajes son el contenido más importante. Subimos la
         // proporción del font (50% del row) y achicamos el padding (14% por
         // lado) para que las filas crezcan. Cap a 60 px para pantallas grandes.
