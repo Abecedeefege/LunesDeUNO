@@ -276,37 +276,24 @@
        una mini esquina doblada (peel). Las imágenes vienen de
        assets/stickers/ y son provistas por el usuario; si un PNG falla
        en cargar, el slot se quita silenciosamente. */
+    /* Sticker pegado al bezel: PNG transparente as-is (sin fondo blanco,
+       sin marco de papel, sin peel curl). La sombra respeta la
+       transparencia vía filter:drop-shadow para dar el efecto "pegado
+       sobre la TV". */
     .tv90-sticker {
       position: absolute;
       z-index: 5;
-      width: clamp(44px, 5vw, 78px);          /* tamaño chico — el bezel es slim */
-      padding: 4px;
-      background: #fff;
-      border-radius: 14px 6px 18px 8px;       /* esquinas levemente irregulares */
-      box-shadow:
-        0 2px 0 rgba(0,0,0,.22),
-        0 8px 18px rgba(0,0,0,.55),
-        inset 0 -2px 0 rgba(0,0,0,.06);
+      width: clamp(44px, 5vw, 78px);
       transform-origin: center;
       pointer-events: none;
       user-select: none;
-      filter: drop-shadow(0 1px 0 rgba(0,0,0,.25));
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,.55))
+              drop-shadow(0 1px 0 rgba(0,0,0,.3));
     }
     .tv90-sticker img {
       display: block;
       width: 100%;
       height: auto;
-      border-radius: 10px 4px 14px 6px;
-      pointer-events: none;
-    }
-    /* Peel chiquito (esquina doblada) en una esquina inferior */
-    .tv90-sticker::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; right: -3px;
-      width: 12px; height: 12px;
-      background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,.35) 50%);
-      border-radius: 0 0 8px 0;
       pointer-events: none;
     }
 
@@ -327,7 +314,7 @@
     .tv90-st-12 { bottom: 5.5vh; right: 1vw;   transform: rotate(5deg); }
 
     @media (max-width: 700px) {
-      .tv90-sticker { width: clamp(36px, 11vw, 60px); padding: 3px; }
+      .tv90-sticker { width: clamp(36px, 11vw, 60px); }
       /* En celulares mantenemos sólo las 4 esquinas + 4 laterales para no saturar */
       .tv90-st-2, .tv90-st-3, .tv90-st-10, .tv90-st-11 { display: none; }
     }
