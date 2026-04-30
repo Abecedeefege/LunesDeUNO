@@ -42,7 +42,7 @@
       position: relative;
       width: 98vw; height: 96vh;
       margin: 2vh auto;
-      padding: 2.4vh 4vw 4vh 2.4vw;     /* bezel slim: la pantalla ocupa ~92% × ~90% del viewport */
+      padding: 1.4vh 3vw 2.4vh 1.4vw;     /* bezel ultra-slim para liberar pantalla en TV real */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
@@ -94,33 +94,33 @@
     /* Marca del frente — chiquita en el bezel slim */
     .tv-brand-plate {
       position: absolute;
-      bottom: .5vh; left: 1.5vw;
+      bottom: .25vh; left: 1.2vw;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(.55rem, .9vw, .85rem);
-      letter-spacing: .25em;
+      font-size: clamp(.5rem, .8vw, .75rem);
+      letter-spacing: .22em;
       color: #d8b550;
       text-shadow:
         0 1px 0 #6a4f1a,
         0 -1px 0 rgba(255,255,255,.18);
       pointer-events: none;
-      line-height: 1.05;
+      line-height: 1;
     }
     .tv-brand-plate small {
-      display: block;
+      display: inline;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
       font-size: .55em;
       letter-spacing: .2em;
       color: rgba(216,181,80,.6);
-      margin-top: .1vh;
+      margin-left: .4vw;
     }
 
     /* Parrilla horizontal del altavoz — chiquita en el bezel slim */
     .tv-speaker {
       position: absolute;
-      bottom: .6vh; right: 7vw;
-      width: 10vw; max-width: 160px;
-      height: 2.4vh; min-height: 16px;
+      bottom: .35vh; right: 7vw;
+      width: 9vw; max-width: 140px;
+      height: 1.6vh; min-height: 12px;
       background:
         repeating-linear-gradient(
           to bottom,
@@ -158,25 +158,25 @@
       background: linear-gradient(180deg, #d8b550, #6a4f1a);
       border-radius: 1px;
     }
-    .tv-knob.tv-knob-top { top: 3.5vh; }
-    .tv-knob.tv-knob-bot { top: 7.2vh; }
+    .tv-knob.tv-knob-top { top: 2.2vh; }
+    .tv-knob.tv-knob-bot { top: 5.4vh; }
 
     /* LED de power — junto al speaker en el bezel inferior */
     .tv-led {
       position: absolute;
-      right: 2.4vw;
-      bottom: 1.4vh;
-      width: 6px; height: 6px;
+      right: 2vw;
+      bottom: .8vh;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: #ff3344;
-      box-shadow: 0 0 8px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
+      box-shadow: 0 0 6px #ff3344, inset 0 0 2px rgba(255,255,255,.5);
     }
     .tv-led-label {
       position: absolute;
-      right: .9vw;
-      bottom: .8vh;
+      right: .7vw;
+      bottom: .35vh;
       color: rgba(255,255,255,.35);
-      font-size: clamp(.45rem, .7vw, .7rem);
+      font-size: clamp(.4rem, .6vw, .6rem);
       letter-spacing: .2em;
       font-family: 'Inter', sans-serif;
       font-weight: 700;
@@ -240,8 +240,8 @@
       width: 100%; height: 100%;
       display: grid;
       grid-template-rows: auto 1fr;
-      gap: 1vh;
-      padding: 1.5vh 1.5vw;
+      gap: .5vh;
+      padding: .4vh .6vw;
       position: relative;
       z-index: 2;
     }
@@ -317,15 +317,15 @@
     .tv-panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 1.5vw;
-      padding: 1vh 1.2vw;
+      border-radius: 1vw;
+      padding: .5vh .8vw;
       display: flex; flex-direction: column;
       min-height: 0;
     }
     .tv-panel h2 {
       font-family: 'Fredoka One', cursive;
       font-size: clamp(1.1rem, 2.2vw, 2.2rem);
-      margin: 0 0 .6vh 0;
+      margin: 0 0 .3vh 0;
       color: var(--uno-yellow);
       letter-spacing: .04em;
     }
@@ -346,18 +346,19 @@
       flex: 1; min-height: 0;
       table-layout: fixed;
     }
+    .tv-table thead tr { background: rgba(255,255,255,.03); }
     .tv-table th {
       text-align: left;
       color: var(--text-muted);
-      font-size: clamp(.85rem, 1.4vw, 1.5rem);
+      font-size: clamp(.6rem, 1vw, 1.05rem);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .12em;
-      padding: .5vh .8vw;
+      letter-spacing: .06em;
+      padding: .3vh .35vw;
       border-bottom: 2px solid var(--border);
     }
     .tv-table td {
-      padding: 1vh .8vw;
+      padding: .5vh .35vw;
       border-bottom: 1px solid rgba(255,255,255,.04);
       vertical-align: middle;
     }
@@ -390,7 +391,12 @@
       flex-shrink: 0;
     }
     .tv-player .tv-player-name {
-      font-weight: 700; font-size: 1.08em;
+      font-weight: 700; font-size: 1.22em;
+      letter-spacing: -.005em;
+      text-decoration: underline;
+      text-decoration-color: rgba(255,255,255,.18);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .tv-table tr.tv-leader td { background: linear-gradient(90deg, rgba(255,222,0,.10), transparent); }
