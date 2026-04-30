@@ -43,8 +43,8 @@
        posicionados en .tv90-sticker. */
     .tv-cabinet {
       position: relative;
-      width: 98vw; height: 81vh;
-      margin: 5.5vh auto 0 auto;          /* deja ~5vh arriba para las antenas */
+      width: 98vw; height: 88vh;
+      margin: 5vh auto 0 auto;            /* 5+88+7=100vh exacto */
       padding: 6.5vh 8vw 7.5vh 6.5vw;     /* 1/2 del padding original — más slim, deja franja para stickers */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
@@ -61,8 +61,8 @@
     .tv-legs {
       position: absolute;
       left: 0; right: 0;
-      bottom: -7.5vh;
-      height: 7.5vh;
+      bottom: -7vh;
+      height: 7vh;
       pointer-events: none;
       z-index: 0;
     }
@@ -71,7 +71,7 @@
       position: absolute;
       bottom: 0;
       width: 5vw; max-width: 80px; min-width: 32px;
-      height: 6vh; min-height: 32px;
+      height: 5.5vh; min-height: 32px;
       background:
         linear-gradient(180deg, #2a2a2e 0%, #1a1a1e 60%, #0a0a0a 100%);
       border-radius: 0 0 8px 8px;
@@ -404,6 +404,12 @@
       display: grid;
       grid-template-columns: 1.4fr 1fr;
       gap: 1.2vw;
+      min-height: 0;
+    }
+    .tv-side {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: .6vh;
       min-height: 0;
     }
     .tv-panel {
@@ -840,7 +846,7 @@
 
     return `
       <div class="tv-panel">
-        <h2>Temporada en curso <small>· ${all.length} partido${all.length === 1 ? '' : 's'} (incluye parcial)</small></h2>
+        <h2>Temporada en curso <small>· ${all.length} partido${all.length === 1 ? '' : 's'}</small></h2>
         <table class="tv-table">
           <thead><tr>
             <th class="col-pos">#</th>
@@ -864,6 +870,59 @@
       </div>`;
   }
 
+  function renderAnnual(currentGame, finishedGames) {
+    const all = (finishedGames || []).slice().concat(currentGame ? [currentGame] : []);
+    if (!all.length) {
+      return `<div class="tv-panel">
+        <h2>Tabla anual</h2>
+        <div class="tv-empty" style="padding:2vh">
+          <div class="tv-empty-icon">📅</div>
+          <p>Sin partidos finalizados todavía.</p>
+        </div>
+      </div>`;
+    }
+    const t = {}, p = {};
+    all.forEach(g => {
+      const scores = gameTotalScores(g);
+      Object.keys(scores).forEach(pid => {
+        t[pid] = (t[pid] || 0) + scores[pid];
+        p[pid] = (p[pid] || 0) + 1;
+      });
+    });
+    const rows = Object.keys(t).map(id => ({
+      slug: id,
+      name: NAME_BY_ID[id] || id,
+      total: t[id],
+      partidos: p[id] || 0,
+    })).sort((a, b) => a.total - b.total);
+    const winnerSlug = rows[0]?.slug;
+    const loserSlug  = rows[rows.length - 1]?.slug;
+    return `
+      <div class="tv-panel">
+        <h2>Tabla anual <small>· ${all.length} partido${all.length === 1 ? '' : 's'}</small></h2>
+        <table class="tv-table">
+          <thead><tr>
+            <th class="col-pos">#</th>
+            <th>Jugador</th>
+            <th class="col-num">PJ</th>
+            <th class="col-num col-total">Pts</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map((r, i) => `
+              <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
+                <td class="col-pos">${i + 1}</td>
+                <td><div class="tv-player">
+                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
+                  <span class="tv-player-name">${r.name}</span>
+                </div></td>
+                <td class="col-num col-mute">${r.partidos}</td>
+                <td class="col-num col-total">${r.total}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
   function renderAll() {
     const body = document.getElementById('tvBody');
     if (!TV.currentGame) {
@@ -871,7 +930,8 @@
       return;
     }
     setMeta(TV.currentGame);
-    body.innerHTML = renderCurrent(TV.currentGame) + renderSeason(TV.currentGame, TV.finishedGames);
+    body.innerHTML = renderCurrent(TV.currentGame)
+      + `<div class="tv-side">${renderSeason(TV.currentGame, TV.finishedGames)}${renderAnnual(TV.currentGame, TV.finishedGames)}</div>`;
     // Ajustar font-size después de que el browser pintó el layout para que
     // todas las filas entren sin scroll. requestAnimationFrame nos da el size
     // real del tbody.
