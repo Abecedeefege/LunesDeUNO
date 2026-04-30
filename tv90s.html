@@ -1250,15 +1250,14 @@
   // Si un PNG no carga (404 / falta el archivo), el slot se quita y nada
   // más se rompe. Para cambiar/sumar/sacar stickers: editar este array.
   const STICKERS = [
-    // 5 PNGs distribuidos: 4 esquinas + 1 lateral medio. Las posiciones
-    // intermedias quedan como `null` y se saltan. Para reordenar:
-    // intercambiar las entradas (el INDEX define el slot del cabinet).
+    // 7 PNGs distribuidos: 4 esquinas + 1 top-mid + 2 laterales medios.
+    // Las posiciones intermedias quedan como `null` y se saltan.
     { src: 'assets/stickers/ar.png',    alt: '' },     // 1: top-left
-    null,                                              // 2: top-mid-left
+    { src: 'assets/stickers/mtv.png',   alt: '' },     // 2: top-mid-left
     null,                                              // 3: top-mid-right
     { src: 'assets/stickers/ch.png',    alt: '' },     // 4: top-right
     { src: 'assets/stickers/dex.png',   alt: '' },     // 5: mid-left
-    null,                                              // 6: mid-right
+    { src: 'assets/stickers/pe.png',    alt: '' },     // 6: mid-right
     null,                                              // 7: lower-mid-left
     null,                                              // 8: lower-mid-right
     { src: 'assets/stickers/rojo.png',  alt: '' },     // 9: bottom-left
