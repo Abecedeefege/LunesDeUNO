@@ -1263,21 +1263,21 @@
   // Si un PNG no carga (404 / falta el archivo), el slot se quita y nada
   // más se rompe. Para cambiar/sumar/sacar stickers: editar este array.
   const STICKERS = [
-    // 4 PNGs distribuidos a las 4 esquinas. Las posiciones intermedias quedan
-    // como `null` y se saltan. Para ocupar más slots: reemplazar `null` por
-    // { src: 'assets/stickers/...png' } en el orden que queramos.
-    { src: 'assets/stickers/file_0000000033a471fb815b981a0123e355.png', alt: '' },     // 1: top-left
-    null,                                                                              // 2: top-mid-left (vacío)
-    null,                                                                              // 3: top-mid-right (vacío)
-    { src: 'assets/stickers/file_000000005fd871fb979d00ee0a0281cc.png', alt: '' },     // 4: top-right
-    null,                                                                              // 5
-    null,                                                                              // 6
-    null,                                                                              // 7
-    null,                                                                              // 8
-    { src: 'assets/stickers/file_00000000a1a0720e8da7663b7de28753.png', alt: '' },     // 9: bottom-left
-    null,                                                                              // 10
-    null,                                                                              // 11
-    { src: 'assets/stickers/file_00000000b87c720ea91340cbf7a085c8.png', alt: '' },     // 12: bottom-right
+    // 5 PNGs distribuidos: 4 esquinas + 1 lateral medio. Las posiciones
+    // intermedias quedan como `null` y se saltan. Para reordenar:
+    // intercambiar las entradas (el INDEX define el slot del cabinet).
+    { src: 'assets/stickers/ar.png',    alt: '' },     // 1: top-left
+    null,                                              // 2: top-mid-left
+    null,                                              // 3: top-mid-right
+    { src: 'assets/stickers/ch.png',    alt: '' },     // 4: top-right
+    { src: 'assets/stickers/dex.png',   alt: '' },     // 5: mid-left
+    null,                                              // 6: mid-right
+    null,                                              // 7: lower-mid-left
+    null,                                              // 8: lower-mid-right
+    { src: 'assets/stickers/rojo.png',  alt: '' },     // 9: bottom-left
+    null,                                              // 10
+    null,                                              // 11
+    { src: 'assets/stickers/sp.png',    alt: '' },     // 12: bottom-right
   ];
   (function mountStickers() {
     const host = document.getElementById('tv90-stickers');
