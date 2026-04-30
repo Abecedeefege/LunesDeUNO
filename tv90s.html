@@ -45,7 +45,7 @@
       position: relative;
       width: 98vw; height: 88vh;
       margin: 5vh auto 0 auto;            /* 5+88+7=100vh exacto */
-      padding: 6.5vh 8vw 7.5vh 6.5vw;     /* 1/2 del padding original — más slim, deja franja para stickers */
+      padding: 6.5vh 8vw 9vh 6.5vw;       /* +1.5vh bottom para que el LUNES TV no se pise con la pantalla */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
@@ -119,10 +119,11 @@
       border-radius: 6px 6px 0 0;
     }
 
-    /* Marca del frente — vintage placa dorada */
+    /* Marca del frente — vintage placa dorada (z-index alto para no taparse) */
     .tv-brand-plate {
       position: absolute;
-      bottom: .9vh; left: 2.4vw;
+      bottom: 1.2vh; left: 5vw;
+      z-index: 5;
       font-family: 'Fredoka One', cursive;
       font-size: clamp(.6rem, 1vw, 1rem);
       letter-spacing: .3em;
@@ -146,7 +147,8 @@
     /* Parrilla horizontal del altavoz — vintage CRT */
     .tv-speaker {
       position: absolute;
-      bottom: 1vh; right: 11vw;
+      bottom: 1.2vh; right: 11vw;
+      z-index: 5;
       width: 13vw; max-width: 220px;
       height: 3.2vh; min-height: 22px;
       background:
@@ -166,6 +168,7 @@
     .tv-knob {
       position: absolute;
       right: .8vw;
+      z-index: 5;
       width: 3.4vw; max-width: 44px; min-width: 24px;
       aspect-ratio: 1;
       border-radius: 50%;
@@ -193,7 +196,8 @@
     .tv-led {
       position: absolute;
       right: 2.2vw;
-      bottom: 2vh;
+      bottom: 2.6vh;
+      z-index: 5;
       width: 7px; height: 7px;
       border-radius: 50%;
       background: #ff3344;
@@ -202,7 +206,8 @@
     .tv-led-label {
       position: absolute;
       right: 1vw;
-      bottom: 1vh;
+      bottom: 1.6vh;
+      z-index: 5;
       color: rgba(255,255,255,.35);
       font-size: clamp(.45rem, .7vw, .7rem);
       letter-spacing: .2em;

@@ -42,7 +42,7 @@
       position: relative;
       width: 98vw; height: 88vh;
       margin: 5vh auto 0 auto;          /* deja 5vh arriba para las antenas — 5+88+7=100vh exacto */
-      padding: 4vh 3vw 5vh 1.4vw;       /* bezel grueso arriba/abajo (consola vintage), slim laterales */
+      padding: 4vh 3vw 6.5vh 1.4vw;     /* bezel grueso arriba/abajo (consola vintage), slim laterales — bottom +1.5vh para el LUNES TV */
       background:
         radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.05) 0%, transparent 25%),
         linear-gradient(170deg, #2a2a2e 0%, #16161a 50%, #2a2a2e 100%);
@@ -116,10 +116,12 @@
       border-radius: 6px 6px 0 0;
     }
 
-    /* Marca del frente — más visible ahora que el bezel inferior es grueso */
+    /* Marca del frente — más visible ahora que el bezel inferior es grueso.
+       z-index alto para que ningún panel/sombra del .tv-screen lo tape. */
     .tv-brand-plate {
       position: absolute;
-      bottom: 1.5vh; left: 1.5vw;
+      bottom: .8vh; left: 4vw;
+      z-index: 5;
       font-family: 'Fredoka One', cursive;
       font-size: clamp(.7rem, 1.1vw, 1.05rem);
       letter-spacing: .3em;
@@ -143,7 +145,8 @@
     /* Parrilla horizontal del altavoz — vintage, más grande con bezel inferior grueso */
     .tv-speaker {
       position: absolute;
-      bottom: 1.4vh; right: 7vw;
+      bottom: .8vh; right: 7vw;
+      z-index: 5;
       width: 14vw; max-width: 220px;
       height: 3vh; min-height: 22px;
       background:
@@ -163,6 +166,7 @@
     .tv-knob {
       position: absolute;
       right: .5vw;
+      z-index: 5;
       width: 2.2vw; max-width: 32px; min-width: 18px;
       aspect-ratio: 1;
       border-radius: 50%;
@@ -191,6 +195,7 @@
       position: absolute;
       right: 2.4vw;
       bottom: 2.4vh;
+      z-index: 5;
       width: 8px; height: 8px;
       border-radius: 50%;
       background: #ff3344;
@@ -200,6 +205,7 @@
       position: absolute;
       right: 1.2vw;
       bottom: 1.4vh;
+      z-index: 5;
       color: rgba(255,255,255,.4);
       font-size: clamp(.5rem, .8vw, .8rem);
       letter-spacing: .25em;
