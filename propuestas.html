@@ -67,11 +67,10 @@
        de scoring; sólo es un link a tv.html. */
     .tv-cta-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 1rem;
       margin-top: 1.5rem;
     }
-    @media (max-width: 720px) { .tv-cta-grid { grid-template-columns: 1fr; } }
     .tv-cta {
       display: flex; align-items: center; gap: 1rem;
       background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
@@ -323,14 +322,7 @@
       </span>
       <span class="tv-cta-go">→</span>
     </a>
-    <a href="tv90s.html" target="_blank" rel="noopener" class="tv-cta tv-cta-90s">
-      <span class="tv-cta-icon">📼</span>
-      <span class="tv-cta-text">
-        <strong>Modo TV 90s</strong>
-        <small>Marco coloridito Memphis con stickers de Rugrats, Friends, Hey Arnold, Pokémon y más.</small>
-      </span>
-      <span class="tv-cta-go">→</span>
-    </a>
+    <!-- Modo TV 90s temporalmente oculto del sitio público mientras se itera. -->
   </div>
 
   <section class="gallery-section">
