@@ -3095,7 +3095,7 @@ function renderRoundInputs() {
           ${dot}
           ${p.name}
         </div>
-        <input type="number" id="roundScore_${i}" placeholder="0">
+        <input type="number" id="roundScore_${i}" placeholder="0" inputmode="text" pattern="-?[0-9]+" step="1">
         <button class="btn btn-small btn-corte${(state._pendingCortes && state._pendingCortes[i]) ? ' active' : ''}" data-idx="${i}" onclick="togglePendingCorte(${i})">✂️ ${t('game_corte')}</button>
         <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
       </div>
@@ -3249,7 +3249,7 @@ function openEditModal(roundIdx) {
     html += `
       <div class="modal-input-row">
         <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
-        <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+        <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}" inputmode="text" pattern="-?[0-9]+" step="1">
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
         <label style="color:var(--uno-green);font-size:.8rem;display:flex;align-items:center;gap:.4rem;cursor:pointer;">
