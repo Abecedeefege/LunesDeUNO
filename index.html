@@ -907,6 +907,12 @@
       border: 1px solid var(--border);
     }
     .btn-corte:hover { background: rgba(0,166,81,.18); }
+    .btn-sign {
+      background: var(--surface-2); color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 700; min-width: 32px; padding: .3rem .5rem;
+    }
+    .btn-sign:hover { background: rgba(255,255,255,.08); }
     .btn-corte.active {
       background: var(--uno-green); color: #0f0f1a; border-color: var(--uno-green);
       box-shadow: 0 0 0 2px rgba(0,166,81,.25);
@@ -1338,7 +1344,9 @@
     <!-- Full breakdown for print -->
     <div class="round-history" id="resultsHistoryContainer">
       <h3 data-i18n="results_breakdown"></h3>
-      <table class="round-history-table" id="resultsHistoryTable"></table>
+      <div class="round-history-scroll">
+        <table class="round-history-table" id="resultsHistoryTable"></table>
+      </div>
     </div>
 
     <div class="results-actions no-print">
@@ -3096,6 +3104,7 @@ function renderRoundInputs() {
           ${p.name}
         </div>
         <input type="number" id="roundScore_${i}" placeholder="0">
+        <button class="btn btn-small btn-sign" type="button" onclick="toggleScoreSign('roundScore_${i}')" aria-label="negativo">±</button>
         <button class="btn btn-small btn-corte${(state._pendingCortes && state._pendingCortes[i]) ? ' active' : ''}" data-idx="${i}" onclick="togglePendingCorte(${i})">✂️ ${t('game_corte')}</button>
         <button class="btn btn-small btn-fine" onclick="toggleFineInput(${i})">${t('game_fine')}</button>
       </div>
@@ -3110,6 +3119,21 @@ function renderRoundInputs() {
 function toggleFineInput(idx) {
   var row = document.getElementById('fineRow_' + idx);
   if (row) row.classList.toggle('visible');
+}
+
+// Invierte el signo del input para teclados (Samsung) cuyo numpad no muestra "−".
+function toggleScoreSign(inputId) {
+  var el = document.getElementById(inputId);
+  if (!el) return;
+  var raw = (el.value || '').trim();
+  if (raw === '' || raw === '-') {
+    el.value = raw === '-' ? '' : '-';
+  } else {
+    var n = parseInt(raw, 10);
+    if (isNaN(n)) return;
+    el.value = String(-n);
+  }
+  el.focus();
 }
 
 function togglePendingCorte(idx) {
@@ -3250,6 +3274,7 @@ function openEditModal(roundIdx) {
       <div class="modal-input-row">
         <label style="display:flex;align-items:center;gap:.3rem;">${getPlayerDotSm(p, i)} ${p.name}</label>
         <input type="number" id="editScore_${i}" value="${state.rounds[roundIdx][i]}">
+        <button class="btn btn-small btn-sign" type="button" onclick="toggleScoreSign('editScore_${i}')" aria-label="negativo">±</button>
       </div>
       <div class="modal-input-row" style="padding-left:1rem;">
         <label style="color:var(--uno-green);font-size:.8rem;display:flex;align-items:center;gap:.4rem;cursor:pointer;">
