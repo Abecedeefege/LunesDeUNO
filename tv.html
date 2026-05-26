@@ -812,10 +812,24 @@
     function totalsFor(games) {
       const t = {}, p = {};
       games.forEach(g => {
+        const parts = g.participants || [];
+        // BASE máxima del partido = penalización para los absentees.
+        let maxBase = -Infinity;
+        parts.forEach(pp => {
+          const b = (g.rounds || []).reduce((s, r) => s + ((r && r[pp.slot]) || 0), 0);
+          if (b > maxBase) maxBase = b;
+        });
+        const loserBase = (maxBase === -Infinity) ? 0 : maxBase;
         const scores = gameTotalScores(g);
         Object.keys(scores).forEach(pid => {
           t[pid] = (t[pid] || 0) + scores[pid];
           p[pid] = (p[pid] || 0) + 1;
+        });
+        // Ausentes: suman loserBase pero NO incrementan partidos jugados.
+        (g.absentees || []).forEach(absId => {
+          if (!absId) return;
+          t[absId] = (t[absId] || 0) + loserBase;
+          if (p[absId] === undefined) p[absId] = 0;
         });
       });
       return { t, p };
