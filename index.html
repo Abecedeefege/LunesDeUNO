@@ -1207,8 +1207,11 @@
     <button class="btn btn-primary" onclick="showScreen('setup')" data-i18n="home_start"></button>
     <div style="display:flex; align-items:center; gap:.6rem; margin-top:.5rem; flex-wrap:wrap; justify-content:center;">
       <button class="btn btn-secondary" onclick="showScreen('stats')" data-i18n="home_stats"></button>
+      <!-- Acceso "for Nachi" deshabilitado temporalmente (no accesible por el momento)
       <a href="propuestas.html" class="btn-nachi" aria-label="for Nachi">🍎🍌 for Nachi 🍌🍎</a>
+      -->
     </div>
+    <!-- Modo Asado deshabilitado temporalmente
     <div class="asado-toggle-row">
       <label class="asado-switch">
         <input type="checkbox" id="asadoToggle" onchange="toggleAsado()">
@@ -1216,6 +1219,7 @@
       </label>
       <span data-i18n="asado_mode"></span>
     </div>
+    -->
     <div id="gamesList"></div>
   </div>
 
@@ -6298,9 +6302,10 @@ async function shareStatsTableImage(tableId, titleKey, btn) {
 }
 
 // ============ INIT ============
-asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
-document.getElementById('asadoToggle').checked = asadoMode;
-if (asadoMode) applyAsadoMode();
+// Modo Asado deshabilitado temporalmente — init neutralizado (sin #asadoToggle en el DOM).
+// asadoMode = localStorage.getItem('lunesdeuno_asado') === 'on';
+// document.getElementById('asadoToggle').checked = asadoMode;
+// if (asadoMode) applyAsadoMode();
 
 setLang(currentLang);
 initSetup();
