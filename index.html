@@ -1155,6 +1155,19 @@
     }
     .btn-nachi:hover { background: var(--surface-3); transform: scale(1.05); }
 
+    /* ---- Modo dueño (owner) ---- */
+    /* Controles visibles sólo para el dueño (desbloqueado en este dispositivo). */
+    body:not(.owner) .owner-only { display: none !important; }
+    .owner-badge {
+      position: fixed; right: 12px; bottom: 12px; z-index: 60;
+      display: none; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--surface-2); border: 1px solid var(--border);
+      font-size: 1.15rem; cursor: pointer; user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,.35);
+    }
+    .home-tophat { cursor: pointer; }
+
     /* ---- Edit limit inline ---- */
     .edit-limit-btn {
       background: none; border: none; cursor: pointer;
@@ -1195,6 +1208,9 @@
   <div id="saveIndicator" class="save-indicator" role="status" aria-live="polite">
     <span id="saveIndicatorText"></span>
   </div>
+
+  <!-- Badge de modo dueño: visible sólo cuando el dueño desbloqueó este dispositivo -->
+  <div id="ownerBadge" class="owner-badge" onclick="promptOwnerUnlock()" title="Modo dueño" role="button" aria-label="Modo dueño">🔓</div>
 
   <!-- ============ HOME ============ -->
   <div id="home" class="screen active">
@@ -1356,8 +1372,8 @@
     <div class="results-actions no-print">
       <button class="btn btn-secondary" onclick="goHome()" data-i18n="game_go_home"></button>
       <button class="btn btn-secondary" id="shareResultsImgBtn" onclick="shareResultsImage(this)"><span>📜</span> <span data-i18n="results_print"></span></button>
-      <button class="btn btn-secondary" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
-      <button class="btn btn-secondary" onclick="openEditMaxPoints()" data-i18n="results_edit_limit"></button>
+      <button class="btn btn-secondary owner-only" onclick="showEditableHistory()"><span>&#9998;</span> <span data-i18n="results_edit"></span></button>
+      <button class="btn btn-secondary owner-only" onclick="openEditMaxPoints()" data-i18n="results_edit_limit"></button>
       <button class="btn btn-secondary" onclick="shareToWhatsApp()"><span>📲</span> <span data-i18n="share_whatsapp"></span></button>
       <button class="btn btn-primary" onclick="newGame()" data-i18n="results_new_game"></button>
     </div>
@@ -1477,6 +1493,23 @@
       <div class="modal-actions">
         <button class="btn btn-secondary btn-small" onclick="closeEditMaxPoints()" data-i18n="modal_cancel"></button>
         <button class="btn btn-primary btn-small" onclick="saveEditMaxPoints()" data-i18n="modal_save"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL PIN DE DUEÑO ============ -->
+  <div class="modal-overlay" id="ownerPinModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 data-i18n="owner_pin_title"></h3>
+      <div class="modal-inputs">
+        <div class="modal-input-row">
+          <label data-i18n="owner_pin_prompt"></label>
+          <input type="password" id="ownerPinInput" autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')submitOwnerPin()" style="width:120px;text-align:center;font-weight:600;letter-spacing:.2em;">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary btn-small" onclick="closeOwnerPinModal()" data-i18n="modal_cancel"></button>
+        <button class="btn btn-primary btn-small" onclick="submitOwnerPin()" data-i18n="modal_save"></button>
       </div>
     </div>
   </div>
@@ -1822,6 +1855,13 @@ const STRINGS = {
     results_breakdown: 'Ronda por ronda',
     results_print: 'Compartir resultado (IMG)',
     results_edit: 'Editar puntajes',
+    owner_locked: '🔒 Sólo el dueño puede editar partidas cerradas',
+    owner_pin_prompt: 'PIN de dueño:',
+    owner_unlocked: '🔓 Modo dueño activado',
+    owner_pin_wrong: '❌ PIN incorrecto',
+    owner_exit_q: '¿Salir de modo dueño?',
+    owner_locked_off: '🔒 Modo dueño desactivado',
+    owner_pin_title: 'Modo dueño 🔒',
     results_new_game: 'Otra partidita',
     modal_edit_round: 'Editar Ronda',
     modal_cancel: 'Na, dejá',
@@ -2006,6 +2046,13 @@ const STRINGS = {
     results_breakdown: 'Round Breakdown',
     results_print: 'Share result (IMG)',
     results_edit: 'Edit Scores',
+    owner_locked: '🔒 Only the owner can edit closed games',
+    owner_pin_prompt: 'Owner PIN:',
+    owner_unlocked: '🔓 Owner mode on',
+    owner_pin_wrong: '❌ Wrong PIN',
+    owner_exit_q: 'Exit owner mode?',
+    owner_locked_off: '🔒 Owner mode off',
+    owner_pin_title: 'Owner mode 🔒',
     results_new_game: 'New Game',
     modal_edit_round: 'Edit Round',
     modal_cancel: 'Cancel',
@@ -3266,7 +3313,77 @@ function renderRoundHistory() {
 // ============ EDIT MODAL ============
 let editingRound = -1;
 
+// ============ MODO DUEÑO (owner) ============
+// Las partidas CERRADAS (state.gameOver) sólo las puede editar el dueño. Ojo: el
+// sitio es estático y la API key de Firestore es pública, así que esto es
+// OFUSCACIÓN para frenar a un visitante casual, NO seguridad criptográfica.
+//  • Activar/desactivar en este dispositivo: tocá 5 veces el sombrero del home.
+//  • Cambiar el PIN: en la consola del navegador corré  ownerHashFor('tuNuevoPin')
+//    y pegá el número en OWNER_PIN_HASH. PIN por defecto: "tophat".
+var OWNER_PIN_HASH = 512573301;
+function _hashPin(s) {
+  s = String(s); var h = 5381;
+  for (var i = 0; i < s.length; i++) { h = ((h << 5) + h) + s.charCodeAt(i); h |= 0; }
+  return h;
+}
+window.ownerHashFor = function(s) { return _hashPin(s); };
+function isOwner() {
+  try { return localStorage.getItem('lunesdeuno_owner') === '1'; } catch (e) { return false; }
+}
+function _setOwner(on) {
+  try {
+    if (on) localStorage.setItem('lunesdeuno_owner', '1');
+    else localStorage.removeItem('lunesdeuno_owner');
+  } catch (e) {}
+  applyOwnerMode();
+}
+function applyOwnerMode() {
+  document.body.classList.toggle('owner', isOwner());
+  var badge = document.getElementById('ownerBadge');
+  if (badge) badge.style.display = isOwner() ? 'flex' : 'none';
+  var results = document.getElementById('results');
+  if (results && results.classList.contains('active')) renderResults();
+  renderGamesList();
+}
+// Bloquea la edición de una partida cerrada si no sos dueño (muestra aviso).
+function canEditClosedGame() {
+  if (state.gameOver && !isOwner()) { _showStatsToast(t('owner_locked')); return false; }
+  return true;
+}
+function promptOwnerUnlock() {
+  if (isOwner()) {
+    customConfirm(t('owner_exit_q'), function() { _setOwner(false); _showStatsToast(t('owner_locked_off')); });
+    return;
+  }
+  var input = document.getElementById('ownerPinInput');
+  if (input) input.value = '';
+  document.getElementById('ownerPinModal').classList.add('active');
+  if (input) setTimeout(function() { input.focus(); }, 50);
+}
+function closeOwnerPinModal() {
+  document.getElementById('ownerPinModal').classList.remove('active');
+}
+function submitOwnerPin() {
+  var input = document.getElementById('ownerPinInput');
+  var pin = input ? input.value : '';
+  closeOwnerPinModal();
+  if (_hashPin(pin) === OWNER_PIN_HASH) { _setOwner(true); _showStatsToast(t('owner_unlocked')); }
+  else { _showStatsToast(t('owner_pin_wrong')); }
+}
+// Desbloqueo discreto: 5 toques al logo del home en menos de 2.5 s.
+var _ownerTapCount = 0, _ownerTapTimer = null;
+function _ownerLogoTap() {
+  _ownerTapCount++;
+  if (_ownerTapTimer) clearTimeout(_ownerTapTimer);
+  _ownerTapTimer = setTimeout(function() { _ownerTapCount = 0; }, 2500);
+  if (_ownerTapCount >= 5) {
+    _ownerTapCount = 0; clearTimeout(_ownerTapTimer);
+    promptOwnerUnlock();
+  }
+}
+
 function openEditModal(roundIdx) {
+  if (!canEditClosedGame()) return;
   editingRound = roundIdx;
   document.getElementById('editModalTitle').textContent = `${t('modal_edit_round')} ${roundIdx + 1}`;
   const container = document.getElementById('editModalInputs');
@@ -3349,10 +3466,13 @@ document.addEventListener('keydown', function(e) {
   if (maxOpen && maxOpen.classList.contains('active')) { closeEditMaxPoints(); return; }
   var confirmOpen = document.getElementById('confirmModal');
   if (confirmOpen && confirmOpen.classList.contains('active')) { _hideConfirmModal(); return; }
+  var ownerPinOpen = document.getElementById('ownerPinModal');
+  if (ownerPinOpen && ownerPinOpen.classList.contains('active')) { closeOwnerPinModal(); return; }
 });
 
 // ============ EDIT MAX POINTS MODAL ============
 function openEditMaxPoints() {
+  if (!canEditClosedGame()) return;
   document.getElementById('newMaxPointsInput').value = state.maxPoints;
   document.getElementById('editMaxPointsModal').classList.add('active');
   document.getElementById('newMaxPointsInput').focus();
@@ -3364,6 +3484,7 @@ function closeEditMaxPoints() {
 }
 
 function saveEditMaxPoints() {
+  if (!canEditClosedGame()) { closeEditMaxPoints(); return; }
   const val = parseInt(document.getElementById('newMaxPointsInput').value);
   if (!val || val < 50) { customAlert(t('edit_limit_label')); return; }
   var oldMaxPoints = state.maxPoints;
@@ -3391,6 +3512,7 @@ function saveEditMaxPoints() {
 
 function saveEditRound() {
   if (editingRound < 0) return;
+  if (!canEditClosedGame()) { closeEditModal(); return; }
   // Defensa contra editar una ronda fuera de cota (race con borrado de
   // ronda, o estado corrupto). Cerrar modal sin tocar nada.
   if (editingRound >= (state.rounds || []).length) {
@@ -3541,6 +3663,7 @@ function renderResultsHistory() {
 }
 
 function showEditableHistory() {
+  if (!canEditClosedGame()) return;
   const table = document.getElementById('resultsHistoryTable');
   let html = `<thead><tr><th>${t('game_round')}</th>`;
   state.players.forEach(p => { html += `<th>${p.name}</th>`; });
@@ -4881,7 +5004,7 @@ function renderGamesList() {
       + '<div class="game-item-info">' + body + '</div>'
       + '<div class="game-item-actions">'
         + '<button class="btn btn-secondary btn-small" onclick="' + btnAction + '">' + btnLabel + '</button>'
-        + '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>'
+        + ((!g.finished || isOwner()) ? '<button class="btn btn-secondary btn-small" style="color:var(--danger);" onclick="deleteGame(\'' + g.id + '\')">' + t('games_delete') + '</button>' : '')
       + '</div>'
     + '</div>';
   });
@@ -4920,6 +5043,9 @@ function resumeGame(gameId) {
 }
 
 function deleteGame(gameId) {
+  // Borrar una partida cerrada es también editarla: sólo el dueño.
+  var _gDel = loadGames().find(function(g) { return g.id === gameId; });
+  if (_gDel && _gDel.finished && !isOwner()) { _showStatsToast(t('owner_locked')); return; }
   customConfirm(t('games_confirm_delete'), function() {
     var games = loadGames();
     games = games.filter(function(g) { return g.id !== gameId; });
@@ -6310,6 +6436,13 @@ async function shareStatsTableImage(tableId, titleKey, btn) {
 setLang(currentLang);
 initSetup();
 renderGamesList();
+
+// Modo dueño: aplicar estado guardado y enganchar el desbloqueo discreto (5 toques al logo).
+applyOwnerMode();
+(function() {
+  var _homeLogo = document.querySelector('.home-tophat');
+  if (_homeLogo) _homeLogo.addEventListener('click', _ownerLogoTap);
+})();
 
 // Kick off passive fingerprint warmup during idle so the first edit event
 // doesn't wait on canvas/WebRTC/ipapi. Fire-and-forget; wrapped in try/catch.
