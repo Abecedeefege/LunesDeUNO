@@ -1167,6 +1167,8 @@
       box-shadow: 0 2px 8px rgba(0,0,0,.35);
     }
     .home-tophat { cursor: pointer; }
+    /* touch-action: manipulation evita que el doble-tap-zoom se coma los toques rápidos en mobile. */
+    .home-tophat, .logo-title { touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 
     /* ---- Edit limit inline ---- */
     .edit-limit-btn {
@@ -3317,10 +3319,11 @@ let editingRound = -1;
 // Las partidas CERRADAS (state.gameOver) sólo las puede editar el dueño. Ojo: el
 // sitio es estático y la API key de Firestore es pública, así que esto es
 // OFUSCACIÓN para frenar a un visitante casual, NO seguridad criptográfica.
-//  • Activar/desactivar en este dispositivo: tocá 5 veces el sombrero del home.
+//  • Desbloquear en este dispositivo: tocá 5 veces el sombrero o el título del
+//    home, o entrá a la URL con #unlock al final (ej: .../index.html#unlock).
 //  • Cambiar el PIN: en la consola del navegador corré  ownerHashFor('tuNuevoPin')
-//    y pegá el número en OWNER_PIN_HASH. PIN por defecto: "tophat".
-var OWNER_PIN_HASH = 512573301;
+//    y pegá el número en OWNER_PIN_HASH. PIN por defecto: "UNO".
+var OWNER_PIN_HASH = 193472215;
 function _hashPin(s) {
   s = String(s); var h = 5381;
   for (var i = 0; i < s.length; i++) { h = ((h << 5) + h) + s.charCodeAt(i); h |= 0; }
@@ -3375,7 +3378,7 @@ var _ownerTapCount = 0, _ownerTapTimer = null;
 function _ownerLogoTap() {
   _ownerTapCount++;
   if (_ownerTapTimer) clearTimeout(_ownerTapTimer);
-  _ownerTapTimer = setTimeout(function() { _ownerTapCount = 0; }, 2500);
+  _ownerTapTimer = setTimeout(function() { _ownerTapCount = 0; }, 3000);
   if (_ownerTapCount >= 5) {
     _ownerTapCount = 0; clearTimeout(_ownerTapTimer);
     promptOwnerUnlock();
@@ -6437,11 +6440,21 @@ setLang(currentLang);
 initSetup();
 renderGamesList();
 
-// Modo dueño: aplicar estado guardado y enganchar el desbloqueo discreto (5 toques al logo).
+// Modo dueño: aplicar estado guardado y enganchar el desbloqueo discreto.
 applyOwnerMode();
 (function() {
-  var _homeLogo = document.querySelector('.home-tophat');
-  if (_homeLogo) _homeLogo.addEventListener('click', _ownerLogoTap);
+  // Gesto: 5 toques al sombrero o al título del home.
+  ['.home-tophat', '.logo-title'].forEach(function(sel) {
+    var el = document.querySelector(sel);
+    if (el) el.addEventListener('click', _ownerLogoTap);
+  });
+  // Vía alternativa confiable: abrir el modal de PIN si la URL termina en #unlock.
+  function _checkUnlockHash() {
+    var h = (location.hash || '').replace(/^#/, '').toLowerCase();
+    if ((h === 'unlock' || h === 'owner' || h === 'dueno') && !isOwner()) promptOwnerUnlock();
+  }
+  window.addEventListener('hashchange', _checkUnlockHash);
+  _checkUnlockHash();
 })();
 
 // Kick off passive fingerprint warmup during idle so the first edit event
