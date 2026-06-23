@@ -1,0 +1,35 @@
+rules_version = '2';
+
+// Reglas de Firestore para Lunes de UNO.
+//
+// La app es un sitio estático sin autenticación: escribe con la API key
+// pública, así que el acceso es abierto por diseño. La única restricción que
+// agregamos es de integridad: un partido ya cerrado (finished:true) NO puede
+// volver a "en curso" (finished:false). Esto evita que un dispositivo con un
+// estado viejo en la cola de guardado reabra un partido que ya se cerró
+// (el bug que dejaba el partido "En curso" después de compartir el resultado).
+//
+// Despliegue (requiere acceso a la consola/CLI de Firebase):
+//   - Consola: Firestore Database → Rules → pegar este contenido → Publicar.
+//   - CLI:     firebase deploy --only firestore:rules
+// Antes de publicar, comparar con las reglas actuales para no perder
+// restricciones existentes en otras colecciones.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Partidos: lectura/creación/borrado libres; en update se prohíbe
+    // degradar finished:true → finished:false.
+    match /games/{gameId} {
+      allow read, create, delete: if true;
+      allow update: if !(resource.data.finished == true &&
+                         request.resource.data.finished == false);
+    }
+
+    // Resto de colecciones (Propuestas, propuestasVisuales, seasons, players,
+    // ediciones/telemetría, etc.): comportamiento abierto como hasta ahora.
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1561,6 +1561,7 @@
     persistentLocalCache,
     persistentMultipleTabManager,
     collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
+    runTransaction,
     query, where, orderBy, serverTimestamp, Timestamp
   } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
   import {
@@ -1624,7 +1625,21 @@
             winnerPlayerId: entry.winnerPlayerId || null,
             seasonId: entry.seasonId || null
           };
-          await setDoc(doc(db, 'games', entry.id), payload, { merge: true });
+          // Candado anti-reapertura: un partido ya cerrado (finished:true) no
+          // puede ser pisado por un guardado "en curso" ni perder rondas ya
+          // guardadas. Evita que un dispositivo con estado viejo en cola
+          // revierta un cierre. Transacción para que el check sea atómico.
+          const gameRef = doc(db, 'games', entry.id);
+          await runTransaction(db, async (tx) => {
+            const snap = await tx.get(gameRef);
+            const prev = snap.exists() ? snap.data() : null;
+            if (prev) {
+              const prevRounds = Array.isArray(prev.rounds) ? prev.rounds.length : 0;
+              const newRounds = (s.rounds || []).length;
+              if (prev.finished === true && (!entry.finished || newRounds < prevRounds)) return;
+            }
+            tx.set(gameRef, payload, { merge: true });
+          });
         },
         async deleteGame(id) { await deleteDoc(doc(db, 'games', id)); },
         async getAllGames() {
