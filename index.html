@@ -3494,13 +3494,14 @@ function saveEditMaxPoints() {
   state.maxPoints = val;
   closeEditMaxPoints();
 
-  const finalTotals = getFinalTotals();
+  const baseTotals = getTotals();
   const wasOver = state.gameOver;
-  state.gameOver = finalTotals.some(function(t) { return t >= state.maxPoints; });
+  // El límite se cruza por puntaje base (solo rondas); cortes/multas no cuentan para el partido.
+  state.gameOver = baseTotals.some(function(t) { return t >= state.maxPoints; });
   saveCurrentGame();
   logEdit('edit_max_points', null, { before: oldMaxPoints, after: val, wasOver: wasOver, isOver: state.gameOver });
   if (state.gameOver && !wasOver) {
-    logEdit('finish_game', null, { totals: finalTotals.slice(), maxPoints: state.maxPoints, via: 'edit_max_points' });
+    logEdit('finish_game', null, { totals: baseTotals.slice(), maxPoints: state.maxPoints, via: 'edit_max_points' });
   }
 
   if (!state.gameOver && wasOver) {
@@ -3561,7 +3562,10 @@ function renderResults() {
   const baseTotals = getTotals();
   const totalFines = getTotalFines();
   const totalCortes = getTotalCortes();
-  const standings = state.players.map((p, i) => ({...p, idx: i, total: finalTotals[i], baseTotal: baseTotals[i], fines: totalFines[i], cortes: totalCortes[i]}))
+  // El ranking del PARTIDO se decide por puntaje base (solo rondas). Multas y
+  // cortes NO cuentan para el partido; se muestran como anotación porque sí
+  // impactan en la temporada / tabla anual.
+  const standings = state.players.map((p, i) => ({...p, idx: i, total: baseTotals[i], baseTotal: baseTotals[i], finalTotal: finalTotals[i], fines: totalFines[i], cortes: totalCortes[i]}))
     .sort((a, b) => a.total - b.total);
 
   document.getElementById('winnerName').textContent = standings[0].name;
@@ -3582,7 +3586,7 @@ function renderResults() {
       let adjustments = '';
       if (hasFines) adjustments += ` <span class="fine-badge">(+${p.fines} ${t('game_fines_label')})</span>`;
       if (hasCortes) adjustments += ` <span class="corte-badge">(${p.cortes} ${t('game_cortes_label')})</span>`;
-      scoreText = `${p.baseTotal}${adjustments} = ${p.total} ${t('game_pts')}`;
+      scoreText = `${p.baseTotal} ${t('game_pts')}${adjustments}`;
     } else {
       scoreText = `${p.total} ${t('game_pts')}`;
     }
@@ -3903,12 +3907,13 @@ async function shareResultsImage(btn) {
   if (btn) { btn.disabled = true; btn.dataset._label = btn.textContent; btn.textContent = '⏳ ' + t('stats_share_preparing'); }
 
   // Preparar datos del partido
-  var finalTotals = getFinalTotals();
+  var baseTotals = getTotals();
   var totalFinesC = (typeof getTotalFines === 'function') ? getTotalFines() : state.players.map(function(){return 0;});
   var totalCortesC = (typeof getTotalCortes === 'function') ? getTotalCortes() : state.players.map(function(){return 0;});
+  // Ranking del partido por puntaje base; multas/cortes solo se anotan.
   var standings = state.players.map(function(p, i) {
     return { name: p.name, slug: (p.playerId || (p.name||'').toLowerCase()), face: p.face,
-             total: finalTotals[i], fines: totalFinesC[i], cortes: totalCortesC[i] };
+             total: baseTotals[i], fines: totalFinesC[i], cortes: totalCortesC[i] };
   }).sort(function(a, b) { return a.total - b.total; });
   var winner = standings[0];
   var loser = standings[standings.length - 1];
@@ -4184,12 +4189,14 @@ function speakPlayerRanking() {
 let loserPoemRotation = 0;
 
 function buildShareText() {
-  const finalTotals = getFinalTotals();
+  const baseTotals = getTotals();
   const totalFinesC = getTotalFines();
   const totalCortesC = getTotalCortes();
+  // Ranking del partido por puntaje base (solo rondas). Multas/cortes se
+  // anotan pero no definen quién gana/pierde el partido.
   const standings = state.players.map((p, i) => ({
     ...p,
-    total: finalTotals[i],
+    total: baseTotals[i],
     fines: totalFinesC[i],
     cortes: totalCortesC[i],
     idx: i
@@ -4742,10 +4749,11 @@ function saveCurrentGame() {
   var winnerSlot = null;
   var winnerPlayerId = null;
   if (state.gameOver && state.players && state.players.length) {
-    var finalTotals = getFinalTotals();
+    // Ganador por puntaje base (solo rondas); multas/cortes no cuentan para el partido.
+    var baseTotals = getTotals();
     winnerSlot = 0;
-    for (var i = 1; i < finalTotals.length; i++) {
-      if (finalTotals[i] < finalTotals[winnerSlot]) winnerSlot = i;
+    for (var i = 1; i < baseTotals.length; i++) {
+      if (baseTotals[i] < baseTotals[winnerSlot]) winnerSlot = i;
     }
     var winnerParticipant = (state.participants || [])[winnerSlot];
     winnerPlayerId = winnerParticipant ? winnerParticipant.playerId : null;
@@ -4939,6 +4947,18 @@ function _gameFinalTotals(s) {
   return totals;
 }
 
+// Puntaje base (solo rondas) — define el ranking del PARTIDO (ganador/perdedor).
+// Multas y cortes no cuentan para el partido (sí para la tabla anual).
+function _gameBaseTotals(s) {
+  var rounds = s.rounds || [];
+  var n = (s.players || []).length;
+  var totals = [];
+  for (var i = 0; i < n; i++) {
+    totals.push(rounds.reduce(function(sum, r) { return sum + ((r && r[i]) || 0); }, 0));
+  }
+  return totals;
+}
+
 function renderGamesList() {
   var container = document.getElementById('gamesList');
   var games = loadGames();
@@ -4972,7 +4992,7 @@ function renderGamesList() {
 
     var body;
     if (g.finished && players.length) {
-      var totals = _gameFinalTotals(s);
+      var totals = _gameBaseTotals(s);
       var minIdx = 0, maxIdx = 0;
       totals.forEach(function(v, i) {
         if (v < totals[minIdx]) minIdx = i;
@@ -5606,7 +5626,13 @@ function computeAllStats(games, seasons) {
     if (!numPlayers) return;
 
     var finalScores = participants.map(function(_, slot) { return computeGameFinalScore(g, slot); });
-    var ordered = finalScores.map(function(v, i) { return { slot: i, score: v }; }).sort(function(a, b) { return a.score - b.score; });
+    // El ranking del PARTIDO (posiciones, ganador/perdedor, h2h, último puesto)
+    // se decide por puntaje base (solo rondas). finalScores (base+multas+cortes)
+    // se usa SOLO para los puntos acumulados de temporada / tabla anual.
+    var baseScoresStat = participants.map(function(_, slot) {
+      return (g.rounds || []).reduce(function(sum, r) { return sum + ((r && r[slot]) || 0); }, 0);
+    });
+    var ordered = baseScoresStat.map(function(v, i) { return { slot: i, score: v }; }).sort(function(a, b) { return a.score - b.score; });
     var positionBySlot = {};
     ordered.forEach(function(o, i) { positionBySlot[o.slot] = i + 1; });
 
@@ -5659,8 +5685,8 @@ function computeAllStats(games, seasons) {
       (g.fines || []).forEach(function(round) { ps.totalMultas += (round && round[slot]) || 0; });
       (g.cortes || []).forEach(function(round) { if (round && round[slot]) ps.totalCortes++; });
 
-      if (ps.lowestGameScore === null || finalScores[slot] < ps.lowestGameScore) ps.lowestGameScore = finalScores[slot];
-      if (finalScores[slot] > ps.worstGameScore) ps.worstGameScore = finalScores[slot];
+      if (ps.lowestGameScore === null || baseScoresStat[slot] < ps.lowestGameScore) ps.lowestGameScore = baseScoresStat[slot];
+      if (baseScoresStat[slot] > ps.worstGameScore) ps.worstGameScore = baseScoresStat[slot];
       if (numRounds > ps.longestGame) ps.longestGame = numRounds;
 
       var pos = positionBySlot[slot];
@@ -5677,7 +5703,7 @@ function computeAllStats(games, seasons) {
         ps.gamesLost++;
         if (pos === 2) {
           var winnerScore = ordered[0].score;
-          var diff = finalScores[slot] - winnerScore;
+          var diff = baseScoresStat[slot] - winnerScore;
           if (ps.closestLoss === null || diff < ps.closestLoss) ps.closestLoss = diff;
         }
       }
