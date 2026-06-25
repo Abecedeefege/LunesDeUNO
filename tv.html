@@ -462,6 +462,11 @@
       box-shadow: 0 0 8px rgba(255,215,0,.7);
       animation: cobraGoldTV 1.8s ease-in-out infinite;
     }
+    /* Ganador temporada pasada: borde dorado ESTATICO (sin glow ni animacion) */
+    .tv-player img.tv-past-winner {
+      border: max(3px, 0.44vh) solid #ffd700;
+      box-sizing: border-box;
+    }
     .tv-annual-note {
       margin: .6vh 0 0;
       color: #ffd400;
@@ -642,9 +647,28 @@
     currentGameId: null,
     currentGame: null,        // doc del partido en vivo (normalizado)
     finishedGames: [],        // games finalizados (normalizados)
+    lastSeasonWinner: '',     // slug del ganador de la temporada pasada (coleccion 'seasons')
     unsubscribeGame: null,
     unsubscribeGames: null,
   };
+
+  // Badges de cara para TV: cobra = "Campeon anual 2025"; ganador de la temporada
+  // pasada = borde dorado estatico + "Ganador temporada pasada". Si un slug es ambos,
+  // se acumulan (tooltip y emoji) sin pisarse.
+  function _tvFaceAttrs(slug) {
+    const titles = [];
+    if (slug === 'cobra') titles.push('Campeón anual 2025');
+    if (slug && slug === TV.lastSeasonWinner) titles.push('Ganador temporada pasada');
+    const cls = (slug && slug === TV.lastSeasonWinner && slug !== 'cobra') ? ' class="tv-past-winner"' : '';
+    const title = titles.length ? ' title="' + titles.join(' · ') + '"' : '';
+    return cls + title;
+  }
+  function _tvNameSuffix(slug) {
+    let s = '';
+    if (slug === 'cobra') s += ' 👑';
+    if (slug && slug === TV.lastSeasonWinner) s += ' 🏆';
+    return s;
+  }
 
   // ----- Render -----
   function renderEmpty(message) {
@@ -740,8 +764,8 @@
               <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
                 <td class="col-pos">${i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
                 <td><div class="tv-player">
-                  <img src="${FACE_PATH(r.slug)}" alt="" ${r.slug === 'cobra' ? 'title="Campeón anual 2025" ' : ''}onerror="this.style.visibility='hidden'">
-                  <span class="tv-player-name">${r.name}${r.slug === 'cobra' ? ' 👑' : ''}</span>
+                  <img src="${FACE_PATH(r.slug)}" alt=""${_tvFaceAttrs(r.slug)} onerror="this.style.visibility='hidden'">
+                  <span class="tv-player-name">${r.name}${_tvNameSuffix(r.slug)}</span>
                 </div></td>
                 <td class="col-num col-mute">${r.base || 0}</td>
                 <td class="col-num tv-fines-cell">${r.fines > 0 ? '+' + r.fines : '—'}</td>
@@ -776,8 +800,8 @@
           <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
             <td class="col-pos">${startIndex + i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
             <td><div class="tv-player">
-              <img src="${FACE_PATH(r.slug)}" alt="" ${r.slug === 'cobra' ? 'title="Campeón anual 2025" ' : ''}onerror="this.style.visibility='hidden'">
-              <span class="tv-player-name">${r.name}${r.slug === 'cobra' ? ' 👑' : ''}</span>
+              <img src="${FACE_PATH(r.slug)}" alt=""${_tvFaceAttrs(r.slug)} onerror="this.style.visibility='hidden'">
+              <span class="tv-player-name">${r.name}${_tvNameSuffix(r.slug)}</span>
             </div></td>
             <td class="col-num col-mute">${r.partidos}</td>
             <td class="col-num col-total">${r.total}</td>
@@ -1082,6 +1106,23 @@
   });
 
   // ----- Suscripciones a Firestore (read-only) -----
+  // Lee la coleccion 'seasons' (la misma que la app) y guarda el ganador de la
+  // temporada COMPLETADA con mayor seasonNumber, para que la TV coincida con index.html.
+  function loadLastSeasonWinner() {
+    getDocs(collection(_db, 'seasons')).then(snap => {
+      let maxSeason = -1, winner = '';
+      snap.docs.forEach(d => {
+        const s = d.data() || {};
+        if (s.winnerPlayerId) {
+          const n = Number(s.seasonNumber);
+          if (!isNaN(n) && n > maxSeason) { maxSeason = n; winner = s.winnerPlayerId; }
+        }
+      });
+      TV.lastSeasonWinner = winner;
+      renderAll();
+    }).catch(err => { console.warn('[tv] seasons load error', err); });
+  }
+
   function subscribeToGames() {
     // onSnapshot a la colección entera. Cada vez que cambia algo, recomputamos:
     //   - cuál es el partido in-progress más reciente
@@ -1273,6 +1314,7 @@
   // Boot
   setStatus('EN VIVO', false);
   subscribeToGames();
+  loadLastSeasonWinner();
   // Aviso si Firestore tarda > 8 s en responder (network mala, etc).
   setTimeout(() => {
     if (!TV.currentGame && TV.finishedGames.length === 0) {
