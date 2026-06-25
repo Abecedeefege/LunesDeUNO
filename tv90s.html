@@ -492,6 +492,23 @@
       border: 2px solid var(--border);
       flex-shrink: 0;
     }
+    /* Cobra: Campeón anual 2025 — anillo dorado animado (~8% del ancho) */
+    @keyframes cobraGoldTV {
+      0%, 100% { box-shadow: 0 0 6px rgba(255,215,0,.6); border-color: #ffd700; }
+      50%      { box-shadow: 0 0 14px rgba(255,215,0,1); border-color: #fff3b0; }
+    }
+    .tv-player img[src$="faces/cobra.png"] {
+      border: max(3px, 0.44vh) solid #ffd700;
+      box-shadow: 0 0 8px rgba(255,215,0,.7);
+      animation: cobraGoldTV 1.8s ease-in-out infinite;
+    }
+    .tv-annual-note {
+      margin: .6vh 0 0;
+      color: #ffd400;
+      font-size: 1.5vh;
+      font-weight: 600;
+      opacity: .92;
+    }
     .tv-player .tv-player-name {
       font-weight: 700; font-size: 1.22em;
       letter-spacing: -.005em;
@@ -770,8 +787,8 @@
               <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
                 <td class="col-pos">${i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
                 <td><div class="tv-player">
-                  <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
-                  <span class="tv-player-name">${r.name}</span>
+                  <img src="${FACE_PATH(r.slug)}" alt="" ${r.slug === 'cobra' ? 'title="Campeón anual 2025" ' : ''}onerror="this.style.visibility='hidden'">
+                  <span class="tv-player-name">${r.name}${r.slug === 'cobra' ? ' 👑' : ''}</span>
                 </div></td>
                 <td class="col-num col-mute">${r.base || 0}</td>
                 <td class="col-num tv-fines-cell">${r.fines > 0 ? '+' + r.fines : '—'}</td>
@@ -804,8 +821,8 @@
           <tr class="${r.slug === winnerSlug ? 'tv-leader' : (r.slug === loserSlug && rows.length > 1 ? 'tv-trail' : '')}">
             <td class="col-pos">${startIndex + i + 1}${prevPos ? arrowHTML(prevPos[r.slug], currPos[r.slug]) : ''}</td>
             <td><div class="tv-player">
-              <img src="${FACE_PATH(r.slug)}" alt="" onerror="this.style.visibility='hidden'">
-              <span class="tv-player-name">${r.name}</span>
+              <img src="${FACE_PATH(r.slug)}" alt="" ${r.slug === 'cobra' ? 'title="Campeón anual 2025" ' : ''}onerror="this.style.visibility='hidden'">
+              <span class="tv-player-name">${r.name}${r.slug === 'cobra' ? ' 👑' : ''}</span>
             </div></td>
             <td class="col-num col-mute">${r.partidos}</td>
             <td class="col-num col-total">${r.total}</td>
@@ -968,6 +985,7 @@
     return `
       <div class="tv-panel">
         <h2>Tabla anual <small>· ${finished.length} partido${finished.length === 1 ? '' : 's'}</small></h2>
+        <p class="tv-annual-note">⚠️ Pendiente: Naso tiene que confirmar en WhatsApp cómo terminaron los partidos de la Temporada 3 — los números de la anual no son exactos todavía.</p>
         ${rankingSplitHTML(rows, null, null, winnerSlug, loserSlug)}
       </div>`;
   }
