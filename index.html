@@ -367,6 +367,30 @@
       animation: cobraLabelShine 2.4s linear infinite;
     }
 
+    /* ---- Ganador temporada pasada: borde dorado ESTATICO (sin brillo ni animacion) ----
+       La clase .last-season-winner la agrega _withSeasonStar() a la cara del ganador de la
+       ultima temporada completada (mayor seasonNumber). La ETIQUETA va ARRIBA (top) para no
+       pisar el badge de campeon anual de cobra, que va ABAJO (bottom), si caen sobre el
+       mismo jugador. Borde estatico en TODAS las caras del ganador: */
+    .last-season-winner img { border: .1rem solid #ffd700; box-sizing: border-box; }
+    .last-season-winner img.player-face { border-width: .12rem; }      /* 1.5rem */
+    .last-season-winner img.player-face-sm { border-width: .1rem; }    /* 1.2rem */
+    .game-card-row .last-season-winner img.player-face-sm { border-width: .09rem; } /* 1.1rem */
+    .stats-hero .last-season-winner img { border-width: 4px; }         /* 56px */
+    .face-wrap .last-winner-label {
+      position: absolute;
+      left: 50%; top: -0.7rem;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      background: #ffd700;
+      color: #3a2a00;
+      font-family: 'Inter', sans-serif; font-weight: 800;
+      font-size: .46rem; letter-spacing: .02em; line-height: 1;
+      padding: 2px 6px; border-radius: 999px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.5);
+      pointer-events: none; z-index: 2;
+    }
+
     .points-presets {
       display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
     }
@@ -2244,6 +2268,7 @@ function speakShame(name, event) {
 // Set of player slugs that have won at least one season. Populated by
 // loadSeasonWinners() on boot; re-populated whenever stats load.
 var SEASON_WINNERS = new Set();
+var LAST_SEASON_WINNER = '';   // slug del ganador de la temporada pasada (ultima completada)
 
 function _playerSlug(player) {
   if (!player) return '';
@@ -2260,26 +2285,49 @@ function _isSeasonWinner(slug) {
   return !!slug && SEASON_WINNERS.has(slug);
 }
 
+function _isLastSeasonWinner(slug) {
+  return !!slug && slug === LAST_SEASON_WINNER;
+}
+
 function _withSeasonStar(inner, slug, size) {
   var isChamp = (slug === 'cobra');           // Campe\u00f3n anual 2025
   var isWinner = _isSeasonWinner(slug);
-  if (!isChamp && !isWinner) return inner;
+  var isLast = _isLastSeasonWinner(slug);
+  if (!isChamp && !isWinner && !isLast) return inner;
   var cls = (size === 'lg' ? 'face-wrap face-wrap-lg' : 'face-wrap');
   if (isChamp) cls += (size === 'lg' ? ' cobra-champ cobra-champ-lg' : ' cobra-champ');
-  var titleAttr = isChamp ? ' title="Campe\u00f3n anual 2025"' : '';
+  // borde dorado estatico al ganador de la temporada pasada (no a cobra, que ya tiene el suyo animado)
+  if (isLast && !isChamp) cls += ' last-season-winner';
+  var titles = [];
+  if (isChamp) titles.push('Campe\u00f3n anual 2025');
+  if (isLast) titles.push('Ganador temporada pasada');
+  var titleAttr = titles.length ? ' title="' + titles.join(' \u00b7 ') + '"' : '';
   var badges = '';
-  if (isWinner) badges += '<span class="season-star-badge" title="Season winner">\u2726</span>';
+  if (isWinner && !isLast) badges += '<span class="season-star-badge" title="Season winner">\u2726</span>';
+  if (isLast && size === 'lg') badges += '<span class="last-winner-label">\ud83c\udfc6 Ganador temporada pasada</span>';
   if (isChamp && size === 'lg') badges += '<span class="cobra-champ-label">\ud83d\udc51 Campe\u00f3n anual 2025</span>';
   return '<span class="' + cls + '"' + titleAttr + '>' + inner + badges + '</span>';
+}
+
+// Rellena SEASON_WINNERS (todos los ganadores de temporada) y LAST_SEASON_WINNER
+// (el de la temporada completada con mayor seasonNumber) desde un array de seasons.
+function _populateSeasonWinners(seasons) {
+  SEASON_WINNERS = new Set();
+  LAST_SEASON_WINNER = '';
+  var maxSeason = -1;
+  (seasons || []).forEach(function(s) {
+    if (s && s.winnerPlayerId) {
+      SEASON_WINNERS.add(s.winnerPlayerId);
+      var n = Number(s.seasonNumber);
+      if (!isNaN(n) && n > maxSeason) { maxSeason = n; LAST_SEASON_WINNER = s.winnerPlayerId; }
+    }
+  });
 }
 
 function loadSeasonWinners() {
   if (!window.LDU_READY || !window.LDU || !window.LDU.getSeasons) return Promise.resolve();
   return window.LDU.getSeasons().then(function(seasons) {
-    SEASON_WINNERS = new Set();
-    (seasons || []).forEach(function(s) {
-      if (s && s.winnerPlayerId) SEASON_WINNERS.add(s.winnerPlayerId);
-    });
+    _populateSeasonWinners(seasons);
   }).catch(function() { /* silently tolerate offline */ });
 }
 
@@ -5323,10 +5371,7 @@ function initStats() {
     _statsData.computed = computeAllStats(_statsData.games, _statsData.seasons);
     _statsData.computedBySeason = {};
     // Refresh season-winner set (also used for face badges site-wide).
-    SEASON_WINNERS = new Set();
-    (_statsData.seasons || []).forEach(function(s) {
-      if (s && s.winnerPlayerId) SEASON_WINNERS.add(s.winnerPlayerId);
-    });
+    _populateSeasonWinners(_statsData.seasons);
     populatePlayerDropdown();
     populateLeaderboardSort();
     populateSeasonSelector();
