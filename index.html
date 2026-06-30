@@ -391,6 +391,35 @@
       pointer-events: none; z-index: 2;
     }
 
+    /* ---- Cobra (campeón anual + ganador temporada pasada): "Diseño B" ----
+       Estrella (temporada pasada) en píldora arriba al centro + copa (anual)
+       como medallón dorado en la esquina superior derecha. */
+    .face-wrap .champ-star {
+      position: absolute;
+      left: 50%; top: -0.5rem;
+      transform: translateX(-50%);
+      background: #0f0f1a; color: #ffd400;
+      font-size: .5rem; line-height: 1;
+      padding: 1px 4px; border-radius: 999px;
+      pointer-events: none; z-index: 2;
+      font-family: 'Inter', sans-serif;
+    }
+    .face-wrap.face-wrap-lg .champ-star { top: -0.72rem; font-size: .78rem; padding: 2px 7px; }
+    .face-wrap .champ-cup {
+      position: absolute;
+      top: -0.22rem; right: -0.22rem;
+      width: .72rem; height: .72rem; border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff7cc, #ffd700 55%, #b8860b);
+      border: 1px solid #fff3b0; box-shadow: 0 1px 2px rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .46rem; line-height: 1;
+      pointer-events: none; z-index: 3;
+    }
+    .face-wrap.face-wrap-lg .champ-cup {
+      top: -0.45rem; right: -0.45rem;
+      width: 1.55rem; height: 1.55rem; font-size: .92rem; border-width: 2px;
+    }
+
     .points-presets {
       display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem;
     }
@@ -2290,7 +2319,7 @@ function _isLastSeasonWinner(slug) {
 }
 
 function _withSeasonStar(inner, slug, size) {
-  var isChamp = (slug === 'cobra');           // Campe\u00f3n anual 2025
+  var isChamp = (slug === 'cobra');           // Campe\u00f3n anual 2025 + ganador temporada pasada
   var isWinner = _isSeasonWinner(slug);
   var isLast = _isLastSeasonWinner(slug);
   if (!isChamp && !isWinner && !isLast) return inner;
@@ -2299,13 +2328,20 @@ function _withSeasonStar(inner, slug, size) {
   // borde dorado estatico al ganador de la temporada pasada (no a cobra, que ya tiene el suyo animado)
   if (isLast && !isChamp) cls += ' last-season-winner';
   var titles = [];
-  if (isChamp) titles.push('Campe\u00f3n anual 2025');
-  if (isLast) titles.push('Ganador temporada pasada');
+  if (isChamp) { titles.push('Campe\u00f3n anual 2025'); titles.push('Ganador temporada pasada'); }
+  else if (isLast) titles.push('Ganador temporada pasada');
   var titleAttr = titles.length ? ' title="' + titles.join(' \u00b7 ') + '"' : '';
   var badges = '';
-  if (isWinner && !isLast) badges += '<span class="season-star-badge" title="Season winner">\u2726</span>';
-  if (isLast && size === 'lg') badges += '<span class="last-winner-label">\ud83c\udfc6 Ganador temporada pasada</span>';
-  if (isChamp && size === 'lg') badges += '<span class="cobra-champ-label">\ud83d\udc51 Campe\u00f3n anual 2025</span>';
+  if (isChamp) {
+    // Dise\u00f1o B: estrella (temporada pasada) arriba + copa (anual) en la esquina
+    badges += '<span class="champ-star" title="Ganador temporada pasada">\u2b50</span>';
+    badges += '<span class="champ-cup" title="Campe\u00f3n anual 2025">\ud83c\udfc6</span>';
+    if (size === 'lg') badges += '<span class="cobra-champ-label">\ud83d\udc51 Campe\u00f3n anual 2025</span>';
+  } else if (isWinner && !isLast) {
+    badges += '<span class="season-star-badge" title="Season winner">\u2726</span>';
+  } else if (isLast && size === 'lg') {
+    badges += '<span class="last-winner-label">\ud83c\udfc6 Ganador temporada pasada</span>';
+  }
   return '<span class="' + cls + '"' + titleAttr + '>' + inner + badges + '</span>';
 }
 
@@ -2322,6 +2358,10 @@ function _populateSeasonWinners(seasons) {
       if (!isNaN(n) && n > maxSeason) { maxSeason = n; LAST_SEASON_WINNER = s.winnerPlayerId; }
     }
   });
+  // Override manual: Cobra es el ganador de la temporada pasada y campeón anual 2025.
+  // (Alineado con el badge de campeón anual, que también está fijado a 'cobra'.)
+  SEASON_WINNERS.add('cobra');
+  LAST_SEASON_WINNER = 'cobra';
 }
 
 function loadSeasonWinners() {
@@ -4433,6 +4473,57 @@ function loadFaceImage(src) {
   });
 }
 
+// Badges de campeón de Cobra sobre un avatar de canvas ("Diseño B"): estrella
+// (temporada pasada) en una píldora arriba al centro + copa (anual) como medallón
+// dorado en la esquina superior derecha.
+function _drawChampBadges(ctx, x, y, size) {
+  // Estrella en píldora oscura, centrada arriba
+  var starFont = Math.max(11, Math.round(size * 0.26));
+  var padX = Math.max(3, Math.round(size * 0.06));
+  var padY = Math.max(2, Math.round(size * 0.045));
+  ctx.save();
+  ctx.font = starFont + "px 'Inter', sans-serif";
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  var star = '⭐';
+  var starW = ctx.measureText(star).width;
+  var rectW = Math.ceil(starW) + padX * 2;
+  var rectH = starFont + padY * 2;
+  var rectX = x + size / 2 - rectW / 2;
+  var rectY = y - rectH - Math.max(2, Math.round(size * 0.04));
+  ctx.fillStyle = '#0f0f1a';
+  if (ctx.roundRect) {
+    ctx.beginPath();
+    ctx.roundRect(rectX, rectY, rectW, rectH, Math.min(7, rectH / 3));
+    ctx.fill();
+  } else {
+    ctx.fillRect(rectX, rectY, rectW, rectH);
+  }
+  ctx.fillText(star, rectX + padX, rectY + padY);
+  ctx.restore();
+  // Copa: medallón dorado en la esquina superior derecha
+  var cupR = Math.max(11, Math.round(size * 0.19));
+  var cupCx = x + size - cupR * 0.55;
+  var cupCy = y + cupR * 0.55;
+  ctx.save();
+  var grd = ctx.createRadialGradient(cupCx - cupR * 0.35, cupCy - cupR * 0.4, cupR * 0.2, cupCx, cupCy, cupR);
+  grd.addColorStop(0, '#fff7cc');
+  grd.addColorStop(0.55, '#ffd700');
+  grd.addColorStop(1, '#b8860b');
+  ctx.beginPath();
+  ctx.arc(cupCx, cupCy, cupR, 0, Math.PI * 2);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  ctx.lineWidth = Math.max(1.5, cupR * 0.12);
+  ctx.strokeStyle = '#fff3b0';
+  ctx.stroke();
+  ctx.font = Math.round(cupR * 1.2) + "px 'Inter', sans-serif";
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🏆', cupCx, cupCy + cupR * 0.06);
+  ctx.restore();
+}
+
 function drawAvatar(ctx, faceImg, playerIdx, x, y, size, slug) {
   ctx.save();
   ctx.beginPath();
@@ -4455,8 +4546,11 @@ function drawAvatar(ctx, faceImg, playerIdx, x, y, size, slug) {
   ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Season-winner star badge above the avatar
-  if (slug && typeof _isSeasonWinner === 'function' && _isSeasonWinner(slug)) {
+  // Cobra: estrella (temporada pasada) + copa (anual) — "Diseño B"
+  if (slug === 'cobra') {
+    _drawChampBadges(ctx, x, y, size);
+  } else if (slug && typeof _isSeasonWinner === 'function' && _isSeasonWinner(slug)) {
+    // Season-winner star badge above the avatar
     var starFont = Math.max(10, Math.round(size * 0.28));
     var padX = Math.max(3, Math.round(size * 0.06));
     var padY = Math.max(2, Math.round(size * 0.04));
