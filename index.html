@@ -77,8 +77,8 @@
       margin: .75rem auto 0;
       max-width: 480px;
       text-align: left;
-      white-space: pre-line;
     }
+    .naso-disclaimer + .naso-disclaimer { margin-top: .4rem; }
     .naso-disclaimer:empty { display: none; }
 
     /* ---- Indicador de guardado (sync con Firestore) ---- */
@@ -1283,6 +1283,10 @@
     </div>
     -->
     <div class="naso-disclaimer" data-i18n="naso_disclaimer_home"></div>
+    <div class="naso-disclaimer">Tano debe postre/picada por perder el 23 de Junio</div>
+    <div class="naso-disclaimer">Tano debia postre/picada por perder el 23 de Junio y NO la trajo el 30 de Junio a Africa</div>
+    <div class="naso-disclaimer">Mac debe postre/picada por perder el 30 de Junio</div>
+    <div class="naso-disclaimer">Mac debe cena por perder temporada 4</div>
     <div id="gamesList"></div>
   </div>
 
@@ -1783,7 +1787,7 @@ const STRINGS = {
     guest_placeholder: 'Nombre del invitado',
     home_stats: '📊 Estadísticas',
     home_tv: '📺 TV - Live score',
-    naso_disclaimer_home: '⚠️ Temporada 3 pendiente\nTano debe postre/picada por perder el 23 de Junio\nTano debia postre/picada por perder el 23 de Junio y NO la trajo el 30 de Junio a Africa\nMac debe postre/picada por perder el 30 de Junio\nMac debe cena por perder temporada 4',
+    naso_disclaimer_home: '⚠️ Temporada 3 pendiente',
     naso_disclaimer_stats: '⚠️ Temporada 3 pendiente',
     games_pending_results: '⏳ Pendiente confirmación de resultados',
     stats_title: '📊 Estadísticas',
@@ -1970,7 +1974,7 @@ const STRINGS = {
     guest_placeholder: 'Guest name',
     home_stats: '📊 Stats',
     home_tv: '📺 TV - Live score',
-    naso_disclaimer_home: '⚠️ Temporada 3 pendiente\nTano debe postre/picada por perder el 23 de Junio\nTano debia postre/picada por perder el 23 de Junio y NO la trajo el 30 de Junio a Africa\nMac debe postre/picada por perder el 30 de Junio\nMac debe cena por perder temporada 4',
+    naso_disclaimer_home: '⚠️ Temporada 3 pendiente',
     naso_disclaimer_stats: '⚠️ Temporada 3 pendiente',
     games_pending_results: '⏳ Pending result confirmation',
     stats_title: '📊 Stats',
@@ -2742,7 +2746,9 @@ function getPlayerDot(player, idx) {
   var inner;
   if (player.face) inner = `<img src="${player.face}" alt="${player.name}" class="player-face" onclick="speakName('${player.name.replace(/'/g, "\\\\'")}', event)" style="cursor:pointer;">`;
   else inner = `<div class="player-color" style="background:${player.color}"></div>`;
-  return _withSeasonStar(inner, _playerSlug(player), 'lg');
+  // 'sm': en el anotador la cara es chica (1.5rem); con 'lg' la copa/estrella
+  // (pensadas para el hero de 56px) tapaban todo. El hero usa otro camino.
+  return _withSeasonStar(inner, _playerSlug(player), 'sm');
 }
 
 function getPlayerDotSm(player, idx) {
