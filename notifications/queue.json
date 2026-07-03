@@ -1,6 +1,36 @@
 {
-  "_updated_at": "2026-07-03T20:56:59.158Z",
+  "_updated_at": "2026-07-03T18:11:00-03:00",
   "notifications": [
+    {
+      "id": "2026-07-03-d",
+      "title": "🎩 Bienvenido al club, Negro",
+      "body": "El canal respira y vos ya estás adentro. La previa del lunes está en el horno — espiala.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
+      "devices": [
+        "negro"
+      ],
+      "send_at": "2026-07-03T18:06:00-03:00",
+      "expires_at": "2026-07-03T23:59:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-03 (bienvenida negro)"
+    },
+    {
+      "id": "2026-07-03-e",
+      "title": "🎩 Probando la galera nueva",
+      "body": "Si arriba de este aviso ves una galera y no un cuadrado, el sombrero anda. La previa del lunes te espera.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
+      "devices": [
+        "mata"
+      ],
+      "send_at": "2026-07-03T18:06:00-03:00",
+      "expires_at": "2026-07-03T23:59:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-03 (test galera)"
+    },
     {
       "id": "2026-07-03-c",
       "title": "🎩 Bienvenido al club",
