@@ -318,6 +318,10 @@ la corrida siguiente — por eso vive acá y no hardcodeada.
 }
 ```
 
+Campo opcional `"devices": ["apodo", ...]`: el push va SOLO a esos
+dispositivos (ej. una bienvenida a un socio nuevo). Sin el campo, va a todos
+los activos — el caso normal de la semana editorial.
+
 Reglas de copy: posesivo + dato específico gana ("La picada de Tano cumple 13
 días" > "hay deudas pendientes"). El copy CUMPLE lo que promete su url —
 nunca linkear al home "a ver qué hay" (la única excepción: el recordatorio de

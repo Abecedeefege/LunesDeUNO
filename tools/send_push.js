@@ -111,8 +111,19 @@ async function main() {
   const log = readJson(SEND_LOG_PATH, { events: [] });
   for (const n of due) {
     const payload = JSON.stringify({ nid: n.id, title: n.title, body: n.body, url: n.url });
+    // Envío dirigido opcional: si la notificación trae "devices": ["negro",...]
+    // va SOLO a esos apodos; sin el campo, a todos los activos. Si ninguno de
+    // los apodos está activo, queda pending (reintenta hasta expirar).
+    const wanted = Array.isArray(n.devices) && n.devices.length
+      ? n.devices.map((x) => String(x).toLowerCase())
+      : null;
+    const targets = wanted ? subs.filter((s) => wanted.includes(s.device.toLowerCase())) : subs;
+    if (!targets.length) {
+      console.log(`[${n.id}] sin destinatarios activos${wanted ? ` (${wanted.join(',')})` : ''} — queda pending.`);
+      continue;
+    }
     let okCount = 0, lastFail = null;
-    for (const sub of subs) {
+    for (const sub of targets) {
       if (sub.status !== 'active') continue;   // invalidada en esta misma corrida
       try {
         // urgency high + TTL 4h: entrega inmediata saltando Doze; si el
