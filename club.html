@@ -144,6 +144,8 @@ function showPanel() {
   document.getElementById('whoami').textContent = localStorage.getItem(LS_DEVICE_NAME) || '—';
   refreshCupo();
   detectMemberState();
+  // Si el permiso ya está bloqueado, avisar ANTES de que toquen el botón.
+  if ('Notification' in window && Notification.permission === 'denied') showDeniedHelp();
 }
 
 // Si este dispositivo YA está suscripto: modo socio (sin botones que tocar,
@@ -200,25 +202,38 @@ function urlBase64ToUint8Array(b64) {
   return arr;
 }
 
+function showDeniedHelp() {
+  setStatus('El navegador tiene bloqueadas las notificaciones de este sitio. ' +
+    'Desbloquealas y recargá la página: en el teléfono, tocá el candado 🔒 al lado ' +
+    'de la dirección → Notificaciones → Permitir. En Safari de Mac: menú Safari → ' +
+    'Ajustes → Sitios web → Notificaciones → buscá abecedeefege.github.io → Permitir.', 'err');
+}
+
 async function enablePush() {
   try {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-      setStatus('Este navegador no soporta Web Push. En iPhone: agregá la app a la pantalla de inicio primero.', 'err');
+      const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      setStatus(ios
+        ? 'En iPhone primero hay que instalar la app: botón Compartir → "Agregar a pantalla de inicio", abrila desde ahí y tocá este botón de nuevo.'
+        : 'Este navegador no soporta Web Push.', 'err');
       return;
     }
-    setStatus('Verificando cupo…');
+
+    // EL PERMISO SE PIDE PRIMERO, sin ningún await antes: Safari descarta el
+    // gesto del click si hay red o registros en el medio y auto-deniega
+    // (el "Permiso denegado" que vieron Cobra y MC sin ver ningún prompt).
+    let perm = Notification.permission;
+    if (perm === 'default') perm = await Notification.requestPermission();
+    if (perm !== 'granted') { showDeniedHelp(); return; }
+
+    setStatus('Activando…');
+    const reg = await navigator.serviceWorker.register('sw.js');
+    await navigator.serviceWorker.ready;
+
     // Tope de socios: 8 dispositivos activos (los jugadores de la mesa).
     const others = await activeSubCount(deviceId());
     if (others >= MAX_ACTIVE_SUBS) {
       setStatus('El club está lleno (8/8). Que alguien libere su lugar primero.', 'err');
-      return;
-    }
-
-    const reg = await navigator.serviceWorker.register('sw.js');
-    await navigator.serviceWorker.ready;
-
-    if ((await Notification.requestPermission()) !== 'granted') {
-      setStatus('Permiso denegado. Habilitalo en los ajustes del navegador y reintentá.', 'err');
       return;
     }
 
@@ -249,7 +264,24 @@ async function enablePush() {
   }
 }
 
-if (localStorage.getItem(LS_CLUB_OK) === '1' && localStorage.getItem(LS_DEVICE_NAME)) showPanel();
+// Link de invitación de un toque: club.html?invita=CODIGO&apodo=NOMBRE
+// abre directo el panel con el apodo puesto — solo queda apretar el botón.
+(function () {
+  const params = new URLSearchParams(location.search);
+  const inv = normalize(params.get('invita') || '');
+  const apodo = normalize(params.get('apodo') || '');
+  if (inv === CODE_OK) {
+    localStorage.setItem(LS_CLUB_OK, '1');
+    if (apodo) localStorage.setItem(LS_DEVICE_NAME, apodo);
+    if (!localStorage.getItem(LS_DEVICE_NAME)) {
+      // código válido pero sin apodo: dejarlo pre-cargado y pedir solo el nombre
+      document.getElementById('code').value = params.get('invita');
+      document.getElementById('deviceName').focus();
+      return;
+    }
+  }
+  if (localStorage.getItem(LS_CLUB_OK) === '1' && localStorage.getItem(LS_DEVICE_NAME)) showPanel();
+})();
 </script>
 </body>
 </html>
