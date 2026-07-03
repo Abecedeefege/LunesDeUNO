@@ -137,19 +137,28 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
 
 ## 3. La semana editorial (cadencia base — la vigente vive en learnings.md)
 
-Regla de oro: **fuera de estos slots, silencio**. Acá el exceso mata el
-ritual. Máximo 1 push por día, solo en el slot del día. El primer `send_at`
-debe quedar ≥60 min después de tu corrida (margen de deploy de Pages).
+**CADENCIA: 1 push por día, todos los días, a las 14:00** (fijada por Andrés
+el 2026-07-03; si learnings.md dice otra cosa más nueva, manda learnings).
+Regla de oro: **un solo push diario, siempre a la misma hora** — nunca dos el
+mismo día. El `send_at` debe quedar ≥60 min después de tu corrida (margen de
+deploy de Pages; corriendo a las 06:00 sobra).
 
-| Día (corrida 06:00) | Slot | Qué hacés |
+El CONTENIDO del día sigue anclado al ritual del lunes:
+
+| Día (corrida 06:00) | Push 14:00 | Qué hacés |
 |---|---|---|
-| **Domingo** | push 20:00 | Creás la experiencia **"La Previa"** del lunes (§3.1) y encolás el teaser: "Mañana es lunes. La tabla dice X. ¿Va postre o picada?" apuntando a la previa. |
-| **Lunes** | push 10:00 | Actualizás la previa si algo cambió (deuda pagada, dato nuevo) y encolás el push de la previa ("🔥 Hoy se juega…") apuntando a la MISMA página con otro id. |
-| **Martes** | push 09:00 | **La crónica** (§3.2): si hay partida nueva de anoche en `games` → crónica épica + push. Si NO hay → push "¿Anoche se jugó? Cargá el resultado" con url a `https://abecedeefege.github.io/LunesDeUNO/index.html` (`expires_at` 14:00 — después pierde sentido). |
-| **Miércoles** | — | Sin push. Solo pasos 1–4 y 6–8 (gestión, compactación, memoria). |
-| **Jueves** | push 19:30 | **Mitad de semana** (§3.3): un ángulo rotativo con datos reales. |
-| **Viernes** | — | Sin push. Igual que miércoles. |
-| **Sábado** | — | Sin push. Igual que miércoles. |
+| **Domingo** | teaser | Creás la experiencia **"La Previa"** del lunes (§3.1) y encolás el teaser: "Mañana es lunes. La tabla dice X. ¿Va postre o picada?" apuntando a la previa. |
+| **Lunes** | previa | Actualizás la previa si algo cambió (deuda pagada, dato nuevo) y encolás "🔥 Hoy se juega…" apuntando a la MISMA página con otro id. |
+| **Martes** | crónica | **La crónica** (§3.2): si hay partida nueva de anoche en `games` → crónica épica + push. Si NO hay → push "¿Anoche se jugó? Cargá el resultado" con url a `https://abecedeefege.github.io/LunesDeUNO/index.html`. |
+| **Miércoles** | ángulo rotativo | Un ángulo del §3.3 con los datos YA actualizados de la fecha del lunes. |
+| **Jueves** | ángulo rotativo | Otro ángulo del §3.3 (el chusmerío rinde acá). No repetir el ángulo del miércoles. |
+| **Viernes** | ángulo rotativo | Otro ángulo del §3.3. |
+| **Sábado** | ángulo rotativo | Otro ángulo del §3.3, o "archivo" (aniversarios, remontadas históricas). |
+
+Anti-quemado: no repetir el mismo ángulo dos días seguidos ni más de dos
+veces por semana; si un formato midió `meh`/`no`, descansalo ≥4 días. Cada
+push del día a un destino DISTINTO del de ayer (página nueva o actualizada —
+nunca el mismo link dos días seguidos sin contenido nuevo).
 
 - Si el historial muestra que el lunes NO se jugó, la crónica del martes **no
   se inventa**: registralo en learnings y adaptá la semana ("semana de
@@ -281,7 +290,7 @@ Se **REESCRIBE** entera cada corrida (máx ~150 líneas). Estructura:
 
 ```markdown
 # Learnings del agente — Lunes de UNO
-## ⏱️ CADENCIA VIGENTE: semana editorial dom20/lun10/mar09/jue19:30 (quién la fijó, cuándo)
+## ⏱️ CADENCIA VIGENTE: 1 push/día a las 14:00 (quién la fijó, cuándo)
 ## 💸 DEUDAS (ledger vigente + saldadas con duración)
 ## 🚀 SÍNTESIS: qué convierte (con números: dwell, reacción, answers, aprobación)
 ## 📊 Estado del sistema: subs activas, cutoff de datos, última compactación
@@ -312,12 +321,11 @@ la corrida siguiente — por eso vive acá y no hardcodeada.
 Reglas de copy: posesivo + dato específico gana ("La picada de Tano cumple 13
 días" > "hay deudas pendientes"). El copy CUMPLE lo que promete su url —
 nunca linkear al home "a ver qué hay" (la única excepción: el recordatorio de
-cargar resultado, cuya acción ES el home). `expires_at` el mismo día (~23:00;
-recordatorio del martes 14:00). Estados: `pending`→`sent`/`failed`/`expired`/
-`cancelled` (los tres primeros los escribe el dispatcher; `cancelled` vos).
-Nunca dos pushes con el mismo destino el mismo día. Encolar = despachar: el
-push a main dispara el workflow al instante, no encoles nada cuyo `send_at`
-todavía no querés que esté "armado".
+cargar resultado, cuya acción ES el home). `expires_at` el mismo día (~23:00).
+Estados: `pending`→`sent`/`failed`/`expired`/`cancelled` (los tres primeros
+los escribe el dispatcher; `cancelled` vos). Un solo push por día. Encolar =
+despachar: el push a main dispara el workflow al instante, no encoles nada
+cuyo `send_at` todavía no querés que esté "armado".
 
 ## 8. Reglas duras (no negociables)
 

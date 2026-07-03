@@ -1,12 +1,12 @@
 # Learnings del agente — Lunes de UNO
 
-## ⏱️ CADENCIA VIGENTE: semana editorial (fijada por Andrés, 2026-07-03)
+## ⏱️ CADENCIA VIGENTE: 1 push/día a las 14:00 (fijada por Andrés, 2026-07-03)
 
-- **Domingo 20:00** — teaser → apunta a La Previa del lunes (se crea el domingo).
-- **Lunes 10:00** — push de La Previa (misma página, otro nid).
-- **Martes 09:00** — crónica de anoche (o recordatorio de carga si no hay datos; expira 14:00).
-- **Jueves 19:30** — ángulo rotativo (chusmerío / récords / horóscopo / feed / confesiones).
-- Miércoles, viernes y sábado: **silencio** (solo gestión y memoria). Máximo 1 push/día.
+Un solo push diario, siempre 14:00 -03:00, contenido anclado al lunes:
+dom teaser de la previa · lun la previa · mar la crónica (o recordatorio de
+carga) · mié–sáb ángulos rotativos (chusmerío / récords / horóscopo / feed /
+confesiones / archivo), sin repetir ángulo dos días seguidos ni más de dos
+veces por semana. Nunca dos pushes el mismo día.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-03)
 
@@ -41,19 +41,25 @@ fuerte que en un catálogo. A validar con dwell/reacción/answers de la semana 1
 - Eventos `engagement`: 0. Compactaciones: ninguna.
 - Inventario completo de assets y fórmulas: `engage/AUDIT.md`.
 
-## 🗓️ Semana en curso (editorial del lunes 06/07)
+## 🗓️ Semana en curso (editorial del lunes 06/07, todos los push 14:00)
 
-- Encolado: teaser dom 05/07 20:00 (`2026-07-05-a`), previa lun 06/07 10:00
-  (`2026-07-06-a`), recordatorio martes 07/07 09:00 (`2026-07-07-a`, genérico
-  y honesto en ambos escenarios), chusmerío jue 09/07 19:30 (`2026-07-09-a`).
-- Páginas vivas: `2026-07-06-la-previa.html`, `2026-07-09-chusmerio.html`
-  (ambas `pending` en proposals; contadores de deuda calculados en vivo con JS).
-- ⚠️ Para la corrida del MARTES 07/07: si hay partida nueva del lunes en
-  `games`, crear la crónica y REEMPLAZAR el push `2026-07-07-a` (título/cuerpo/url)
-  antes de las 09:00. Si el lunes no se jugó, dejarlo como está y registrar
-  "semana congelada" acá.
-- ⚠️ Para la corrida del JUEVES 09/07: reconciliar el chusmerío si alguna
-  deuda cambió (answers) o si la crónica del lunes aporta material más fresco.
+- Encolado: bienvenida/test vie 03/07 (`2026-07-03-test`, send_at pasado —
+  sale apenas haya una sub activa), récords sáb 04/07 (`2026-07-04-a`),
+  teaser dom 05/07 (`2026-07-05-a`), previa lun 06/07 (`2026-07-06-a`),
+  recordatorio mar 07/07 (`2026-07-07-a`, genérico y honesto en ambos
+  escenarios), chusmerío jue 09/07 (`2026-07-09-a`).
+- Páginas vivas: `2026-07-04-records.html`, `2026-07-06-la-previa.html`,
+  `2026-07-09-chusmerio.html` (todas `pending`; contadores de deuda en vivo).
+- ⚠️ MIÉRCOLES 08/07 sin push pre-encolado a propósito: su contenido necesita
+  los datos de la fecha del lunes. Lo cubre la corrida del miércoles (Routine
+  o /engagement a mano). Ídem viernes 10/07 en adelante. Regla: mejor
+  silencio que contenido viejo.
+- ⚠️ Corrida del MARTES 07/07: si hay partida nueva del lunes en `games`,
+  crear la crónica y REEMPLAZAR el push `2026-07-07-a` (título/cuerpo/url)
+  antes de las 14:00. Si no se jugó, dejarlo y registrar "semana congelada".
+- ⚠️ Corrida del JUEVES 09/07: refrescar el chusmerío con lo del lunes
+  (sequía de Mac, deudas, últimos puestos pueden haber cambiado) — la página
+  está fechada "al cierre del 3/7" pero merece edición actualizada.
 
 ## 🔭 Corrida de HOY (2026-07-03, manual)
 

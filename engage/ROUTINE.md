@@ -32,15 +32,13 @@ Claude usa su tool `create_trigger` con:
 
 ## Por qué 06:00 y por qué diaria
 
-- 06:00 deja ≥3 h de margen antes del primer slot de envío del día (martes
-  09:00 es el más temprano): tiempo de leer el feedback de anoche, construir
-  la página, pushear a main y que GitHub Pages deploye ANTES de que el
-  dispatcher mande el push que la linkea.
-- Diaria y no "solo 4 días" porque el agente también tiene trabajo los días
-  sin push: juzgar proposals (aprobadas/rechazadas/vencidas), borrar efímeras,
-  compactar eventos, reconciliar la cola si algo quedó desactualizado y dejar
-  la memoria lista. Además así la cadencia se puede cambiar editando
-  `learnings.md`, sin tocar la Routine.
+- 06:00 deja 8 h de margen antes del push diario de las 14:00: tiempo de leer
+  el feedback de anoche, construir la página, pushear a main y que GitHub
+  Pages deploye ANTES de que el dispatcher mande el push que la linkea.
+- La cadencia vigente (1 push/día a las 14:00) vive en `learnings.md`: se
+  cambia editándola ahí o diciéndoselo al agente, sin tocar la Routine.
+  Además del push, cada corrida juzga proposals (aprobadas/rechazadas/
+  vencidas), borra efímeras, compacta eventos y reconcilia la cola.
 
 ## Checklist previo (una sola vez, antes de la primera corrida)
 

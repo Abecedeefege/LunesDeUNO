@@ -1,6 +1,16 @@
 {
   "proposals": [
     {
+      "id": "2026-07-04-records",
+      "title": "🏆 Récords del grupo (salón de la fama/vergüenza)",
+      "page": "engage/2026-07-04-records.html",
+      "created": "2026-07-03",
+      "status": "pending",
+      "hypothesis": "El orgullo y los superlativos verificados convierten (prior §récords del playbook). El bloque 'récords que se pueden romper el lunes' alimenta la anticipación. Métrica: reacción + dwell.",
+      "notified_by": ["2026-07-04-a"],
+      "result_notes": null
+    },
+    {
       "id": "2026-07-06-la-previa",
       "title": "🔥 La Previa (cartelera del lunes: tabla + deudas + pronóstico)",
       "page": "engage/2026-07-06-la-previa.html",
