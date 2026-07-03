@@ -1,9 +1,23 @@
-# Cómo activar la Routine del agente /engagement
+# Routine del agente /engagement
 
-La Routine NO está creada — la activás vos cuando quieras. El agente corre
-**todos los días** aunque la cadencia sea semanal: cada mañana lee qué día es
-y solo encola lo que toca (domingo/lunes/martes/jueves); el resto de los días
-gestiona proposals, compacta datos y reescribe su memoria.
+## ✅ ESTADO: ACTIVA desde el 2026-07-03
+
+- Trigger: `trig_01UmgygfzHFXbiFqP1Kg8kF5` ("LunesDeUNO — /engagement diario 06:00 UY")
+- Cron: `0 9 * * *` **UTC** = 06:00 America/Montevideo (la plataforma suma
+  unos minutos de jitter; la primera corrida quedó para el 04/07 ~06:08).
+- Sesión nueva por corrida, prompt: `/engagement`.
+- Se administra desde claude.ai/code → Routines (pausar/editar/borrar), o
+  pidiéndoselo a Claude en una sesión del entorno (tools `list_triggers` /
+  `update_trigger` / `delete_trigger`). NO crear una segunda: revisar
+  `list_triggers` antes.
+
+Lo que sigue es la referencia de cómo se creó y por qué así.
+
+---
+
+El agente corre **todos los días**: cada mañana lee qué día es y encola el
+push de las 14:00 que toca según la semana editorial; además gestiona
+proposals, compacta datos y reescribe su memoria.
 
 ## Opción A — pedírselo a Claude (recomendada)
 

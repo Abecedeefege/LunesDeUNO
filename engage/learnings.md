@@ -34,8 +34,11 @@ fuerte que en un catálogo. A validar con dwell/reacción/answers de la semana 1
   `VAPID_PRIVATE_KEY` y suscribirse como device `andres` en la página secreta
   club.html — ver engage/ROUTINE.md). Tope: 8 dispositivos. Decisiones de
   proposals: SOLO device `andres`; el resto es señal secundaria.
-- Routine: NO activa todavía. Hasta que corra, la cola encolada del 5–9/7 sale
-  sola vía dispatcher, pero nadie reconcilia ni genera la crónica del martes.
+- Routine: ✅ ACTIVA desde el 03/07 (diaria ~06:08 UY, sesión nueva,
+  `/engagement`; trigger en engage/ROUTINE.md). Primera corrida: sáb 04/07 —
+  ese día el push de récords YA está encolado (`2026-07-04-a`): no duplicar,
+  solo verificar/reconciliar. Ídem dom/lun/mar/jue de esta semana (ver abajo).
+  El MIÉRCOLES 08/07 y el VIERNES 10/07 sí hay que crear contenido nuevo.
 - Datos: 15 fechas válidas en `games` (cutoff 29/06). Temporadas cerradas: 4
   (T1 Gordo, T2 PT, T3 Carucha, T4 Cobra — T4 sin doc en `seasons`, calculada).
 - Eventos `engagement`: 0. Compactaciones: ninguna.
