@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-03T17:56:24.938Z",
+  "_updated_at": "2026-07-03T17:50:00-03:00",
   "notifications": [
     {
       "id": "2026-07-03-test",
@@ -12,6 +12,18 @@
       "sent_at": "2026-07-03T17:56:24.937Z",
       "fail_reason": null,
       "created_by": "primer-ciclo-manual 2026-07-03"
+    },
+    {
+      "id": "2026-07-03-b",
+      "title": "🎩 Bienvenido al club",
+      "body": "Prueba de sonido oficial: el canal respira. La previa del lunes ya está en el horno — espiala.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
+      "send_at": "2026-07-03T17:30:00-03:00",
+      "expires_at": "2026-07-03T23:59:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-03 (re-bienvenida)"
     },
     {
       "id": "2026-07-04-a",
