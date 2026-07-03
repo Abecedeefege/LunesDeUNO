@@ -1,6 +1,21 @@
 {
-  "_updated_at": "2026-07-03T21:14:37.542Z",
+  "_updated_at": "2026-07-03T18:15:00-03:00",
   "notifications": [
+    {
+      "id": "2026-07-03-g",
+      "title": "🎩 Bienvenido al club, Cobra",
+      "body": "El campeón de la T4 ya está adentro. La previa del lunes te espera — defendés la corona.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
+      "devices": [
+        "cobra"
+      ],
+      "send_at": "2026-07-03T18:10:00-03:00",
+      "expires_at": "2026-07-03T23:59:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-03 (bienvenida cobra)"
+    },
     {
       "id": "2026-07-03-f",
       "title": "🎩 Probando la galera (toma 2)",
