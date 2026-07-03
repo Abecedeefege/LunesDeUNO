@@ -122,3 +122,17 @@ apiKey    : AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM
 | `games` | Partidas terminadas (fuente de stats) |
 | `Propuestas` | Pedidos de los usuarios |
 | `propuestasVisuales` | Registro de visibilidad de tarjetas |
+| `engagement` | Eventos de feedback de las experiencias (sistema /engagement) |
+| `pushSubs` | Suscripciones Web Push por dispositivo (sistema /engagement) |
+
+---
+
+## Otro agente: /engagement (semana editorial)
+
+Existe un segundo agente programado, `/engagement`
+(`.claude/commands/engagement.md`), dueño de: `engage/`,
+`notifications/queue.json`, `sw.js`, `notificaciones.html` y `tools/`.
+La tarea horaria de propuestas NO toca esos archivos; el agente de
+engagement NO toca `propuestas.html`. La regla "sólo modificar
+propuestas.html" aplica a la tarea horaria de este documento, no a
+`/engagement`.
