@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-03T14:30:00-03:00",
+  "_updated_at": "2026-07-03T17:56:24.938Z",
   "notifications": [
     {
       "id": "2026-07-03-test",
@@ -8,8 +8,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
       "send_at": "2026-07-03T13:00:00-03:00",
       "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-03T17:56:24.937Z",
       "fail_reason": null,
       "created_by": "primer-ciclo-manual 2026-07-03"
     },

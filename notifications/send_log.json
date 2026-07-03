@@ -1,3 +1,18 @@
 {
-  "events": []
+  "events": [
+    {
+      "type": "sent",
+      "nid": "2026-07-03-test",
+      "device": "mata",
+      "ts": "2026-07-03T17:56:24.802Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-03-test",
+      "device": "mata",
+      "ts": "2026-07-03T17:56:24.937Z",
+      "status_code": 201
+    }
+  ]
 }
