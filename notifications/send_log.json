@@ -13,6 +13,20 @@
       "device": "mata",
       "ts": "2026-07-03T17:56:24.937Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-03-b",
+      "device": "mata",
+      "ts": "2026-07-03T20:42:36.095Z",
+      "status_code": 201
+    },
+    {
+      "type": "failed",
+      "nid": "2026-07-03-b",
+      "device": "mata",
+      "ts": "2026-07-03T20:42:36.187Z",
+      "status_code": 410
     }
   ]
 }
