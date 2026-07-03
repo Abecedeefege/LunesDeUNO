@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🍿 Chusmerío de la mesa</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: Georgia, 'Times New Roman', serif; padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; font-family: -apple-system, sans-serif; }
+  .masthead {
+    background: #FFDE00; color: #0d0d12; border-radius: 6px; padding: .9rem .8rem .7rem;
+    text-align: center; margin-bottom: .4rem; transform: rotate(-.6deg);
+  }
+  .masthead h1 { font-size: 1.9rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; line-height: 1; }
+  .masthead .tag { font-size: .7rem; font-weight: 700; letter-spacing: 2px; margin-top: .25rem; font-family: -apple-system, sans-serif; }
+  .edition { text-align: center; color: #8f8f9c; font-size: .72rem; font-family: -apple-system, sans-serif; letter-spacing: 1px; margin-bottom: 1rem; }
+  .story {
+    background: #17171f; border: 1px solid #2a2a35; border-left: 4px solid #ED1C24;
+    border-radius: 10px; padding: 1rem; margin-bottom: 1rem;
+  }
+  .stamp {
+    display: inline-block; font-family: -apple-system, sans-serif; font-size: .62rem; font-weight: 800;
+    letter-spacing: 2px; color: #ED1C24; border: 1.5px solid #ED1C24; border-radius: 4px;
+    padding: .12rem .45rem; margin-bottom: .45rem; transform: rotate(-2deg);
+  }
+  .story h2 { font-size: 1.25rem; line-height: 1.2; margin-bottom: .5rem; }
+  .story p { font-size: .92rem; line-height: 1.55; color: #d9d9e2; margin-bottom: .5rem; }
+  .story b { color: #FFDE00; }
+  .face { width: 26px; height: 26px; border-radius: 50%; vertical-align: -7px; margin-right: .2rem; border: 1.5px solid #2a2a35; }
+  .bigday { font-size: 2.4rem; font-weight: 900; color: #ED1C24; font-family: -apple-system, sans-serif; line-height: 1; }
+  .qs { margin-top: .6rem; font-size: .85rem; color: #b9b9c4; font-family: -apple-system, sans-serif; }
+  button {
+    margin: .35rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .9rem; font-weight: 600; cursor: pointer;
+    font-family: -apple-system, sans-serif;
+  }
+  .react button { font-size: 1.25rem; padding: .4rem .7rem; }
+  .react-hint, .q-hint, .engage-hint { display: block; font-size: .75rem; color: #8f8f9c; margin-top: .35rem; font-family: -apple-system, sans-serif; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; font-family: -apple-system, sans-serif; }
+  .card h2 { color: #FFDE00; font-size: 1rem; margin-bottom: .5rem; }
+  .fine { color: #6b6b78; font-size: .72rem; margin-top: .4rem; line-height: 1.4; font-family: -apple-system, sans-serif; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="masthead">
+    <h1>🍿 Chusmerío<br>de la mesa</h1>
+    <div class="tag">TODO VERIFICADO · NADA PERDONADO</div>
+  </div>
+  <div class="edition">EDICIÓN JUEVES 09.07.2026 · datos oficiales de la tabla al cierre</div>
+
+  <div class="story">
+    <div class="stamp">EXCLUSIVO</div>
+    <h2>La picada que ya es leyenda</h2>
+    <p><img class="face" src="../assets/faces/tano.png" alt=""><b>Tano</b> debe
+    postre/picada desde el <b>23 de junio</b>. Tuvo su gran oportunidad el 30/6
+    en Africa, con toda la mesa mirando… y apareció con las manos vacías.</p>
+    <p style="text-align:center"><span class="bigday" data-since="2026-06-23">–</span><br>
+    <span style="font-size:.7rem;letter-spacing:2px;color:#8f8f9c;font-family:-apple-system,sans-serif;">DÍAS Y CONTANDO</span></p>
+    <div class="qs">¿Novedades de la picada?
+      <div>
+        <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','pagada',this)">Ya pagó ✅</button>
+        <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','sigue',this)">Sigue debiendo 🧀⏳</button>
+        <span class="q-hint"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="stamp">EL EXPEDIENTE</div>
+    <h2>Mac: cero victorias, doble deuda</h2>
+    <p><img class="face" src="../assets/faces/mac.png" alt=""><b>Mac</b> jugó
+    <b>12 fechas</b> en 2026 y no ganó <b>ninguna</b>. Terminó último <b>5
+    veces</b> (récord del año), perdió la Temporada 4 (cena adeudada) y el 30/6
+    sumó un postre/picada más a la cuenta.</p>
+    <p>El dato que duele de verdad: <b>Gordo</b> terminó arriba de él en
+    <b>9 de las 10</b> fechas que compartieron este año. Eso ya no es mala
+    suerte: es una relación.</p>
+    <div class="qs">¿La cena de la T4 tiene fecha?
+      <div>
+        <button onclick="engageAnswer('deuda-mac-cena-t4','fecha_puesta',this)">Ya hay fecha 📅</button>
+        <button onclick="engageAnswer('deuda-mac-cena-t4','sigue',this)">Sigue en veremos 🙄</button>
+        <span class="q-hint"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="stamp">LA FINAL QUE NADIE VIO</div>
+    <h2>8 puntos: la temporada más finita del año</h2>
+    <p>La Temporada 4 se definió por <b>8 puntos</b>:
+    <img class="face" src="../assets/faces/cobra.png" alt=""><b>Cobra 1155</b> vs
+    <img class="face" src="../assets/faces/nachi.png" alt=""><b>Nachi 1163</b>.
+    En un juego donde una mano mala son 100 puntos, 8 es un suspiro. Nachi
+    perdió la temporada por menos que una multa de mate.</p>
+  </div>
+
+  <div class="story">
+    <div class="stamp">LA MULTA DEL SIGLO</div>
+    <h2>Tano y los 150 que nadie olvida</h2>
+    <p>El 4/5 <b>Tano</b> se comió una multa de <b>150 puntos</b> — la más
+    grande registrada en 2026. Para dimensionar: todas las demás multas del año,
+    de todos los jugadores <b>juntos</b>, suman 172. Casi la mitad del rubro
+    multas del año es de una sola noche de Tano.</p>
+  </div>
+
+  <div class="story">
+    <div class="stamp">SEQUÍAS</div>
+    <h2>El club de los que no ganan</h2>
+    <p>🌵 <b>Mac</b>: 12 fechas, 0 victorias (ver expediente).<br>
+    🌵 <b>Mata</b>: 8 fechas, 0 victorias — aunque con 7 faltas, su técnica es
+    otra: no se puede perder lo que no se juega.<br>
+    🌵 <b>Gordo</b>: ganó las DOS primeras fechas del año (2/3 y 9/3)… y
+    después nada: 11 fechas seguidas sin ganar, mirando la punta de cerca.</p>
+  </div>
+
+  <div class="story">
+    <div class="stamp">DATO INCÓMODO</div>
+    <h2>Mata nunca terminó abajo de Tano</h2>
+    <p>En las 5 fechas que compartieron este año,
+    <img class="face" src="../assets/faces/mata.png" alt=""><b>Mata</b> terminó
+    arriba de <img class="face" src="../assets/faces/tano.png" alt=""><b>Tano</b>
+    las <b>5 veces</b>. 5–0. El fantasma de las 7 faltas tiene, al menos, un
+    dominio absoluto.</p>
+  </div>
+
+  <div class="story">
+    <div class="stamp">ARCHIVO X</div>
+    <h2>La fecha fantasma del 11 de mayo</h2>
+    <p>En el registro oficial existe una partida del 11/5, sede
+    <b>"Negrofshi"</b>: sin manos cargadas, sin ganador, sin puntos. ¿Se jugó y
+    nadie anotó? ¿No se jugó y alguien abrió el anotador igual? El expediente
+    sigue abierto.</p>
+    <div class="qs">¿Qué pasó esa noche?
+      <div>
+        <button onclick="engageAnswer('fecha-fantasma-2026-05-11','se_jugo',this)">Se jugó, no se cargó 🕵️</button>
+        <button onclick="engageAnswer('fecha-fantasma-2026-05-11','no_se_jugo',this)">No se jugó 😴</button>
+        <span class="q-hint"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="stamp">REMONTADAS</div>
+    <h2>De último a campeón de la noche</h2>
+    <p>Dos veces en 2026 alguien terminó la primera mano <b>último entre 9</b>
+    y aun así ganó la fecha: <b>Naso</b> el 4/5 y <b>Nachi</b> el 18/5. La
+    ciencia todavía no lo explica; la mesa tampoco.</p>
+    <div class="fine">Fuente de todo: la tabla y el historial oficiales (manos, multas, cortes y faltas recalculados). Si un dato está mal, la culpa es del anotador de esa noche.</div>
+  </div>
+
+  <div class="card react">
+    <h2>¿Qué tal el chusmerío?</h2>
+    <button onclick="engageReact('2026-07-09-chusmerio','love',this)">😍</button>
+    <button onclick="engageReact('2026-07-09-chusmerio','like',this)">🙂</button>
+    <button onclick="engageReact('2026-07-09-chusmerio','meh',this)">😐</button>
+    <button onclick="engageReact('2026-07-09-chusmerio','no',this)">🙅</button>
+    <span class="react-hint"></span>
+  </div>
+
+  <div class="card">
+    <h2>¿Chusmerío todos los jueves 19:30?</h2>
+    <button onclick="engageAnswer('2026-07-09-chusmerio-suscripcion','si',this)">Sí, quiero el chisme</button>
+    <button onclick="engageAnswer('2026-07-09-chusmerio-suscripcion','no',this)">No hace falta</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="card">
+    ¿Esta sección merece existir?
+    <div>
+      <button onclick="engageApprove('2026-07-09-chusmerio',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-09-chusmerio',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+  </div>
+
+<script>
+  document.querySelectorAll('[data-since]').forEach(function (el) {
+    var since = new Date(el.getAttribute('data-since') + 'T00:00:00-03:00');
+    el.textContent = Math.max(0, Math.floor((Date.now() - since) / 86400000));
+  });
+</script>
+<script src="engage.js"></script>
+</body>
+</html>
