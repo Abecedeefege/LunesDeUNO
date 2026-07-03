@@ -6813,13 +6813,6 @@ window.addEventListener('pagehide', _flushOnHide);
     splash.remove();
     return;
   }
-  // Una vez por sesión: al abrir la app sí, en cada reload/navegación no.
-  // (La app se usa durante la partida; iOS recarga la pestaña al volver de background.)
-  try {
-    if (sessionStorage.getItem('splashVisto')) { splash.remove(); return; }
-    sessionStorage.setItem('splashVisto', '1');
-  } catch (e) { /* modo privado: reproducir igual */ }
-
   var COLORS = ['#ED1C24', '#FFDE00', '#00A651', '#0072BC'];
   var GLOWS  = ['rgba(237,28,36,.6)','rgba(255,222,0,.55)','rgba(0,166,81,.6)','rgba(0,114,188,.6)'];
   var UNO_LABELS = ['+4', 'R', '+2', 'S', 'W', '7', '0'];
