@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-03T18:15:00-03:00",
+  "_updated_at": "2026-07-03T20:56:59.158Z",
   "notifications": [
     {
       "id": "2026-07-03-c",
@@ -8,8 +8,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
       "send_at": "2026-07-03T17:45:00-03:00",
       "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-03T20:56:59.157Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-03 (bienvenida c)"
     },
