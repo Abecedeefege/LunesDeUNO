@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>📬 Próximos avisos — Lunes de UNO</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+  h1 { font-size: 1.35rem; margin-bottom: .2rem; }
+  .sub { color: #8f8f9c; font-size: .8rem; margin-bottom: 1.1rem; }
+  h2 { font-size: .95rem; color: #FFDE00; margin: 1.1rem 0 .5rem; letter-spacing: .5px; }
+  .n {
+    background: #17171f; border: 1px solid #2a2a35; border-left: 4px solid #00A651;
+    border-radius: 10px; padding: .8rem .9rem; margin-bottom: .6rem;
+  }
+  .n.hist { border-left-color: #2a2a35; opacity: .75; }
+  .n.hist.failed { border-left-color: #ED1C24; }
+  .when { font-size: .78rem; color: #FFDE00; font-weight: 700; letter-spacing: .5px; }
+  .n.hist .when { color: #8f8f9c; }
+  .t { font-size: .95rem; font-weight: 700; margin: .2rem 0 .15rem; }
+  .b { font-size: .85rem; color: #b9b9c4; line-height: 1.45; }
+  .meta { font-size: .72rem; color: #6b6b78; margin-top: .35rem; }
+  .meta a { color: #6b6b78; }
+  .empty { color: #8f8f9c; font-size: .88rem; padding: .6rem 0; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+  <h1>📬 Próximos avisos</h1>
+  <div class="sub" id="updated">cargando la cola…</div>
+  <div id="out"></div>
+
+<script>
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+function fmt(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return DIAS[d.getDay()] + ' ' + d.getDate() + ' ' + MESES[d.getMonth()] + ' · ' +
+    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function esc(s) { const e = document.createElement('span'); e.textContent = s || ''; return e.innerHTML; }
+function card(n, hist) {
+  const cls = 'n' + (hist ? ' hist' : '') + (n.status === 'failed' ? ' failed' : '');
+  const when = hist
+    ? (n.status === 'sent' ? '✓ enviado ' + fmt(n.sent_at) : n.status + (n.fail_reason ? ' · ' + esc(n.fail_reason) : ''))
+    : '⏰ ' + fmt(n.send_at);
+  return '<div class="' + cls + '"><div class="when">' + when + '</div>' +
+    '<div class="t">' + esc(n.title) + '</div><div class="b">' + esc(n.body) + '</div>' +
+    '<div class="meta"><a href="' + esc(n.url) + '">' + esc((n.url || '').replace(/^https:\/\/[^/]+\//,'')) + '</a></div></div>';
+}
+fetch('queue.json?nocache=' + Date.now(), { cache: 'no-store' })
+  .then(r => r.json())
+  .then(q => {
+    const ns = q.notifications || [];
+    const pend = ns.filter(n => n.status === 'pending').sort((a,b) => (a.send_at||'').localeCompare(b.send_at||''));
+    const hist = ns.filter(n => n.status !== 'pending').sort((a,b) => (b.send_at||'').localeCompare(a.send_at||''));
+    document.getElementById('updated').textContent = 'cola actualizada: ' + fmt(q._updated_at) + ' · un aviso por día a las 14:00';
+    document.getElementById('out').innerHTML =
+      '<h2>EN CAMINO</h2>' + (pend.length ? pend.map(n => card(n,false)).join('') : '<div class="empty">Nada encolado — el agente de las 06:00 carga el del día.</div>') +
+      '<h2>YA SALIERON</h2>' + (hist.length ? hist.map(n => card(n,true)).join('') : '<div class="empty">Todavía nada.</div>');
+  })
+  .catch(e => { document.getElementById('updated').textContent = 'No pude leer la cola: ' + e; });
+</script>
+</body>
+</html>
