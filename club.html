@@ -67,14 +67,21 @@
       <div style="font-size:.85rem;color:#b9b9c4;margin-bottom:.8rem;">
         Socio: <b id="whoami" style="color:#FFDE00;"></b> · lugares del club: <b id="cupo">–</b>/8
       </div>
-      <button class="primary" onclick="enablePush()">Activar los avisos en este dispositivo</button>
-      <button class="ghost" onclick="disablePush()">Desactivar en este dispositivo</button>
+      <div id="joinBox">
+        <button class="primary" onclick="enablePush()">Activar los avisos en este dispositivo</button>
+      </div>
+      <div id="memberBox" style="display:none;font-size:.92rem;line-height:1.55;color:#d9d9e2;">
+        🎩 <b style="color:#00A651;">Ya sos socio.</b> Los avisos llegan a este
+        dispositivo, un aviso por día a las 14:00. No hay nada más que tocar acá.
+      </div>
       <div id="status"></div>
     </div>
   </div>
 
   <div class="foot">Llegan aunque la app esté cerrada. Se guarda solo tu apodo y la
-  dirección técnica de entrega del navegador. La picada es ley.</div>
+  dirección técnica de entrega del navegador. Del club no se sale apretando un
+  botón: si de verdad querés bajarte, bloqueá las notificaciones del sitio en
+  los ajustes del navegador. La picada es ley.</div>
 
 <script>
 const FS_BASE = 'https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
@@ -136,6 +143,39 @@ function showPanel() {
   document.getElementById('panel').style.display = 'block';
   document.getElementById('whoami').textContent = localStorage.getItem(LS_DEVICE_NAME) || '—';
   refreshCupo();
+  detectMemberState();
+}
+
+// Si este dispositivo YA está suscripto: modo socio (sin botones que tocar,
+// ni re-activar ni desactivar — la baja es solo vía ajustes del navegador).
+// De paso re-sincroniza la suscripción vigente a Firestore: si Chrome rotó
+// el endpoint, esto lo cura sin que el socio haga nada.
+async function detectMemberState() {
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    if (Notification.permission !== 'granted') return;
+    const reg = await navigator.serviceWorker.getRegistration();
+    const sub = reg && await reg.pushManager.getSubscription();
+    if (!sub) return;
+    setMemberMode();
+    const j = sub.toJSON();
+    await saveSub({
+      device: localStorage.getItem(LS_DEVICE_NAME) || 'sin-nombre',
+      endpoint: j.endpoint,
+      p256dh: j.keys.p256dh,
+      auth: j.keys.auth,
+      status: 'active',
+      updated_at: new Date().toISOString(),
+      invalidated_at: null,
+      invalid_reason: null,
+    });
+  } catch (e) { /* sin red no pasa nada: el modo socio ya quedó puesto */ }
+}
+
+function setMemberMode() {
+  document.getElementById('joinBox').style.display = 'none';
+  document.getElementById('memberBox').style.display = 'block';
+  setStatus('', '');
 }
 
 async function saveSub(fields) {
@@ -201,32 +241,11 @@ async function enablePush() {
       invalidated_at: null,
       invalid_reason: null,
     });
-    setStatus('✓ Bienvenido al club, ' + (localStorage.getItem(LS_DEVICE_NAME) || '') + '. Los avisos llegan a este dispositivo.', 'ok');
+    setMemberMode();
+    setStatus('✓ Bienvenido al club, ' + (localStorage.getItem(LS_DEVICE_NAME) || '') + '.', 'ok');
     refreshCupo();
   } catch (e) {
     setStatus('No se pudo activar: ' + (e && e.message ? e.message : e), 'err');
-  }
-}
-
-async function disablePush() {
-  try {
-    setStatus('Desactivando…');
-    if ('serviceWorker' in navigator) {
-      const reg = await navigator.serviceWorker.getRegistration();
-      const sub = reg && await reg.pushManager.getSubscription();
-      if (sub) await sub.unsubscribe();
-    }
-    await saveSub({
-      device: localStorage.getItem(LS_DEVICE_NAME) || 'sin-nombre',
-      status: 'disabled',
-      updated_at: new Date().toISOString(),
-      invalidated_at: null,
-      invalid_reason: 'user_disabled',
-    });
-    setStatus('✓ Desactivado. Tu lugar queda libre.', 'ok');
-    refreshCupo();
-  } catch (e) {
-    setStatus('No se pudo desactivar: ' + (e && e.message ? e.message : e), 'err');
   }
 }
 
