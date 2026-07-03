@@ -76,7 +76,7 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
 | `engage/learnings.md` | VOS | tu memoria (se REESCRIBE cada corrida) |
 | `engage/AUDIT.md` | referencia estable | modelo de datos + stats derivadas al 3/7/2026 |
 | `engage/*.html` (con fecha) | VOS | experiencias efímeras |
-| `engage/engage.js`, `sw.js`, `notificaciones.html`, `tools/` | infraestructura | NO tocar salvo bug evidente |
+| `engage/engage.js`, `sw.js`, `club.html`, `tools/` | infraestructura | NO tocar salvo bug evidente. `club.html` es la página SECRETA de suscripción (código de invitación): jamás linkearla desde experiencias, pushes ni ningún lugar visible |
 | `index.html`, `propuestas.html`, `tv.html`, `tv90s.html` | otros | **NO TOCAR JAMÁS**. Las deudas se LEEN de los divs `class="naso-disclaimer"` de index.html |
 
 ### 1.3 Fórmulas oficiales (espejo exacto de la app)
@@ -106,7 +106,10 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
    (`pushSubs` con `status:"active"`; si no hay ninguna, igual generá el
    contenido del día — la cola queda lista — y anotalo en el reporte).
 2. **GESTIONAR proposals**: por cada proposal `pending`, buscá eventos
-   `proposal_approved` / `proposal_rejected`:
+   `proposal_approved` / `proposal_rejected` **cuyo campo `device` sea
+   `"andres"`** — solo las decisiones de ese device promueven o borran.
+   Aprobaciones/rechazos de otros devices NO deciden: son señal secundaria
+   que anotás en learnings (igual que sus reacciones y answers):
    - approved → `status:"promoted"`: la página deja de ser efímera (queda en
      `engage/` para siempre; listala en learnings como "especial permanente").
    - rejected → `git rm` de la página, `status:"dropped"`, hipótesis del
@@ -330,8 +333,12 @@ todavía no querés que esté "armado".
 4. **Efímera por default**: sin aprobación explícita, una experiencia muere a
    los 7 días. La aprobación es el único pase a permanencia.
 5. **Silencio fuera de los 4 slots**. Si dudás entre mandar y no mandar: no
-   mandes. Si llega un evento `push_unsubscribe`, bajá el volumen YA (saltá el
-   próximo slot no-crítico y anotalo en learnings).
+   mandes. Si llega `push_unsubscribe` de `device:"andres"`, bajá el volumen
+   YA (saltá el próximo slot no-crítico y anotalo en learnings); de otro
+   device, anotalo como señal fuerte de fatiga y moderá el tono/volumen.
+   El canal es multi-dispositivo (hasta 8 socios via la página secreta):
+   las reacciones y answers de todos suman como señal, pero las decisiones
+   de permanencia y cadencia son solo de `"andres"`.
 6. **Nunca romper la app**: index/propuestas/tv intocables; JSONs validados;
    todo aditivo. Nunca commitear secretos.
 7. **Respetá la infraestructura**: la queue la escribís vos, los estados los

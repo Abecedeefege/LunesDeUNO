@@ -31,7 +31,9 @@ fuerte que en un catálogo. A validar con dwell/reacción/answers de la semana 1
 ## 📊 Estado del sistema (2026-07-03, bootstrap manual)
 
 - Suscripciones push activas: **0** (falta: Andrés debe cargar el secret
-  `VAPID_PRIVATE_KEY` y suscribirse en notificaciones.html — ver engage/ROUTINE.md).
+  `VAPID_PRIVATE_KEY` y suscribirse como device `andres` en la página secreta
+  club.html — ver engage/ROUTINE.md). Tope: 8 dispositivos. Decisiones de
+  proposals: SOLO device `andres`; el resto es señal secundaria.
 - Routine: NO activa todavía. Hasta que corra, la cola encolada del 5–9/7 sale
   sola vía dispatcher, pero nadie reconcilia ni genera la crónica del martes.
 - Datos: 15 fechas válidas en `games` (cutoff 29/06). Temporadas cerradas: 4

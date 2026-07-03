@@ -47,9 +47,15 @@ Claude usa su tool `create_trigger` con:
 1. Secret `VAPID_PRIVATE_KEY` cargado en GitHub (repo → Settings → Secrets
    and variables → Actions → New repository secret). La clave te la pasó
    Claude por chat al armar el sistema — jamás va en un archivo.
-2. Suscripción activa: abrir
-   `https://abecedeefege.github.io/LunesDeUNO/notificaciones.html` en tu
-   teléfono → poner nombre → "Activar notificaciones".
+2. Suscripción activa: abrir la página secreta
+   `https://abecedeefege.github.io/LunesDeUNO/club.html` en tu teléfono →
+   código de invitación (te lo pasó Claude por chat; no está escrito en
+   ningún archivo del repo… salvo en el propio club.html, validación
+   client-side de bajo riesgo) → apodo `andres` → "Activar los avisos".
+   OJO: tu apodo debe ser exactamente `andres` — es el device cuyas
+   aprobaciones/rechazos deciden sobre las proposals. Hay tope de 8
+   dispositivos activos; la página no está linkeada desde ningún lado y
+   lleva noindex.
 3. Push de prueba de punta a punta: encolar en `notifications/queue.json` un
    item con `send_at` en el pasado y `expires_at` esta noche, commitear a
    main (el `on: push` del workflow dispara solo) y verificar que llega con

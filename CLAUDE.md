@@ -131,7 +131,7 @@ apiKey    : AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM
 
 Existe un segundo agente programado, `/engagement`
 (`.claude/commands/engagement.md`), dueño de: `engage/`,
-`notifications/queue.json`, `sw.js`, `notificaciones.html` y `tools/`.
+`notifications/queue.json`, `sw.js`, `club.html` y `tools/`.
 La tarea horaria de propuestas NO toca esos archivos; el agente de
 engagement NO toca `propuestas.html`. La regla "sólo modificar
 propuestas.html" aplica a la tarea horaria de este documento, no a

@@ -227,12 +227,11 @@
   };
 
   // ---------- control de fatiga (auto-inyectado al pie) ----------
+  // Sin link de suscripción: la activación es solo vía la página secreta /club.
   function injectFooterControls() {
     var div = document.createElement('div');
     div.style.cssText = 'margin:2.2rem 0 1rem;text-align:center;font:12px -apple-system,sans-serif;color:#6b6b78;';
-    var base = location.pathname.indexOf('/engage/') !== -1 ? '../' : '';
-    div.innerHTML = '<a href="' + base + 'notificaciones.html" style="color:#8f8f9c;">🔔 avisos</a>' +
-      ' · <a href="#" id="_engageMute" style="color:#8f8f9c;">🔕 esto es mucho, pausen</a>';
+    div.innerHTML = '<a href="#" id="_engageMute" style="color:#8f8f9c;">🔕 esto es mucho, pausen</a>';
     document.body.appendChild(div);
     document.getElementById('_engageMute').addEventListener('click', function (e) {
       e.preventDefault();
