@@ -1230,8 +1230,226 @@
       .scoreboard th, .scoreboard td { padding: .5rem .4rem; font-size: .85rem; }
     }
   </style>
+
+  <!-- ============ SPLASH SCREEN: la galera mágica (bullet time) ============ -->
+  <style>
+    #unoSplash {
+      position: fixed; inset: 0; z-index: 9999; background: #08080f; overflow: hidden;
+      touch-action: none; cursor: pointer; user-select: none; -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    #unoSplash.spl-gone { transition: opacity .4s ease; opacity: 0; pointer-events: none; }
+    .spl-stage { position: absolute; inset: 0; will-change: transform; }
+    .spl-glowcorners {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 40% 40% at 0% 0%, rgba(237,28,36,.12), transparent 70%),
+        radial-gradient(ellipse 40% 40% at 100% 0%, rgba(0,114,188,.12), transparent 70%),
+        radial-gradient(ellipse 40% 40% at 0% 100%, rgba(0,166,81,.10), transparent 70%),
+        radial-gradient(ellipse 40% 40% at 100% 100%, rgba(255,222,0,.10), transparent 70%);
+    }
+    .spl-vignette {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 42%, transparent 38%, rgba(0,0,0,.62) 100%);
+    }
+    .spl-stripe {
+      position: absolute; top: -20%; height: 140%; width: 46%; left: -10%;
+      transform: skewX(-14deg) translateX(-160vw); will-change: transform;
+    }
+    .spl-stripe i { position: absolute; inset: 0; box-shadow: 0 0 60px rgba(0,0,0,.5); }
+    .spl-stripe::after {
+      content: ''; position: absolute; top: 0; bottom: 0; right: -6px; width: 12px;
+      background: #fff; filter: blur(2px);
+    }
+    .spl-stripe.spl-go { animation: splSwipe .62s cubic-bezier(.7,0,.2,1) both; }
+    @keyframes splSwipe {
+      0% { transform: skewX(-14deg) translateX(-160vw); }
+      100% { transform: skewX(-14deg) translateX(220vw); }
+    }
+    #splFx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .spl-hat-anchor {
+      position: absolute; left: 50%; top: 44%;
+      transform: translate(-50%, -50%);
+      width: min(58vmin, 330px); height: min(58vmin, 330px);
+      z-index: 30;
+    }
+    .spl-rays {
+      position: absolute; left: 50%; top: 50%;
+      width: 260%; height: 260%; margin: -130% 0 0 -130%;
+      background: repeating-conic-gradient(from 0deg,
+        rgba(255,222,0,.10) 0deg 7deg, transparent 7deg 22deg,
+        rgba(255,255,255,.06) 22deg 27deg, transparent 27deg 45deg);
+      -webkit-mask-image: radial-gradient(circle, #000 8%, transparent 62%);
+              mask-image: radial-gradient(circle, #000 8%, transparent 62%);
+      mix-blend-mode: screen;
+      opacity: 0; transition: opacity .9s ease;
+      animation: splSpin 26s linear infinite;
+      pointer-events: none;
+    }
+    .spl-rays.spl-on { opacity: 1; }
+    @keyframes splSpin { to { transform: rotate(360deg); } }
+    .spl-aura {
+      position: absolute; left: 50%; top: 50%;
+      width: 150%; height: 150%; margin: -75% 0 0 -75%;
+      background: radial-gradient(circle, rgba(255,222,0,.22) 0%, rgba(255,140,40,.10) 40%, transparent 68%);
+      mix-blend-mode: screen; border-radius: 50%;
+      opacity: 0; transition: opacity .8s ease;
+      animation: splAuraPulse 2.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .spl-aura.spl-on { opacity: 1; }
+    @keyframes splAuraPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+    .spl-hat {
+      position: relative; z-index: 2;
+      width: 100%; height: 100%; object-fit: contain; opacity: 0;
+      filter: drop-shadow(0 0 28px rgba(255,222,0,.35)) drop-shadow(0 18px 26px rgba(0,0,0,.65));
+      will-change: transform, filter;
+    }
+    .spl-hat.spl-shown { opacity: 1; }
+    .spl-hat.spl-stamp { animation: splStamp .4s cubic-bezier(.6,0,.8,.4) both; }
+    @keyframes splStamp {
+      0%   { opacity: 0; transform: scale(7); filter: blur(16px); }
+      60%  { opacity: 1; filter: blur(2px); }
+      80%  { transform: scale(.94); filter: blur(0); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .spl-hat.spl-alive { animation: splIdle 2.4s ease-in-out infinite; }
+    @keyframes splIdle {
+      0%,100% { transform: translateY(0) rotate(-1deg) scale(1); }
+      50% { transform: translateY(-2%) rotate(1deg) scale(1.015); }
+    }
+    .spl-hat.spl-charge { animation: splCharge .5s cubic-bezier(.3,1.4,.4,1) both; }
+    @keyframes splCharge {
+      0%   { transform: scale(1); }
+      45%  { transform: scale(1.22); filter: brightness(1.9) drop-shadow(0 0 70px rgba(255,222,0,.95)) drop-shadow(0 0 24px rgba(255,255,255,.8)); }
+      100% { transform: scale(1.04); filter: brightness(1.15) drop-shadow(0 0 34px rgba(255,222,0,.5)); }
+    }
+    .spl-hat.spl-zoomout { animation: splZoomThrough .8s cubic-bezier(.72,0,.9,.4) both; }
+    @keyframes splZoomThrough {
+      0%   { transform: scale(1.04); opacity: 1; filter: brightness(1.15) blur(0); }
+      75%  { opacity: 1; }
+      100% { transform: scale(30); opacity: 0; filter: brightness(1.4) blur(12px); }
+    }
+    .spl-shockwave {
+      position: absolute; border-radius: 50%; pointer-events: none; z-index: 40;
+      border: 4px solid rgba(255,255,255,.9);
+      animation: splShock .65s cubic-bezier(.2,.7,.3,1) both;
+    }
+    @keyframes splShock {
+      0% { transform: translate(-50%,-50%) scale(.05); opacity: 1; border-width: 10px; }
+      100% { transform: translate(-50%,-50%) scale(1); opacity: 0; border-width: 1px; }
+    }
+    .spl-shockwave.spl-c2 { border-color: rgba(255,222,0,.8); animation-duration: .85s; }
+    #splFlash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 90; }
+    #splFlash.spl-hit { animation: splFlashHit .4s ease-out both; }
+    @keyframes splFlashHit { 0% { opacity: .65; } 100% { opacity: 0; } }
+    #splCards { position: absolute; inset: 0; perspective: 850px; pointer-events: none; z-index: 20; }
+    .spl-c3 {
+      position: absolute; left: 0; top: 0;
+      width: clamp(46px, 10.5vmin, 70px); aspect-ratio: 5/7; border-radius: 12%;
+      border: 3px solid #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fredoka One', 'Arial Black', sans-serif;
+      color: #fff; font-size: clamp(17px, 3.8vmin, 25px);
+      text-shadow: 2px 2px 0 rgba(0,0,0,.35);
+      will-change: transform;
+    }
+    .spl-c3.spl-uno {
+      width: clamp(48px, 11vmin, 74px);
+      background: transparent; border: none; text-shadow: none;
+    }
+    .spl-c3.spl-uno svg { width: 100%; height: 100%; display: block; }
+    .spl-c3.spl-face {
+      width: clamp(56px, 13vmin, 88px);
+      flex-direction: column; gap: 4%;
+      padding-top: 6%;
+    }
+    .spl-c3.spl-face::before {
+      content: ''; position: absolute; inset: 8% 6%;
+      background: rgba(255,255,255,.18); border-radius: 50%; transform: rotate(-30deg);
+    }
+    .spl-c3.spl-face img {
+      position: relative; width: 70%; aspect-ratio: 1; border-radius: 50%;
+      border: 2.5px solid #fff; object-fit: cover;
+      background: rgba(255,255,255,.15);
+      box-shadow: 0 3px 8px rgba(0,0,0,.45);
+    }
+    .spl-c3.spl-face b {
+      position: relative; font-weight: 400;
+      font-size: clamp(10px, 2.4vmin, 15px); letter-spacing: .03em;
+    }
+    .spl-slowmo {
+      position: absolute; top: 6.5%; left: 50%; transform: translateX(-50%);
+      font-weight: 700; font-size: .78rem; letter-spacing: .5em; text-transform: uppercase;
+      color: rgba(255,255,255,.55); opacity: 0; display: flex; align-items: center; gap: .8em;
+      z-index: 50; white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+    }
+    .spl-slowmo.spl-on { animation: splBlink 0.9s steps(2) infinite, splFadeIn .3s ease both; }
+    .spl-slowmo::before, .spl-slowmo::after { content: '●'; font-size: .6em; color: var(--uno-red); }
+    @keyframes splBlink { 50% { opacity: .35; } }
+    @keyframes splFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .spl-title-zone {
+      position: absolute; left: 0; right: 0; top: 68%;
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+      z-index: 25;
+    }
+    .spl-title-zone.spl-out { transition: opacity .3s ease, transform .35s ease; opacity: 0; transform: scale(.85); }
+    .spl-logo {
+      font-family: 'Fredoka One', 'Arial Black', sans-serif; font-weight: 400;
+      font-size: clamp(2.2rem, 10vw, 4.4rem); letter-spacing: .04em;
+      display: flex; gap: .06em; color: #fff;
+    }
+    .spl-logo b { font-weight: 400; opacity: 0; display: inline-block; will-change: transform; }
+    .spl-logo b.spl-on { animation: splPunch .34s cubic-bezier(.2,1.6,.4,1) both, splGlitch .5s steps(1) .34s 2; }
+    @keyframes splPunch {
+      0% { opacity: 0; transform: scale(2.6) translateY(-6px); }
+      100% { opacity: 1; transform: none; }
+    }
+    @keyframes splGlitch {
+      0%   { text-shadow: none; transform: none; }
+      12%  { text-shadow: -4px 0 var(--uno-red), 4px 0 var(--uno-blue); transform: translate(2px, -1px) skewX(-4deg); }
+      24%  { text-shadow: none; transform: none; }
+      55%  { text-shadow: 3px 0 var(--uno-green), -3px 0 var(--uno-red); transform: translate(-2px, 1px); }
+      68%  { text-shadow: none; transform: none; }
+    }
+    .spl-logo b.spl-space { width: .35em; }
+    .spl-bar4 { display: flex; width: min(60vw, 330px); height: 6px; border-radius: 99px; overflow: hidden;
+      transform: scaleX(0); transition: transform .45s cubic-bezier(.2,1.2,.4,1); }
+    .spl-bar4.spl-on { transform: scaleX(1); }
+    .spl-bar4 i { flex: 1; }
+    .spl-bar4 i:nth-child(1) { background: var(--uno-red); }
+    .spl-bar4 i:nth-child(2) { background: var(--uno-yellow); }
+    .spl-bar4 i:nth-child(3) { background: var(--uno-green); }
+    .spl-bar4 i:nth-child(4) { background: var(--uno-blue); }
+    /* accesibilidad: sin animaciones, sin splash */
+    @media (prefers-reduced-motion: reduce) {
+      #unoSplash { display: none; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ============ SPLASH SCREEN (se autodestruye al terminar; tap para saltear) ============ -->
+  <div id="unoSplash" aria-hidden="true">
+    <div class="spl-stage" id="splStage">
+      <div class="spl-glowcorners"></div>
+      <canvas id="splFx"></canvas>
+      <div class="spl-hat-anchor" id="splHatAnchor">
+        <div class="spl-rays" id="splRays"></div>
+        <div class="spl-aura" id="splAura"></div>
+        <img class="spl-hat" id="splHat" src="assets/tophat-logo.png" alt="">
+      </div>
+      <div id="splCards"></div>
+      <div class="spl-slowmo" id="splSlowmo">cámara lenta</div>
+      <div class="spl-title-zone" id="splTitleZone">
+        <div class="spl-logo" id="splTitle"></div>
+        <div class="spl-bar4" id="splBar4"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div class="spl-vignette"></div>
+    </div>
+    <div id="splFlash"></div>
+  </div>
 
   <!-- ============ HEADER (logo + flags) ============ -->
   <header class="app-header no-print">
@@ -6583,6 +6801,374 @@ document.addEventListener('visibilitychange', function() {
   if (document.visibilityState === 'hidden') _flushOnHide();
 });
 window.addEventListener('pagehide', _flushOnHide);
+</script>
+
+<!-- ============ SPLASH SCREEN: lógica (autocontenida, se limpia sola) ============ -->
+<script>
+(function() {
+  var splash = document.getElementById('unoSplash');
+  if (!splash) return;
+  // Sin animaciones si el usuario lo pidió en su sistema
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    splash.remove();
+    return;
+  }
+  // Una vez por sesión: al abrir la app sí, en cada reload/navegación no.
+  // (La app se usa durante la partida; iOS recarga la pestaña al volver de background.)
+  try {
+    if (sessionStorage.getItem('splashVisto')) { splash.remove(); return; }
+    sessionStorage.setItem('splashVisto', '1');
+  } catch (e) { /* modo privado: reproducir igual */ }
+
+  var COLORS = ['#ED1C24', '#FFDE00', '#00A651', '#0072BC'];
+  var GLOWS  = ['rgba(237,28,36,.6)','rgba(255,222,0,.55)','rgba(0,166,81,.6)','rgba(0,114,188,.6)'];
+  var UNO_LABELS = ['+4', 'R', '+2', 'S', 'W', '7', '0'];
+  var NAMES = { pt:'PT', mac:'Mac', mata:'Mata', gael:'Gael', nachi:'Nachi', carucha:'Carucha',
+                negro:'Negro', naso:'Naso', tano:'Tano', gordo:'Gordo', cobra:'Cobra' };
+  var PLAYER_IDS = Object.keys(NAMES);
+  var FACE_SRC = {};
+  PLAYER_IDS.forEach(function(id) {
+    FACE_SRC[id] = 'assets/faces/' + id + '.png';
+    var pre = new Image(); pre.src = FACE_SRC[id]; // precarga
+  });
+
+  var stage  = document.getElementById('splStage');
+  var anchor = document.getElementById('splHatAnchor');
+  var hat    = document.getElementById('splHat');
+  var canvas = document.getElementById('splFx');
+  var ctx    = canvas.getContext('2d');
+  var running = true;
+
+  function fit() { canvas.width = innerWidth; canvas.height = innerHeight; }
+  fit(); addEventListener('resize', fit);
+
+  function hatCenter() {
+    var r = anchor.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+  function hatMouth() {
+    var r = anchor.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height * 0.2 };
+  }
+
+  /* ---------- generador de cartas UNO auténticas (SVG) ---------- */
+  function cardSVG(val, ci, uid) {
+    var C = COLORS[ci];
+    var dark = (val === '+4' || val === 'W');
+    var FONT = 'font-family="Arial Black, Fredoka One, sans-serif" font-weight="900" font-style="italic" text-anchor="middle"';
+
+    function textPair(t, size, fill, dx, dy) {
+      return '<text x="' + (dx + 4) + '" y="' + (dy + 4) + '" font-size="' + size + '" ' + FONT + ' fill="rgba(0,0,0,.35)">' + t + '</text>'
+           + '<text x="' + dx + '" y="' + dy + '" font-size="' + size + '" ' + FONT + ' fill="' + fill + '">' + t + '</text>';
+    }
+    var ARROW = 'M-11,44 L-11,-6 L-27,-6 L0,-46 L27,-6 L11,-6 L11,44 Z';
+    function reverseSym(fill) {
+      var a = '<path d="' + ARROW + '"/>';
+      var pair = '<g transform="translate(-22,16)">' + a + '</g><g transform="translate(22,-16) rotate(180)">' + a + '</g>';
+      return '<g fill="rgba(0,0,0,.3)" transform="translate(4,4) rotate(45)">' + pair + '</g>'
+           + '<g fill="' + fill + '" transform="rotate(45)">' + pair + '</g>';
+    }
+    function skipSym(stroke) {
+      var shape = '<circle r="45"/><line x1="-32" y1="-32" x2="32" y2="32"/>';
+      return '<g fill="none" stroke="rgba(0,0,0,.3)" stroke-width="13" transform="translate(4,4)">' + shape + '</g>'
+           + '<g fill="none" stroke="' + stroke + '" stroke-width="13">' + shape + '</g>';
+    }
+    function miniCard(fill, rot, tx, ty) {
+      return '<g transform="rotate(' + rot + ') translate(' + tx + ',' + ty + ')">'
+           + '<rect x="-26" y="-38" width="52" height="76" rx="8" fill="' + fill + '" stroke="#fff" stroke-width="5"/></g>';
+    }
+    function wildQuads(rx, ry) {
+      return '<path d="M0,0 L' + rx + ',0 A' + rx + ',' + ry + ' 0 0 0 0,-' + ry + ' Z" fill="#0072BC"/>'
+           + '<path d="M0,0 L0,-' + ry + ' A' + rx + ',' + ry + ' 0 0 0 -' + rx + ',0 Z" fill="#ED1C24"/>'
+           + '<path d="M0,0 L-' + rx + ',0 A' + rx + ',' + ry + ' 0 0 0 0,' + ry + ' Z" fill="#FFDE00"/>'
+           + '<path d="M0,0 L0,' + ry + ' A' + rx + ',' + ry + ' 0 0 0 ' + rx + ',0 Z" fill="#00A651"/>';
+    }
+
+    var center = '';
+    if (val === 'R') center = reverseSym(dark ? '#fff' : C);
+    else if (val === 'S') center = skipSym(C);
+    else if (val === '+2') center = miniCard(C, -12, -18, -6) + miniCard(C, 8, 16, 4);
+    else if (val === '+4') center = miniCard('#FFDE00', -22, -32, 6) + miniCard('#0072BC', -8, -11, 0)
+                                  + miniCard('#ED1C24', 8, 11, 0) + miniCard('#00A651', 22, 32, 6);
+    else if (val !== 'W') center = textPair(val, 132, C, 0, 46);
+
+    var corner;
+    if (val === 'R') corner = '<g transform="scale(.3)">' + reverseSym('#fff') + '</g>';
+    else if (val === 'S') corner = '<g transform="scale(.3)">' + skipSym('#fff') + '</g>';
+    else if (val === 'W') corner = '<g transform="rotate(-35)">' + wildQuads(26, 15) + '</g>';
+    else corner = textPair(val, 44, '#fff', 0, 16);
+
+    return '<svg viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">'
+      + '<defs><clipPath id="splin' + uid + '"><rect x="11" y="11" width="178" height="258" rx="16"/></clipPath></defs>'
+      + '<rect width="200" height="280" rx="24" fill="#fff"/>'
+      + '<rect x="11" y="11" width="178" height="258" rx="16" fill="' + (dark ? '#161616' : C) + '"/>'
+      + '<g clip-path="url(#splin' + uid + ')">'
+      + (dark
+          ? (val === 'W'
+              ? '<g transform="translate(100,140) rotate(-35)">' + wildQuads(98, 58)
+                + '<ellipse rx="98" ry="58" fill="none" stroke="#fff" stroke-width="6"/></g>'
+              : '')
+          : '<ellipse cx="100" cy="140" rx="98" ry="58" transform="rotate(-35 100 140)" fill="#fff"/>')
+      + '</g>'
+      + '<g transform="translate(100,140)">' + center + '</g>'
+      + '<g id="splcr' + uid + '" transform="translate(34,52)">' + corner + '</g>'
+      + '<use href="#splcr' + uid + '" transform="rotate(180 100 140)"/>'
+      + '</svg>';
+  }
+
+  /* ---- timeScale global: bullet time ---- */
+  var timeScale = 1, timeTarget = 1, timeEase = .12;
+
+  /* ---- partículas ---- */
+  var parts = [], emitting = false;
+  function burst(x, y, n, speed) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * 6.283, sp = speed * (.4 + Math.random());
+      parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        g: .12, life: 1, decay: .008 + Math.random() * .014,
+        size: 1.5 + Math.random() * 3,
+        color: ['237,28,36','255,222,0','0,166,81','0,114,188','255,255,255'][(Math.random()*5)|0] });
+    }
+  }
+  function mouthSpark() {
+    var m = hatMouth();
+    parts.push({ x: m.x + (Math.random()-.5) * 50, y: m.y,
+      vx: (Math.random()-.5) * 4, vy: -5 - Math.random() * 6,
+      g: .18, life: 1, decay: .014 + Math.random() * .02,
+      size: 1.2 + Math.random() * 2.4,
+      color: Math.random() < .6 ? '255,222,0' : '255,255,255' });
+  }
+
+  /* ---- objetos voladores: cartas UNO + cartas-jugador ---- */
+  var cards = [], mode = 'fly';
+  function spawnFromHat(i, kind, payload) {
+    var m = hatMouth();
+    var el = document.createElement('div');
+    var color = COLORS[i % 4], glow = GLOWS[i % 4];
+    var isFace = kind === 'face';
+    var isDark = payload === '+4' || payload === 'W';
+    el.className = 'spl-c3' + (isFace ? ' spl-face' : ' spl-uno');
+    if (isFace) {
+      el.style.background = color;
+      el.style.boxShadow = '0 10px 22px rgba(0,0,0,.55), 0 0 24px ' + glow;
+      el.innerHTML = '<img src="' + FACE_SRC[payload] + '" alt=""><b>' + NAMES[payload] + '</b>';
+    } else {
+      el.innerHTML = cardSVG(payload, i % 4, i);
+      el.style.filter = 'drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 14px '
+        + (isDark ? 'rgba(255,255,255,.4)' : glow) + ')';
+    }
+    document.getElementById('splCards').appendChild(el);
+    var spreadX = (Math.random() - .5) * 24;
+    cards.push({
+      el: el, x: m.x, y: m.y, s: .3,
+      vx: spreadX,
+      vy: -8 - Math.random() * 9,
+      rz: isFace ? (Math.random() - .5) * 46 : Math.random() * 360,
+      ry: isFace ? (Math.random() - .5) * 40 : Math.random() * 360,
+      rx: isFace ? (Math.random() - .5) * 24 : Math.random() * 60,
+      vrz: (Math.random() - .5) * (isFace ? 7 : 22),
+      vry: (Math.random() - .5) * (isFace ? 9 : 26),
+      vrx: (Math.random() - .5) * (isFace ? 4 : 12),
+      w: isFace ? 44 : 32, hh: isFace ? 60 : 45
+    });
+    for (var k = 0; k < 8; k++) mouthSpark();
+  }
+
+  /* ---- cámara ---- */
+  var camT = 0, camOn = false, shakeAmt = 0;
+  function shake(n) { shakeAmt = Math.max(shakeAmt, n); }
+
+  var absorbed = 0, totalSpawned = 0, allAbsorbedCb = null;
+
+  (function loop() {
+    if (!running) return;
+    timeScale += (timeTarget - timeScale) * timeEase;
+    var dt = timeScale;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'lighter';
+    if (emitting) for (var e = 0; e < 3; e++) mouthSpark();
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.x += p.vx * dt; p.y += p.vy * dt; p.vy += p.g * dt; p.life -= p.decay * Math.max(dt, .5);
+      if (p.life <= 0) { parts.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(' + p.color + ',' + (p.life * .85) + ')';
+      ctx.arc(p.x, p.y, p.size * p.life, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    var m = hatMouth();
+    for (var j = cards.length - 1; j >= 0; j--) {
+      var c = cards[j];
+      if (mode === 'fly') {
+        c.x += c.vx * dt; c.y += c.vy * dt; c.vy += .42 * dt;
+        if (c.s < 1) c.s = Math.min(1, c.s + .12 * dt);
+        if (c.y > innerHeight + 180) { c.el.remove(); cards.splice(j, 1); continue; }
+      } else { // vacuum: la galera aspira todo
+        var dx = m.x - c.x, dy = m.y - c.y;
+        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        c.vx = c.vx * .93 + (dx / dist) * 3.4 * dt + (-dy / dist) * 1.5 * dt;
+        c.vy = c.vy * .93 + (dy / dist) * 3.4 * dt + (dx / dist) * 1.5 * dt;
+        c.x += c.vx * dt; c.y += c.vy * dt;
+        c.s = Math.max(.06, Math.min(c.s, dist / 260));
+        if (dist < 52) {
+          c.el.remove(); cards.splice(j, 1);
+          absorbed++;
+          for (var k = 0; k < 10; k++) mouthSpark();
+          shake(5);
+          if (absorbed >= totalSpawned && allAbsorbedCb) { allAbsorbedCb(); allAbsorbedCb = null; }
+          continue;
+        }
+      }
+      c.rz += c.vrz * dt; c.ry += c.vry * dt; c.rx += c.vrx * dt;
+      c.el.style.transform = 'translate3d(' + (c.x - c.w) + 'px,' + (c.y - c.hh) + 'px,0)'
+        + ' rotateX(' + c.rx + 'deg) rotateY(' + c.ry + 'deg) rotateZ(' + c.rz + 'deg)'
+        + ' scale(' + c.s + ')';
+    }
+
+    var tx = 0, ty = 0, rot = 0;
+    if (camOn) {
+      camT += .016;
+      tx = Math.sin(camT * .7) * 12; ty = Math.cos(camT * .5) * 8; rot = Math.sin(camT * .4) * .6;
+    }
+    if (shakeAmt > .3) {
+      shakeAmt *= .85;
+      tx += (Math.random() - .5) * shakeAmt; ty += (Math.random() - .5) * shakeAmt;
+    }
+    stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) rotate(' + rot + 'deg) scale(' + (camOn ? 1.05 : 1) + ')';
+
+    requestAnimationFrame(loop);
+  })();
+
+  function wave(x, y, size, cls) {
+    var el = document.createElement('div');
+    el.className = 'spl-shockwave' + (cls ? ' ' + cls : '');
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    el.style.width = el.style.height = size + 'px';
+    stage.appendChild(el);
+    setTimeout(function() { el.remove(); }, 950);
+  }
+  function flash() {
+    var f = document.getElementById('splFlash');
+    f.classList.remove('spl-hit'); void f.offsetWidth; f.classList.add('spl-hit');
+  }
+
+  /* ================= TIMELINE ================= */
+  var timeouts = [];
+  var T = function(ms, fn) { timeouts.push(setTimeout(fn, ms)); };
+
+  function cleanup() {
+    running = false;
+    removeEventListener('resize', fit);
+    splash.remove();
+  }
+
+  var finished = false;
+  function finishSequence() {
+    if (finished) return; finished = true;
+    var c = hatCenter();
+    hat.classList.remove('spl-alive');
+    hat.classList.add('spl-charge');
+    flash(); shake(14);
+    wave(c.x, c.y, Math.min(innerWidth, innerHeight) * 1.2, 'spl-c2');
+    burst(hatMouth().x, hatMouth().y, 60, 7);
+    T(520, function() {
+      hat.classList.remove('spl-charge');
+      hat.classList.add('spl-zoomout');
+    });
+    T(1050, function() { splash.classList.add('spl-gone'); });
+    T(1500, cleanup);
+  }
+
+  // tap / click en cualquier lado = saltear el splash
+  splash.addEventListener('click', function() {
+    if (finished) return; finished = true;
+    timeouts.forEach(clearTimeout);
+    splash.classList.add('spl-gone');
+    setTimeout(cleanup, 450);
+  });
+
+  function runTimeline() {
+    // 1) franjas diagonales de los 4 colores
+    COLORS.forEach(function(col, i) {
+      var s = document.createElement('div');
+      s.className = 'spl-stripe';
+      s.innerHTML = '<i style="background:' + col + '"></i>';
+      stage.appendChild(s);
+      T(60 + i * 95, function() { s.classList.add('spl-go'); });
+      T(1100, function() { s.remove(); });
+    });
+
+    // 2) la galera se estampa desde la cámara, con rayos y aura
+    T(820, function() { hat.classList.add('spl-stamp'); });
+    T(1130, function() {
+      var c = hatCenter();
+      flash(); shake(24);
+      wave(c.x, c.y, Math.min(innerWidth, innerHeight) * 1.1);
+      wave(c.x, c.y, Math.min(innerWidth, innerHeight) * 1.5, 'spl-c2');
+      burst(c.x, c.y, 90, 9);
+      document.getElementById('splRays').classList.add('spl-on');
+      document.getElementById('splAura').classList.add('spl-on');
+    });
+    T(1220, function() {
+      hat.classList.remove('spl-stamp');
+      hat.classList.add('spl-shown');
+      hat.classList.add('spl-alive');
+    });
+
+    // 3) erupción DESDE la galera: los 11 pibes + cartas UNO entrelazadas
+    T(1320, function() {
+      emitting = true;
+      var deck = [];
+      var f = 0, u = 0;
+      for (var i = 0; i < PLAYER_IDS.length + UNO_LABELS.length; i++) {
+        if (i % 3 !== 2 && f < PLAYER_IDS.length) deck.push(['face', PLAYER_IDS[f++]]);
+        else if (u < UNO_LABELS.length) deck.push(['uno', UNO_LABELS[u++]]);
+        else deck.push(['face', PLAYER_IDS[f++]]);
+      }
+      deck.forEach(function(d, i) {
+        T(i * 25, function() { spawnFromHat(i, d[0], d[1]); shake(3); });
+      });
+    });
+
+    // 4) bullet time: los pibes congelados en el aire
+    T(1860, function() {
+      timeTarget = .05; timeEase = .2; camOn = true; emitting = false;
+      document.getElementById('splSlowmo').classList.add('spl-on');
+    });
+
+    // 5) título punch + glitch
+    T(2000, function() {
+      var title = document.getElementById('splTitle');
+      'LUNES DE UNO'.split('').forEach(function(ch, k) {
+        var b = document.createElement('b');
+        if (ch === ' ') b.className = 'spl-space'; else b.textContent = ch;
+        title.appendChild(b);
+        T(k * 70, function() { b.classList.add('spl-on'); });
+      });
+    });
+    T(3000, function() { document.getElementById('splBar4').classList.add('spl-on'); });
+
+    // 6) la galera ASPIRA todo de vuelta
+    T(4200, function() {
+      mode = 'vacuum';
+      totalSpawned = cards.length; absorbed = 0;
+      timeTarget = 2.6; timeEase = .22; camOn = false;
+      document.getElementById('splSlowmo').classList.remove('spl-on');
+      document.getElementById('splTitleZone').classList.add('spl-out');
+      allAbsorbedCb = finishSequence;
+      T(1400, function() { if (allAbsorbedCb) { allAbsorbedCb(); allAbsorbedCb = null; } });
+    });
+  }
+
+  // arrancar cuando la galera esté cargada (fallback a los 900 ms)
+  var started = false;
+  function start() { if (started || finished) return; started = true; runTimeline(); }
+  if (hat.complete && hat.naturalWidth) start();
+  else { hat.addEventListener('load', start); setTimeout(start, 900); }
+})();
 </script>
 </body>
 </html>
