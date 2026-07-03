@@ -62,6 +62,13 @@
       "device": "mata",
       "ts": "2026-07-03T21:14:37.542Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-03-g",
+      "device": "cobra",
+      "ts": "2026-07-03T21:15:56.350Z",
+      "status_code": 201
     }
   ]
 }
