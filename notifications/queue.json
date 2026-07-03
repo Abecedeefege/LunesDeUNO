@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-03T18:11:00-03:00",
+  "_updated_at": "2026-07-03T21:12:07.577Z",
   "notifications": [
     {
       "id": "2026-07-03-d",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-03T18:06:00-03:00",
       "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-03T21:12:07.443Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-03 (bienvenida negro)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-03T18:06:00-03:00",
       "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-03T21:12:07.576Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-03 (test galera)"
     },
