@@ -60,17 +60,17 @@
 
   <div class="marquee">
     <div class="kicker">LA PREVIA · TEMPORADA 5 · FECHA 1</div>
-    <h1>Hoy se juega</h1>
+    <h1 id="diaTitulo">Hoy se juega</h1>
     <div class="sub">Lunes 06.07.2026 · la mesa manda, la picada es ley</div>
   </div>
 
   <div class="card">
-    <h2>⚔️ Qué se juega esta noche</h2>
+    <h2>⚔️ Qué se juega <span id="diaCuando">esta noche</span></h2>
     <ul class="stakes">
       <li>🏁 <b>Arranca la Temporada 5</b> (la 4ª la ganó Cobra… por 8 puntos).</li>
       <li>👑 <b>PT defiende la punta anual</b>: 4637 puntos, el más bajo del año.</li>
       <li>🔥 <b>Récord en juego:</b> nadie ganó 3 lunes seguidos en 2026. Cobra fue el último en intentarlo (ganó el 8/6 y el 22/6; PT lo bajó el 29/6).</li>
-      <li>🍮 El último de esta noche <b>paga postre o picada</b> — Tano y Mac saben de qué se trata.</li>
+      <li>🍮 El último de <span id="diaPaga">esta noche</span> <b>paga postre o picada</b> — Tano y Mac saben de qué se trata.</li>
     </ul>
   </div>
 
@@ -173,6 +173,23 @@
     var since = new Date(el.getAttribute('data-since') + 'T00:00:00-03:00');
     el.textContent = Math.max(0, Math.floor((Date.now() - since) / 86400000));
   });
+
+  // Copy según el día: la misma página sirve el viernes (welcome), el domingo
+  // (teaser) y el lunes (previa). Override para pruebas: ?fecha=YYYY-MM-DD.
+  (function () {
+    var GAME_DAY = '2026-07-06';
+    var hoy = new URLSearchParams(location.search).get('fecha');
+    if (!hoy) hoy = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10); // UY = UTC-3 fijo
+    var diff = Math.round((new Date(GAME_DAY) - new Date(hoy)) / 86400000);
+    var titulo, cuando;
+    if (diff === 0)      { titulo = 'Hoy se juega';      cuando = 'esta noche'; }
+    else if (diff === 1) { titulo = 'Mañana se juega';   cuando = 'mañana'; }
+    else if (diff > 1)   { titulo = 'El lunes se juega'; cuando = 'el lunes'; }
+    else                 { titulo = 'Ya se jugó';        cuando = 'esa noche'; }
+    document.getElementById('diaTitulo').textContent = titulo;
+    document.getElementById('diaCuando').textContent = cuando;
+    document.getElementById('diaPaga').textContent = cuando;
+  })();
 </script>
 <script src="engage.js"></script>
 </body>

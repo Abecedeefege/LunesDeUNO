@@ -20,7 +20,7 @@
     background: #17171f; border: 1px solid #2a2a35; border-left: 4px solid #00A651;
     border-radius: 10px; padding: .8rem .9rem; margin-bottom: .6rem;
   }
-  .n.hist { border-left-color: #2a2a35; opacity: .75; }
+  .n.hist { border-left-color: #2a2a35; opacity: .8; }
   .n.hist.failed { border-left-color: #ED1C24; }
   .when { font-size: .78rem; color: #FFDE00; font-weight: 700; letter-spacing: .5px; }
   .n.hist .when { color: #8f8f9c; }
@@ -28,7 +28,21 @@
   .b { font-size: .85rem; color: #b9b9c4; line-height: 1.45; }
   .meta { font-size: .72rem; color: #6b6b78; margin-top: .35rem; }
   .meta a { color: #6b6b78; }
+  .rev { font-size: .78rem; font-weight: 700; margin-top: .5rem; padding-top: .45rem; border-top: 1px dashed #2a2a35; }
+  .rev.ok { color: #00A651; }
+  .rev.bad { color: #ED1C24; }
+  .rev.pend { color: #FFDE00; }
+  .rev.signal { color: #8f8f9c; }
+  .rev .reacts { color: #b9b9c4; font-weight: 400; margin-left: .35rem; }
   .empty { color: #8f8f9c; font-size: .88rem; padding: .6rem 0; }
+  details { margin-top: .6rem; }
+  summary {
+    cursor: pointer; color: #8f8f9c; font-size: .85rem; font-weight: 700;
+    padding: .55rem .2rem; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: '▸ '; }
+  details[open] summary::before { content: '▾ '; }
 </style>
 </head>
 <body>
@@ -38,6 +52,10 @@
   <div id="out"></div>
 
 <script>
+const FS_BASE = 'https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
+const FS_KEY  = 'AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
+const DECIDER = 'andres';   // único device cuyas aprobaciones deciden
+const EMOJI = { love: '😍', like: '🙂', meh: '😐', no: '🙅' };
 const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
 const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 
@@ -48,27 +66,94 @@ function fmt(iso) {
     String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
 function esc(s) { const e = document.createElement('span'); e.textContent = s || ''; return e.innerHTML; }
-function card(n, hist) {
+function slugOf(url) {
+  const base = (url || '').split('/').pop().split('?')[0].replace(/\.html?$/, '');
+  return (!base || base === 'index') ? null : base;
+}
+
+// Veredicto de revisión para una landing, a partir de eventos en vivo +
+// proposals.json. Los de DECIDER deciden; el resto es señal.
+function verdict(slug, events, proposals) {
+  if (!slug) return '';
+  const prop = (proposals || []).find(p => p.id === slug);
+  const evs = (events || []).filter(e => (e.proposal === slug || e.slug === slug || e.page === slug));
+  const reacts = {};
+  evs.filter(e => e.type === 'reaction').forEach(e => { reacts[e.reaction] = (reacts[e.reaction] || 0) + 1; });
+  const rTxt = Object.keys(reacts).length
+    ? '<span class="reacts">' + Object.entries(reacts).map(([k,n]) => (EMOJI[k]||k) + '×' + n).join(' ') + '</span>' : '';
+
+  const ap = evs.find(e => e.type === 'proposal_approved' && e.device === DECIDER);
+  const rj = evs.find(e => e.type === 'proposal_rejected' && e.device === DECIDER);
+  if (prop && prop.status === 'promoted') return '<div class="rev ok">✅ Integrada (aprobada y promovida)' + rTxt + '</div>';
+  if (ap) return '<div class="rev ok">✅ Aprobada (' + DECIDER + ')' + rTxt + '</div>';
+  if (rj) return '<div class="rev bad">✕ Rechazada (' + DECIDER + ')' + rTxt + '</div>';
+  const other = evs.find(e => e.type === 'proposal_approved' || e.type === 'proposal_rejected');
+  if (other) return '<div class="rev signal">👀 ' + (other.type === 'proposal_approved' ? 'aprobó' : 'rechazó') + ' ' + esc(other.device) + ' (señal, no decide)' + rTxt + '</div>';
+  return '<div class="rev pend">🕓 Sin revisar — abrí la landing y decidí' + rTxt + '</div>';
+}
+
+function card(n, hist, badge) {
   const cls = 'n' + (hist ? ' hist' : '') + (n.status === 'failed' ? ' failed' : '');
   const when = hist
     ? (n.status === 'sent' ? '✓ enviado ' + fmt(n.sent_at) : n.status + (n.fail_reason ? ' · ' + esc(n.fail_reason) : ''))
     : '⏰ ' + fmt(n.send_at);
-  return '<div class="' + cls + '"><div class="when">' + when + '</div>' +
+  const dev = Array.isArray(n.devices) && n.devices.length ? ' · solo: ' + n.devices.map(esc).join(', ') : '';
+  return '<div class="' + cls + '"><div class="when">' + when + esc(dev) + '</div>' +
     '<div class="t">' + esc(n.title) + '</div><div class="b">' + esc(n.body) + '</div>' +
-    '<div class="meta"><a href="' + esc(n.url) + '">' + esc((n.url || '').replace(/^https:\/\/[^/]+\//,'')) + '</a></div></div>';
+    '<div class="meta"><a href="' + esc(n.url) + '">' + esc((n.url || '').replace(/^https:\/\/[^/]+\//,'')) + '</a></div>' +
+    (badge || '') + '</div>';
 }
-fetch('queue.json?nocache=' + Date.now(), { cache: 'no-store' })
-  .then(r => r.json())
-  .then(q => {
-    const ns = q.notifications || [];
-    const pend = ns.filter(n => n.status === 'pending').sort((a,b) => (a.send_at||'').localeCompare(b.send_at||''));
-    const hist = ns.filter(n => n.status !== 'pending').sort((a,b) => (b.send_at||'').localeCompare(a.send_at||''));
-    document.getElementById('updated').textContent = 'cola actualizada: ' + fmt(q._updated_at) + ' · un aviso por día a las 14:00';
-    document.getElementById('out').innerHTML =
-      '<h2>EN CAMINO</h2>' + (pend.length ? pend.map(n => card(n,false)).join('') : '<div class="empty">Nada encolado — el agente de las 06:00 carga el del día.</div>') +
-      '<h2>YA SALIERON</h2>' + (hist.length ? hist.map(n => card(n,true)).join('') : '<div class="empty">Todavía nada.</div>');
-  })
-  .catch(e => { document.getElementById('updated').textContent = 'No pude leer la cola: ' + e; });
+
+// Firestore REST → eventos planos. Si falla (sin red), señales en vivo vacías.
+async function loadEvents() {
+  try {
+    const r = await fetch(FS_BASE + '/engagement?key=' + FS_KEY + '&pageSize=300', { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const data = await r.json();
+    return (data.documents || []).map(doc => {
+      const out = {};
+      Object.entries(doc.fields || {}).forEach(([k, v]) => {
+        out[k] = v.stringValue !== undefined ? v.stringValue :
+                 v.integerValue !== undefined ? Number(v.integerValue) : v.booleanValue;
+      });
+      return out;
+    });
+  } catch (e) { return null; }
+}
+async function loadProposals() {
+  try {
+    const r = await fetch('../engage/proposals.json?nocache=' + Date.now(), { cache: 'no-store' });
+    return (await r.json()).proposals || [];
+  } catch (e) { return []; }
+}
+
+Promise.all([
+  fetch('queue.json?nocache=' + Date.now(), { cache: 'no-store' }).then(r => r.json()),
+  loadEvents(),
+  loadProposals(),
+]).then(([q, events, proposals]) => {
+  const ns = q.notifications || [];
+  const pend = ns.filter(n => n.status === 'pending').sort((a,b) => (a.send_at||'').localeCompare(b.send_at||''));
+  const hist = ns.filter(n => n.status !== 'pending').sort((a,b) => (b.sent_at||b.send_at||'').localeCompare(a.sent_at||a.send_at||''));
+  const last = hist[0];
+  const past = hist.slice(1);
+
+  document.getElementById('updated').textContent =
+    'cola actualizada: ' + fmt(q._updated_at) + ' · un aviso por día a las 14:00' +
+    (events === null ? ' · ⚠️ sin señales en vivo (Firestore no respondió)' : '');
+
+  document.getElementById('out').innerHTML =
+    '<h2>EN CAMINO — revisá y aprobá</h2>' +
+    (pend.length
+      ? pend.map(n => card(n, false, verdict(slugOf(n.url), events, proposals))).join('')
+      : '<div class="empty">Nada encolado — el agente de las 06:00 carga el del día.</div>') +
+    '<h2>ÚLTIMO ENVIADO</h2>' +
+    (last ? card(last, true) : '<div class="empty">Todavía nada.</div>') +
+    (past.length
+      ? '<details><summary>📦 Notificaciones pasadas (' + past.length + ')</summary>' +
+        past.map(n => card(n, true)).join('') + '</details>'
+      : '');
+}).catch(e => { document.getElementById('updated').textContent = 'No pude leer la cola: ' + e; });
 </script>
 </body>
 </html>

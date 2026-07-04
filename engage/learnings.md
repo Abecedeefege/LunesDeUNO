@@ -64,13 +64,26 @@ fuerte que en un catálogo. A validar con dwell/reacción/answers de la semana 1
   (sequía de Mac, deudas, últimos puestos pueden haber cambiado) — la página
   está fechada "al cierre del 3/7" pero merece edición actualizada.
 
-## 🔭 Corrida de HOY (2026-07-03, manual)
+## 🔭 Corrida de HOY (2026-07-03, manual — actualizada a la noche)
 
-Bootstrap del sistema completo: capa push, tracking, comando, primera semana
-encolada. Qué mirar en la próxima corrida: ¿llegaron los pushes del domingo y
-lunes? (send_log), ¿hubo clicks/reacciones/answers? (engagement), ¿alguien
-respondió las preguntas de deuda? Primer dato real de conversión esperado el
-lunes a la noche.
+Bootstrap completo + primer día en producción: 10 envíos (bienvenidas/tests),
+club con 4 subs activas (andres=cel de Andrés, mata=su compu, negro, cobra;
+mc desuscripto con link pendiente). PARA LA CORRIDA DEL SÁBADO 04/07:
+
+- **`2026-07-04-records` YA FUE APROBADA por `andres`** (proposal_approved
+  02:57 UTC, + reaction love + answer si, dwell 73s) → marcarla `promoted`
+  en proposals.json; la página queda.
+- **Identidad de devices**: el "mata" activo es el dispositivo secundario de
+  ANDRÉS (compu) — sus señales son de Andrés. Si el Mata real se suscribe va
+  a elegir el mismo apodo: ojo con la colisión al leer señales.
+- **La previa es día-consciente** (JS ajusta "hoy/mañana/el lunes" solo,
+  override ?fecha=): la corrida del domingo NO reescribe copy por día, solo
+  refresca datos si cambiaron.
+- **proximos.html es el CMS de Andrés**: muestra veredicto de revisión por
+  landing (eventos en vivo + proposals.json) y colapsa las enviadas. Al
+  cambiar estados en proposals.json, ese view se actualiza solo.
+- El push de récords de hoy 14:00 sale a los 4 suscriptos; mirar el
+  engagement de negro/cobra (primera vez que reciben contenido editorial).
 
 ## TODO / ángulos sin usar
 
