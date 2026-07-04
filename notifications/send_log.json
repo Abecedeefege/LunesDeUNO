@@ -69,6 +69,34 @@
       "device": "cobra",
       "ts": "2026-07-03T21:15:56.350Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-04-a",
+      "device": "negro",
+      "ts": "2026-07-04T18:05:37.902Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-04-a",
+      "device": "mata",
+      "ts": "2026-07-04T18:05:38.029Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-04-a",
+      "device": "cobra",
+      "ts": "2026-07-04T18:05:38.161Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-04-a",
+      "device": "andres",
+      "ts": "2026-07-04T18:05:38.314Z",
+      "status_code": 201
     }
   ]
 }
