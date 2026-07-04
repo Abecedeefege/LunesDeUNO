@@ -7,27 +7,33 @@
       "created": "2026-07-03",
       "status": "pending",
       "hypothesis": "El orgullo y los superlativos verificados convierten (prior §récords del playbook). El bloque 'récords que se pueden romper el lunes' alimenta la anticipación. Métrica: reacción + dwell.",
-      "notified_by": ["2026-07-04-a"],
+      "notified_by": [
+        "2026-07-04-a"
+      ],
       "result_notes": null
     },
     {
       "id": "2026-07-06-la-previa",
-      "title": "🔥 La Previa (cartelera del lunes: tabla + deudas + pronóstico)",
+      "title": "🔥 La Previa (cartelera del lunes: tabla + deudas + padres/hijos + pronóstico)",
       "page": "engage/2026-07-06-la-previa.html",
       "created": "2026-07-03",
       "status": "pending",
       "hypothesis": "La anticipación del lunes convierte: tabla real + conteo de deudas en vivo + pronóstico en broma genera reacción 😍 y answers de deuda antes de la partida. Métrica: click del push dom/lun + ≥1 answer de deuda.",
-      "notified_by": ["2026-07-05-a", "2026-07-06-a"],
+      "notified_by": [
+        "2026-07-06-a"
+      ],
       "result_notes": null
     },
     {
-      "id": "2026-07-09-chusmerio",
-      "title": "🍿 Chusmerío de la mesa (tabloide con datos verificados)",
-      "page": "engage/2026-07-09-chusmerio.html",
+      "id": "2026-07-05-chusmerio",
+      "title": "🍿 Chusmerío de la mesa (tabloide dominical con datos verificados)",
+      "page": "engage/2026-07-05-chusmerio.html",
       "created": "2026-07-03",
       "status": "pending",
-      "hypothesis": "El chisme sobre gente real de la mesa es el ángulo más fuerte del sistema (prior del playbook: chisme+orgullo+identidad convierten). Métrica: dwell alto + reacción 😍 + answer de la fecha fantasma.",
-      "notified_by": ["2026-07-09-a"],
+      "hypothesis": "El chisme sobre gente real de la mesa es el ángulo más fuerte del sistema; como cierre del domingo alimenta la anticipación del lunes. Métrica: dwell alto + reacción 😍 + answer de la fecha fantasma.",
+      "notified_by": [
+        "2026-07-05-a"
+      ],
       "result_notes": null
     }
   ]

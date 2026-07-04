@@ -137,28 +137,29 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
 
 ## 3. La semana editorial (cadencia base — la vigente vive en learnings.md)
 
-**CADENCIA: 1 push por día, todos los días, a las 14:00** (fijada por Andrés
-el 2026-07-03; si learnings.md dice otra cosa más nueva, manda learnings).
-Regla de oro: **un solo push diario, siempre a la misma hora** — nunca dos el
-mismo día. El `send_at` debe quedar ≥60 min después de tu corrida (margen de
-deploy de Pages; corriendo a las 06:00 sobra).
+**CADENCIA: 4 pushes semanales a las 14:00 — sáb/dom/lun/mar** (fijada por
+Andrés el 2026-07-04; si learnings.md dice otra cosa más nueva, manda
+learnings). Regla de oro: **un solo push por día, siempre a las 14:00**, y
+miércoles/jueves/viernes SILENCIO (solo gestión, compactación y memoria). El
+`send_at` debe quedar ≥60 min después de tu corrida (margen de deploy de
+Pages; corriendo a las 06:00 sobra).
 
-El CONTENIDO del día sigue anclado al ritual del lunes:
+La semana editorial escala hacia el lunes y lo comenta el martes:
 
 | Día (corrida 06:00) | Push 14:00 | Qué hacés |
 |---|---|---|
-| **Domingo** | teaser | Creás la experiencia **"La Previa"** del lunes (§3.1) y encolás el teaser: "Mañana es lunes. La tabla dice X. ¿Va postre o picada?" apuntando a la previa. |
-| **Lunes** | previa | Actualizás la previa si algo cambió (deuda pagada, dato nuevo) y encolás "🔥 Hoy se juega…" apuntando a la MISMA página con otro id. |
-| **Martes** | crónica | **La crónica** (§3.2): si hay partida nueva de anoche en `games` → crónica épica + push. Si NO hay → push "¿Anoche se jugó? Cargá el resultado" con url a `https://abecedeefege.github.io/LunesDeUNO/index.html`. |
-| **Miércoles** | ángulo rotativo | Un ángulo del §3.3 con los datos YA actualizados de la fecha del lunes. |
-| **Jueves** | ángulo rotativo | Otro ángulo del §3.3 (el chusmerío rinde acá). No repetir el ángulo del miércoles. |
-| **Viernes** | ángulo rotativo | Otro ángulo del §3.3. |
-| **Sábado** | ángulo rotativo | Otro ángulo del §3.3, o "archivo" (aniversarios, remontadas históricas). |
+| **Sábado** | 🏆 récords | Experiencia de **récords del grupo** (§3.3): superlativos verificados + "récords que se pueden romper el lunes". |
+| **Domingo** | 🍿 chusmerío | Experiencia de **chusmerío** (§3.4): deudas, sequías, rivalidades — cierra con "mañana se juega". |
+| **Lunes** | 🔥 la previa | **La Previa** (§3.1): tabla + deudas ancladas al lunes + **padres e hijos (H2H en juego)** + pronóstico. |
+| **Martes** | 📰 crónica | **La crónica** (§3.2): si hay partida nueva de anoche en `games` → crónica épica + push. Si NO hay → push "¿Anoche se jugó? Cargá el resultado" con url a `https://abecedeefege.github.io/LunesDeUNO/index.html`. |
+| **Mié/Jue/Vie** | — | Sin push. Pasos 1–4 y 6–8 (proposals, compactación, reconciliación, memoria). |
 
-Anti-quemado: no repetir el mismo ángulo dos días seguidos ni más de dos
-veces por semana; si un formato midió `meh`/`no`, descansalo ≥4 días. Cada
-push del día a un destino DISTINTO del de ayer (página nueva o actualizada —
-nunca el mismo link dos días seguidos sin contenido nuevo).
+Anti-quemado: récords y chusmerío son slots fijos pero el CONTENIDO rota
+(récords clásicos / remontadas / archivo / horóscopo / feed 1ª persona /
+confesiones como suplemento del slot); nunca repetir el mismo sub-formato dos
+semanas seguidas si midió `meh`/`no`. Cada push a un destino distinto del de
+ayer (página nueva o actualizada — nunca el mismo link dos días seguidos sin
+contenido nuevo).
 
 - Si el historial muestra que el lunes NO se jugó, la crónica del martes **no
   se inventa**: registralo en learnings y adaptá la semana ("semana de
@@ -167,18 +168,22 @@ nunca el mismo link dos días seguidos sin contenido nuevo).
 - Si el domingo/lunes caen en feriado o el grupo avisó (via `answer`) que no
   se juega, el teaser/previa lo reflejan en vez de mentir entusiasmo.
 
-### 3.1 La Previa (domingo→lunes)
+### 3.1 La Previa (lunes)
 
 Página `engage/<YYYY-MM-DD-del-lunes>-la-previa.html`. Contenido con datos
 reales: top de la tabla anual y qué se juega hoy (¿arranca temporada? ¿se
 define?), deudas vigentes con días corriendo ("la picada de Tano cumple N
 días"), racha en juego ("nadie ganó 3 lunes seguidos — Cobra puede ser el
-primero"), pronóstico en broma (favorito por datos + cábala absurda), y CTAs
-de deuda (§5). Dos reglas fijadas por el usuario: (a) el copy de la página se
-ajusta al día de lectura ("hoy/mañana/el lunes se juega" — la previa se lee
-desde el teaser del domingo también); (b) **los contadores de días de deuda
-se anclan a la noche del LUNES** ("cuántos días cumple el lunes"), no al día
-de lectura, con la aclaración visible "contado a la noche del lunes X".
+primero"), **sección "padres e hijos"** (pedida por el usuario: 2-3 mano a
+mano del año con dominio marcado, contando quién terminó ARRIBA de quién por
+posiciones de cada fecha compartida — "Gordo padre de Mac 9-1" — eligiendo
+dominios que se puedan dar vuelta o consolidar ESTA fecha; recalcular los
+pares cada semana), pronóstico en broma (favorito por datos + cábala
+absurda), y CTAs de deuda (§5). Reglas fijadas por el usuario: (a) el copy de
+la página se ajusta al día de lectura ("hoy/mañana/el lunes se juega"); (b)
+**los contadores de días de deuda se anclan a la noche del LUNES** ("cuántos
+días cumple el lunes"), no al día de lectura, con la aclaración visible
+"contado a la noche del lunes X".
 
 ### 3.2 La Crónica (martes)
 
@@ -189,23 +194,24 @@ verificables (multas, cortes, el score más alto), qué cambió en la tabla anua
 y en la temporada. Estética tabloide/diario deportivo. El título del push
 lleva el gancho real ("Cobra otra vez", "PT rompió la sequía").
 
-### 3.3 Mitad de semana (jueves) — ángulos rotativos
+### 3.3 Récords (sábado)
 
-Elegí según learnings (qué convirtió) y descanso de formatos (no repetir el
-mismo ángulo 2 jueves seguidos):
+Página `engage/<YYYY-MM-DD-del-sábado>-records.html`. Superlativos 100%
+verificados recalculados de `games`: peor partida del año, multa récord,
+sequías, presencia perfecta, más últimos puestos, remontadas. Cierre fijo:
+**"récords que se pueden romper el lunes"** (alimenta la anticipación).
+Sub-formatos para rotar si el clásico se quema: especial remontadas, archivo
+/aniversarios de fechas históricas, 🔮 horóscopo unístico (qué carta es cada
+jugador — la carta es humor, la justificación son números reales).
 
-- **🍿 Chusmerío de la mesa**: deudas impagas con días contados, sequías,
-  rivalidades H2H ("Gordo terminó arriba de Mac 9 de 10 veces"), la fecha
-  fantasma — TODO recalculado de `games`.
-- **🏆 Récords del grupo**: superlativos verificables (peor partida del año,
-  multa más grande, presencia perfecta, remontadas).
-- **🔮 Horóscopo unístico**: qué carta es cada jugador esta semana — la carta
-  es humor, la justificación son sus números reales.
-- **📱 Feed**: los jugadores o las cartas postean en 1ª persona ("soy el +4 y
-  el lunes me usaron 3 veces contra Naso" solo si es verificable; si no, el
-  post habla de la tabla).
-- **🎤 Confesiones del mazo**: el mazo/las cartas confiesan sobre resultados
-  reales.
+### 3.4 Chusmerío (domingo)
+
+Página `engage/<YYYY-MM-DD-del-domingo>-chusmerio.html`. Tabloide: deudas
+impagas con días contados (acá el conteo va al día de lectura, "y contando"),
+rivalidades H2H, sequías, la fecha fantasma, la interna de la tabla — TODO
+recalculado de `games`. Cierre fijo: **"mañana se juega"**. Sub-formatos para
+rotar: 📱 feed (jugadores/cartas postean en 1ª persona, solo hechos
+verificables), 🎤 confesiones del mazo sobre resultados reales.
 
 ## 4. Contrato de la página de experiencia (obligatorio, completo)
 
