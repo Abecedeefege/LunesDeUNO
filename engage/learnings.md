@@ -78,7 +78,9 @@ mc desuscripto con link pendiente). PARA LA CORRIDA DEL SÁBADO 04/07:
   a elegir el mismo apodo: ojo con la colisión al leer señales.
 - **La previa es día-consciente** (JS ajusta "hoy/mañana/el lunes" solo,
   override ?fecha=): la corrida del domingo NO reescribe copy por día, solo
-  refresca datos si cambiaron.
+  refresca datos si cambiaron. Y los **contadores de deuda van anclados a la
+  noche del lunes** (Tano 13, Mac 6 al 6/7) — regla fijada por Andrés, ya
+  bakeada en el comando §3.1. NO volverlos a "días al momento de lectura".
 - **proximos.html es el CMS de Andrés**: muestra veredicto de revisión por
   landing (eventos en vivo + proposals.json) y colapsa las enviadas. Al
   cambiar estados en proposals.json, ese view se actualiza solo.

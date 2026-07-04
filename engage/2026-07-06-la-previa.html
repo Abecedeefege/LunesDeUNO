@@ -95,6 +95,7 @@
 
   <div class="card">
     <h2>💸 El conteo de la vergüenza</h2>
+    <div style="font-size:.72rem;color:#8f8f9c;margin:-.2rem 0 .6rem;">contado a la noche del lunes 06/07 — el día que importa</div>
     <div class="debt">
       <div class="days"><span data-since="2026-06-23">–</span><small>DÍAS</small></div>
       <div class="what"><b>Tano</b> debe postre/picada desde el <b>23/6</b>.
@@ -168,10 +169,13 @@
   </div>
 
 <script>
-  // Contadores de deuda en vivo: la página nunca miente aunque pasen días.
+  // Contadores de deuda ANCLADOS al día del partido: la previa habla del
+  // lunes, así que el conteo asume el lunes aunque la leas el domingo
+  // (pedido de Andrés 4/7 — "cuántos días cumple la deuda EL LUNES").
+  var GAME_NIGHT = new Date('2026-07-06T00:00:00-03:00');
   document.querySelectorAll('[data-since]').forEach(function (el) {
     var since = new Date(el.getAttribute('data-since') + 'T00:00:00-03:00');
-    el.textContent = Math.max(0, Math.floor((Date.now() - since) / 86400000));
+    el.textContent = Math.max(0, Math.round((GAME_NIGHT - since) / 86400000));
   });
 
   // Copy según el día: la misma página sirve el viernes (welcome), el domingo

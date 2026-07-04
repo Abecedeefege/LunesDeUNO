@@ -174,7 +174,11 @@ reales: top de la tabla anual y qué se juega hoy (¿arranca temporada? ¿se
 define?), deudas vigentes con días corriendo ("la picada de Tano cumple N
 días"), racha en juego ("nadie ganó 3 lunes seguidos — Cobra puede ser el
 primero"), pronóstico en broma (favorito por datos + cábala absurda), y CTAs
-de deuda (§5).
+de deuda (§5). Dos reglas fijadas por el usuario: (a) el copy de la página se
+ajusta al día de lectura ("hoy/mañana/el lunes se juega" — la previa se lee
+desde el teaser del domingo también); (b) **los contadores de días de deuda
+se anclan a la noche del LUNES** ("cuántos días cumple el lunes"), no al día
+de lectura, con la aclaración visible "contado a la noche del lunes X".
 
 ### 3.2 La Crónica (martes)
 
