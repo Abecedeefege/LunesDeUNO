@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-04T01:30:00-03:00",
+  "_updated_at": "2026-07-04T11:20:00-03:00",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -140,10 +140,11 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/index.html",
       "send_at": "2026-07-07T14:00:00-03:00",
       "expires_at": "2026-07-07T23:00:00-03:00",
-      "status": "pending",
+      "status": "draft",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03"
+      "created_by": "primer-ciclo-manual 2026-07-03",
+      "hold_reason": "Andres revisa la cronica con los puntos del lunes ANTES de enviar (pedido 04/07)"
     },
     {
       "id": "2026-07-09-a",

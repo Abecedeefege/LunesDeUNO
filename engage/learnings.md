@@ -53,13 +53,29 @@ fuerte que en un catálogo. A validar con dwell/reacción/answers de la semana 1
   (`2026-07-09-a`) quedó `cancelled`.
 - Páginas vivas: `2026-07-04-records.html`, `2026-07-05-chusmerio.html`,
   `2026-07-06-la-previa.html`. Las bienvenidas del viernes ya salieron todas.
-- ⚠️ Corrida del SÁBADO y DOMINGO: la cola de su día YA está encolada —
+- ✅ APROBACIONES por chat de Andrés (04/07 11:00): **los pushes de sáb, dom
+  y lun quedan aprobados** — salen solos a las 14:00, no tocar. Récords
+  además promovida (botón + chat).
+- ⚠️ Corrida del DOMINGO: la cola del día YA está encolada y aprobada —
   verificar/reconciliar, no duplicar. OJO: el chusmerío se renombró de
   2026-07-09 a 2026-07-05 — los eventos engagement viejos con slug
-  `2026-07-09-chusmerio` (visitas del viernes) son de la misma página.
-- ⚠️ Corrida del MARTES 07/07: si hay partida nueva del lunes en `games`,
-  crear la crónica y REEMPLAZAR el push `2026-07-07-a` (título/cuerpo/url)
-  antes de las 14:00. Si no se jugó, dejarlo y registrar "semana congelada".
+  `2026-07-09-chusmerio` son de la misma página.
+- 🛑 PROTOCOLO DEL MARTES 07/07 (pedido de Andrés): la crónica se revisa
+  ANTES de enviarse. La corrida del martes: (1) si hay partida nueva del
+  lunes en `games`, crear la página de la crónica con los datos reales,
+  actualizar el item `2026-07-07-a` (título/cuerpo/url apuntando a la
+  crónica) pero DEJARLO en `status:"draft"`; (2) commitear para que Andrés
+  la vea en Pages/proximos.html; (3) reportar. El push NO sale hasta que
+  Andrés dé el OK por chat (alguien con acceso lo pasa a `pending`). Sin OK
+  antes de las 14:00 → no sale nada ese día. Si el lunes no se jugó, ídem
+  con el recordatorio en draft.
+- ⚠️ La corrida del SÁBADO 04/07 (06:09) NO dejó commits. Hipótesis: la
+  allowlist de .claude/settings.json no cubre comandos que el procedimiento
+  usa (git pull, python3, date) y la sesión fresca pudo trabarse en un
+  permiso. El trabajo del sábado lo hizo la sesión interactiva. Si la
+  corrida del DOMINGO tampoco committea: revisar su sesión en claude.ai/code
+  y que Andrés amplíe la allowlist (el clasificador no deja que un agente
+  se la amplíe solo).
 - Miércoles a viernes: sin pushes (cadencia nueva). Solo gestión/memoria.
 
 ## 🔭 Corrida de HOY (2026-07-03, manual — actualizada a la noche)

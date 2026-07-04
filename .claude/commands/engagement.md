@@ -332,6 +332,14 @@ Campo opcional `"devices": ["apodo", ...]`: el push va SOLO a esos
 dispositivos (ej. una bienvenida a un socio nuevo). Sin el campo, va a todos
 los activos — el caso normal de la semana editorial.
 
+Estado especial `"draft"`: borrador que el dispatcher IGNORA (solo procesa
+`pending`). Usalo cuando el usuario pidió revisar el contenido ANTES de que
+salga: creá la experiencia, dejá el push en `draft` con un `hold_reason`, y
+reportalo. SOLO el usuario (por chat o pedido directo) convierte
+`draft`→`pending`; si el día pasa sin OK, el push no sale (mejor silencio) y
+lo limpiás en la corrida siguiente. En proximos.html los drafts se ven como
+"⏸ BORRADOR".
+
 Reglas de copy: posesivo + dato específico gana ("La picada de Tano cumple 13
 días" > "hay deudas pendientes"). El copy CUMPLE lo que promete su url —
 nunca linkear al home "a ver qué hay" (la única excepción: el recordatorio de

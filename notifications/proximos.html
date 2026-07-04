@@ -22,6 +22,7 @@
   }
   .n.hist { border-left-color: #2a2a35; opacity: .8; }
   .n.hist.failed { border-left-color: #ED1C24; }
+  .n.draft { border-left-color: #FFDE00; }
   .when { font-size: .78rem; color: #FFDE00; font-weight: 700; letter-spacing: .5px; }
   .n.hist .when { color: #8f8f9c; }
   .t { font-size: .95rem; font-weight: 700; margin: .2rem 0 .15rem; }
@@ -93,8 +94,10 @@ function verdict(slug, events, proposals) {
 }
 
 function card(n, hist, badge) {
-  const cls = 'n' + (hist ? ' hist' : '') + (n.status === 'failed' ? ' failed' : '');
-  const when = hist
+  const cls = 'n' + (hist ? ' hist' : '') + (n.status === 'failed' ? ' failed' : '') + (n.status === 'draft' ? ' draft' : '');
+  const when = n.status === 'draft'
+    ? '⏸ BORRADOR ' + fmt(n.send_at) + ' — no sale sin OK de andres'
+    : hist
     ? (n.status === 'sent' ? '✓ enviado ' + fmt(n.sent_at) : n.status + (n.fail_reason ? ' · ' + esc(n.fail_reason) : ''))
     : '⏰ ' + fmt(n.send_at);
   const dev = Array.isArray(n.devices) && n.devices.length ? ' · solo: ' + n.devices.map(esc).join(', ') : '';
@@ -133,8 +136,8 @@ Promise.all([
   loadProposals(),
 ]).then(([q, events, proposals]) => {
   const ns = q.notifications || [];
-  const pend = ns.filter(n => n.status === 'pending').sort((a,b) => (a.send_at||'').localeCompare(b.send_at||''));
-  const hist = ns.filter(n => n.status !== 'pending').sort((a,b) => (b.sent_at||b.send_at||'').localeCompare(a.sent_at||a.send_at||''));
+  const pend = ns.filter(n => n.status === 'pending' || n.status === 'draft').sort((a,b) => (a.send_at||'').localeCompare(b.send_at||''));
+  const hist = ns.filter(n => n.status !== 'pending' && n.status !== 'draft').sort((a,b) => (b.sent_at||b.send_at||'').localeCompare(a.sent_at||a.send_at||''));
   const last = hist[0];
   const past = hist.slice(1);
 

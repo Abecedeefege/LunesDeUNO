@@ -5,12 +5,12 @@
       "title": "🏆 Récords del grupo (salón de la fama/vergüenza)",
       "page": "engage/2026-07-04-records.html",
       "created": "2026-07-03",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "El orgullo y los superlativos verificados convierten (prior §récords del playbook). El bloque 'récords que se pueden romper el lunes' alimenta la anticipación. Métrica: reacción + dwell.",
       "notified_by": [
         "2026-07-04-a"
       ],
-      "result_notes": null
+      "result_notes": "Aprobada por andres (boton 02:57Z) + chat 04/07. Promovida: la pagina queda. Reaccion love, answer si, dwell 73s."
     },
     {
       "id": "2026-07-06-la-previa",
@@ -22,7 +22,7 @@
       "notified_by": [
         "2026-07-06-a"
       ],
-      "result_notes": null
+      "result_notes": "Push aprobado por chat (Andres 04/07, \"aprobados hasta el lunes inclusive\"). Permanencia del formato: a decidir con botones."
     },
     {
       "id": "2026-07-05-chusmerio",
@@ -34,7 +34,7 @@
       "notified_by": [
         "2026-07-05-a"
       ],
-      "result_notes": null
+      "result_notes": "Push aprobado por chat (Andres 04/07). Permanencia del formato: a decidir con botones."
     }
   ]
 }
