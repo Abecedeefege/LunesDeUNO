@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-04T18:05:38.315Z",
+  "_updated_at": "2026-07-05T17:03:16.650Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -116,8 +116,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-05-chusmerio.html",
       "send_at": "2026-07-05T14:00:00-03:00",
       "expires_at": "2026-07-05T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-05T17:03:16.650Z",
       "fail_reason": null,
       "created_by": "primer-ciclo-manual 2026-07-03"
     },
