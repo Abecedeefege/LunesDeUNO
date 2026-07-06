@@ -134,6 +134,18 @@
       "created_by": "primer-ciclo-manual 2026-07-03"
     },
     {
+      "id": "2026-07-06-reenvio",
+      "title": "🔥 Hoy se juega.",
+      "body": "Arranca la T5: Cobra defiende la corona, Tano debe hace 13 días, Mac el doble… y Gordo puede adoptar a Mac (9-1). La previa:",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
+      "send_at": "2026-07-06T14:00:00-03:00",
+      "expires_at": "2026-07-06T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "reenvio-manual 2026-07-06 (la previa no le llego a todos; sin filtro devices = todos los activos)"
+    },
+    {
       "id": "2026-07-07-a",
       "title": "📋 ¿Cómo salió anoche?",
       "body": "Si la partida ya está cargada, la tabla habla sola. Si no, cargala antes de que los números se olviden.",
