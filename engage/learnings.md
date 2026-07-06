@@ -43,18 +43,22 @@ juega y Tano trae la picada, esperar el answer o la crónica lo confirma.
   arranca esta noche.**
 - Eventos `engagement`: 51, todos del 03–05/07 (nada para compactar hasta
   ~17/07). Queue: nada para limpiar hasta el 10/07 (sent del 03/07).
-- ⚠️→✅ **ROUTINE REPARADA el 06/07.** Las corridas programadas del 04, 05 y
-  06/07 fallaron TODAS con "Unknown command: /engagement": el trigger viejo
-  (`trig_01UmgygfzHFXbiFqP1Kg8kF5`, borrado) disparaba sesiones nuevas SIN el
-  repo clonado (workspace vacío → el comando no existe). La hipótesis previa
-  (allowlist) era incorrecta. Trigger nuevo:
-  `trig_01L9huoaXgfZkNbPGxef2XzS` — mismo cron 0 9 * * * UTC (06:00 UY),
-  sesión nueva, notificación push al terminar, y prompt en texto plano que
-  clona el repo si falta y lee `.claude/commands/engagement.md` directo si el
-  slash command no está registrado. Detalle en engage/ROUTINE.md. Riesgo
-  residual: si la sesión fresca no tiene credenciales de git, el push a main
-  falla — el prompt exige reportarlo explícitamente; mirar la corrida del
-  07/07.
+- 🔴 **CAUSA RAÍZ CONFIRMADA (06/07) — la routine necesita fix por UI, no por MCP.**
+  Las corridas del 04, 05 y 06/07 murieron con "Unknown command: /engagement".
+  Diagnóstico verificado comparando configs de triggers: **los triggers creados
+  por MCP (`create_trigger`, `created_via: meta_mcp`) NO adjuntan el repo como
+  `source`.** La sesión fresca arranca con el workspace VACÍO y sin credenciales
+  de push a main. Los triggers que SÍ funcionan (el viejo `Claudio_LunesDeUNO`,
+  Rugby, AI-radar, Gardening) son `created_via: http_api` = creados desde la UI
+  de claude.ai/code, y todos tienen `sources:[git_repository]` + `outcomes` con
+  branch. El trigger v2 `trig_01L9huoaXgfZkNbPGxef2XzS` (mío, MCP) le puso al
+  prompt "cloná el repo vos mismo": eso arregla el clone (repo público) pero
+  NO da permiso de push → el commit nunca aterriza. Test disparado a mano
+  12:53Z: 0 commits tras 50 min. **FIX REAL (solo lo puede hacer Andrés): borrar
+  el trigger v2 y recrear la routine desde la UI (Routines → New) con el entorno
+  LunesDeUNO y el repo como source; el prompt robusto sirve igual.** Hasta que
+  eso pase, la routine diaria NO va a poder commitear sola: el contenido lo
+  sostiene esta sesión persistente (safety net) o una corrida manual.
 - El contenido del finde salió igual porque estaba pre-armado del 03–04/07 y
   el dispatcher (GitHub Actions) es independiente de la routine.
 
