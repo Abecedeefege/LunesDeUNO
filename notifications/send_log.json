@@ -125,6 +125,41 @@
       "device": "andres",
       "ts": "2026-07-05T17:03:16.650Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-a",
+      "device": "negro",
+      "ts": "2026-07-06T17:19:27.169Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-a",
+      "device": "mata",
+      "ts": "2026-07-06T17:19:27.245Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-a",
+      "device": "cobra",
+      "ts": "2026-07-06T17:19:27.306Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-a",
+      "device": "pt",
+      "ts": "2026-07-06T17:19:27.424Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-a",
+      "device": "pt",
+      "ts": "2026-07-06T17:19:27.653Z",
+      "status_code": 201
     }
   ]
 }
