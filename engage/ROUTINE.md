@@ -1,11 +1,24 @@
 # Routine del agente /engagement
 
-## ✅ ESTADO: ACTIVA desde el 2026-07-03
+## ✅ ESTADO: ACTIVA — trigger v2 desde el 2026-07-06
 
-- Trigger: `trig_01UmgygfzHFXbiFqP1Kg8kF5` ("LunesDeUNO — /engagement diario 06:00 UY")
+- Trigger: `trig_01L9huoaXgfZkNbPGxef2XzS` ("LunesDeUNO — engagement diario
+  06:00 UY (v2)"), con notificación push al dueño al terminar cada corrida.
 - Cron: `0 9 * * *` **UTC** = 06:00 America/Montevideo (la plataforma suma
-  unos minutos de jitter; la primera corrida quedó para el 04/07 ~06:08).
-- Sesión nueva por corrida, prompt: `/engagement`.
+  unos minutos de jitter).
+- Sesión nueva por corrida. Prompt: texto plano robusto (NO el slash `/engagement`
+  pelado): clona el repo si el workspace arranca vacío y, si el slash command
+  no está registrado, lee `.claude/commands/engagement.md` y lo sigue directo.
+
+### ⚠️ Historia: por qué v2 (2026-07-06)
+
+El trigger original (`trig_01UmgygfzHFXbiFqP1Kg8kF5`, creado 03/07, borrado
+06/07) tenía prompt `/engagement` a secas y sus sesiones nuevas arrancaban
+SIN el repo clonado (sin `sources` en el job): workspace vacío → el slash
+command no existe → "Unknown command: /engagement" → corrida muerta. Fallaron
+así las corridas del 04, 05 y 06/07 (el contenido salió igual porque estaba
+pre-armado y el dispatcher de Actions es independiente). Si una corrida v2
+falla, mirar: (a) ¿clonó el repo?, (b) ¿pudo pushear a main (credenciales)?
 - Se administra desde claude.ai/code → Routines (pausar/editar/borrar), o
   pidiéndoselo a Claude en una sesión del entorno (tools `list_triggers` /
   `update_trigger` / `delete_trigger`). NO crear una segunda: revisar

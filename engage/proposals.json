@@ -17,24 +17,24 @@
       "title": "🔥 La Previa (cartelera del lunes: tabla + deudas + padres/hijos + pronóstico)",
       "page": "engage/2026-07-06-la-previa.html",
       "created": "2026-07-03",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "La anticipación del lunes convierte: tabla real + conteo de deudas en vivo + pronóstico en broma genera reacción 😍 y answers de deuda antes de la partida. Métrica: click del push dom/lun + ≥1 answer de deuda.",
       "notified_by": [
         "2026-07-06-a"
       ],
-      "result_notes": "Push aprobado por chat (Andres 04/07, \"aprobados hasta el lunes inclusive\"). Permanencia del formato: a decidir con botones."
+      "result_notes": "Aprobada por andres (boton proposal_approved 04/07 13:56Z) + reaccion love + answer si. Promovida 06/07: la pagina queda. Dwell alto (93-124s en visitas del 04/07)."
     },
     {
       "id": "2026-07-05-chusmerio",
       "title": "🍿 Chusmerío de la mesa (tabloide dominical con datos verificados)",
       "page": "engage/2026-07-05-chusmerio.html",
       "created": "2026-07-03",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "El chisme sobre gente real de la mesa es el ángulo más fuerte del sistema; como cierre del domingo alimenta la anticipación del lunes. Métrica: dwell alto + reacción 😍 + answer de la fecha fantasma.",
       "notified_by": [
         "2026-07-05-a"
       ],
-      "result_notes": "Push aprobado por chat (Andres 04/07). Permanencia del formato: a decidir con botones."
+      "result_notes": "Aprobada por andres (boton proposal_approved 05/07 19:45Z tras click del push) + reaccion love + answer si + dwell 39s. Promovida 06/07: la pagina queda. Ya tenia approve del 04/07 con el slug viejo 2026-07-09-chusmerio."
     }
   ]
 }
