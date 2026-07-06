@@ -86,12 +86,21 @@ routine nueva disparado a demanda. Mañana 06:02 UY corre sola: verificar que
 haya commit de la corrida del martes; si no lo hay, revisar la sesión de la
 routine en claude.ai/code (¿push con credenciales?).
 
-- 📱 **Prototipo pedido por Andrés (06/07): `engage/prototipo-previa-ig.html`**
-  — versión "instagram-like" de la previa (feed + stories + carrusel). NO es
-  editorial: no registrarlo en proposals, no encolarle pushes, no borrarlo por
-  efímero, no linkearlo desde experiencias. Es material de referencia de
-  diseño; solo Andrés decide su futuro. Si gusta, el formato "Lunesgram" puede
-  ser un sub-formato rotativo del domingo (feed 1ª persona ya estaba en TODO).
+- 🎨 **DIRECCIÓN DE DISEÑO FIJADA POR ANDRÉS (06/07, vinculante):** las
+  experiencias deben ser INMERSIVAS y parecer apps nuevas/nativas — nivel del
+  formato "Lunesgram" (feed IG con stories+visor, carrusel, double-tap like,
+  micro-animaciones, encuestas, humor en los detalles). **La referencia es
+  `engage/2026-07-06-la-previa.html`**: Andrés vio el prototipo y pidió que
+  REEMPLACE a la previa clásica ("IMPRESIONANTE… así deben ser las
+  experiencias"). Al construir experiencias nuevas: shell de app (top bar,
+  stories, bottom nav), datos reales adentro de la UI, contrato engage.js
+  integrado con estética nativa (botones pill, no forms), y una cuenta de
+  humor tipo "patrocinado". No repetir Lunesgram idéntico cada día: es la
+  VARA de calidad, el skin puede variar (otras apps nativas: spotify-like,
+  netflix-like, whatsapp-like, tinder-like…).
+- El viejo `engage/prototipo-previa-ig.html` quedó como redirect a la previa
+  oficial (no borrar el archivo hasta pasada la semana: hay un chat de Andrés
+  con esa URL).
 
 ## TODO / ángulos sin usar
 

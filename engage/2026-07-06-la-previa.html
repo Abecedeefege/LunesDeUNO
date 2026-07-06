@@ -5,212 +5,858 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>🔥 La Previa — Lunes 06.07</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #000; --surface: #000; --line: #262626; --txt: #fafafa;
+    --txt2: #a8a8a8; --blue: #0095f6; --heart: #ff3040;
+    --uno-r: #ED1C24; --uno-y: #FFDE00; --uno-g: #00A651; --uno-b: #0072BC;
+    --ring: conic-gradient(from 210deg, #f9ce34, #ee2a7b, #6228d7, #f9ce34);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
   body {
-    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    padding: 1rem 1rem 2rem;
+    background: #0d0d12; color: var(--txt);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex; flex-direction: column; align-items: center; min-height: 100dvh;
   }
-  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
-  .marquee {
-    background: linear-gradient(135deg, #ED1C24 0%, #7a0e12 100%);
-    border-radius: 16px; padding: 1.2rem 1rem; text-align: center; margin-bottom: 1rem;
-    border: 2px solid #FFDE00; box-shadow: 0 0 30px rgba(237,28,36,.35);
+  a.back { width: 100%; max-width: 470px; display: block; padding: .55rem .9rem;
+    color: var(--uno-y); text-decoration: none; font-weight: 700; font-size: .82rem; }
+
+  .app {
+    width: 100%; max-width: 470px; background: var(--bg); min-height: 92dvh;
+    border: 1px solid var(--line); border-radius: 18px; overflow: hidden; position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6); margin-bottom: 1.2rem;
   }
-  .marquee .kicker { font-size: .75rem; letter-spacing: 3px; color: #FFDE00; font-weight: 800; }
-  .marquee h1 { font-size: 2rem; font-weight: 900; margin: .2rem 0; text-transform: uppercase; }
-  .marquee .sub { font-size: .95rem; color: #ffe9ea; }
-  .card {
-    background: #17171f; border: 1px solid #2a2a35; border-radius: 14px;
-    padding: 1rem; margin-bottom: 1rem;
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .7rem .9rem .5rem; position: sticky; top: 0; z-index: 30;
+    background: linear-gradient(#000 82%, transparent);
   }
-  h2 { font-size: 1.02rem; color: #FFDE00; margin-bottom: .6rem; letter-spacing: .5px; }
-  ul.stakes { list-style: none; font-size: .92rem; line-height: 1.75; }
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
-  th { text-align: left; color: #8f8f9c; font-size: .72rem; letter-spacing: 1px; padding: .25rem .3rem; border-bottom: 1px solid #2a2a35; }
-  td { padding: .34rem .3rem; border-bottom: 1px solid #1f1f28; }
-  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  tr.lider td { color: #FFDE00; font-weight: 700; }
-  tr.zona td { color: #ff9a9e; }
-  .face { width: 22px; height: 22px; border-radius: 50%; vertical-align: -6px; margin-right: .35rem; border: 1.5px solid #2a2a35; }
-  .debt { display: flex; gap: .8rem; align-items: center; background: #0d0d12; border: 1px dashed #ED1C24; border-radius: 12px; padding: .7rem .8rem; margin-bottom: .7rem; }
-  .debt .days { font-size: 1.9rem; font-weight: 900; color: #ED1C24; min-width: 64px; text-align: center; line-height: 1; }
-  .debt .days small { display: block; font-size: .6rem; letter-spacing: 1px; color: #8f8f9c; font-weight: 600; margin-top: .2rem; }
-  .debt .what { font-size: .88rem; line-height: 1.45; }
-  .debt .what b { color: #FFDE00; }
-  .qs { margin-top: .7rem; font-size: .85rem; color: #b9b9c4; }
-  .qs button, .react button, .cta button, .engage-actions button {
-    margin: .35rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
-    background: #22222c; color: #f2f2f2; font-size: .9rem; font-weight: 600; cursor: pointer;
+  .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: -.5px;
+    font-family: 'Snell Roundhand','Brush Script MT','Segoe Script',cursive; }
+  .logo b { background: linear-gradient(90deg,#ED1C24,#FFDE00,#00A651,#0072BC);
+    -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; }
+  .topbar .icons { display: flex; gap: 1.1rem; align-items: center; }
+  .icon { width: 24px; height: 24px; position: relative; color: var(--txt); }
+  .icon svg { width: 100%; height: 100%; display: block; }
+  .badge { position: absolute; top: -5px; right: -7px; background: var(--heart); color: #fff;
+    font-size: .58rem; font-weight: 700; border-radius: 99px; padding: 1px 4.5px; }
+  .dot { position: absolute; top: -2px; right: 0; width: 8px; height: 8px; background: var(--heart); border-radius: 50%; }
+
+  /* ---------- stories ---------- */
+  .stories { display: flex; gap: .85rem; padding: .5rem .9rem .8rem; overflow-x: auto;
+    scrollbar-width: none; border-bottom: 1px solid var(--line); }
+  .stories::-webkit-scrollbar { display: none; }
+  .story { flex: 0 0 auto; width: 66px; text-align: center; cursor: pointer; }
+  .story .ring { width: 62px; height: 62px; border-radius: 50%; padding: 2.5px;
+    background: var(--ring); animation: ringspin 14s linear infinite; }
+  @keyframes ringspin { to { filter: hue-rotate(360deg); } }
+  .story .ring .inner { width: 100%; height: 100%; border-radius: 50%; padding: 2.5px; background: #000; }
+  .story img, .story .em { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+  .story .em { display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    background: radial-gradient(circle at 30% 25%, #3a0d10, #0d0d12); }
+  .story .nm { font-size: .66rem; color: var(--txt2); margin-top: .3rem; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; }
+  .story.live .nm { color: var(--txt); font-weight: 600; }
+  .story .liveb { font-size: .5rem; font-weight: 800; letter-spacing: 1px; background: var(--uno-r);
+    border-radius: 4px; padding: 1px 4px; display: inline-block; margin-top: -10px; position: relative; z-index: 2;
+    border: 2px solid #000; }
+
+  /* ---------- posts ---------- */
+  .post { border-bottom: 1px solid var(--line); padding-bottom: .4rem; opacity: 0; transform: translateY(14px);
+    transition: opacity .5s ease, transform .5s ease; }
+  .post.vis { opacity: 1; transform: none; }
+  .phead { display: flex; align-items: center; gap: .6rem; padding: .65rem .9rem; }
+  .phead .av { width: 34px; height: 34px; border-radius: 50%; padding: 2px; background: var(--ring); }
+  .phead .av img, .phead .av .em { width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+    border: 2px solid #000; display: block; }
+  .phead .av .em { display: flex; align-items: center; justify-content: center; font-size: .95rem;
+    background: #17171f; }
+  .phead .who { flex: 1; min-width: 0; }
+  .phead .u { font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: .25rem; }
+  .vrf { width: 12px; height: 12px; flex: 0 0 auto; }
+  .phead .s { font-size: .7rem; color: var(--txt2); }
+  .phead .more { color: var(--txt); font-weight: 800; letter-spacing: 1px; }
+
+  .media { position: relative; aspect-ratio: 4/5; background: #111; overflow: hidden; user-select: none; }
+  .media.sq { aspect-ratio: 1/1; }
+  .media.tall { aspect-ratio: auto; }
+  .slides { display: flex; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .slides::-webkit-scrollbar { display: none; }
+  .slide { flex: 0 0 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column;
+    justify-content: center; padding: 1.4rem 1.2rem; position: relative; overflow: hidden; }
+  .cnt { position: absolute; top: .7rem; right: .7rem; background: rgba(0,0,0,.6); font-size: .7rem;
+    padding: .2rem .55rem; border-radius: 99px; z-index: 3; }
+  .dots { display: flex; gap: .28rem; justify-content: center; padding: .55rem 0 .1rem; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: #4d4d4d; transition: background .2s, transform .2s; }
+  .dots i.on { background: var(--blue); transform: scale(1.15); }
+
+  .bigheart { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    pointer-events: none; z-index: 5; }
+  .bigheart svg { width: 96px; height: 96px; filter: drop-shadow(0 6px 18px rgba(0,0,0,.5));
+    transform: scale(0); opacity: 0; }
+  .bigheart.pop svg { animation: heartpop .9s cubic-bezier(.17,.89,.32,1.28); }
+  @keyframes heartpop { 15% { transform: scale(1.15); opacity: 1; } 30% { transform: scale(.95); opacity: 1; }
+    45% { transform: scale(1); opacity: 1; } 80% { transform: scale(1); opacity: 1; } 100% { transform: scale(.3) translateY(-30px); opacity: 0; } }
+
+  .actions { display: flex; align-items: center; gap: 1rem; padding: .55rem .9rem .1rem; }
+  .actions .right { margin-left: auto; }
+  .abtn { background: none; border: none; color: var(--txt); cursor: pointer; width: 26px; height: 26px; padding: 0; }
+  .abtn svg { width: 100%; height: 100%; display: block; transition: transform .15s; }
+  .abtn:active svg { transform: scale(.8); }
+  .abtn.liked { color: var(--heart); animation: likepop .35s cubic-bezier(.17,.89,.32,1.5); }
+  @keyframes likepop { 50% { transform: scale(1.25); } }
+  .likes { font-size: .82rem; font-weight: 600; padding: .45rem .9rem 0; }
+  .likes .avs { display: inline-flex; margin-right: .35rem; vertical-align: -4px; }
+  .likes .avs img { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid #000; margin-right: -6px; }
+  .cap { font-size: .82rem; padding: .3rem .9rem 0; line-height: 1.45; }
+  .cap b { font-weight: 600; }
+  .cap .tags { color: #e0f1ff; }
+  .cap .tags span { color: var(--blue); }
+  .viewall { font-size: .8rem; color: var(--txt2); padding: .35rem .9rem 0; display: block; }
+  .cmt { font-size: .8rem; padding: .28rem .9rem 0; line-height: 1.4; display: flex; gap: .45rem; }
+  .cmt img { width: 20px; height: 20px; border-radius: 50%; flex: 0 0 auto; margin-top: 1px; }
+  .cmt b { font-weight: 600; }
+  .cmt .h { color: var(--txt2); font-size: .72rem; margin-top: .1rem; }
+  .time { font-size: .68rem; color: var(--txt2); text-transform: uppercase; letter-spacing: .3px; padding: .45rem .9rem .35rem; }
+
+  /* ---------- preguntas reales (engage) ---------- */
+  .q { padding: .6rem .9rem 0; }
+  .q .qt { font-size: .84rem; font-weight: 600; margin-bottom: .1rem; }
+  .qbtns { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; padding-top: .45rem; }
+  .qbtns button {
+    background: #16181d; border: 1px solid #2f3138; color: var(--txt); cursor: pointer;
+    border-radius: 99px; padding: .5rem .95rem; font-size: .84rem; font-weight: 600;
+    transition: transform .12s, border-color .2s;
   }
-  .react button { font-size: 1.25rem; padding: .4rem .7rem; }
-  .react-hint, .q-hint, .engage-hint { display: block; font-size: .75rem; color: #8f8f9c; margin-top: .35rem; }
-  .fc { display: flex; gap: .7rem; align-items: center; margin-bottom: .65rem; }
-  .fc img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #FFDE00; }
-  .fc.threat img { border-color: #0072BC; }
-  .fc.chaos img { border-color: #00A651; }
-  .fc .t { font-size: .88rem; line-height: 1.4; }
-  .fc .t b { color: #FFDE00; }
-  .fine { color: #6b6b78; font-size: .72rem; margin-top: .5rem; line-height: 1.4; }
-  .engage-actions { border-top: 1px solid #2a2a35; padding-top: .8rem; }
+  .qbtns button:active { transform: scale(.95); }
+  .qbtns .q-hint, .qbtns .react-hint, .qbtns .engage-hint { flex-basis: 100%; font-size: .72rem; color: var(--txt2); }
+  .qbtns.emoji button { font-size: 1.25rem; padding: .42rem .75rem; }
+
+  /* ---------- content inside slides ---------- */
+  .kick { font-size: .68rem; font-weight: 800; letter-spacing: 3.5px; color: var(--uno-y); margin-bottom: .5rem; }
+  .hero-t { font-size: 2.7rem; font-weight: 900; line-height: 1.02; text-transform: uppercase; letter-spacing: -1px; }
+  .hero-s { margin-top: .7rem; font-size: .92rem; color: #ffeaea; line-height: 1.5; }
+  .hero-date { position: absolute; bottom: 1.1rem; left: 1.2rem; font-size: .72rem; letter-spacing: 2px;
+    color: rgba(255,255,255,.75); font-weight: 700; }
+  .g-red { background: radial-gradient(140% 110% at 15% 0%, #ff5a60 0%, #ED1C24 34%, #5c090d 100%); }
+  .g-ink { background: radial-gradient(130% 120% at 85% 10%, #1d2440 0%, #0e1120 55%, #05060c 100%); }
+  .g-gold { background: radial-gradient(130% 120% at 20% 0%, #4a3a05 0%, #171204 60%, #000 100%); }
+  .g-vio { background: radial-gradient(130% 130% at 80% 0%, #3c1e6e 0%, #190b33 55%, #06030f 100%); }
+
+  .slide.tabla { justify-content: center; padding: .9rem 1rem; }
+  .mini-table { width: 100%; border-collapse: collapse; font-size: .8rem; position: relative; z-index: 2; }
+  .mini-table th { text-align: left; color: rgba(255,255,255,.5); font-size: .58rem; letter-spacing: 1.5px;
+    padding: 0 .25rem .25rem; font-weight: 700; }
+  .mini-table th.num { text-align: right; }
+  .mini-table td { padding: .26rem .25rem; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .mini-table td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .mini-table img { width: 20px; height: 20px; border-radius: 50%; vertical-align: -5px; margin-right: .4rem;
+    border: 1.5px solid rgba(255,255,255,.25); }
+  .mini-table tr.led td { color: var(--uno-y); font-weight: 800; }
+  .mini-table tr.red td { color: #ff9a9e; }
+  .slide .foot { margin-top: .55rem; font-size: .6rem; color: rgba(255,255,255,.55); line-height: 1.45; }
+  .slide .foot b { color: rgba(255,222,0,.85); }
+
+  .stake { display: flex; gap: .6rem; font-size: .95rem; line-height: 1.5; margin: .55rem 0; align-items: flex-start; }
+  .stake .e { font-size: 1.2rem; }
+  .stake b { color: var(--uno-y); }
+
+  .debt-big { text-align: center; position: relative; z-index: 2; }
+  .debt-big .n { font-size: 6.2rem; font-weight: 900; line-height: 1; color: #fff;
+    text-shadow: 0 8px 40px rgba(237,28,36,.55); font-variant-numeric: tabular-nums; }
+  .debt-big .lbl { font-size: .8rem; letter-spacing: 5px; font-weight: 800; color: var(--uno-y); }
+  .debt-big .who { display: flex; align-items: center; justify-content: center; gap: .6rem; margin-top: 1rem; }
+  .debt-big .who img { width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid var(--uno-y); }
+  .debt-big .who .t { text-align: left; font-size: .88rem; line-height: 1.45; }
+  .debt-anchor { margin-top: .9rem; font-size: .64rem; color: rgba(255,255,255,.55); }
+  .debt-row { display: flex; align-items: center; gap: .7rem; background: rgba(255,255,255,.06);
+    border: 1px dashed rgba(237,28,36,.8); border-radius: 14px; padding: .7rem .8rem; margin-top: .7rem;
+    font-size: .84rem; line-height: 1.4; position: relative; z-index: 2; text-align: left; }
+  .debt-row img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--uno-r); }
+  .debt-row b { color: var(--uno-y); }
+
+  .h2h { position: relative; z-index: 2; margin: .65rem 0; }
+  .h2h .faces { display: flex; align-items: center; gap: .55rem; margin-bottom: .35rem; }
+  .h2h .faces img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff2; }
+  .h2h .faces img.win { border-color: var(--uno-y); }
+  .h2h .vs { font-size: .68rem; font-weight: 800; color: var(--txt2); letter-spacing: 1px; }
+  .h2h .lbl { font-size: .84rem; line-height: 1.45; margin-bottom: .4rem; }
+  .h2h .lbl b { color: var(--uno-y); }
+  .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 99px;
+    background: linear-gradient(90deg, var(--uno-y), var(--uno-r));
+    transition: width 1.1s cubic-bezier(.2,.7,.2,1); }
+  .h2h .score { font-size: .7rem; color: var(--txt2); margin-top: .25rem; font-variant-numeric: tabular-nums; }
+
+  .poll { position: relative; z-index: 2; }
+  .poll .opt { margin: .6rem 0; }
+  .poll .opt .row1 { display: flex; align-items: center; gap: .55rem; font-size: .88rem; margin-bottom: .35rem; }
+  .poll .opt img { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #fff2; }
+  .poll .opt b { color: #fff; }
+  .poll .opt .pct { margin-left: auto; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .poll .opt .bar i { background: linear-gradient(90deg, #34d399, var(--uno-g)); }
+  .poll .opt.o2 .bar i { background: linear-gradient(90deg, #7dd3fc, var(--uno-b)); }
+  .poll .opt.o3 .bar i { background: linear-gradient(90deg, #fda4af, var(--uno-r)); }
+
+  /* sponsored */
+  .sp-cta { display: flex; justify-content: space-between; align-items: center; background: #101623;
+    padding: .7rem .9rem; font-size: .84rem; font-weight: 600; border-top: 1px solid var(--line); cursor: pointer; }
+  .sp-cta span { color: var(--blue); }
+  .sp-media { aspect-ratio: 1/1; background:
+    radial-gradient(120% 100% at 80% 0%, #52320a 0%, #241503 55%, #0a0501 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    padding: 1.4rem; position: relative; overflow: hidden; }
+  .sp-media .plate { font-size: 4.2rem; animation: floaty 3.5s ease-in-out infinite; }
+  @keyframes floaty { 50% { transform: translateY(-9px) rotate(-3deg); } }
+  .sp-media h3 { font-size: 1.5rem; font-weight: 900; margin-top: .4rem; }
+  .sp-media p { font-size: .86rem; color: #ffe9c7; margin-top: .45rem; line-height: 1.5; max-width: 30ch; }
+
+  /* sugerencias */
+  .sugg { padding: .8rem 0 .9rem; border-bottom: 1px solid var(--line); }
+  .sugg h4 { font-size: .8rem; color: var(--txt2); padding: 0 .9rem .6rem; font-weight: 600; }
+  .sugg .rail { display: flex; gap: .7rem; overflow-x: auto; padding: 0 .9rem; scrollbar-width: none; }
+  .sugg .rail::-webkit-scrollbar { display: none; }
+  .scard { flex: 0 0 138px; border: 1px solid var(--line); border-radius: 12px; padding: .9rem .6rem .7rem;
+    text-align: center; background: #050505; }
+  .scard img { width: 62px; height: 62px; border-radius: 50%; border: 1px solid var(--line); }
+  .scard .u { font-size: .78rem; font-weight: 600; margin-top: .45rem; }
+  .scard .r { font-size: .66rem; color: var(--txt2); margin-top: .15rem; line-height: 1.35; min-height: 2.4em; }
+  .scard button { margin-top: .55rem; width: 100%; background: var(--blue); color: #fff; border: none;
+    border-radius: 8px; font-size: .76rem; font-weight: 700; padding: .42rem 0; cursor: pointer; }
+  .scard button.done { background: #1a1a1a; color: var(--txt2); }
+
+  .comment-bar { display: flex; align-items: center; gap: .6rem; padding: .5rem .9rem .8rem; }
+  .comment-bar img { width: 26px; height: 26px; border-radius: 50%; }
+  .comment-bar input { flex: 1; background: none; border: none; color: var(--txt); font-size: .82rem; outline: none; }
+  .comment-bar input::placeholder { color: var(--txt2); }
+
+  /* bottom nav */
+  .bnav { position: sticky; bottom: 0; display: flex; justify-content: space-around; align-items: center;
+    padding: .6rem 0 calc(.6rem + env(safe-area-inset-bottom)); background: rgba(0,0,0,.92);
+    backdrop-filter: blur(12px); border-top: 1px solid var(--line); z-index: 30; }
+  .bnav .icon { width: 25px; height: 25px; }
+  .bnav .me { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--txt); overflow: hidden; }
+  .bnav .me img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ---------- story viewer ---------- */
+  .viewer { position: fixed; inset: 0; background: #000; z-index: 100; display: none;
+    flex-direction: column; align-items: center; justify-content: center; }
+  .viewer.open { display: flex; }
+  .vstage { width: 100%; max-width: 470px; height: 100dvh; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; }
+  .vslide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+    padding: 4.6rem 1.6rem 5rem; opacity: 0; transition: opacity .25s; pointer-events: none; }
+  .vslide.on { opacity: 1; pointer-events: auto; }
+  .vslide .k { font-size: .7rem; font-weight: 800; letter-spacing: 3.5px; color: var(--uno-y); margin-bottom: .6rem; }
+  .vslide h2 { font-size: 2.2rem; font-weight: 900; line-height: 1.08; letter-spacing: -.5px; }
+  .vslide p { margin-top: .8rem; font-size: 1.02rem; line-height: 1.55; color: #f4f4f6; max-width: 34ch; }
+  .vslide p b { color: var(--uno-y); }
+  .vslide .huge { font-size: 5.6rem; font-weight: 900; line-height: 1; margin: .4rem 0 .1rem;
+    font-variant-numeric: tabular-nums; }
+  .vslide .sface { width: 76px; height: 76px; border-radius: 50%; border: 3px solid var(--uno-y); margin-bottom: .9rem; }
+  .vslide .fine2 { margin-top: 1rem; font-size: .66rem; color: rgba(255,255,255,.55); }
+  .vslide a.go { display: inline-block; margin-top: 1.3rem; background: #fff; color: #000; font-weight: 800;
+    text-decoration: none; padding: .75rem 1.3rem; border-radius: 99px; font-size: .9rem; }
+  .vprog { position: absolute; top: .7rem; left: .8rem; right: .8rem; display: flex; gap: 4px; z-index: 5; }
+  .vprog i { flex: 1; height: 2.5px; background: rgba(255,255,255,.3); border-radius: 99px; overflow: hidden; }
+  .vprog i b { display: block; height: 100%; width: 0; background: #fff; }
+  .vprog i.done b { width: 100%; }
+  .vprog i.run b { animation: prog 5s linear forwards; }
+  @keyframes prog { from { width: 0; } to { width: 100%; } }
+  .vhead { position: absolute; top: 1.35rem; left: .9rem; right: .9rem; display: flex; align-items: center;
+    gap: .55rem; z-index: 5; }
+  .vhead .em2 { width: 34px; height: 34px; border-radius: 50%; background: #17171f; display: flex;
+    align-items: center; justify-content: center; font-size: .95rem; border: 1.5px solid #fff5; }
+  .vhead .u { font-size: .82rem; font-weight: 600; }
+  .vhead .h { font-size: .76rem; color: rgba(255,255,255,.7); }
+  .vhead .x { margin-left: auto; background: none; border: none; color: #fff; font-size: 1.7rem;
+    line-height: 1; cursor: pointer; padding: .2rem .4rem; }
+  .vtap { position: absolute; inset: 0; display: flex; z-index: 4; }
+  .vtap .l { flex: 0 0 34%; } .vtap .r { flex: 1; }
+  .vreply { position: absolute; bottom: calc(1rem + env(safe-area-inset-bottom)); left: .9rem; right: .9rem;
+    display: flex; gap: .6rem; align-items: center; z-index: 5; }
+  .vreply input { flex: 1; background: transparent; border: 1.5px solid rgba(255,255,255,.5); border-radius: 99px;
+    color: #fff; padding: .68rem 1rem; font-size: .88rem; outline: none; }
+  .vreply input::placeholder { color: rgba(255,255,255,.6); }
+
+  /* toast */
+  .toast { position: fixed; bottom: 4.5rem; left: 50%; transform: translate(-50%, 20px); background: #fff;
+    color: #000; font-size: .84rem; font-weight: 600; padding: .7rem 1.1rem; border-radius: 12px;
+    opacity: 0; pointer-events: none; transition: all .3s cubic-bezier(.2,.7,.2,1); z-index: 200;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5); max-width: 88vw; text-align: center; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
+
   <a class="back" href="../index.html">← Lunes de UNO</a>
 
-  <div class="marquee">
-    <div class="kicker">LA PREVIA · TEMPORADA 5 · FECHA 1</div>
-    <h1 id="diaTitulo">Hoy se juega</h1>
-    <div class="sub">Lunes 06.07.2026 · la mesa manda, la picada es ley</div>
+  <div class="app">
+
+    <!-- ===== top bar ===== -->
+    <header class="topbar">
+      <div class="logo"><b>Lunesgram</b></div>
+      <div class="icons">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg><span class="dot"></span></span>
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.5 2.5 10.8 13.2M21.5 2.5 14.7 21.5l-3.9-8.3-8.3-3.9z"/></svg><span class="badge">3</span></span>
+      </div>
+    </header>
+
+    <!-- ===== stories ===== -->
+    <nav class="stories" id="stories">
+      <div class="story live" onclick="openStories()">
+        <div class="ring"><div class="inner"><div class="em">🔥</div></div></div>
+        <span class="liveb">PREVIA</span>
+        <div class="nm">lunesdeuno</div>
+      </div>
+      <div class="story" onclick="openStories(4)"><div class="ring"><div class="inner"><img src="../assets/faces/cobra.png" alt=""></div></div><div class="nm">cobra 👑</div></div>
+      <div class="story" onclick="openStories(1)"><div class="ring"><div class="inner"><img src="../assets/faces/pt.png" alt=""></div></div><div class="nm">pt</div></div>
+      <div class="story" onclick="openStories(2)"><div class="ring"><div class="inner"><img src="../assets/faces/tano.png" alt=""></div></div><div class="nm">tano 🧀</div></div>
+      <div class="story" onclick="openStories(3)"><div class="ring"><div class="inner"><img src="../assets/faces/mac.png" alt=""></div></div><div class="nm">mac</div></div>
+      <div class="story" onclick="openStories(3)"><div class="ring"><div class="inner"><img src="../assets/faces/gordo.png" alt=""></div></div><div class="nm">gordo</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/carucha.png" alt=""></div></div><div class="nm">carucha</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/mata.png" alt=""></div></div><div class="nm">mata</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/nachi.png" alt=""></div></div><div class="nm">nachi</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/gael.png" alt=""></div></div><div class="nm">gael</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/naso.png" alt=""></div></div><div class="nm">naso</div></div>
+      <div class="story" onclick="openStories()"><div class="ring"><div class="inner"><img src="../assets/faces/negro.png" alt=""></div></div><div class="nm">negro</div></div>
+    </nav>
+
+    <!-- ===== POST 1: carrusel la previa ===== -->
+    <article class="post">
+      <div class="phead">
+        <div class="av"><div class="em">🎴</div></div>
+        <div class="who">
+          <div class="u">lunesdeuno <svg class="vrf" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5 14.8 4l3.7-.5 1 3.6 3.3 1.8-1.5 3.4 1.5 3.4-3.3 1.8-1 3.6-3.7-.5L12 22.8 9.2 20.3l-3.7.5-1-3.6-3.3-1.8L2.7 12 1.2 8.6l3.3-1.8 1-3.6 3.7.5z"/><path fill="#fff" d="m10.6 15.6-2.9-2.9 1.2-1.2 1.7 1.7 4.5-4.5 1.2 1.2z"/></svg></div>
+          <div class="s">Temporada 5 · Fecha 1 · Montevideo</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+
+      <div class="media" data-dbl>
+        <div class="cnt"><span class="cur">1</span>/3</div>
+        <div class="slides" data-slides>
+          <div class="slide g-red">
+            <div class="kick">LA PREVIA · LUNES 06.07</div>
+            <div class="hero-t" id="diaTitulo">Hoy<br>se juega</div>
+            <div class="hero-s">Arranca la <b style="color:#FFDE00">Temporada 5</b>. Cobra defiende la corona, la mesa manda y la picada es ley.</div>
+            <div class="hero-date">T5 · F1 · 21:30 HS</div>
+          </div>
+          <div class="slide g-ink tabla">
+            <div class="kick">LA TABLA ANUAL · MENOS ES MEJOR</div>
+            <table class="mini-table">
+              <tr><th>#</th><th>JUGADOR</th><th class="num">PTS</th><th class="num">W</th></tr>
+              <tr class="led"><td>1</td><td><img src="../assets/faces/pt.png" alt="">PT</td><td class="num">4637</td><td class="num">1</td></tr>
+              <tr><td>2</td><td><img src="../assets/faces/gordo.png" alt="">Gordo</td><td class="num">4839</td><td class="num">2</td></tr>
+              <tr><td>3</td><td><img src="../assets/faces/cobra.png" alt="">Cobra</td><td class="num">4909</td><td class="num">4</td></tr>
+              <tr><td>4</td><td><img src="../assets/faces/carucha.png" alt="">Carucha</td><td class="num">5043</td><td class="num">2</td></tr>
+              <tr><td>5</td><td><img src="../assets/faces/gael.png" alt="">Gael</td><td class="num">5461</td><td class="num">1</td></tr>
+              <tr><td>6</td><td><img src="../assets/faces/nachi.png" alt="">Nachi</td><td class="num">5532</td><td class="num">2</td></tr>
+              <tr><td>7</td><td><img src="../assets/faces/mata.png" alt="">Mata</td><td class="num">5666</td><td class="num">0</td></tr>
+              <tr><td>8</td><td><img src="../assets/faces/tano.png" alt="">Tano</td><td class="num">5811</td><td class="num">1</td></tr>
+              <tr class="red"><td>9</td><td><img src="../assets/faces/mac.png" alt="">Mac</td><td class="num">5862</td><td class="num">0</td></tr>
+              <tr class="red"><td>10</td><td><img src="../assets/faces/naso.png" alt="">Naso</td><td class="num">5921</td><td class="num">1</td></tr>
+              <tr class="red"><td>11</td><td><img src="../assets/faces/negro.png" alt="">Negro</td><td class="num">6050</td><td class="num">1</td></tr>
+            </table>
+            <div class="foot">Manos + multas + cortes (−50) + falta · 15 fechas al 03/07 · <b>⚠️ Temporada 3 con datos incompletos</b></div>
+          </div>
+          <div class="slide g-gold">
+            <div class="kick">QUÉ SE JUEGA ESTA NOCHE</div>
+            <div class="stake"><span class="e">🏁</span><span><b>Arranca la T5</b> — la 4ª la ganó Cobra por 8 puntos.</span></div>
+            <div class="stake"><span class="e">👑</span><span><b>PT defiende la punta anual</b> con 4637, el más bajo del año.</span></div>
+            <div class="stake"><span class="e">🔥</span><span><b>Récord en juego:</b> nadie ganó 3 lunes seguidos en 2026.</span></div>
+            <div class="stake"><span class="e">🍮</span><span>El último de esta noche <b>paga postre o picada</b>.</span></div>
+          </div>
+        </div>
+        <div class="bigheart"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 21.35C6.4 17.36 2 13.9 2 9.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 10 3.5c0 4.4-4.4 7.86-10 11.85z"/></svg></div>
+      </div>
+      <div class="dots" data-dots><i class="on"></i><i></i><i></i></div>
+
+      <div class="actions">
+        <button class="abtn like" aria-label="Me gusta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></button>
+        <button class="abtn" aria-label="Comentar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg></button>
+        <button class="abtn" aria-label="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.5 2.5 10.8 13.2M21.5 2.5 14.7 21.5l-3.9-8.3-8.3-3.9z"/></svg></button>
+        <button class="abtn right" aria-label="Guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19 21.5 12 16.6 5 21.5V4A1.5 1.5 0 0 1 6.5 2.5h11A1.5 1.5 0 0 1 19 4z"/></svg></button>
+      </div>
+      <div class="likes"><span class="avs"><img src="../assets/faces/cobra.png" alt=""><img src="../assets/faces/naso.png" alt=""><img src="../assets/faces/gael.png" alt=""></span>Les gusta a <b>cobra</b> y <b><span class="lk">9</span> personas más</b></div>
+      <div class="cap"><b>lunesdeuno</b> Se terminó la espera. Esta noche arranca la T5 y hay corona, punta y postres en juego 🎴 <span class="tags"><span>#LunesDeUNO</span> <span>#LaPrevia</span> <span>#T5F1</span></span></div>
+      <span class="viewall">Ver los 23 comentarios</span>
+      <div class="cmt"><img src="../assets/faces/cobra.png" alt=""><div><b>cobra</b> la corona no se presta 👑<div class="h">hace 2 h · 6 Me gusta</div></div></div>
+      <div class="cmt"><img src="../assets/faces/mac.png" alt=""><div><b>mac</b> hoy arranca mi temporada. de verdad esta vez</div></div>
+      <div class="cmt"><img src="../assets/faces/gordo.png" alt=""><div><b>gordo</b> @mac tranquilo hijo, papá te lleva 🚗</div></div>
+      <div class="time">Hace 2 horas</div>
+    </article>
+
+    <!-- ===== POST 2: conteo de la vergüenza (con preguntas REALES) ===== -->
+    <article class="post">
+      <div class="phead">
+        <div class="av"><img src="../assets/faces/tano.png" alt=""></div>
+        <div class="who">
+          <div class="u">conteo.de.la.verguenza <svg class="vrf" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5 14.8 4l3.7-.5 1 3.6 3.3 1.8-1.5 3.4 1.5 3.4-3.3 1.8-1 3.6-3.7-.5L12 22.8 9.2 20.3l-3.7.5-1-3.6-3.3-1.8L2.7 12 1.2 8.6l3.3-1.8 1-3.6 3.7.5z"/><path fill="#fff" d="m10.6 15.6-2.9-2.9 1.2-1.2 1.7 1.7 4.5-4.5 1.2 1.2z"/></svg></div>
+          <div class="s">Auditoría de postres impagos</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+
+      <div class="media sq g-red" data-dbl style="display:flex;align-items:center;justify-content:center;">
+        <div class="debt-big">
+          <div class="n" data-count="13">0</div>
+          <div class="lbl">DÍAS SIN PICADA</div>
+          <div class="who">
+            <img src="../assets/faces/tano.png" alt="Tano">
+            <div class="t"><b>Tano</b> debe desde el <b>23/6</b>.<br>El 30/6 en Africa tuvo su chance…<br>y no la trajo.</div>
+          </div>
+          <div class="debt-row">
+            <img src="../assets/faces/mac.png" alt="Mac">
+            <span><b>Mac</b>: postre/picada (día <b>6</b>) + la <b>cena de la T4</b>. Doble deuda, situación inédita en 2026. Hoy puede saldar… o triplicar.</span>
+          </div>
+          <div class="debt-anchor">contado a la noche del lunes 06/07 — el día que importa</div>
+        </div>
+        <div class="bigheart"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 21.35C6.4 17.36 2 13.9 2 9.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 10 3.5c0 4.4-4.4 7.86-10 11.85z"/></svg></div>
+      </div>
+
+      <div class="actions">
+        <button class="abtn like" aria-label="Me gusta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></button>
+        <button class="abtn" aria-label="Comentar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg></button>
+        <button class="abtn" aria-label="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.5 2.5 10.8 13.2M21.5 2.5 14.7 21.5l-3.9-8.3-8.3-3.9z"/></svg></button>
+        <button class="abtn right" aria-label="Guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19 21.5 12 16.6 5 21.5V4A1.5 1.5 0 0 1 6.5 2.5h11A1.5 1.5 0 0 1 19 4z"/></svg></button>
+      </div>
+      <div class="likes"><span class="avs"><img src="../assets/faces/naso.png" alt=""><img src="../assets/faces/negro.png" alt=""></span>Les gusta a <b>naso</b> y <b><span class="lk">7</span> personas más</b></div>
+      <div class="cap"><b>conteo.de.la.verguenza</b> Día 13. La heladera del grupo sigue esperando 🧀⏳</div>
+
+      <div class="q">
+        <div class="qt">¿Tano trajo por fin la picada/el postre?</div>
+        <div class="qbtns">
+          <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','pagada',this)">Ya pagó ✅</button>
+          <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','sigue',this)">Todavía no 🧀⏳</button>
+          <span class="q-hint"></span>
+        </div>
+      </div>
+      <div class="q">
+        <div class="qt">¿Mac ya puso fecha para la cena de la T4?</div>
+        <div class="qbtns">
+          <button onclick="engageAnswer('deuda-mac-cena-t4','fecha_puesta',this)">Sí, hay fecha 📅</button>
+          <button onclick="engageAnswer('deuda-mac-cena-t4','sigue',this)">Ni idea de cuándo 🙄</button>
+          <span class="q-hint"></span>
+        </div>
+      </div>
+
+      <div class="cmt" style="padding-top:.6rem"><img src="../assets/faces/tano.png" alt=""><div><b>tano</b> ya está comprada, juro<div class="h">hace 1 h · 2 Me gusta</div></div></div>
+      <div class="cmt"><img src="../assets/faces/negro.png" alt=""><div><b>negro</b> @tano eso mismo dijiste el 30/6 en Africa</div></div>
+      <div class="time">Hace 3 horas</div>
+    </article>
+
+    <!-- ===== POST patrocinado (joda) ===== -->
+    <article class="post sp">
+      <div class="phead">
+        <div class="av"><div class="em">🧀</div></div>
+        <div class="who">
+          <div class="u">picadas.doña.deuda</div>
+          <div class="s">Publicidad</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+      <div class="sp-media">
+        <div class="plate">🧀🍖🫒</div>
+        <h3>¿Debés una picada<br>hace 13 días?</h3>
+        <p>En <b>Doña Deuda</b> la armamos por vos antes de que el conteo llegue a 20. Entrega el mismo lunes. Descuento "Tano": 13% off.</p>
+      </div>
+      <div class="sp-cta" onclick="toast('Tano ya la pidió… hace 13 días 🧀 (mentira, todavía no)')">
+        <span>Pedir ahora</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0095f6" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg>
+      </div>
+      <div class="likes" style="padding-top:.55rem"><b>2.847</b> Me gusta</div>
+      <div class="cap"><b>picadas.doña.deuda</b> El queso no se promete. Se trae. 🧀</div>
+      <div class="time">Publicidad · Hace 13 días (obvio)</div>
+    </article>
+
+    <!-- ===== POST 3: padres e hijos ===== -->
+    <article class="post">
+      <div class="phead">
+        <div class="av"><img src="../assets/faces/gordo.png" alt=""></div>
+        <div class="who">
+          <div class="u">padres.e.hijos.uno <svg class="vrf" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5 14.8 4l3.7-.5 1 3.6 3.3 1.8-1.5 3.4 1.5 3.4-3.3 1.8-1 3.6-3.7-.5L12 22.8 9.2 20.3l-3.7.5-1-3.6-3.3-1.8L2.7 12 1.2 8.6l3.3-1.8 1-3.6 3.7.5z"/><path fill="#fff" d="m10.6 15.6-2.9-2.9 1.2-1.2 1.7 1.7 4.5-4.5 1.2 1.2z"/></svg></div>
+          <div class="s">Registro civil del mano a mano 2026</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+
+      <div class="media sq g-vio" data-dbl style="display:flex;flex-direction:column;justify-content:center;padding:1.3rem 1.2rem;">
+        <div class="kick" style="position:relative;z-index:2">DOMINIOS EN JUEGO ESTA FECHA</div>
+        <div class="h2h">
+          <div class="faces"><img class="win" src="../assets/faces/gordo.png" alt=""><span class="vs">VS</span><img src="../assets/faces/mac.png" alt=""></div>
+          <div class="lbl"><b>Gordo padre de Mac: 9–1.</b> Una más hoy y la adopción sale sola.</div>
+          <div class="bar"><i data-w="90"></i></div>
+          <div class="score">arriba en 9 de 10 fechas compartidas</div>
+        </div>
+        <div class="h2h">
+          <div class="faces"><img class="win" src="../assets/faces/mata.png" alt=""><span class="vs">VS</span><img src="../assets/faces/tano.png" alt=""></div>
+          <div class="lbl"><b>Mata padre de Tano: 5–0.</b> Paternidad perfecta.</div>
+          <div class="bar"><i data-w="100"></i></div>
+          <div class="score">Tano jamás le terminó arriba</div>
+        </div>
+        <div class="h2h">
+          <div class="faces"><img class="win" src="../assets/faces/carucha.png" alt=""><span class="vs">VS</span><img src="../assets/faces/cobra.png" alt=""></div>
+          <div class="lbl"><b>Carucha 8–4 sobre Cobra.</b> El campeón también tiene padre.</div>
+          <div class="bar"><i data-w="67"></i></div>
+          <div class="score">arriba en 8 de 12 · hoy, revancha</div>
+        </div>
+        <div class="bigheart"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 21.35C6.4 17.36 2 13.9 2 9.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 10 3.5c0 4.4-4.4 7.86-10 11.85z"/></svg></div>
+      </div>
+
+      <div class="actions">
+        <button class="abtn like" aria-label="Me gusta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></button>
+        <button class="abtn" aria-label="Comentar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg></button>
+        <button class="abtn" aria-label="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.5 2.5 10.8 13.2M21.5 2.5 14.7 21.5l-3.9-8.3-8.3-3.9z"/></svg></button>
+        <button class="abtn right" aria-label="Guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19 21.5 12 16.6 5 21.5V4A1.5 1.5 0 0 1 6.5 2.5h11A1.5 1.5 0 0 1 19 4z"/></svg></button>
+      </div>
+      <div class="likes"><span class="avs"><img src="../assets/faces/gordo.png" alt=""><img src="../assets/faces/mata.png" alt=""></span>Les gusta a <b>gordo</b> y <b><span class="lk">5</span> personas más</b></div>
+      <div class="cap"><b>padres.e.hijos.uno</b> Mano a mano 2026: quién terminó arriba de quién, fecha por fecha. Todo se puede dar vuelta esta noche 👨‍👦</div>
+      <span class="viewall">Ver los 9 comentarios</span>
+      <div class="cmt"><img src="../assets/faces/gordo.png" alt=""><div><b>gordo</b> los papeles entran mañana a primera hora 📋<div class="h">hace 45 min · 4 Me gusta</div></div></div>
+      <div class="cmt"><img src="../assets/faces/tano.png" alt=""><div><b>tano</b> primero que venga Mata alguna vez (7 faltas), después hablamos</div></div>
+      <div class="time">Hace 4 horas</div>
+    </article>
+
+    <!-- ===== POST 4: pronóstico ===== -->
+    <article class="post">
+      <div class="phead">
+        <div class="av"><div class="em">🔮</div></div>
+        <div class="who">
+          <div class="u">pronosticos.uno <svg class="vrf" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5 14.8 4l3.7-.5 1 3.6 3.3 1.8-1.5 3.4 1.5 3.4-3.3 1.8-1 3.6-3.7-.5L12 22.8 9.2 20.3l-3.7.5-1-3.6-3.3-1.8L2.7 12 1.2 8.6l3.3-1.8 1-3.6 3.7.5z"/><path fill="#fff" d="m10.6 15.6-2.9-2.9 1.2-1.2 1.7 1.7 4.5-4.5 1.2 1.2z"/></svg></div>
+          <div class="s">Cero ciencia, puros números</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+
+      <div class="media sq g-ink" data-dbl style="display:flex;flex-direction:column;justify-content:center;padding:1.4rem 1.2rem;">
+        <div class="kick" style="position:relative;z-index:2">¿QUIÉN GANA ESTA NOCHE?</div>
+        <div class="poll">
+          <div class="opt">
+            <div class="row1"><img src="../assets/faces/cobra.png" alt=""><span><b>Cobra</b> — el favorito. Campeón vigente, 15/15 presencias</span><span class="pct" data-count="4">0</span></div>
+            <div class="bar"><i data-w="100"></i></div>
+          </div>
+          <div class="opt o2">
+            <div class="row1"><img src="../assets/faces/pt.png" alt=""><span><b>PT</b> — la amenaza. Ganó la última remontando desde el 5º</span><span class="pct" data-count="1">0</span></div>
+            <div class="bar"><i data-w="25"></i></div>
+          </div>
+          <div class="opt o3">
+            <div class="row1"><img src="../assets/faces/mac.png" alt=""><span><b>Mac</b> — la ley de los grandes números. 0 en 12… ¿hasta hoy?</span><span class="pct" data-count="0">0</span></div>
+            <div class="bar"><i data-w="4"></i></div>
+          </div>
+          <div style="margin-top:.9rem;font-size:.64rem;color:rgba(255,255,255,.55);position:relative;z-index:2">las barras son victorias 2026 reales, no votos — acá no se inventa nada</div>
+        </div>
+        <div class="bigheart"><svg viewBox="0 0 24 24"><path fill="#fff" d="M12 21.35C6.4 17.36 2 13.9 2 9.5A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 10 3.5c0 4.4-4.4 7.86-10 11.85z"/></svg></div>
+      </div>
+
+      <div class="actions">
+        <button class="abtn like" aria-label="Me gusta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></button>
+        <button class="abtn" aria-label="Comentar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg></button>
+        <button class="abtn" aria-label="Compartir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M21.5 2.5 10.8 13.2M21.5 2.5 14.7 21.5l-3.9-8.3-8.3-3.9z"/></svg></button>
+        <button class="abtn right" aria-label="Guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19 21.5 12 16.6 5 21.5V4A1.5 1.5 0 0 1 6.5 2.5h11A1.5 1.5 0 0 1 19 4z"/></svg></button>
+      </div>
+      <div class="likes"><span class="avs"><img src="../assets/faces/pt.png" alt=""><img src="../assets/faces/carucha.png" alt=""></span>Les gusta a <b>pt</b> y <b><span class="lk">8</span> personas más</b></div>
+      <div class="cap"><b>pronosticos.uno</b> El dato es el dato: nadie ganó 3 lunes seguidos en 2026. Cobra fue el último en intentarlo y PT lo bajó el 29/6 🎯</div>
+      <div class="cmt"><img src="../assets/faces/naso.png" alt=""><div><b>naso</b> falta mi opción: "naso gana y nadie lo vio venir"</div></div>
+      <div class="cmt"><img src="../assets/faces/nachi.png" alt=""><div><b>nachi</b> 2 victorias y ni una mención. el algoritmo me odia</div></div>
+      <div class="time">Hace 5 horas</div>
+      <div class="comment-bar">
+        <img src="../assets/faces/pt.png" alt="">
+        <input type="text" placeholder="Agregá un comentario…" onfocus="this.blur();toast('Los comentarios van en la mesa, esta noche 🎴')">
+      </div>
+    </article>
+
+    <!-- ===== POST 5: encuesta oficial (feedback REAL) ===== -->
+    <article class="post">
+      <div class="phead">
+        <div class="av"><div class="em">📋</div></div>
+        <div class="who">
+          <div class="u">lunesdeuno <svg class="vrf" viewBox="0 0 24 24"><path fill="#0095f6" d="M12 1.5 14.8 4l3.7-.5 1 3.6 3.3 1.8-1.5 3.4 1.5 3.4-3.3 1.8-1 3.6-3.7-.5L12 22.8 9.2 20.3l-3.7.5-1-3.6-3.3-1.8L2.7 12 1.2 8.6l3.3-1.8 1-3.6 3.7.5z"/><path fill="#fff" d="m10.6 15.6-2.9-2.9 1.2-1.2 1.7 1.7 4.5-4.5 1.2 1.2z"/></svg></div>
+          <div class="s">Encuesta oficial · tu voto SÍ cuenta</div>
+        </div>
+        <span class="more">···</span>
+      </div>
+
+      <div class="q">
+        <div class="qt">¿Qué tal estuvo la previa?</div>
+        <div class="qbtns emoji">
+          <button onclick="engageReact('2026-07-06-la-previa','love',this)">😍</button>
+          <button onclick="engageReact('2026-07-06-la-previa','like',this)">🙂</button>
+          <button onclick="engageReact('2026-07-06-la-previa','meh',this)">😐</button>
+          <button onclick="engageReact('2026-07-06-la-previa','no',this)">🙅</button>
+          <span class="react-hint"></span>
+        </div>
+      </div>
+
+      <div class="q">
+        <div class="qt">¿La previa todos los lunes?</div>
+        <div class="qbtns">
+          <button onclick="engageAnswer('2026-07-06-la-previa-suscripcion','si',this)">Sí, obvio</button>
+          <button onclick="engageAnswer('2026-07-06-la-previa-suscripcion','no',this)">No hace falta</button>
+          <span class="q-hint"></span>
+        </div>
+      </div>
+
+      <div class="q" style="padding-bottom:.6rem">
+        <div class="qt">¿Este formato Lunesgram merece quedarse?</div>
+        <div class="qbtns">
+          <button onclick="engageApprove('2026-07-06-la-previa',this)">✅ Que quede</button>
+          <button onclick="engageRejected('2026-07-06-la-previa',this)">✕ No me interesa</button>
+          <span class="engage-hint"></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===== sugerencias ===== -->
+    <section class="sugg">
+      <h4>Sugerencias para vos</h4>
+      <div class="rail">
+        <div class="scard">
+          <img src="../assets/faces/mac.png" alt="">
+          <div class="u">mac</div>
+          <div class="r">0 victorias en 12 fechas. Necesita apoyo emocional.</div>
+          <button onclick="follow(this)">Seguir</button>
+        </div>
+        <div class="scard">
+          <img src="../assets/faces/tano.png" alt="">
+          <div class="u">tano</div>
+          <div class="r">Sube contenido de picadas que nunca llegan.</div>
+          <button onclick="follow(this)">Seguir</button>
+        </div>
+        <div class="scard">
+          <img src="../assets/faces/naso.png" alt="">
+          <div class="u">naso</div>
+          <div class="r">Dueño del 648, el récord que nadie quiere.</div>
+          <button onclick="follow(this)">Seguir</button>
+        </div>
+        <div class="scard">
+          <img src="../assets/faces/mata.png" alt="">
+          <div class="u">mata</div>
+          <div class="r">7 faltas. Visto por última vez… se investiga.</div>
+          <button onclick="follow(this)">Seguir</button>
+        </div>
+      </div>
+    </section>
+
+    <div style="padding:1rem .9rem 1.4rem;font-size:.68rem;color:#565660;line-height:1.5;text-align:center">
+      Lunesgram · la previa oficial del lunes 06/07 · datos reales al 03/07 (15 fechas) · ⚠️ Temporada 3 con datos incompletos
+    </div>
+
+    <!-- ===== bottom nav ===== -->
+    <nav class="bnav">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6 2.8 10v11h6.4v-6.4h5.6V21h6.4V10z"/></svg></span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5.5 5.5"/></svg></span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m10 8.8 5.2 3.2L10 15.2z" fill="currentColor" stroke="none"/></svg></span>
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></span>
+      <span class="me"><img src="../assets/faces/pt.png" alt=""></span>
+    </nav>
   </div>
 
-  <div class="card">
-    <h2>⚔️ Qué se juega <span id="diaCuando">esta noche</span></h2>
-    <ul class="stakes">
-      <li>🏁 <b>Arranca la Temporada 5</b> (la 4ª la ganó Cobra… por 8 puntos).</li>
-      <li>👑 <b>PT defiende la punta anual</b>: 4637 puntos, el más bajo del año.</li>
-      <li>🔥 <b>Récord en juego:</b> nadie ganó 3 lunes seguidos en 2026. Cobra fue el último en intentarlo (ganó el 8/6 y el 22/6; PT lo bajó el 29/6).</li>
-      <li>🍮 El último de <span id="diaPaga">esta noche</span> <b>paga postre o picada</b> — Tano y Mac saben de qué se trata.</li>
-    </ul>
-  </div>
+  <!-- ===== story viewer ===== -->
+  <div class="viewer" id="viewer" role="dialog" aria-label="Historias de la previa">
+    <div class="vstage">
+      <div class="vprog" id="vprog"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="vhead">
+        <div class="em2">🔥</div>
+        <div><div class="u">lunesdeuno</div></div>
+        <div class="h">hoy</div>
+        <button class="x" onclick="closeStories()" aria-label="Cerrar">×</button>
+      </div>
 
-  <div class="card">
-    <h2>📊 La tabla anual (menos es mejor)</h2>
-    <table>
-      <tr><th>#</th><th>Jugador</th><th class="num">Pts</th><th class="num">W</th></tr>
-      <tr class="lider"><td>1</td><td><img class="face" src="../assets/faces/pt.png" alt="">PT</td><td class="num">4637</td><td class="num">1</td></tr>
-      <tr><td>2</td><td><img class="face" src="../assets/faces/gordo.png" alt="">Gordo</td><td class="num">4839</td><td class="num">2</td></tr>
-      <tr><td>3</td><td><img class="face" src="../assets/faces/cobra.png" alt="">Cobra</td><td class="num">4909</td><td class="num">4</td></tr>
-      <tr><td>4</td><td><img class="face" src="../assets/faces/carucha.png" alt="">Carucha</td><td class="num">5043</td><td class="num">2</td></tr>
-      <tr><td>5</td><td><img class="face" src="../assets/faces/gael.png" alt="">Gael</td><td class="num">5461</td><td class="num">1</td></tr>
-      <tr><td>6</td><td><img class="face" src="../assets/faces/nachi.png" alt="">Nachi</td><td class="num">5532</td><td class="num">2</td></tr>
-      <tr><td>7</td><td><img class="face" src="../assets/faces/mata.png" alt="">Mata</td><td class="num">5666</td><td class="num">0</td></tr>
-      <tr><td>8</td><td><img class="face" src="../assets/faces/tano.png" alt="">Tano</td><td class="num">5811</td><td class="num">1</td></tr>
-      <tr class="zona"><td>9</td><td><img class="face" src="../assets/faces/mac.png" alt="">Mac</td><td class="num">5862</td><td class="num">0</td></tr>
-      <tr class="zona"><td>10</td><td><img class="face" src="../assets/faces/naso.png" alt="">Naso</td><td class="num">5921</td><td class="num">1</td></tr>
-      <tr class="zona"><td>11</td><td><img class="face" src="../assets/faces/negro.png" alt="">Negro</td><td class="num">6050</td><td class="num">1</td></tr>
-    </table>
-    <div class="fine">Puntaje oficial: manos + multas + cortes (−50) + penalización por falta. Al 03/07, 15 fechas jugadas.</div>
-  </div>
+      <div class="vslide g-red">
+        <div class="k">LA PREVIA · T5 · FECHA 1</div>
+        <h2 id="storyTitulo">HOY<br>SE JUEGA</h2>
+        <p>Lunes 06.07.2026. Arranca la <b>Temporada 5</b>: la mesa manda, la picada es ley y el último paga.</p>
+      </div>
+      <div class="vslide g-ink">
+        <div class="k">LA PUNTA ANUAL</div>
+        <img class="sface" src="../assets/faces/pt.png" alt="PT" style="border-color:#0072BC">
+        <h2>PT defiende<br>la cima</h2>
+        <p><b>4637 puntos</b>, el más bajo del año, con UNA sola victoria. El francotirador de la regularidad. Gordo (4839) y Cobra (4909) respiran atrás.</p>
+      </div>
+      <div class="vslide g-red">
+        <div class="k">EL CONTEO DE LA VERGÜENZA</div>
+        <div class="huge">13</div>
+        <h2>días sin picada</h2>
+        <p><b>Tano</b> debe desde el 23/6 — el 30/6 en Africa tuvo su chance y no la trajo. <b>Mac</b> acumula doble: postre (día 6) + la cena de la T4.</p>
+        <div class="fine2">contado a la noche del lunes 06/07 — el día que importa</div>
+      </div>
+      <div class="vslide g-vio">
+        <div class="k">PADRES E HIJOS</div>
+        <img class="sface" src="../assets/faces/gordo.png" alt="Gordo" style="border-color:#6366F1">
+        <h2>Gordo padre<br>de Mac: 9–1</h2>
+        <p>Arriba en 9 de las 10 fechas que compartieron. Una más esta noche y el trámite de adopción sale solo. Además: <b>Mata 5–0 Tano</b> y <b>Carucha 8–4 Cobra</b>.</p>
+      </div>
+      <div class="vslide g-ink">
+        <div class="k">EL PRONÓSTICO</div>
+        <img class="sface" src="../assets/faces/cobra.png" alt="Cobra" style="border-color:#00A651">
+        <h2>Favorito:<br>Cobra</h2>
+        <p><b>4 victorias</b> en el año (nadie tiene más), <b>15/15</b> presencias y campeón vigente de la T4. Récord en juego: nadie ganó 3 lunes seguidos en 2026.</p>
+      </div>
+      <div class="vslide g-gold">
+        <div class="k">ÚLTIMA HISTORIA</div>
+        <h2>🍮 El último<br>paga</h2>
+        <p>Postre o picada para el que cierre la tabla esta noche. Tano y Mac saben exactamente de qué se trata. La tabla completa vive en el sitio de siempre.</p>
+        <a class="go" href="../index.html">Abrir Lunes de UNO →</a>
+      </div>
 
-  <div class="card">
-    <h2>💸 El conteo de la vergüenza</h2>
-    <div style="font-size:.72rem;color:#8f8f9c;margin:-.2rem 0 .6rem;">contado a la noche del lunes 06/07 — el día que importa</div>
-    <div class="debt">
-      <div class="days"><span data-since="2026-06-23">–</span><small>DÍAS</small></div>
-      <div class="what"><b>Tano</b> debe postre/picada desde el <b>23/6</b>.
-      El 30/6 en Africa tuvo su chance… y no la trajo. El conteo sigue.</div>
-    </div>
-    <div class="debt">
-      <div class="days"><span data-since="2026-06-30">–</span><small>DÍAS</small></div>
-      <div class="what"><b>Mac</b> debe postre/picada desde el <b>30/6</b>. Hoy puede saldar… o duplicar.</div>
-    </div>
-    <div class="debt">
-      <div class="days">🍽️<small>CENA</small></div>
-      <div class="what"><b>Mac</b> también debe la <b>cena de la Temporada 4</b> (último con 1895). Doble deuda: situación inédita en 2026.</div>
-    </div>
-    <div class="qs">
-      ¿Tano trajo por fin la picada/el postre?
-      <div>
-        <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','pagada',this)">Ya pagó ✅</button>
-        <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','sigue',this)">Todavía no 🧀⏳</button>
-        <span class="q-hint"></span>
+      <div class="vtap"><div class="l" onclick="stepStory(-1)"></div><div class="r" onclick="stepStory(1)"></div></div>
+      <div class="vreply">
+        <input type="text" placeholder="Responder a lunesdeuno…" onfocus="this.blur();toast('Las respuestas van en la mesa, esta noche 🎴')">
+        <span class="icon" style="color:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20.8s-8.2-4.9-8.2-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8.2 3.2c0 6.1-8.2 11-8.2 11z"/></svg></span>
       </div>
     </div>
-    <div class="qs">
-      ¿Mac ya puso fecha para la cena de la T4?
-      <div>
-        <button onclick="engageAnswer('deuda-mac-cena-t4','fecha_puesta',this)">Sí, hay fecha 📅</button>
-        <button onclick="engageAnswer('deuda-mac-cena-t4','sigue',this)">Ni idea de cuándo 🙄</button>
-        <span class="q-hint"></span>
-      </div>
-    </div>
   </div>
 
-  <div class="card">
-    <h2>👨‍👦 Padres e hijos — dominios en juego esta fecha</h2>
-    <div style="font-size:.72rem;color:#8f8f9c;margin:-.2rem 0 .7rem;">mano a mano 2026: quién terminó arriba de quién. Todo se puede dar vuelta el lunes.</div>
-    <div class="fc">
-      <img src="../assets/faces/gordo.png" alt="Gordo" style="border-color:#6366F1;">
-      <div class="t"><b>Gordo padre de Mac: 9–1.</b> Arriba en 9 de las 10 fechas que compartieron. Una más el lunes y el trámite de adopción sale solo.</div>
-    </div>
-    <div class="fc">
-      <img src="../assets/faces/mata.png" alt="Mata" style="border-color:#00A651;">
-      <div class="t"><b>Mata padre de Tano: 5–0.</b> Paternidad perfecta — Tano jamás le terminó arriba. Para cortarla necesita que Mata venga (7 faltas)… y ganarle.</div>
-    </div>
-    <div class="fc">
-      <img src="../assets/faces/carucha.png" alt="Carucha" style="border-color:#A855F7;">
-      <div class="t"><b>El campeón tiene padre: Carucha 8–4 sobre Cobra.</b> Cobra levantó la T4, pero en el mano a mano del año Carucha lo dejó abajo 8 de 12 veces. El lunes, revancha.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🔮 Pronóstico (cero ciencia, puros números)</h2>
-    <div class="fc">
-      <img src="../assets/faces/cobra.png" alt="Cobra">
-      <div class="t"><b>El favorito: Cobra.</b> 4 victorias en el año (nadie tiene más), 15 de 15 presencias y campeón vigente. Viene picante.</div>
-    </div>
-    <div class="fc threat">
-      <img src="../assets/faces/pt.png" alt="PT">
-      <div class="t"><b>La amenaza: PT.</b> Ganó la última (29/6, remontando desde el 5º puesto) y lidera la anual con UNA sola victoria. El francotirador de la regularidad.</div>
-    </div>
-    <div class="fc chaos">
-      <img src="../assets/faces/mac.png" alt="Mac">
-      <div class="t"><b>La ley de los grandes números: Mac.</b> 0 victorias en 12 fechas. La probabilidad no puede seguir ignorándolo… ¿o sí?</div>
-    </div>
-  </div>
-
-  <div class="card react">
-    <h2>¿Te sirvió la previa?</h2>
-    <button onclick="engageReact('2026-07-06-la-previa','love',this)">😍</button>
-    <button onclick="engageReact('2026-07-06-la-previa','like',this)">🙂</button>
-    <button onclick="engageReact('2026-07-06-la-previa','meh',this)">😐</button>
-    <button onclick="engageReact('2026-07-06-la-previa','no',this)">🙅</button>
-    <span class="react-hint"></span>
-  </div>
-
-  <div class="card cta">
-    <h2>¿La previa todos los lunes?</h2>
-    <button onclick="engageAnswer('2026-07-06-la-previa-suscripcion','si',this)">Sí, obvio</button>
-    <button onclick="engageAnswer('2026-07-06-la-previa-suscripcion','no',this)">No hace falta</button>
-    <span class="q-hint"></span>
-  </div>
-
-  <div class="card engage-actions">
-    ¿Esta sección merece existir todas las semanas?
-    <div>
-      <button onclick="engageApprove('2026-07-06-la-previa',this)">✅ Que quede</button>
-      <button onclick="engageRejected('2026-07-06-la-previa',this)">✕ No me interesa</button>
-      <span class="engage-hint"></span>
-    </div>
-  </div>
+  <div class="toast" id="toast"></div>
 
 <script>
-  // Contadores de deuda ANCLADOS al día del partido: la previa habla del
-  // lunes, así que el conteo asume el lunes aunque la leas el domingo
-  // (pedido de Andrés 4/7 — "cuántos días cumple la deuda EL LUNES").
-  var GAME_NIGHT = new Date('2026-07-06T00:00:00-03:00');
-  document.querySelectorAll('[data-since]').forEach(function (el) {
-    var since = new Date(el.getAttribute('data-since') + 'T00:00:00-03:00');
-    el.textContent = Math.max(0, Math.round((GAME_NIGHT - since) / 86400000));
-  });
+(function () {
+  'use strict';
 
-  // Copy según el día: la misma página sirve el viernes (welcome), el domingo
-  // (teaser) y el lunes (previa). Override para pruebas: ?fecha=YYYY-MM-DD.
+  /* ---------- toast ---------- */
+  var toastEl = document.getElementById('toast'), toastT;
+  window.toast = function (msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
+  };
+
+  /* ---------- copy día-consciente (la página queda para siempre) ---------- */
   (function () {
     var GAME_DAY = '2026-07-06';
     var hoy = new URLSearchParams(location.search).get('fecha');
     if (!hoy) hoy = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10); // UY = UTC-3 fijo
     var diff = Math.round((new Date(GAME_DAY) - new Date(hoy)) / 86400000);
-    var titulo, cuando;
-    if (diff === 0)      { titulo = 'Hoy se juega';      cuando = 'esta noche'; }
-    else if (diff === 1) { titulo = 'Mañana se juega';   cuando = 'mañana'; }
-    else if (diff > 1)   { titulo = 'El lunes se juega'; cuando = 'el lunes'; }
-    else                 { titulo = 'Ya se jugó';        cuando = 'esa noche'; }
-    document.getElementById('diaTitulo').textContent = titulo;
-    document.getElementById('diaCuando').textContent = cuando;
-    document.getElementById('diaPaga').textContent = cuando;
+    var t;
+    if (diff === 0) t = 'HOY<br>SE JUEGA';
+    else if (diff === 1) t = 'MAÑANA<br>SE JUEGA';
+    else if (diff > 1) t = 'EL LUNES<br>SE JUEGA';
+    else t = 'ASÍ LLEGABA<br>LA FECHA';
+    document.getElementById('diaTitulo').innerHTML = t;
+    document.getElementById('storyTitulo').innerHTML = t;
   })();
+
+  /* ---------- posts: entrada + count-up + barras al entrar en viewport ---------- */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('vis');
+      en.target.querySelectorAll('[data-count]').forEach(function (el) {
+        if (el._done) return; el._done = true;
+        var target = +el.getAttribute('data-count'), t0 = null;
+        function tick(ts) {
+          if (!t0) t0 = ts;
+          var p = Math.min(1, (ts - t0) / 900);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      });
+      en.target.querySelectorAll('.bar i[data-w]').forEach(function (b) {
+        setTimeout(function () { b.style.width = b.getAttribute('data-w') + '%'; }, 150);
+      });
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.post, .sugg').forEach(function (p) { io.observe(p); });
+
+  /* ---------- carrusel: dots ---------- */
+  document.querySelectorAll('[data-slides]').forEach(function (sl) {
+    var media = sl.closest('.media');
+    var dots = media.parentElement.querySelector('[data-dots]');
+    var cnt = media.querySelector('.cnt .cur');
+    sl.addEventListener('scroll', function () {
+      var i = Math.round(sl.scrollLeft / sl.clientWidth);
+      if (cnt) cnt.textContent = i + 1;
+      if (dots) dots.querySelectorAll('i').forEach(function (d, j) { d.classList.toggle('on', j === i); });
+    }, { passive: true });
+  });
+
+  /* ---------- like + double tap (cosmético) ---------- */
+  function likePost(post, fromDbl) {
+    var btn = post.querySelector('.abtn.like');
+    if (!btn) return;
+    var heart = btn.querySelector('svg path');
+    var lk = post.querySelector('.lk');
+    var on = btn.classList.contains('liked');
+    if (fromDbl && on) return;
+    btn.classList.toggle('liked', fromDbl ? true : !on);
+    var nowOn = btn.classList.contains('liked');
+    heart.setAttribute('fill', nowOn ? 'currentColor' : 'none');
+    if (lk) lk.textContent = +lk.textContent + (nowOn === on ? 0 : (nowOn ? 1 : -1));
+  }
+  document.querySelectorAll('.post').forEach(function (post) {
+    var btn = post.querySelector('.abtn.like');
+    if (btn) btn.addEventListener('click', function () { likePost(post, false); });
+    var media = post.querySelector('[data-dbl]');
+    if (!media) return;
+    var last = 0;
+    media.addEventListener('pointerup', function () {
+      var now = Date.now();
+      if (now - last < 320) {
+        var bh = media.querySelector('.bigheart');
+        if (bh) { bh.classList.remove('pop'); void bh.offsetWidth; bh.classList.add('pop'); }
+        likePost(post, true);
+      }
+      last = now;
+    });
+  });
+
+  /* ---------- seguir (cosmético) ---------- */
+  window.follow = function (btn) {
+    var done = btn.classList.toggle('done');
+    btn.textContent = done ? 'Siguiendo' : 'Seguir';
+    if (done && btn.closest('.scard').querySelector('.u').textContent === 'mac') {
+      toast('Mac agradece el apoyo. Las victorias vendrán. Algún día.');
+    }
+  };
+
+  /* ---------- story viewer ---------- */
+  var viewer = document.getElementById('viewer');
+  var slides = viewer.querySelectorAll('.vslide');
+  var bars = document.getElementById('vprog').querySelectorAll('i');
+  var cur = 0, timer = null;
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function showStory(i) {
+    if (i < 0) i = 0;
+    if (i >= slides.length) { closeStories(); return; }
+    cur = i;
+    slides.forEach(function (s, j) { s.classList.toggle('on', j === i); });
+    bars.forEach(function (b, j) {
+      b.classList.remove('run', 'done');
+      void b.offsetWidth;
+      if (j < i) b.classList.add('done');
+      if (j === i) b.classList.add('run');
+    });
+    clearTimeout(timer);
+    if (!reduced) timer = setTimeout(function () { showStory(cur + 1); }, 5000);
+  }
+  window.openStories = function (start) {
+    viewer.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    showStory(start || 0);
+  };
+  window.closeStories = function () {
+    viewer.classList.remove('open');
+    document.body.style.overflow = '';
+    clearTimeout(timer);
+  };
+  window.stepStory = function (d) { showStory(cur + d); };
+  document.addEventListener('keydown', function (e) {
+    if (!viewer.classList.contains('open')) return;
+    if (e.key === 'Escape') closeStories();
+    if (e.key === 'ArrowRight') stepStory(1);
+    if (e.key === 'ArrowLeft') stepStory(-1);
+  });
+})();
 </script>
 <script src="engage.js"></script>
 </body>
