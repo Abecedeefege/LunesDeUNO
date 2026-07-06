@@ -160,6 +160,41 @@
       "device": "pt",
       "ts": "2026-07-06T17:19:27.653Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-reenvio",
+      "device": "negro",
+      "ts": "2026-07-06T17:56:03.528Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-reenvio",
+      "device": "mata",
+      "ts": "2026-07-06T17:56:03.693Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-reenvio",
+      "device": "cobra",
+      "ts": "2026-07-06T17:56:03.848Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-reenvio",
+      "device": "andres",
+      "ts": "2026-07-06T17:56:04.035Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-06-reenvio",
+      "device": "pt",
+      "ts": "2026-07-06T17:56:04.079Z",
+      "status_code": 201
     }
   ]
 }
