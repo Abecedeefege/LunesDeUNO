@@ -86,6 +86,13 @@ routine nueva disparado a demanda. Mañana 06:02 UY corre sola: verificar que
 haya commit de la corrida del martes; si no lo hay, revisar la sesión de la
 routine en claude.ai/code (¿push con credenciales?).
 
+- 📱 **Prototipo pedido por Andrés (06/07): `engage/prototipo-previa-ig.html`**
+  — versión "instagram-like" de la previa (feed + stories + carrusel). NO es
+  editorial: no registrarlo en proposals, no encolarle pushes, no borrarlo por
+  efímero, no linkearlo desde experiencias. Es material de referencia de
+  diseño; solo Andrés decide su futuro. Si gusta, el formato "Lunesgram" puede
+  ser un sub-formato rotativo del domingo (feed 1ª persona ya estaba en TODO).
+
 ## TODO / ángulos sin usar
 
 🔮 Horóscopo unístico · 📱 Feed 1ª persona · 🎤 Confesiones del mazo ·
