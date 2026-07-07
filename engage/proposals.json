@@ -47,6 +47,16 @@
         "2026-07-07-b"
       ],
       "result_notes": null
+    },
+    {
+      "id": "2026-07-06-cronica",
+      "title": "📰 La Crónica (tabloide deportivo del martes: Cobra le roba la punta a Gordo)",
+      "page": "engage/2026-07-06-cronica.html",
+      "created": "2026-07-07",
+      "status": "pending",
+      "hypothesis": "El relato de la remontada real (Gael 4 rondas líder, Gordo 1 sola mano, Cobra la roba en la 9na) + box score + multa/falta/deuda nueva de Negro convierte igual o mejor que records/chusmerio. Métrica: reacción + answer suscripción + approve. Push retenido en draft hasta OK de Andrés (protocolo del 07/07).",
+      "notified_by": [],
+      "result_notes": null
     }
   ]
 }

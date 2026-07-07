@@ -147,16 +147,16 @@
     },
     {
       "id": "2026-07-07-a",
-      "title": "📋 ¿Cómo salió anoche?",
-      "body": "Si la partida ya está cargada, la tabla habla sola. Si no, cargala antes de que los números se olviden.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/index.html",
+      "title": "📰 Cobra le robó la punta a Gordo",
+      "body": "Gael lideró 4 rondas, Gordo 1 sola mano y Cobra se la robó en la 9na. 223 a 258. Negro último con 417.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-cronica.html",
       "send_at": "2026-07-07T14:00:00-03:00",
       "expires_at": "2026-07-07T23:00:00-03:00",
       "status": "draft",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03",
-      "hold_reason": "Andres revisa la cronica con los puntos del lunes ANTES de enviar (pedido 04/07)"
+      "created_by": "engagement-agent 2026-07-07",
+      "hold_reason": "Cronica construida con datos reales de anoche (Chorolo, game_1783387875567). Andres revisa ANTES de enviar (protocolo del 07/07 en learnings.md); sin OK antes de las 14:00, no sale."
     },
     {
       "id": "2026-07-09-a",

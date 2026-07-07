@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>📰 La Crónica — Cobra le roba la punta en la última mano</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+
+  .paper { background: #f4f1e8; color: #16161a; border-radius: 8px; overflow: hidden; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .masthead { background: #16161a; color: #f4f1e8; padding: .7rem .9rem .55rem; display: flex;
+    align-items: baseline; justify-content: space-between; border-bottom: 3px solid #ED1C24; }
+  .masthead .name { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: 1.05rem; letter-spacing: .5px; }
+  .masthead .ed { font-size: .58rem; letter-spacing: 1.5px; color: #c9c9ce; text-align: right; line-height: 1.5; }
+
+  .ticker { background: #ED1C24; color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .5px;
+    padding: .4rem .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .headline { padding: 1.05rem .9rem .3rem; }
+  .kick { font-family: Georgia, serif; font-size: .7rem; font-weight: 800; letter-spacing: 2px; color: #ED1C24; text-transform: uppercase; }
+  .headline h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: 1.85rem;
+    line-height: 1.05; margin: .3rem 0 .5rem; }
+  .dek { font-size: .9rem; line-height: 1.5; color: #34343c; padding-bottom: .8rem; border-bottom: 2px solid #16161a; margin-bottom: .9rem; }
+  .dek b { color: #ED1C24; }
+
+  .byline { font-size: .68rem; color: #6b6b73; letter-spacing: .5px; padding: 0 .9rem .8rem; text-transform: uppercase; }
+
+  .score-panel { margin: 0 .9rem 1rem; background: #16161a; color: #f4f1e8; border-radius: 8px; padding: .9rem .8rem; }
+  .score-panel .lbl { font-size: .62rem; letter-spacing: 2.5px; color: #FFDE00; font-weight: 800; margin-bottom: .5rem; }
+  .board { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .board td { padding: .28rem .1rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .board td.n { text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .board tr:last-child td { border-bottom: none; }
+  .board img { width: 20px; height: 20px; border-radius: 50%; vertical-align: -5px; margin-right: .4rem; border: 1px solid rgba(255,255,255,.3); }
+  .board tr.win td { color: #FFDE00; }
+  .board tr.win .n::before { content: "👑 "; }
+  .board tr.lose td { color: #ff9a9e; }
+  .board .rk { color: #8f8f9c; font-size: .68rem; width: 1.4rem; }
+
+  .body-copy { padding: 0 .9rem; font-size: .93rem; line-height: 1.62; color: #22222a; }
+  .body-copy p { margin-bottom: .85rem; }
+  .body-copy b { color: #a3141c; }
+  .dropcap:first-letter { font-family: Georgia, serif; font-size: 2.6rem; font-weight: 900; float: left;
+    line-height: .82; padding: .1rem .35rem 0 0; color: #ED1C24; }
+
+  .pull { font-family: Georgia, serif; font-style: italic; font-size: 1.05rem; line-height: 1.4;
+    border-top: 2px solid #16161a; border-bottom: 2px solid #16161a; padding: .7rem 0; margin: 0 .9rem 1rem; color: #16161a; }
+
+  .sidebar { margin: 0 .9rem 1rem; display: grid; gap: .55rem; }
+  .brief { background: #e9e4d4; border-left: 4px solid #ED1C24; border-radius: 4px; padding: .55rem .7rem; font-size: .82rem; line-height: 1.45; }
+  .brief b { color: #a3141c; }
+  .brief .tag { display: block; font-size: .58rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .15rem; }
+
+  .h2h-box { margin: 0 .9rem 1rem; background: #e9e4d4; border-radius: 8px; padding: .8rem .8rem; }
+  .h2h-box .tag { font-size: .6rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .5rem; }
+  .h2h-row { display: flex; align-items: center; gap: .5rem; font-size: .84rem; line-height: 1.4; margin-bottom: .4rem; }
+  .h2h-row img { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #FFDE00; }
+  .h2h-row b { color: #a3141c; }
+
+  .annual { margin: 0 .9rem 1rem; background: #16161a; color: #f4f1e8; border-radius: 8px; padding: .8rem; }
+  .annual .lbl { font-size: .62rem; letter-spacing: 2px; color: #FFDE00; font-weight: 800; margin-bottom: .5rem; }
+  .annual .row { display: flex; justify-content: space-between; font-size: .82rem; padding: .22rem 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .annual .row:last-child { border: none; }
+  .annual .row b { color: #FFDE00; }
+  .annual .gap { font-size: .72rem; color: #c9c9ce; margin-top: .4rem; line-height: 1.4; }
+
+  .stamp-fin { text-align: center; font-family: Georgia, serif; font-style: italic; font-size: .8rem; color: #6b6b73; padding: .3rem 0 1.1rem; }
+
+  .interact { background: #0d0d12; padding: 1rem .9rem 1.3rem; margin-top: .2rem; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; margin-bottom: .9rem; }
+  .card h2 { color: #FFDE00; font-size: .95rem; margin-bottom: .55rem; }
+  button {
+    margin: .3rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .88rem; font-weight: 600; cursor: pointer;
+  }
+  .react button { font-size: 1.2rem; padding: .38rem .68rem; }
+  .react-hint, .q-hint, .engage-hint { display: block; font-size: .74rem; color: #8f8f9c; margin-top: .35rem; }
+  .fine-print { color: #565660; font-size: .66rem; line-height: 1.5; padding: 0 .1rem; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="paper">
+    <div class="masthead">
+      <div class="name">📰 EL MAZO DIARIO</div>
+      <div class="ed">EDICIÓN LUNES 06.07<br>CHOROLO · T5 · FECHA 1</div>
+    </div>
+    <div class="ticker">🔴 EN VIVO DE ANOCHE — COBRA GANA CON 223 · NEGRO ÚLTIMO CON 417 · NASO SE COME UNA MULTA DE 50</div>
+
+    <div class="headline">
+      <div class="kick">Crónica del lunes</div>
+      <h1>Cobra le roba la punta a Gordo en la última mano y gana la fecha 1 de la T5</h1>
+      <div class="dek">Gael dominó cuatro rondas seguidas, Gordo se quedó con la punta una sola mano y <b>Cobra</b> la agarró en la novena para no soltarla más. Anoche en Chorolo, diez en la mesa.</div>
+    </div>
+    <div class="byline">Redacción · datos recalculados de la tabla oficial</div>
+
+    <div class="score-panel">
+      <div class="lbl">TABLA FINAL DE LA NOCHE</div>
+      <table class="board">
+        <tr class="win"><td class="rk">1</td><td><img src="../assets/faces/cobra.png" alt="">Cobra</td><td class="n">223</td></tr>
+        <tr><td class="rk">2</td><td><img src="../assets/faces/nachi.png" alt="">Nachi</td><td class="n">244</td></tr>
+        <tr><td class="rk">3</td><td><img src="../assets/faces/gordo.png" alt="">Gordo</td><td class="n">258</td></tr>
+        <tr><td class="rk">4</td><td><img src="../assets/faces/gael.png" alt="">Gael</td><td class="n">260</td></tr>
+        <tr><td class="rk">5</td><td><img src="../assets/faces/mata.png" alt="">Mata</td><td class="n">268</td></tr>
+        <tr><td class="rk">6</td><td><img src="../assets/faces/pt.png" alt="">PT</td><td class="n">269</td></tr>
+        <tr><td class="rk">7</td><td><img src="../assets/faces/tano.png" alt="">Tano</td><td class="n">296</td></tr>
+        <tr><td class="rk">8</td><td><img src="../assets/faces/mac.png" alt="">Mac</td><td class="n">324</td></tr>
+        <tr><td class="rk">9</td><td><img src="../assets/faces/naso.png" alt="">Naso</td><td class="n">345</td></tr>
+        <tr class="lose"><td class="rk">10</td><td><img src="../assets/faces/negro.png" alt="">Negro</td><td class="n">417</td></tr>
+      </table>
+    </div>
+
+    <div class="body-copy">
+      <p class="dropcap">La noche empezó con Cobra al frente, apenas terminada la primera mano (-10, la única en rojo de toda la partida). Duró una ronda. En la segunda, PT tomó la delantera; en la tercera, Tano. Nada se sostenía.</p>
+      <p>Recién en la cuarta mano el partido encontró a su líder de fondo: <b>Gael</b> se instaló arriba de la tabla y no la soltó durante <b>cuatro rondas seguidas</b> (4ª a 7ª), llegando a la séptima con apenas 114 puntos acumulados — un margen cómodo. Todo cambió en la octava: una mano de <b>89 puntos</b> lo hundió de golpe y le costó la punta.</p>
+      <p>Ahí apareció <b>Gordo</b>, que tomó el liderazgo con 158 después de ocho rondas. Le duró exactamente una mano. En la novena, <b>Cobra</b> —que venía escondido en la mitad de la tabla— sumó apenas 6 puntos y pasó a Gordo por la mínima (191 a 200). En la última mano ninguno de los dos se movió lo suficiente para cambiar el orden: Cobra cerró en <b>223</b>, Gordo en <b>258</b>, y la fecha 1 de la Temporada 5 quedó para la serpiente.</p>
+    </div>
+
+    <div class="pull">"Lideraba cuatro rondas seguidas y en la octava se cayó del podio" — el resumen de la noche de Gael, contado en números.</div>
+
+    <div class="sidebar">
+      <div class="brief"><span class="tag">LA MULTA</span><img class="face" style="width:20px;height:20px;border-radius:50%;vertical-align:-5px;margin-right:.3rem" src="../assets/faces/naso.png" alt="">
+        <b>Naso</b> se comió una multa de <b>50 puntos</b> en la tercera mano, justo cuando más apretaba la pelea de arriba. Terminó 9º.</div>
+      <div class="brief"><span class="tag">LA AUSENCIA</span><img class="face" style="width:20px;height:20px;border-radius:50%;vertical-align:-5px;margin-right:.3rem" src="../assets/faces/carucha.png" alt="">
+        <b>Carucha</b> faltó a Chorolo y aun así se lleva a la tabla anual el peor puntaje de la noche: <b>417</b>, sin haber tocado una carta.</div>
+      <div class="brief"><span class="tag">EL ÚLTIMO</span><img class="face" style="width:20px;height:20px;border-radius:50%;vertical-align:-5px;margin-right:.3rem" src="../assets/faces/negro.png" alt="">
+        <b>Negro</b> venía tranquilo hasta la sexta mano (81 puntos) y remató con una <b>última mano de 105</b> que lo hundió a los 417. Paga postre o picada — la cuenta arranca hoy.</div>
+    </div>
+
+    <div class="h2h-box">
+      <div class="tag">PADRES E HIJOS — SE CUMPLIÓ EL PRONÓSTICO</div>
+      <div class="h2h-row"><img src="../assets/faces/gordo.png" alt="">Gordo terminó arriba de Mac otra vez (258 contra 324). <b>El dominio pasa a 10–1.</b></div>
+    </div>
+
+    <div class="annual">
+      <div class="lbl">CÓMO QUEDA LA TABLA ANUAL</div>
+      <div class="row"><span>1. PT</span><span>4906</span></div>
+      <div class="row"><span>2. Gordo</span><span>5097</span></div>
+      <div class="row"><span>3. <b>Cobra</b></span><span><b>5132</b></span></div>
+      <div class="row"><span>4. Carucha</span><span>5460</span></div>
+      <div class="row"><span>...</span><span>...</span></div>
+      <div class="row"><span>11. Negro</span><span>6467</span></div>
+      <div class="gap">Cobra le achicó la distancia a Gordo: la diferencia venía de 70 puntos y hoy quedó en <b>35</b>. Arriba de todo sigue PT, que ni jugó anoche pero defiende la cima con 4906.</div>
+    </div>
+
+    <div class="stamp-fin">— 🎴 —</div>
+  </div>
+
+  <div class="interact">
+    <div class="card react">
+      <h2>¿Qué tal la crónica?</h2>
+      <button onclick="engageReact('2026-07-06-cronica','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-06-cronica','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-06-cronica','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-06-cronica','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Querés la crónica todos los martes?</h2>
+      <button onclick="engageAnswer('2026-07-06-cronica-suscripcion','si',this)">Sí, obvio</button>
+      <button onclick="engageAnswer('2026-07-06-cronica-suscripcion','no',this)">No hace falta</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Trajo Negro el postre/picada de esta noche?</h2>
+      <button onclick="engageAnswer('deuda-negro-postre-2026-07-06','pagada',this)">Ya pagó ✅</button>
+      <button onclick="engageAnswer('deuda-negro-postre-2026-07-06','sigue',this)">Todavía no</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Esta sección merece existir?</h2>
+      <button onclick="engageApprove('2026-07-06-cronica',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-06-cronica',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div class="fine-print">Datos recalculados de <code>games/game_1783387875567</code> (Chorolo, 06/07). Tabla anual: 16 fechas válidas al cierre de esta edición.</div>
+  </div>
+
+  <script src="engage.js"></script>
+</body>
+</html>
