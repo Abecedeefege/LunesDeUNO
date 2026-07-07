@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>🎩 El Club</title>
+<!-- PWA / iOS: sin esto, "Agregar a pantalla de inicio" abre en Safari (sin
+     PushManager) y las push nunca se pueden activar en iPhone. -->
+<link rel="manifest" href="club.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="El Club">
+<meta name="theme-color" content="#0d0d12">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
