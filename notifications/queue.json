@@ -169,6 +169,21 @@
       "sent_at": null,
       "fail_reason": "semana editorial nueva: el chusmerío pasó al domingo 05/07",
       "created_by": "primer-ciclo-manual 2026-07-03"
+    },
+    {
+      "id": "2026-07-07-b",
+      "title": "🎤 Cobra, la prensa te espera",
+      "body": "Ganaste con 223 y sin una sola multa. Te armamos la rueda de prensa del campeón: 5 preguntas para que hables. Pasá al micrófono 🎙️",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-entrevista-cobra.html",
+      "devices": [
+        "cobra"
+      ],
+      "send_at": "2026-07-07T10:25:00-03:00",
+      "expires_at": "2026-07-07T22:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-07 (entrevista al campeon, aprobada por andres, SOLO cobra)"
     }
   ]
 }

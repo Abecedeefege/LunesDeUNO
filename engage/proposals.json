@@ -35,6 +35,18 @@
         "2026-07-05-a"
       ],
       "result_notes": "Aprobada por andres (boton proposal_approved 05/07 19:45Z tras click del push) + reaccion love + answer si + dwell 39s. Promovida 06/07: la pagina queda. Ya tenia approve del 04/07 con el slug viejo 2026-07-09-chusmerio."
+    },
+    {
+      "id": "2026-07-06-entrevista-cobra",
+      "title": "🎤 Sala de prensa del campeón (entrevista a Cobra, 5 preguntas)",
+      "page": "engage/2026-07-06-entrevista-cobra.html",
+      "created": "2026-07-07",
+      "status": "pending",
+      "hypothesis": "Entrevista dirigida al ganador (Cobra) para que alardee y opine de los sin-estrella, los perdedores y los que sufrieron; sus respuestas (engageAnswer q1..q5) se citan en la cronica del martes. Metrica: >=1 answer de cobra-entrevista-qN desde el device cobra.",
+      "notified_by": [
+        "2026-07-07-b"
+      ],
+      "result_notes": null
     }
   ]
 }

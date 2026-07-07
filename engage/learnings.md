@@ -14,6 +14,7 @@ sub-formatos si se queman (horóscopo, feed, confesiones, archivo).
 | Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA — falló la entrega del 30/06 en Africa. Cumple 13 días esta noche | `deuda-tano-postre-2026-06-23` |
 | Mac | 🍮/🧀 postre o picada | 30/06 | pendiente. Cumple 6 días esta noche | `deuda-mac-postre-2026-06-30` |
 | Mac | 🍽️ cena (perdió T4) | 30/06 | pendiente, sin fecha | `deuda-mac-cena-t4` |
+| Negro | 🍮/🧀 postre o picada | 06/07 | NUEVA — último anoche con 417 | `deuda-negro-postre-2026-07-06` |
 
 Saldadas: (ninguna todavía). **Cero answers de deuda hasta hoy** — los botones
 pagada/sigue de previa y chusmerío no recibieron ni un click. Si esta noche se
@@ -76,6 +77,16 @@ juega y Tano trae la picada, esperar el answer o la crónica lo confirma.
   (2) commitear para que Andrés la vea en Pages/proximos.html; (3) reportar.
   Sin OK de Andrés antes de las 14:00 → no sale nada. Si no se jugó, ídem con
   el recordatorio en draft.
+- 🎤 **ENTREVISTA A COBRA (enviada 07/07, SOLO a cobra):** experiencia
+  `engage/2026-07-06-entrevista-cobra.html` (sala de prensa del campeón, 5
+  preguntas: alarde, sin-estrella, perdedores, sufrimiento, bicampeonato).
+  Push `2026-07-07-b` `pending` 10:25 `devices:["cobra"]`, aprobada por Andrés
+  en chat. Cobra responde por texto libre → docs `engagement` con id
+  `answer-cobra-entrevista-q1..q5` (device `cobra`). **La crónica del martes
+  debe CITAR esas respuestas** (leerlas antes de finalizar la crónica). Si
+  Cobra no contestó todavía, la crónica sale sin las citas o Andrés espera.
+  Ganador real 06/07 verificado: Cobra 223 (0 multas/0 cortes), 2º Nachi 244
+  (+21), último Negro 417 (paga postre/picada), Naso +50 de multa, Carucha faltó.
 - Las 3 experiencias de la semana están `promoted` (aprobación con botón de
   andres). proximos.html refleja los estados solo.
 - Mié 08 a vie 10/07: sin pushes. Solo gestión, compactación y memoria.
