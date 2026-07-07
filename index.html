@@ -6399,7 +6399,11 @@ function renderLeaderboard(sortKey, scope) {
     html += '<tr>'
       + '<td>' + (i + 1) + '</td>'
       + '<td>' + faceImg + _presetName(p.slug) + '</td>'
-      + '<td>' + p.totalScore + '</td>'
+      + '<td>' + p.totalScore + (sortKey === 'totalScore' && i > 0
+          ? ' <span style="font-size:.78em;color:var(--text-muted);font-weight:400;">('
+            + ((p.totalScore - rows[i - 1].totalScore) >= 0 ? '+' : '−')
+            + Math.abs(p.totalScore - rows[i - 1].totalScore) + ')</span>'
+          : '') + '</td>'
       + '<td>' + p.gamesPlayed + '</td>'
       + '<td>' + p.gamesWon + '</td>'
       + '<td>' + p.gamesLost + '</td>'
