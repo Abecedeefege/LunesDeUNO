@@ -91,9 +91,12 @@ repregunta). Botón nuevo agregado hoy en la crónica para Negro.
     falta/último, H2H, tabla anual).
   - Registrada en `proposals.json` como `pending` (nueva, sin botón de
     andres todavía).
-  - Item de cola `2026-07-07-a` actualizado (título/cuerpo/url reales) pero
-    **dejado en `status:"draft"`** — no sale hasta que Andrés dé OK antes de
-    las 14:00. Si no hay OK, no sale nada hoy y se limpia mañana.
+  - Item de cola `2026-07-07-a` con título/cuerpo/url reales. **OK condicional
+    de Andrés (07/07 ~12:10): pasado a `status:"pending"`, sale 14:00 COMO ESTÁ
+    si Cobra no contesta la entrevista antes.** Si contesta antes de las 14:00,
+    se actualiza la página (misma url) con la sección "Sala de prensa" y el push
+    de las 14:00 ya apunta ahí. Se quitó de la crónica la pregunta-botón de la
+    deuda de Negro (pedido de Andrés).
   - 🎤 **ENTREVISTA A COBRA (enviada 07/07 ~10:17, SOLO a cobra):** experiencia
     `engage/2026-07-06-entrevista-cobra.html` (sala de prensa del campeón, 5
     preguntas). Push `2026-07-07-b` **`sent`** a `devices:["cobra"]` (aprobada
