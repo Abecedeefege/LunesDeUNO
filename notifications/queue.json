@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-07T15:17:43.605Z",
+  "_updated_at": "2026-07-07T18:08:08.055Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -152,8 +152,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-cronica.html",
       "send_at": "2026-07-07T14:00:00-03:00",
       "expires_at": "2026-07-07T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-07T18:08:08.054Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-07 (crónica; OK condicional de Andrés: sale 14:00 como está si Cobra no contesta antes)"
     },

@@ -209,6 +209,55 @@
       "device": "cobra",
       "ts": "2026-07-07T15:17:43.604Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "negro",
+      "ts": "2026-07-07T18:08:07.593Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "mata",
+      "ts": "2026-07-07T18:08:07.738Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "cobra",
+      "ts": "2026-07-07T18:08:07.808Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "andres",
+      "ts": "2026-07-07T18:08:07.918Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "pt",
+      "ts": "2026-07-07T18:08:07.963Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "cara",
+      "ts": "2026-07-07T18:08:08.043Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-07-a",
+      "device": "mac",
+      "ts": "2026-07-07T18:08:08.054Z",
+      "status_code": 201
     }
   ]
 }
