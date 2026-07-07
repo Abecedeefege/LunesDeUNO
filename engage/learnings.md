@@ -4,8 +4,22 @@
 
 **Sábado récords · Domingo chusmerío · Lunes la previa (con "padres e hijos"
 H2H en juego) · Martes la crónica.** Miércoles a viernes: SILENCIO (solo
-gestión y memoria). Nunca dos pushes el mismo día. Los slots sáb/dom rotan
-sub-formatos si se queman (horóscopo, feed, confesiones, archivo).
+gestión y memoria). Nunca dos pushes de DIFUSIÓN el mismo día. Los slots
+sáb/dom rotan sub-formatos si se queman (horóscopo, feed, confesiones, archivo).
+
+**🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante):**
+1. **Martes temprano (~10:00):** se le manda la entrevista "Sala de prensa"
+   (5 preguntas: alarde, sin-estrella, perdedores, sufrimiento, cierre) SOLO
+   al **ganador del lunes**, a su device (`devices:["<ganador>"]`). Envío
+   inmediato, no diferido. Esto NO cuenta contra la regla de un push/día
+   porque va a un solo device, no es difusión.
+2. **Si el ganador NO tiene push activa** (no está en `pushSubs` con
+   `status:"active"`): **no se envía nada y listo** — no se fuerza, no se
+   busca alternativa.
+3. **La crónica del martes (push de difusión de las 14:00) DEBE salir con la
+   info de la entrevista:** leer los answers `answer-<ganador>-entrevista-q1..q5`
+   de `engagement` y citarlos en la crónica. La entrevista de las 10:00 le da
+   ~4h al ganador para contestar antes de que salga la crónica.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-06)
 

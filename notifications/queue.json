@@ -178,12 +178,12 @@
       "devices": [
         "cobra"
       ],
-      "send_at": "2026-07-07T10:25:00-03:00",
+      "send_at": "2026-07-07T10:05:00-03:00",
       "expires_at": "2026-07-07T22:00:00-03:00",
       "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "manual-andres 2026-07-07 (entrevista al campeon, aprobada por andres, SOLO cobra)"
+      "created_by": "manual-andres 2026-07-07 (entrevista al campeon, SOLO cobra, envio inmediato pedido por andres)"
     }
   ]
 }
