@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-07T18:08:08.055Z",
+  "_updated_at": "2026-07-07T19:03:30.000Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -198,6 +198,21 @@
       "sent_at": "2026-07-07T15:17:43.604Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-07 (reenvio entrevista a cobra, recordatorio, SOLO cobra)"
+    },
+    {
+      "id": "2026-07-07-test-andres",
+      "title": "🎴 Test de canal — Andrés",
+      "body": "Si ves esto, tu suscripción está viva. Tocá para confirmar que el push llega.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-07T16:00:00-03:00",
+      "expires_at": "2026-07-07T22:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "debug 2026-07-07 (test de entrega dirigido SOLO a andres; verificar sub viva/zombie)"
     }
   ]
 }
