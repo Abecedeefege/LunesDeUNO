@@ -183,6 +183,21 @@
       "sent_at": "2026-07-07T13:17:26.716Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-07 (entrevista al campeon, SOLO cobra, envio inmediato pedido por andres)"
+    },
+    {
+      "id": "2026-07-07-c",
+      "title": "🎤 Cobra, la crónica te espera",
+      "body": "Sos el campeón y todavía no dijiste nada. 5 preguntas para alardear — contestá antes de las 2 y salís en la crónica 🎙️",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-entrevista-cobra.html",
+      "devices": [
+        "cobra"
+      ],
+      "send_at": "2026-07-07T12:08:00-03:00",
+      "expires_at": "2026-07-07T22:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "manual-andres 2026-07-07 (reenvio entrevista a cobra, recordatorio, SOLO cobra)"
     }
   ]
 }
