@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-07T13:17:26.717Z",
+  "_updated_at": "2026-07-07T15:17:43.605Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -194,8 +194,8 @@
       ],
       "send_at": "2026-07-07T12:08:00-03:00",
       "expires_at": "2026-07-07T22:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-07T15:17:43.604Z",
       "fail_reason": null,
       "created_by": "manual-andres 2026-07-07 (reenvio entrevista a cobra, recordatorio, SOLO cobra)"
     }
