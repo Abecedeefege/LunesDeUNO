@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-07T19:03:30.000Z",
+  "_updated_at": "2026-07-07T19:04:09.321Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -209,8 +209,8 @@
       ],
       "send_at": "2026-07-07T16:00:00-03:00",
       "expires_at": "2026-07-07T22:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-07T19:04:09.321Z",
       "fail_reason": null,
       "created_by": "debug 2026-07-07 (test de entrega dirigido SOLO a andres; verificar sub viva/zombie)"
     }
