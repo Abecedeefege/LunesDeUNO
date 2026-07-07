@@ -771,7 +771,7 @@
 
   // Tabla del partido en curso: pos | jugador | base | mul | cor | total
   // Helper: rank de un game omitiendo las últimas N rondas. Devuelve un mapa
-  // { playerId: posición (1-indexed) } basado en totales menor→mayor.
+  // { playerId: posición (1-indexed) } basado en puntaje base menor→mayor.
   function rankFor(g, omitLastRounds) {
     if (!g || !Array.isArray(g.participants)) return {};
     const N = (g.rounds || []).length - (omitLastRounds || 0);
@@ -783,8 +783,8 @@
     });
     const breakdown = gameScoreBreakdown(slim);
     return Object.keys(breakdown)
-      .map(id => ({ id, total: breakdown[id].total }))
-      .sort((a, b) => a.total - b.total)
+      .map(id => ({ id, base: breakdown[id].base, total: breakdown[id].total }))
+      .sort((a, b) => a.base - b.base || a.total - b.total)
       .reduce((acc, p, i) => { acc[p.id] = i + 1; return acc; }, {});
   }
 
@@ -806,7 +806,7 @@
       slug: p.playerId,
       name: p.name || NAME_BY_ID[p.playerId] || p.playerId,
       ...breakdown[p.playerId] || { base: 0, fines: 0, cortes: 0, total: 0 }
-    })).sort((a, b) => a.total - b.total);
+    })).sort((a, b) => a.base - b.base || a.total - b.total);
     const winnerSlug = rows[0]?.slug;
     const loserSlug  = rows[rows.length - 1]?.slug;
 
