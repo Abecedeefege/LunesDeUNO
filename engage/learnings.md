@@ -13,12 +13,12 @@ el ganador no tiene push activa, no se envía nada. La crónica de las 14:00
 cita sus respuestas si llegan a tiempo; si no, sale igual (protocolo de OK
 condicional de Andrés) y las citas se agregan como addendum si llegan después.
 
-## 💸 DEUDAS (ledger vigente al 2026-07-08)
+## 💸 DEUDAS (ledger vigente al 2026-07-09)
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. 15 días al 08/07. Cero answers pese a 4 experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
-| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. 2 días al 08/07. | `deuda-negro-postre-2026-07-06` |
+| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. 16 días al 09/07. Cero answers pese a 4+ experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
+| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. 3 días al 09/07. | `deuda-negro-postre-2026-07-06` |
 
 Saldadas / archivadas: **Mac** — sus dos deudas (postre 30/06, cena T4)
 desaparecieron de los divs `naso-disclaimer` de index.html en commits
@@ -27,86 +27,87 @@ directos de otra sesión (`62dff76` 07/07 12:47Z quitó la cena T4;
 registrado en `engagement` — se asume resuelto administrativamente fuera del
 sistema de botones. No se recontarán salvo que reaparezcan en el home.
 
-🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME:** commit `cca7dde`
-(08/07 01:16Z) agregó "Gael debe postre por perder T4". Chequeado contra
-`seasons` (doc `4`): `winnerPlayerId: cobra`, **`loserPlayerId: mac`** — el
-perdedor de la T4 es Mac, no Gael (Gael perdió la T3, doc `seasons/3`).
-Además el tipo de deuda no cierra: perder una TEMPORADA paga **cena**, no
-postre (así estaba etiquetada la vieja deuda de Mac: "cena por perder
-temporada 4"). No se incorpora esta deuda al ledger ni a ningún contenido
-hasta que Andrés lo confirme o corrija — publicar un dato así de no verificado
-rompe la regla dura #1 (canal sagrado). **Reportado en el chat de esta
-corrida para que Andrés lo revise.**
+🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, 2 días):**
+commit `cca7dde` (08/07 01:16Z) agregó "Gael debe postre por perder T4" y
+sigue en index.html hoy 09/07. Chequeado contra `seasons` (doc `4`):
+`winnerPlayerId: cobra`, **`loserPlayerId: mac`** — el perdedor de la T4 es
+Mac, no Gael (Gael perdió la T3, doc `seasons/3`). Además el tipo de deuda no
+cierra: perder una TEMPORADA paga **cena**, no postre. No se incorpora esta
+deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
+**Reportado de nuevo en el chat de esta corrida.**
 
 ## 🚀 SÍNTESIS: qué convierte (números reales)
 
 - **andres clickea todo**: reacción 😍 + answer "sí, obvio" en las 4
   experiencias que tuvo enfrente (récords, chusmerío, previa, crónica — esta
-  última la reaccionó `mata`, no andres, ver nota abajo).
+  última la reaccionó `mata`, no andres).
 - **pt activo desde 06/07**: sub activa, dwell 127–170s en la previa.
 - **mata SÍ interactuó con la crónica** (07/07 18:08 UY): reacción 😍, answer
   "sí" a la suscripción, y clickeó "✅ Que quede" — pero esa aprobación NO
   cuenta como decisión de permanencia (solo decide `device:"andres"`; queda
-  como señal secundaria). La crónica sigue `pending` en proposals.json.
-- **cobra respondió la entrevista** — pero tarde: madrugada del 08/07 (~01:09
-  UY), muchas horas después de que la crónica de las 14:00 del 07/07 ya
-  hubiese salido sin citas (OK condicional de Andrés). Dwell 696s en la
-  página de la entrevista, 100% scroll — la leyó a fondo antes de contestar.
-  Se agregó una sección "Sala de prensa" a la crónica (08/07, gestión, sin
-  push nuevo) con sus 5 citas, ya que la página sigue viva y pending.
-- **negro y cara** interactuaron con el push de la crónica (notification_click
-  + dwell) el 07/07 tarde. **mac** recién clickeó la crónica el 08/07 01:23 UY
-  (push abierto muy tarde, no mismo día).
+  como señal secundaria). La crónica sigue `pending` en proposals.json (2 días,
+  vence 14/07 si no hay decisión de andres).
+- **cobra respondió la entrevista** el 08/07 (~01:09–04:08 UY) y la leyó a
+  fondo (dwell 31842s de background-tab/idle, 100% scroll — número inflado por
+  la pestaña abierta, no dwell activo real). Sección "Sala de prensa" ya
+  integrada a la crónica (gestión del 08/07, sin push nuevo). La entrevista
+  también sigue `pending` en proposals.json (2 días).
+- **negro, cara y mac** interactuaron tarde con la crónica (07/07 tarde y
+  08/07 madrugada) — ya contabilizado, sin eventos nuevos desde entonces.
+- Sin eventos nuevos en `engagement` desde el 08/07 12:48 UY (0 nuevos hoy).
 - Anomalía `sin-nombre`/`cara`: sigue sin resolverse, sin nuevos datos hoy.
 
-## 📊 Estado del sistema (2026-07-08)
+## 📊 Estado del sistema (2026-07-09)
 
 - Subs push activas: **7** — andres (decide), pt, mata, negro, cobra, mac,
   cara. `mc` disabled. Sin cambios desde 07/07.
-- Datos: 18 docs en `games` (17 finalizados con winner + 1 partida en curso
-  sin terminar, `game_1783469788259`, no cuenta todavía). 16 fechas válidas
-  para tabla anual, cutoff sigue siendo Chorolo (06/07, ganó Cobra 223).
-  Temporada 4 cerrada (Cobra ganó, Mac perdió — confirmado en `seasons`). T5
-  en curso, fecha 1 jugada.
-- Eventos `engagement`: 91 (8 nuevos desde la corrida del 07/07: respuestas de
-  Cobra q1–q5, su dwell, un `notification_clicked` de mac en la crónica y el
-  `page_visit` de cobra a su propia entrevista). Nada para compactar (el más
+- Datos: 18 docs en `games`, sin cambios desde el 08/07 (17 finalizados con
+  winner + 1 partida en curso sin terminar, `game_1783469788259`, sigue sin
+  cerrar). 16 fechas válidas para tabla anual, cutoff sigue siendo Chorolo
+  (06/07, ganó Cobra 223). Temporada 4 cerrada (Cobra ganó, Mac perdió). T5
+  en curso, fecha 1 jugada. No hay partida nueva que crónica todavía — el
+  próximo martes de crónica (14/07) depende de que se juegue el lunes 13/07.
+- Eventos `engagement`: 91 totales, 0 nuevos hoy. Nada para compactar (el más
   viejo es del 03/07, cutoff de 14 días recién en ~17/07).
 - Queue: todo `sent`/`cancelled`, nada `pending`/`draft` para reconciliar.
-  Nada para limpiar todavía (cutoff de 7 días en ~10/07).
-- Miércoles 08/07: día de silencio, sin push. Solo gestión.
+  Nada purgado hoy — el cutoff de 7 días para limpiar `sent`/`cancelled`
+  recién cae mañana (~10/07); los ítems más viejos son del 03/07.
+- Proposals `pending` sin decisión de andres: `2026-06-06-entrevista-cobra`
+  y `2026-07-06-cronica`, ambas creadas 07/07 → vencen 14/07 si nadie decide.
+  Sin novedad hoy.
+- Jueves 09/07: día de silencio, sin push. Solo gestión (sin cambios que
+  hacer — repo ya estaba al día).
 
 ## 🗓️ Semana en curso (editorial del lunes 06/07 — martes 07/07)
 
 - ✅ Sáb 04/07 récords, ✅ Dom 05/07 chusmerío, ✅ Lun 06/07 previa: promovidos.
 - ✅ Mar 07/07: entrevista a Cobra enviada (~10:17 UY) y crónica enviada
   (~15:08 UY, sin citas, según protocolo). Ambas siguen `pending` en
-  proposals.json — sin decisión de `andres` todavía (mata aprobó la crónica
-  pero eso no cuenta). Ninguna vence hasta el 14/07 (regla de 7 días).
-- 🔧 Mié 08/07 (hoy): sin push. Se agregó la sala de prensa de Cobra a la
-  crónica (contenido, no push nuevo). Se detectó y reportó la posible
-  inconsistencia de la deuda de Gael/T4 en el home (ver DEUDAS). Se reconcilió
-  el ledger de deudas con los cambios directos en index.html (Mac limpio).
-- Jue 09 y vie 10/07: sin pushes. Gestión y memoria únicamente.
-- Próximo push: sábado 11/07, récords — pendiente decidir sub-formato (el
+  proposals.json, vencen 14/07.
+- 🔧 Mié 08/07: sin push. Se agregó la sala de prensa de Cobra a la crónica.
+  Se detectó y reportó la inconsistencia de la deuda de Gael/T4 en el home.
+- 🔧 Jue 09/07 (hoy): sin push, sin eventos nuevos, sin proposals para
+  decidir, sin nada para compactar/reconciliar. Solo se actualizaron los
+  contadores de deuda (Tano 16 días, Negro 3 días) y se reafirmó el flag de
+  Gael/T4.
+- Vie 10/07: sin push. Gestión y memoria únicamente — probablemente primer
+  día con purga real de queue.json (ítems `sent` del 03/07 cumplen 7 días).
+- Próximo push: **sábado 11/07, récords** — pendiente decidir sub-formato (el
   clásico ya se usó el 04/07; considerar remontadas/horóscopo/archivo para no
-  repetir).
+  repetir). Si no hay partida nueva el lunes 13/07, la crónica del martes
+  14/07 no se inventa (ver regla de "semana de descanso").
 
-## 🔭 Corrida de HOY (2026-07-08, miércoles, 06:05 UY)
+## 🔭 Corrida de HOY (2026-07-09, jueves, 06:06 UY)
 
-Repo limpio y actualizado sin fricción. Leídos 8 eventos nuevos: Cobra
-finalmente contestó la entrevista (tarde, después de la ventana de la
-crónica) y visitas/clicks tardíos de mac/cara/negro sobre la crónica. Sin
-proposals que aprobar/rechazar/expirar hoy (las 2 pendientes tienen 1 día).
-Nada para compactar ni limpiar en queue/engagement todavía. Reconciliado el
-ledger de deudas contra cambios directos en index.html: Mac queda sin deudas
-(sin answer que lo confirme, se asume resuelto fuera de banda); se detectó
-que la nueva deuda de Gael ("postre por perder T4") contradice `seasons/4`
-(loser=mac, no gael) y el tipo de deuda (temporada = cena, no postre) — no se
-incorpora al ledger, queda reportada para que Andrés la revise o corrija en
-el home. Se enriqueció `2026-07-06-cronica.html` con una sección "Sala de
-prensa" citando las 5 respuestas de Cobra (gestión de contenido existente,
-sin push nuevo, sin tocar proposals.json). Sin push hoy (miércoles = silencio).
+Repo limpio y actualizado (`git pull` trajo 1 commit de otra sesión: sala de
+prensa de Cobra + reconciliación de deudas del 08/07, ya reflejado acá).
+Revisados: engagement (0 eventos nuevos desde 08/07 12:48 UY), pushSubs (sin
+cambios, 7 activas), games (sin partidas nuevas, sigue 1 en curso sin
+cerrar), queue.json (nada `pending`/`draft`, nada para purgar todavía),
+proposals.json (2 `pending` de 07/07, ninguna con decisión de `andres`, no
+vencen hasta 14/07), index.html (deudas sin cambios: Tano, Negro, y el Gael/T4
+sin verificar sigue ahí). Único cambio real: actualicé los contadores de días
+de deuda en el ledger. Sin push (jueves = silencio).
 
 ## TODO / ángulos sin usar
 
