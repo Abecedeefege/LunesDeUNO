@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-10T23:46:27.753Z",
+  "_updated_at": "2026-07-10T23:53:00.885Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -254,8 +254,8 @@
       ],
       "send_at": "2026-07-10T20:52:00-03:00",
       "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-10T23:53:00.885Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: rediseño del tape + reenvío para revisarlo; versión nueva verificada en Pages antes de encolar)"
     },

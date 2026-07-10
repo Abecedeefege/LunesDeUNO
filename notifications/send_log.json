@@ -286,6 +286,13 @@
       "device": "andres",
       "ts": "2026-07-10T23:46:27.752Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-10-d",
+      "device": "andres",
+      "ts": "2026-07-10T23:53:00.884Z",
+      "status_code": 201
     }
   ]
 }
