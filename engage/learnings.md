@@ -13,12 +13,12 @@ el ganador no tiene push activa, no se envía nada. La crónica de las 14:00
 cita sus respuestas si llegan a tiempo; si no, sale igual (protocolo de OK
 condicional de Andrés) y las citas se agregan como addendum si llegan después.
 
-## 💸 DEUDAS (ledger vigente al 2026-07-09)
+## 💸 DEUDAS (ledger vigente al 2026-07-10)
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. 16 días al 09/07. Cero answers pese a 4+ experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
-| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. 3 días al 09/07. | `deuda-negro-postre-2026-07-06` |
+| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. 17 días al 10/07. Cero answers pese a 4+ experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
+| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. 4 días al 10/07. | `deuda-negro-postre-2026-07-06` |
 
 Saldadas / archivadas: **Mac** — sus dos deudas (postre 30/06, cena T4)
 desaparecieron de los divs `naso-disclaimer` de index.html en commits
@@ -27,9 +27,9 @@ directos de otra sesión (`62dff76` 07/07 12:47Z quitó la cena T4;
 registrado en `engagement` — se asume resuelto administrativamente fuera del
 sistema de botones. No se recontarán salvo que reaparezcan en el home.
 
-🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, 2 días):**
+🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, 3 días):**
 commit `cca7dde` (08/07 01:16Z) agregó "Gael debe postre por perder T4" y
-sigue en index.html hoy 09/07. Chequeado contra `seasons` (doc `4`):
+sigue en index.html hoy 10/07. Chequeado contra `seasons` (doc `4`):
 `winnerPlayerId: cobra`, **`loserPlayerId: mac`** — el perdedor de la T4 es
 Mac, no Gael (Gael perdió la T3, doc `seasons/3`). Además el tipo de deuda no
 cierra: perder una TEMPORADA paga **cena**, no postre. No se incorpora esta
@@ -57,26 +57,33 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
 - Sin eventos nuevos en `engagement` desde el 08/07 12:48 UY (0 nuevos hoy).
 - Anomalía `sin-nombre`/`cara`: sigue sin resolverse, sin nuevos datos hoy.
 
-## 📊 Estado del sistema (2026-07-09)
+## 📊 Estado del sistema (2026-07-10)
 
 - Subs push activas: **7** — andres (decide), pt, mata, negro, cobra, mac,
   cara. `mc` disabled. Sin cambios desde 07/07.
-- Datos: 18 docs en `games`, sin cambios desde el 08/07 (17 finalizados con
-  winner + 1 partida en curso sin terminar, `game_1783469788259`, sigue sin
-  cerrar). 16 fechas válidas para tabla anual, cutoff sigue siendo Chorolo
-  (06/07, ganó Cobra 223). Temporada 4 cerrada (Cobra ganó, Mac perdió). T5
-  en curso, fecha 1 jugada. No hay partida nueva que crónica todavía — el
-  próximo martes de crónica (14/07) depende de que se juegue el lunes 13/07.
-- Eventos `engagement`: 91 totales, 0 nuevos hoy. Nada para compactar (el más
-  viejo es del 03/07, cutoff de 14 días recién en ~17/07).
+- Datos: **17 docs en `games`** (bajó de 18) — la partida en curso sin
+  cerrar `game_1783469788259` (creada 08/07 00:16Z, ~07/07 21:16 UY) **ya no
+  existe** en la colección; se asume abandonada/borrada por otra sesión, no
+  se cuenta como fecha jugada. Las 17 restantes son todas `finished:true` con
+  winner. 16 fechas válidas para tabla anual (una sin `winnerPlayerId`, la de
+  12/05), cutoff sigue siendo Chorolo (06/07, ganó Cobra 223). Temporada 4
+  cerrada (Cobra ganó, Mac perdió). T5 en curso, fecha 1 jugada. No hay
+  partida nueva que crónica todavía — el próximo martes de crónica (14/07)
+  depende de que se juegue el lunes 13/07.
+- Eventos `engagement`: 91 totales, 0 nuevos hoy (el último sigue siendo
+  08/07 12:48 UY). Nada para compactar (el más viejo es del 03/07, cutoff de
+  14 días recién en ~17/07).
 - Queue: todo `sent`/`cancelled`, nada `pending`/`draft` para reconciliar.
-  Nada purgado hoy — el cutoff de 7 días para limpiar `sent`/`cancelled`
-  recién cae mañana (~10/07); los ítems más viejos son del 03/07.
-- Proposals `pending` sin decisión de andres: `2026-06-06-entrevista-cobra`
+  Nada purgado hoy — medí la antigüedad exacta de los ítems del 03/07 contra
+  ahora (10/07 ~09:06 UTC): el más viejo tiene 6d15h, ninguno pasa aún de 7
+  días. Purga real recién mañana (11/07).
+- Proposals `pending` sin decisión de andres: `2026-07-06-entrevista-cobra`
   y `2026-07-06-cronica`, ambas creadas 07/07 → vencen 14/07 si nadie decide.
-  Sin novedad hoy.
-- Jueves 09/07: día de silencio, sin push. Solo gestión (sin cambios que
-  hacer — repo ya estaba al día).
+  Sin novedad hoy (sin `proposal_approved`/`proposal_rejected` de `andres`
+  para ninguna de las dos).
+- Viernes 10/07: día de silencio, sin push. Solo gestión (sin cambios que
+  hacer más allá de actualizar contadores de deuda y notar la desaparición
+  de la partida sin cerrar — repo ya estaba al día).
 
 ## 🗓️ Semana en curso (editorial del lunes 06/07 — martes 07/07)
 
@@ -86,28 +93,32 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   proposals.json, vencen 14/07.
 - 🔧 Mié 08/07: sin push. Se agregó la sala de prensa de Cobra a la crónica.
   Se detectó y reportó la inconsistencia de la deuda de Gael/T4 en el home.
-- 🔧 Jue 09/07 (hoy): sin push, sin eventos nuevos, sin proposals para
+- 🔧 Jue 09/07: sin push, sin eventos nuevos, sin proposals para
   decidir, sin nada para compactar/reconciliar. Solo se actualizaron los
   contadores de deuda (Tano 16 días, Negro 3 días) y se reafirmó el flag de
   Gael/T4.
-- Vie 10/07: sin push. Gestión y memoria únicamente — probablemente primer
-  día con purga real de queue.json (ítems `sent` del 03/07 cumplen 7 días).
+- 🔧 Vie 10/07 (hoy): sin push. Gestión y memoria únicamente. La partida sin
+  cerrar que venía arrastrándose desde el 07/07 desapareció de `games`
+  (asumida abandonada). Purga de queue.json todavía no toca (los `sent` del
+  03/07 recién pasan de 7 días mañana 11/07).
 - Próximo push: **sábado 11/07, récords** — pendiente decidir sub-formato (el
   clásico ya se usó el 04/07; considerar remontadas/horóscopo/archivo para no
   repetir). Si no hay partida nueva el lunes 13/07, la crónica del martes
   14/07 no se inventa (ver regla de "semana de descanso").
 
-## 🔭 Corrida de HOY (2026-07-09, jueves, 06:06 UY)
+## 🔭 Corrida de HOY (2026-07-10, viernes, 06:06 UY)
 
-Repo limpio y actualizado (`git pull` trajo 1 commit de otra sesión: sala de
-prensa de Cobra + reconciliación de deudas del 08/07, ya reflejado acá).
-Revisados: engagement (0 eventos nuevos desde 08/07 12:48 UY), pushSubs (sin
-cambios, 7 activas), games (sin partidas nuevas, sigue 1 en curso sin
-cerrar), queue.json (nada `pending`/`draft`, nada para purgar todavía),
-proposals.json (2 `pending` de 07/07, ninguna con decisión de `andres`, no
-vencen hasta 14/07), index.html (deudas sin cambios: Tano, Negro, y el Gael/T4
-sin verificar sigue ahí). Único cambio real: actualicé los contadores de días
-de deuda en el ledger. Sin push (jueves = silencio).
+Repo limpio y actualizado (`git pull` sin commits nuevos desde ayer).
+Revisados: engagement (0 eventos nuevos, sigue en 91 totales / último
+08/07 12:48 UY), pushSubs (sin cambios, 7 activas), games (bajó de 18 a 17
+docs — la partida en curso sin cerrar `game_1783469788259` ya no está;
+ninguna partida nueva finalizada), queue.json (nada `pending`/`draft`;
+medí antigüedad exacta de los ítems del 03/07 y ninguno pasa aún de 7 días,
+purga real mañana), proposals.json (2 `pending` de 07/07, ninguna con
+decisión de `andres`, vencen 14/07), index.html (deudas sin cambios: Tano,
+Negro, y el Gael/T4 sin verificar sigue ahí). Cambios reales: actualicé los
+contadores de días de deuda en el ledger y registré la desaparición de la
+partida sin cerrar. Sin push (viernes = silencio).
 
 ## TODO / ángulos sin usar
 
