@@ -69,6 +69,18 @@
         "2026-07-10-a"
       ],
       "result_notes": null
+    },
+    {
+      "id": "2026-07-10-el-feed",
+      "title": "📱 El Feed de la mesa (newsfeed interactivo, exclusiva para la dirección)",
+      "page": "engage/2026-07-10-el-feed.html",
+      "created": "2026-07-10",
+      "status": "pending",
+      "hypothesis": "Pedida por Andres por chat (10/07): formato newsfeed moderno e interactivo (stories con visor, likes con señal real, contadores de deuda en vivo, encuesta de pronostico). Prueba si el formato feed merece entrar a la rotacion editorial. Metrica: answer feed-en-rotacion + eventos feed_like/feed_story + dwell.",
+      "notified_by": [
+        "2026-07-10-b"
+      ],
+      "result_notes": null
     }
   ]
 }

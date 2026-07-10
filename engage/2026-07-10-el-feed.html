@@ -1,0 +1,616 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>📱 El Feed de la mesa</title>
+  <style>
+    :root{
+      --bg:#0d0d12; --card:#17171f; --card2:#1c1c26; --border:#2a2a35;
+      --rojo:#ED1C24; --amarillo:#FFDE00; --verde:#00A651; --azul:#0072BC;
+      --tinta:#e9e9f0; --gris:#9a9aa6; --gris2:#6b6b78;
+      --ring:conic-gradient(from 210deg,#ED1C24,#FFDE00,#00A651,#0072BC,#ED1C24);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bg); color:var(--tinta);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      max-width:520px; margin:0 auto; padding-bottom:44px;
+      font-size:15px; line-height:1.45;
+    }
+    a.back{
+      display:block; color:var(--gris); text-decoration:none; font-size:12.5px;
+      padding:10px 16px calc(6px);
+    }
+
+    /* ---------- app bar ---------- */
+    .bar{
+      position:sticky; top:0; z-index:50;
+      display:flex; align-items:center; gap:8px;
+      padding:10px 16px; margin-bottom:2px;
+      background:rgba(13,13,18,.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+    }
+    .bar .logo{font-weight:900; font-size:19px; letter-spacing:-.03em;}
+    .bar .logo span{color:var(--rojo);}
+    .bar .live{
+      margin-left:auto; display:flex; align-items:center; gap:6px;
+      font-size:10.5px; font-weight:700; letter-spacing:.12em; color:var(--gris);
+    }
+    .bar .live i{width:7px;height:7px;border-radius:50%;background:var(--verde);
+      box-shadow:0 0 6px var(--verde); animation:pulse 2s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+    /* ---------- stories ---------- */
+    .stories{
+      display:flex; gap:14px; padding:14px 16px 12px; overflow-x:auto;
+      scrollbar-width:none; border-bottom:1px solid var(--border);
+    }
+    .stories::-webkit-scrollbar{display:none}
+    .story{flex:0 0 auto; width:66px; text-align:center; cursor:pointer; border:0; background:none; color:var(--tinta); padding:0;}
+    .story .ring{
+      width:62px;height:62px;border-radius:50%; padding:2.5px; margin:0 auto;
+      background:var(--ring); transition:transform .15s ease;
+    }
+    .story:active .ring{transform:scale(.92)}
+    .story.seen .ring{background:#3a3a46}
+    .story .ring .in{
+      width:100%;height:100%;border-radius:50%;
+      border:2.5px solid var(--bg); overflow:hidden; background:#000;
+      display:flex;align-items:center;justify-content:center;font-size:26px;
+    }
+    .story img{width:100%;height:100%;object-fit:cover;display:block}
+    .story .nm{font-size:10.5px; color:var(--gris); margin-top:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+    /* ---------- story viewer ---------- */
+    .viewer{
+      position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.94);
+      display:none; flex-direction:column; user-select:none; -webkit-user-select:none;
+    }
+    .viewer.open{display:flex}
+    .vbars{display:flex; gap:4px; padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 8px; position:relative; z-index:2;}
+    .vbars i{flex:1; height:2.5px; border-radius:2px; background:#3c3c48; overflow:hidden; position:relative;}
+    .vbars i b{position:absolute; inset:0; width:0; background:#fff; border-radius:2px;}
+    .vhead{display:flex; align-items:center; gap:10px; padding:6px 14px; position:relative; z-index:2;}
+    .vhead img{width:34px;height:34px;border-radius:50%;border:1.5px solid #fff;object-fit:cover;background:#000}
+    .vhead .vw{font-size:13.5px; font-weight:700;}
+    .vhead .vt{font-size:11.5px; color:#b9b9c4;}
+    .vhead .vx{margin-left:auto; background:none;border:0;color:#fff;font-size:26px;line-height:1;padding:4px 6px;cursor:pointer;}
+    .vbody{
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:0 28px calc(env(safe-area-inset-bottom,0px) + 60px);
+    }
+    .vbody .big{font-size:56px; margin-bottom:14px;}
+    .vbody .num{font-size:52px; font-weight:900; letter-spacing:-.03em; line-height:1;}
+    .vbody .cap{font-size:16.5px; color:#d6d6e0; margin-top:14px; max-width:34ch; line-height:1.5;}
+    .vbody .cap b{color:var(--amarillo);}
+    .vzones{position:absolute; inset:0; display:flex;}
+    .vzones div{flex:1;}
+
+    /* ---------- posts ---------- */
+    .post{
+      border-bottom:1px solid var(--border); padding:14px 16px 12px;
+      opacity:0; transform:translateY(14px); transition:opacity .5s ease, transform .5s ease;
+    }
+    .post.vis{opacity:1; transform:none;}
+    .phead{display:flex; align-items:center; gap:10px; margin-bottom:9px;}
+    .phead .av{width:40px;height:40px;border-radius:50%;overflow:hidden;flex:0 0 auto;
+      border:1.5px solid var(--border); background:#000; display:flex;align-items:center;justify-content:center;font-size:20px;}
+    .phead .av img{width:100%;height:100%;object-fit:cover;display:block}
+    .phead .u{font-size:14px; font-weight:800;}
+    .phead .u .vf{color:var(--azul); font-size:12px;}
+    .phead .h{font-size:11.5px; color:var(--gris2);}
+    .ptxt{font-size:15px; margin-bottom:10px;}
+    .ptxt .q{color:var(--tinta); font-weight:600;}
+    .ptxt .q::before{content:"“";color:var(--amarillo)} .ptxt .q::after{content:"”";color:var(--amarillo)}
+
+    .media{
+      border:1px solid var(--border); border-radius:14px; overflow:hidden;
+      background:var(--card); position:relative; cursor:pointer;
+    }
+    .media .heartburst{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-size:74px; opacity:0; pointer-events:none; transform:scale(.4);
+    }
+    .media .heartburst.go{animation:burst .7s ease forwards;}
+    @keyframes burst{20%{opacity:1;transform:scale(1.15)}60%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05)}}
+
+    .scorecard{padding:18px 16px 16px; background:linear-gradient(150deg,#191922,#12121a);}
+    .scorecard .lbl{font-size:10.5px; letter-spacing:.16em; color:var(--gris); text-transform:uppercase; margin-bottom:10px;}
+    .bigrow{display:flex; align-items:baseline; gap:10px;}
+    .bigrow .n{font-size:46px; font-weight:900; letter-spacing:-.03em; color:var(--amarillo); line-height:1;}
+    .bigrow .d{font-size:13px; color:var(--gris);}
+    .minirow{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+    .pill{font-size:11.5px; background:#20202b; border:1px solid var(--border); border-radius:999px; padding:4px 10px; color:var(--gris);}
+    .pill b{color:var(--tinta);}
+
+    /* race bar */
+    .race{padding:16px;}
+    .race .rr{display:flex; align-items:center; gap:10px; margin:10px 0;}
+    .race .rr img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid var(--border);background:#000}
+    .race .tk{flex:1; height:26px; background:#101018; border-radius:8px; overflow:hidden; position:relative;}
+    .race .tk b{
+      position:absolute; inset:0 auto 0 0; width:0; border-radius:8px;
+      display:flex; align-items:center; justify-content:flex-end; padding-right:8px;
+      font-size:12px; font-weight:800; color:#0d0d12;
+      transition:width 1.1s cubic-bezier(.2,.7,.2,1);
+    }
+    .race .rr:nth-child(2) .tk b{background:var(--amarillo);}
+    .race .rr:nth-child(3) .tk b{background:#8f8f9c; color:#0d0d12;}
+    .race .note{font-size:12px; color:var(--gris); margin-top:8px;}
+
+    /* debt counters */
+    .debt{padding:16px; display:flex; flex-direction:column; gap:12px;}
+    .drow{display:flex; align-items:center; gap:12px; background:#14141c; border:1px solid var(--border);
+      border-radius:12px; padding:10px 12px;}
+    .drow img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--rojo);background:#000}
+    .drow .dd{flex:1;}
+    .drow .dw{font-size:14px; font-weight:800;}
+    .drow .dq{font-size:12px; color:var(--gris);}
+    .drow .dn{text-align:right;}
+    .drow .dn .c{font-size:30px; font-weight:900; color:var(--rojo); line-height:1; font-variant-numeric:tabular-nums;}
+    .drow .dn .u{font-size:10px; color:var(--gris); letter-spacing:.1em; text-transform:uppercase;}
+    .dask{display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12.5px; color:var(--gris); padding:0 2px;}
+
+    /* typing / farewell */
+    .typing{display:inline-flex; gap:4px; padding:12px 14px; background:var(--card2); border-radius:16px 16px 16px 4px;}
+    .typing i{width:7px;height:7px;border-radius:50%;background:var(--gris);animation:tp 1.2s infinite;}
+    .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+    @keyframes tp{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+    .bubble{
+      background:var(--card2); border:1px solid var(--border); border-radius:16px 16px 16px 4px;
+      padding:11px 14px; font-size:15px; font-weight:600; max-width:92%;
+      opacity:0; transform:translateY(6px); transition:opacity .4s ease, transform .4s ease;
+      margin-top:8px;
+    }
+    .bubble.show{opacity:1; transform:none;}
+    .bubble small{display:block; font-weight:400; font-size:11px; color:var(--gris2); margin-top:5px;}
+
+    /* actions row */
+    .acts{display:flex; align-items:center; gap:16px; padding:10px 2px 0; font-size:13px; color:var(--gris);}
+    .likebtn{background:none;border:0;color:var(--tinta);font-size:22px;cursor:pointer;line-height:1;
+      transition:transform .12s ease; padding:2px;}
+    .likebtn:active{transform:scale(1.25)}
+    .likebtn.on{color:var(--rojo);}
+    .lc{font-variant-numeric:tabular-nums;}
+
+    /* poll */
+    .poll{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
+    .poll button{
+      background:var(--card2); border:1px solid var(--border); border-radius:12px;
+      color:var(--tinta); font-size:14.5px; font-weight:600; text-align:left;
+      padding:11px 14px; cursor:pointer; display:flex; align-items:center; gap:10px;
+      transition:border-color .15s ease, transform .1s ease;
+    }
+    .poll button:active{transform:scale(.98)}
+    .poll button img{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#000}
+    .poll button.sel{border-color:var(--amarillo); box-shadow:0 0 0 1px var(--amarillo);}
+    .poll .q-hint{padding-left:2px;}
+
+    /* expandable table */
+    details.tbl{border-top:1px dashed var(--border); margin-top:10px; padding-top:8px;}
+    details.tbl summary{
+      list-style:none; cursor:pointer; font-size:13px; color:var(--azul); font-weight:700;
+      display:flex; align-items:center; gap:6px;
+    }
+    details.tbl summary::-webkit-details-marker{display:none}
+    details.tbl summary::after{content:"▾"; transition:transform .2s ease;}
+    details.tbl[open] summary::after{transform:rotate(180deg);}
+    .trow{display:flex; justify-content:space-between; padding:7px 4px; font-size:13.5px;
+      border-bottom:1px solid #1e1e28; font-variant-numeric:tabular-nums;}
+    .trow:last-child{border-bottom:0}
+    .trow .pos{color:var(--gris2); width:26px; display:inline-block;}
+    .trow.hot{background:rgba(255,222,0,.05); border-radius:6px;}
+    .trow .delta{font-size:11.5px; margin-left:8px;}
+    .up{color:var(--verde)} .down{color:var(--rojo)}
+
+    /* contract blocks */
+    .blk{
+      background:var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:14px; margin:14px 16px; font-size:14.5px;
+    }
+    .blk button{
+      background:#20202b; color:var(--tinta); border:1px solid var(--border);
+      border-radius:999px; padding:9px 15px; font-size:14px; font-weight:600;
+      margin:8px 6px 0 0; cursor:pointer;
+    }
+    .react button{font-size:18px; padding:8px 13px;}
+    .react-hint,.q-hint,.engage-hint{display:block; font-size:12px; color:var(--verde); margin-top:6px;}
+    .fine-print{font-size:11px; color:var(--gris2); margin:18px 16px 0; line-height:1.6;}
+    .fine-print code{background:var(--card); padding:1px 5px; border-radius:4px; font-size:10.5px;}
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none!important; transition:none!important}
+      .post{opacity:1; transform:none}
+    }
+  </style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="bar">
+    <div class="logo">el feed <span>●</span></div>
+    <div class="live"><i></i> EDICIÓN PARA LA DIRECCIÓN</div>
+  </div>
+
+  <!-- ═══════════ STORIES ═══════════ -->
+  <div class="stories" id="stories"></div>
+
+  <div class="viewer" id="viewer">
+    <div class="vbars" id="vbars"></div>
+    <div class="vhead">
+      <img id="vface" src="" alt="">
+      <div><div class="vw" id="vwho"></div><div class="vt" id="vtime"></div></div>
+      <button class="vx" id="vclose" aria-label="cerrar">×</button>
+    </div>
+    <div class="vbody" id="vbody"></div>
+    <div class="vzones"><div id="vprev"></div><div id="vnext"></div></div>
+  </div>
+
+  <!-- ═══════════ POST 1 · Cobra flex ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av"><img src="../assets/faces/cobra.png" alt="Cobra"></div>
+      <div><div class="u">cobra <span class="vf">✔</span> <span style="font-size:11px;color:var(--amarillo)">· campeón T4</span></div>
+      <div class="h" data-ts="2026-07-08T04:08:56Z"></div></div>
+    </div>
+    <div class="ptxt"><span class="q">Nueva regla con mucho barro, pero algunos sabemos surfar el barro con estilo</span>
+      <small style="display:block;color:var(--gris2);font-size:11px;margin-top:3px">declaración real, sala de prensa del 08/07</small>
+    </div>
+    <div class="media" data-like="post-cobra-flex">
+      <div class="heartburst">❤️</div>
+      <div class="scorecard">
+        <div class="lbl">🏆 Chorolo · lunes 06/07 · fecha 1 de la T5</div>
+        <div class="bigrow"><span class="n">223</span><span class="d">el score más bajo de la mesa<br>en 10 rondas</span></div>
+        <div class="minirow">
+          <span class="pill">multas <b>0</b></span>
+          <span class="pill">cortes <b>0</b></span>
+          <span class="pill">escolta <b>Nachi 244</b></span>
+          <span class="pill">victoria nº <b>5</b> del año</span>
+        </div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="likebtn" data-like="post-cobra-flex" aria-label="me gusta">♥</button><span class="lc"></span>
+      <span>💬 la mesa no comenta: mastica</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ POST 2 · La tabla ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av">🎴</div>
+      <div><div class="u">lunesdeuno_oficial <span class="vf">✔</span></div>
+      <div class="h" data-ts="2026-07-07T03:04:13Z"></div></div>
+    </div>
+    <div class="ptxt">Cerró la fecha 16 del año y la tabla quedó que arde: <b>Cobra le comió 35 puntos
+    a Gordo</b> y la pelea por el segundo puesto es a cuchillo. Arriba de todo sigue PT — que ni
+    siquiera jugó la última y defiende la cima igual. 🧊</div>
+    <div class="media" data-like="post-tabla">
+      <div class="heartburst">❤️</div>
+      <div class="scorecard">
+        <div class="lbl">📊 Tabla anual · 16 fechas · menos es mejor</div>
+        <div class="trow hot"><span><span class="pos">1</span>PT</span><span>4906</span></div>
+        <div class="trow"><span><span class="pos">2</span>Gordo</span><span>5097</span></div>
+        <div class="trow"><span><span class="pos">3</span>Cobra <span class="delta up">▲ −35 de Gordo</span></span><span>5132</span></div>
+        <details class="tbl"><summary>tabla completa</summary>
+          <div class="trow"><span><span class="pos">4</span>Carucha</span><span>5460</span></div>
+          <div class="trow"><span><span class="pos">5</span>Gael</span><span>5721</span></div>
+          <div class="trow"><span><span class="pos">6</span>Nachi</span><span>5776</span></div>
+          <div class="trow"><span><span class="pos">7</span>Mata</span><span>5934</span></div>
+          <div class="trow"><span><span class="pos">8</span>Tano</span><span>6107</span></div>
+          <div class="trow"><span><span class="pos">9</span>Mac</span><span>6186</span></div>
+          <div class="trow"><span><span class="pos">10</span>Naso</span><span>6266</span></div>
+          <div class="trow"><span><span class="pos">11</span>Negro <span class="delta down">▼ último</span></span><span>6467</span></div>
+        </details>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="likebtn" data-like="post-tabla" aria-label="me gusta">♥</button><span class="lc"></span>
+      <span>📌 fijado por la redacción</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ POST 3 · Radio Postre: deudas ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av">🍮</div>
+      <div><div class="u">radio_postre <span style="font-size:11px;color:var(--gris)">· el conteo no perdona</span></div>
+      <div class="h">en vivo</div></div>
+    </div>
+    <div class="ptxt">El reloj de las deudas sigue corriendo. Nadie tocó el botón de «pagada»
+    todavía, así que la ciencia dice: se debe. ⏱️</div>
+    <div class="media">
+      <div class="debt">
+        <div class="drow">
+          <img src="../assets/faces/tano.png" alt="Tano">
+          <div class="dd"><div class="dw">Tano</div><div class="dq">postre/picada · perdió el 23/06</div></div>
+          <div class="dn"><div class="c" data-days="2026-06-23">—</div><div class="u">días y contando</div></div>
+        </div>
+        <div class="dask">¿novedades?
+          <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','pagada',this)" style="background:#20202b;color:var(--tinta);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer">✅ ya pagó</button>
+          <button onclick="engageAnswer('deuda-tano-postre-2026-06-23','sigue',this)" style="background:#20202b;color:var(--tinta);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer">⏳ sigue debiendo</button>
+          <span class="q-hint"></span>
+        </div>
+        <div class="drow">
+          <img src="../assets/faces/negro.png" alt="Negro">
+          <div class="dd"><div class="dw">Negro</div><div class="dq">postre/picada · 417 en el Chorolo (06/07)</div></div>
+          <div class="dn"><div class="c" data-days="2026-07-06">—</div><div class="u">días y contando</div></div>
+        </div>
+        <div class="dask">¿novedades?
+          <button onclick="engageAnswer('deuda-negro-postre-2026-07-06','pagada',this)" style="background:#20202b;color:var(--tinta);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer">✅ ya pagó</button>
+          <button onclick="engageAnswer('deuda-negro-postre-2026-07-06','sigue',this)" style="background:#20202b;color:var(--tinta);border:1px solid var(--border);border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer">⏳ sigue debiendo</button>
+          <span class="q-hint"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ POST 4 · Nachi tan cerca ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av">📺</div>
+      <div><div class="u">lunes_deportivo <span style="font-size:11px;color:var(--gris)">· análisis</span></div>
+      <div class="h" data-ts="2026-07-07T03:04:13Z"></div></div>
+    </div>
+    <div class="ptxt"><b>21 puntos.</b> Eso separó a Nachi de gritar campeón el lunes. Dos victorias
+    en el año, cero temporadas, y otra noche mirando la espalda del mismo de siempre. 📉</div>
+    <div class="media" data-like="post-nachi">
+      <div class="heartburst">❤️</div>
+      <div class="race" id="race">
+        <div style="font-size:10.5px;letter-spacing:.16em;color:var(--gris);text-transform:uppercase">📸 photo finish · Chorolo 06/07</div>
+        <div class="rr"><img src="../assets/faces/cobra.png" alt="Cobra"><div class="tk"><b data-w="86">223</b></div></div>
+        <div class="rr"><img src="../assets/faces/nachi.png" alt="Nachi"><div class="tk"><b data-w="94">244</b></div></div>
+        <div class="note">La barra más corta gana: menos puntos = mejor. 21 de diferencia en 10 rondas.</div>
+      </div>
+    </div>
+    <div class="acts">
+      <button class="likebtn" data-like="post-nachi" aria-label="me gusta">♥</button><span class="lc"></span>
+      <span>😮‍💨 tan cerca, cebollita</span>
+    </div>
+  </div>
+
+  <!-- ═══════════ POST 5 · La despedida de Cobra ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av"><img src="../assets/faces/cobra.png" alt="Cobra"></div>
+      <div><div class="u">cobra <span class="vf">✔</span> <span style="font-size:11px;color:var(--gris)">· último posteo antes de rajarse</span></div>
+      <div class="h" data-ts="2026-07-08T04:08:56Z"></div></div>
+    </div>
+    <div class="ptxt">Se despidió del micrófono así — y son citas textuales:</div>
+    <div id="fw">
+      <div class="typing" id="fwtyping"><i></i><i></i><i></i></div>
+      <div class="bubble" data-t="Por suerte no voy a escuchar sus ladridos por dos semanas"></div>
+      <div class="bubble" data-t="Diviertanse con la regla mientras no estoy"><small>— sala de prensa, 08/07, 01:08 AM</small></div>
+    </div>
+    <div class="ptxt" style="margin-top:12px;color:var(--gris);font-size:13.5px">
+      🧠 Lectura de la redacción: leído literal, el campeón se pierde los lunes <b>13/07 y
+      20/07</b>. Y de la «regla con mucho barro» que menciona, el sistema no tiene ningún
+      registro. Vos tenés la data:
+    </div>
+    <div class="blk" style="margin:10px 0 4px">
+      ¿Cobra falta los próximos dos lunes?
+      <button onclick="engageAnswer('cobra-ausente-2-semanas','confirmado',this)">✈️ Se va</button>
+      <button onclick="engageAnswer('cobra-ausente-2-semanas','ni-idea',this)">🤷 Ni idea</button>
+      <button onclick="engageAnswer('cobra-ausente-2-semanas','falso',this)">❌ Va a estar</button>
+      <span class="q-hint"></span>
+    </div>
+    <div class="blk" style="margin:10px 0 4px">
+      ¿Y la regla nueva «con mucho barro»… existe?
+      <button onclick="engageAnswer('regla-barro','existe',this)">🟢 Existe</button>
+      <button onclick="engageAnswer('regla-barro','no-existe',this)">🔴 No existe</button>
+      <span class="q-hint"></span>
+    </div>
+  </div>
+
+  <!-- ═══════════ POST 6 · Encuesta fecha 2 ═══════════ -->
+  <div class="post">
+    <div class="phead">
+      <div class="av">🔮</div>
+      <div><div class="u">la_previa <span style="font-size:11px;color:var(--gris)">· encuesta oficial</span></div>
+      <div class="h">cierra el lunes 13/07</div></div>
+    </div>
+    <div class="ptxt">Fecha 2 de la T5 el lunes que viene — y si el campeón de verdad se toma el
+    palo, la corona queda huérfana dos semanas. <b>¿Quién la agarra?</b></div>
+    <div class="poll" id="poll">
+      <button onclick="pollVote('nachi',this)"><img src="../assets/faces/nachi.png" alt="">Nachi — el escolta eterno (a 21 el lunes)</button>
+      <button onclick="pollVote('gordo',this)"><img src="../assets/faces/gordo.png" alt="">Gordo — 2 victorias, defiende el 2° de la anual</button>
+      <button onclick="pollVote('pt',this)"><img src="../assets/faces/pt.png" alt="">PT — el líder silencioso de la tabla</button>
+      <button onclick="pollVote('gael',this)"><img src="../assets/faces/gael.png" alt="">Gael — lideró 4 rondas el lunes y se le escapó</button>
+      <button onclick="pollVote('otro',this)"><span style="width:26px;text-align:center">🃏</span>Otro — el caos no avisa</button>
+      <span class="q-hint"></span>
+    </div>
+  </div>
+
+  <!-- ═══════════ contrato ═══════════ -->
+  <div class="blk react">¿Qué tal el feed?
+    <button onclick="engageReact('2026-07-10-el-feed','love',this)">😍</button>
+    <button onclick="engageReact('2026-07-10-el-feed','like',this)">🙂</button>
+    <button onclick="engageReact('2026-07-10-el-feed','meh',this)">😐</button>
+    <button onclick="engageReact('2026-07-10-el-feed','no',this)">🙅</button>
+    <span class="react-hint"></span>
+  </div>
+
+  <div class="blk cta">¿Este formato feed entra a la rotación editorial de la semana
+    (reemplazando algún slot clásico cuando pinte)?
+    <button onclick="engageAnswer('feed-en-rotacion','si',this)">📱 Sí, a la rotación</button>
+    <button onclick="engageAnswer('feed-en-rotacion','no',this)">🗞️ No, prefiero los clásicos</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="blk engage-actions">¿Y esta página?
+    <button onclick="engageApprove('2026-07-10-el-feed',this)">✅ Que quede</button>
+    <button onclick="engageRejected('2026-07-10-el-feed',this)">✕ No me interesa</button>
+    <span class="engage-hint"></span>
+  </div>
+
+  <div class="fine-print">Feed exclusivo para la dirección, pedido el 10/07. Todo verificado hoy
+  contra <code>games</code>: tabla anual de 16 fechas válidas (fórmula oficial con ausencias),
+  Chorolo 06/07 (Cobra 223 en 10 rondas sin multas ni cortes, Nachi 244, Negro 417), victorias
+  del año (Cobra 5, Nachi 2, Gordo 2). Las citas de Cobra son textuales de la sala de prensa del
+  08/07; los demás posteos son de las cuentas de la redacción — ningún jugador escribió lo que no
+  dijo. Deudas contadas al día de lectura.</div>
+
+  <script src="engage.js"></script>
+  <script>
+  (function(){
+    'use strict';
+
+    /* ---------- tiempos relativos ---------- */
+    function rel(iso){
+      var s=(Date.now()-new Date(iso).getTime())/1000;
+      if(s<3600) return 'hace '+Math.max(1,Math.round(s/60))+' min';
+      if(s<86400) return 'hace '+Math.round(s/3600)+' h';
+      return 'hace '+Math.round(s/86400)+' días';
+    }
+    document.querySelectorAll('[data-ts]').forEach(function(el){ el.textContent=rel(el.getAttribute('data-ts')); });
+
+    /* ---------- contadores de deuda (al día de lectura, hora local) ---------- */
+    function dayDiff(anchor){
+      var now=new Date();
+      var a=new Date(anchor+'T00:00:00-03:00');
+      var n=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      var a0=new Date(a.getFullYear(),a.getMonth(),a.getDate());
+      return Math.max(0,Math.round((n-a0)/86400000));
+    }
+    document.querySelectorAll('[data-days]').forEach(function(el){
+      el.textContent=dayDiff(el.getAttribute('data-days'));
+    });
+
+    /* ---------- entrada de posts ---------- */
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target);} });
+    },{threshold:.08});
+    document.querySelectorAll('.post').forEach(function(p){ io.observe(p); });
+
+    /* ---------- likes (señal real, 1 por post por sesión) ---------- */
+    var liked={};
+    function doLike(key,btnRow){
+      var btn=document.querySelector('.likebtn[data-like="'+key+'"]');
+      var count=btn && btn.nextElementSibling;
+      if(!liked[key]){
+        liked[key]=true;
+        if(btn){btn.classList.add('on');}
+        if(count){count.textContent='a vos te gustó';}
+        if(window.engageTrack) engageTrack('feed_like',{id:'feedlike-'+key+'-'+(localStorage.getItem('lunesdeuno_device_id')||'x').slice(0,8),post:key});
+      }
+      var media=document.querySelector('.media[data-like="'+key+'"] .heartburst');
+      if(media){media.classList.remove('go'); void media.offsetWidth; media.classList.add('go');}
+    }
+    document.querySelectorAll('.likebtn').forEach(function(b){
+      b.addEventListener('click',function(){ doLike(b.getAttribute('data-like')); });
+    });
+    document.querySelectorAll('.media[data-like]').forEach(function(m){
+      var lastTap=0;
+      m.addEventListener('click',function(){
+        var t=Date.now();
+        if(t-lastTap<350) doLike(m.getAttribute('data-like'));
+        lastTap=t;
+      });
+    });
+
+    /* ---------- race bars ---------- */
+    var raceIO=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        e.target.querySelectorAll('[data-w]').forEach(function(b){ b.style.width=b.getAttribute('data-w')+'%'; });
+        raceIO.unobserve(e.target);
+      });
+    },{threshold:.4});
+    var race=document.getElementById('race'); if(race) raceIO.observe(race);
+
+    /* ---------- despedida: typing → burbujas ---------- */
+    var fwIO=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        fwIO.unobserve(e.target);
+        var bubbles=e.target.querySelectorAll('.bubble');
+        var typing=document.getElementById('fwtyping');
+        var i=0;
+        function next(){
+          if(i>=bubbles.length){ if(typing) typing.style.display='none'; return; }
+          var b=bubbles[i++];
+          setTimeout(function(){
+            b.insertAdjacentText('afterbegin','“'+b.getAttribute('data-t')+'”');
+            b.classList.add('show');
+            if(i>=bubbles.length && typing) typing.style.display='none';
+            else next();
+          }, i===1?1300:1600);
+        }
+        next();
+      });
+    },{threshold:.3});
+    fwIO.observe(document.getElementById('fw'));
+
+    /* ---------- encuesta ---------- */
+    window.pollVote=function(who,btn){
+      engageAnswer('pronostico-2026-07-13',who,btn);
+      btn.classList.add('sel');
+    };
+
+    /* ---------- stories ---------- */
+    var STORIES=[
+      {id:'cobra', who:'cobra', face:'cobra', time:'racha 2026', emoji:'👑', num:'5/16',
+       cap:'<b>5 de las 16 fechas</b> del año son suyas — nadie ganó más. La parte que no postea: también coleccionó <b>3 últimos puestos</b>.'},
+      {id:'pt', who:'pt', face:'pt', time:'tabla anual', emoji:'🧊', num:'4906',
+       cap:'La cima de la anual es de <b>PT</b>. Ni jugó la última fecha y ahí sigue, mirando a todos desde arriba.'},
+      {id:'tano', who:'tano', face:'tano', time:'deudas', emoji:'🍮', num:'', numDays:'2026-06-23',
+       cap:'Días que lleva <b>Tano</b> debiendo el postre/picada del 23/06. El botón de «pagada» sigue virgen.'},
+      {id:'negro', who:'negro', face:'negro', time:'Chorolo 06/07', emoji:'🫙', num:'417',
+       cap:'El score de <b>Negro</b> el lunes: 194 más que el campeón. Pagó la noche y entró al conteo de deudas.'},
+      {id:'mac', who:'mac', face:'mac', time:'expediente 2026', emoji:'📁', num:'0',
+       cap:'Victorias de <b>Mac</b> en el año: cero en 13 jugadas, y <b>5 últimos puestos</b> — récord absoluto del grupo. El expediente sigue abierto.'}
+    ];
+    var srail=document.getElementById('stories');
+    STORIES.forEach(function(s,idx){
+      var b=document.createElement('button');
+      b.className='story'; b.id='story-'+s.id;
+      b.innerHTML='<div class="ring"><div class="in"><img src="../assets/faces/'+s.face+'.png" alt="'+s.who+'"></div></div><div class="nm">'+s.who+'</div>';
+      b.addEventListener('click',function(){ openViewer(idx); });
+      srail.appendChild(b);
+    });
+
+    var viewer=document.getElementById('viewer'), vbars=document.getElementById('vbars'),
+        vbody=document.getElementById('vbody'), vface=document.getElementById('vface'),
+        vwho=document.getElementById('vwho'), vtime=document.getElementById('vtime');
+    var cur=0, timer=null, seenSent={};
+    STORIES.forEach(function(){ var i=document.createElement('i'); i.innerHTML='<b></b>'; vbars.appendChild(i); });
+    var bars=vbars.querySelectorAll('i b');
+
+    function renderStory(i){
+      cur=i;
+      var s=STORIES[i];
+      vface.src='../assets/faces/'+s.face+'.png';
+      vwho.textContent=s.who; vtime.textContent=s.time;
+      var num=s.numDays ? String((function(){var el=document.querySelector('[data-days="'+s.numDays+'"]');return el?el.textContent:'';})()) : s.num;
+      vbody.innerHTML='<div class="big">'+s.emoji+'</div>'+(num?'<div class="num">'+num+'</div>':'')+'<div class="cap">'+s.cap+'</div>';
+      bars.forEach(function(b,j){
+        b.style.transition='none';
+        b.style.width= j<i ? '100%' : '0';
+      });
+      var mark=document.getElementById('story-'+s.id); if(mark) mark.classList.add('seen');
+      if(!seenSent[s.id] && window.engageTrack){
+        seenSent[s.id]=true;
+        engageTrack('feed_story',{id:'feedstory-'+s.id+'-'+(localStorage.getItem('lunesdeuno_device_id')||'x').slice(0,8),story:s.id});
+      }
+      clearTimeout(timer);
+      requestAnimationFrame(function(){requestAnimationFrame(function(){
+        var b=bars[i]; b.style.transition='width 5s linear'; b.style.width='100%';
+      });});
+      timer=setTimeout(function(){ nav(1); },5000);
+    }
+    function nav(d){
+      var n=cur+d;
+      if(n<0){ renderStory(0); return; }
+      if(n>=STORIES.length){ closeViewer(); return; }
+      renderStory(n);
+    }
+    function openViewer(i){ viewer.classList.add('open'); document.body.style.overflow='hidden'; renderStory(i); }
+    function closeViewer(){ viewer.classList.remove('open'); document.body.style.overflow=''; clearTimeout(timer); }
+    document.getElementById('vclose').addEventListener('click',closeViewer);
+    document.getElementById('vnext').addEventListener('click',function(){ nav(1); });
+    document.getElementById('vprev').addEventListener('click',function(){ nav(-1); });
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeViewer(); });
+  })();
+  </script>
+</body>
+</html>
