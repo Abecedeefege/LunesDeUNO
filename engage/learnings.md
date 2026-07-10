@@ -114,12 +114,14 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   PT jugó el Chorolo y quedó 6º con 269 (recalculado de games). Corregido en
   la crónica y evitado en el feed. Lección: no heredar frases de páginas
   anteriores sin re-verificar contra games.
-- 🔧 CORRECCIÓN DE ENCUADRE (Andrés por chat, 10/07): la entrevista a Cobra
-  fue POR EL TÍTULO DE LA T4, que se definió por **8 puntos** contra Nachi
-  (seasons/4: Cobra 1155, Nachi 1163; Mac último 1453) — no por la fecha del
-  Chorolo. Tape y feed re-encuadrados (el Chorolo queda como dato secundario:
-  223, por 21 sobre Nachi, apertura de la T5). El "por 8 sobre Nachi" es ORO
-  editorial: dos heridas de Nachi en 15 días (8 en la T4, 21 el lunes).
+- 🔧 ENCUADRE DEFINITIVO de la entrevista (Andrés se corrigió a sí mismo por
+  chat, 10/07 — esta versión MANDA): la entrevista fue por la **victoria en
+  el Chorolo (última fecha, 06/07): le ganó a Nachi por 21**. El título de la
+  T4 por 8 sobre el mismo Nachi (seasons/4: 1155 vs 1163; Mac último 1453) es
+  CONTEXTO verificado, no la ocasión. Tape remasterizado con este encuadre
+  (diseño casete: reels animados, contador de cinta, 5 pistas). El ángulo
+  "dos heridas de Nachi en 15 días (8 en la T4, 21 el lunes)" sigue siendo
+  oro editorial y quedó en tape + feed.
 - 📵 INCIDENTE DE ENTREGA: push `2026-07-10-b` (feed) aceptado con 201 al
   device andres pero NO se mostró; el `-a` (enviado 100ms antes) sí llegó.
   sw.js OK (tags distintos por nid), dispatcher OK (TTL 4h, urgency high,
