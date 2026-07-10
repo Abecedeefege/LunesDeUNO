@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-10T23:33:35.572Z",
+  "_updated_at": "2026-07-10T23:46:27.753Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -239,8 +239,8 @@
       ],
       "send_at": "2026-07-10T20:45:00-03:00",
       "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-10T23:46:27.752Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-10 (reintento del 2026-07-10-b: aceptado 201 pero no se mostró en el device — hipótesis: dos pushes con 100ms de diferencia, el dispositivo mostró solo el primero. Este va solo.)"
     },
