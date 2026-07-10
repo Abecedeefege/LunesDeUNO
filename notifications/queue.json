@@ -230,6 +230,21 @@
       "created_by": "engagement-agent 2026-07-10 (pedido directo de Andrés por chat: newsfeed interactivo exclusivo, envío inmediato, página verificada 200 en Pages)"
     },
     {
+      "id": "2026-07-10-c",
+      "title": "📱 Estrenamos: El Feed de la mesa",
+      "body": "Stories, likes, la tabla al rojo, los relojes de deuda en vivo (Tano 17, Negro 4) y la encuesta: ¿quién gana el 13/07?",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-el-feed.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-10T20:45:00-03:00",
+      "expires_at": "2026-07-10T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-10 (reintento del 2026-07-10-b: aceptado 201 pero no se mostró en el device — hipótesis: dos pushes con 100ms de diferencia, el dispositivo mostró solo el primero. Este va solo.)"
+    },
+    {
       "id": "2026-07-07-test-andres",
       "title": "🎴 Test de canal — Andrés",
       "body": "Si ves esto, tu suscripción está viva. Tocá para confirmar que el push llega.",
