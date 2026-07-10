@@ -97,16 +97,29 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   decidir, sin nada para compactar/reconciliar. Solo se actualizaron los
   contadores de deuda (Tano 16 días, Negro 3 días) y se reafirmó el flag de
   Gael/T4.
-- 🔧 Vie 10/07 (hoy): sin push. Gestión y memoria únicamente. La partida sin
+- 🔧 Vie 10/07 (hoy): sin push editorial. Gestión y memoria. La partida sin
   cerrar que venía arrastrándose desde el 07/07 desapareció de `games`
   (asumida abandonada). Purga de queue.json todavía no toca (los `sent` del
   03/07 recién pasan de 7 días mañana 11/07).
+- 📬 Vie 10/07 ~20:00 (corrida extra, pedido de Andrés por chat): experiencia
+  exclusiva `2026-07-10-cobra-sin-editar.html` (el tape completo de la
+  entrevista de Cobra) + push `2026-07-10-a` SOLO al device andres, 21:15.
+  No cuenta contra la regla de un push editorial por día: es dirigido y
+  pedido explícitamente por el dueño del canal.
 - Próximo push: **sábado 11/07, récords** — pendiente decidir sub-formato (el
   clásico ya se usó el 04/07; considerar remontadas/horóscopo/archivo para no
   repetir). Si no hay partida nueva el lunes 13/07, la crónica del martes
   14/07 no se inventa (ver regla de "semana de descanso").
 
-## 🔭 Corrida de HOY (2026-07-10, viernes, 06:06 UY)
+🚨 **SEÑAL SIN CONFIRMAR — AUSENCIA DE COBRA:** en la entrevista (08/07)
+Cobra dijo DOS veces que se va «dos semanas» → se perdería los lunes 13/07 y
+20/07 (la corona sin defensa, fechas 2 y 3 de la T5). Pregunta de archivo
+`cobra-ausente-2-semanas` (confirmado/ni-idea/falso) embebida en la exclusiva
+del 10/07 para que Andrés confirme. Si se confirma, es EL ángulo del sábado
+récords y de la previa del lunes. También mencionó una «regla nueva con
+barro» que el sistema no registra — pregunta `regla-barro` embebida ídem.
+
+## 🔭 Corrida de HOY (2026-07-10, viernes, 06:06 UY + corrida extra ~20:00 UY)
 
 Repo limpio y actualizado (`git pull` sin commits nuevos desde ayer).
 Revisados: engagement (0 eventos nuevos, sigue en 91 totales / último
@@ -118,7 +131,17 @@ purga real mañana), proposals.json (2 `pending` de 07/07, ninguna con
 decisión de `andres`, vencen 14/07), index.html (deudas sin cambios: Tano,
 Negro, y el Gael/T4 sin verificar sigue ahí). Cambios reales: actualicé los
 contadores de días de deuda en el ledger y registré la desaparición de la
-partida sin cerrar. Sin push (viernes = silencio).
+partida sin cerrar. Sin push editorial (viernes = silencio).
+
+**Corrida extra (~20:00 UY, pedido de Andrés):** creada la exclusiva
+`2026-07-10-cobra-sin-editar` (tape completo: 5 Q&A textuales de los docs
+`answer-cobra-entrevista-q1…q5`, números re-verificados de
+`games/game_1783387875567`, análisis de la ausencia/regla, escritorio de
+decisiones con las 2 proposals que vencen 14/07 y 3 preguntas de archivo).
+Push `2026-07-10-a` encolado SOLO a andres (21:15, expira 23:00). Proposal
+registrada `pending`. Mirar mañana: answers de andres a
+`cobra-ausente-2-semanas`, `regla-barro`, `sala-de-prensa-fija` y las
+decisiones de permanencia — condicionan el ángulo del sábado récords.
 
 ## TODO / ángulos sin usar
 

@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>🎙️ Cobra sin editar — el tape completo</title>
+  <style>
+    :root{
+      --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
+      --rojo:#ED1C24; --amarillo:#FFDE00; --verde:#00A651; --azul:#0072BC;
+      --tinta:#e8e8ee; --gris:#9a9aa6;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      background:var(--bg); color:var(--tinta);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      padding:14px 14px 40px; max-width:640px; margin:0 auto;
+      line-height:1.45;
+    }
+    a.back{
+      display:inline-block; color:var(--gris); text-decoration:none;
+      font-size:13px; margin-bottom:14px; padding:6px 10px;
+      border:1px solid var(--border); border-radius:999px; background:var(--card);
+    }
+    /* --- cabecera de grabadora --- */
+    .deck{
+      background:linear-gradient(160deg,#14141c,#0f0f16 60%,#191922);
+      border:1px solid var(--border); border-radius:14px; padding:18px 16px 14px;
+      position:relative; overflow:hidden; margin-bottom:16px;
+    }
+    .deck::before{
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.012) 3px 4px);
+    }
+    .recline{display:flex; align-items:center; gap:8px; font-size:12px; letter-spacing:.12em;
+      color:var(--gris); text-transform:uppercase; margin-bottom:10px;}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--rojo);
+      box-shadow:0 0 8px var(--rojo); animation:blink 1.4s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    .clas{
+      display:inline-block; font-size:11px; font-weight:800; letter-spacing:.14em;
+      color:var(--amarillo); border:1px dashed var(--amarillo); border-radius:4px;
+      padding:3px 8px; margin-bottom:12px; transform:rotate(-1.2deg);
+    }
+    h1{font-size:26px; line-height:1.12; letter-spacing:-.01em;}
+    h1 em{font-style:normal; color:var(--amarillo);}
+    .sub{color:var(--gris); font-size:14px; margin-top:8px;}
+    .champ{display:flex; align-items:center; gap:12px; margin-top:14px;
+      background:rgba(0,0,0,.25); border:1px solid var(--border); border-radius:10px; padding:10px 12px;}
+    .champ img{width:56px;height:56px;border-radius:50%;border:2px solid var(--amarillo);
+      object-fit:cover; background:#000;}
+    .champ .cd{font-size:13px; color:var(--gris);}
+    .champ .cd b{color:var(--tinta); font-size:15px; display:block;}
+    .ficha{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;}
+    .chip{font-size:11.5px; background:var(--card); border:1px solid var(--border);
+      border-radius:999px; padding:4px 10px; color:var(--gris);}
+    .chip b{color:var(--tinta);}
+
+    /* --- tracks --- */
+    .track{
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:14px; margin-bottom:12px; position:relative;
+    }
+    .thead{display:flex; align-items:baseline; gap:10px; margin-bottom:8px;}
+    .tnum{font-family:ui-monospace,Menlo,monospace; font-size:11px; color:var(--rojo);
+      letter-spacing:.14em; font-weight:700;}
+    .ttag{font-size:11px; color:var(--gris); text-transform:uppercase; letter-spacing:.1em;}
+    .preg{font-size:13px; color:var(--gris); border-left:3px solid var(--azul);
+      padding:2px 0 2px 10px; margin-bottom:10px;}
+    .preg b{color:var(--tinta);}
+    .resp{font-size:17.5px; font-weight:700; line-height:1.35; color:var(--tinta);}
+    .resp::before{content:"“"; color:var(--amarillo);}
+    .resp::after{content:"”"; color:var(--amarillo);}
+
+    /* --- análisis --- */
+    .sec{margin:22px 0 10px; font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+      color:var(--gris); display:flex; align-items:center; gap:8px;}
+    .sec::after{content:""; flex:1; height:1px; background:var(--border);}
+    .nota{
+      background:var(--card); border:1px solid var(--border); border-left:4px solid var(--verde);
+      border-radius:10px; padding:12px 14px; margin-bottom:12px; font-size:14.5px;
+    }
+    .nota.alerta{border-left-color:var(--rojo);}
+    .nota.duda{border-left-color:var(--azul);}
+    .nota h3{font-size:15px; margin-bottom:6px;}
+    .nota p{color:#c9c9d4;}
+    .nota .src{display:block; margin-top:8px; font-size:11.5px; color:var(--gris); font-style:italic;}
+
+    /* --- botoneras --- */
+    .qbox,.react,.cta,.engage-actions{
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:14px; margin-bottom:12px; font-size:14.5px;
+    }
+    .qbox .ql{font-size:13px; color:var(--gris); margin-bottom:8px;}
+    button{
+      background:#20202b; color:var(--tinta); border:1px solid var(--border);
+      border-radius:999px; padding:9px 15px; font-size:14px; font-weight:600;
+      margin:6px 6px 0 0; cursor:pointer;
+    }
+    .react button{font-size:18px; padding:8px 13px;}
+    .react-hint,.q-hint,.engage-hint{display:block; font-size:12px; color:var(--verde); margin-top:6px;}
+
+    /* --- escritorio de decisiones --- */
+    .desk{
+      background:linear-gradient(160deg,#171720,#12121a);
+      border:1px solid var(--amarillo); border-radius:12px; padding:14px; margin-bottom:12px;
+    }
+    .desk h3{font-size:15px; color:var(--amarillo); margin-bottom:4px;}
+    .desk .dl{font-size:12.5px; color:var(--gris); margin-bottom:12px;}
+    .desk .item{border-top:1px solid var(--border); padding:12px 0 4px; }
+    .desk .item .ti{font-size:14.5px; font-weight:700;}
+    .desk .item .exp{font-size:12.5px; color:var(--gris); margin:4px 0 2px;}
+
+    .fine-print{font-size:11px; color:#6b6b78; margin-top:20px; line-height:1.6;}
+    .fine-print code{background:#17171f; padding:1px 5px; border-radius:4px; font-size:10.5px;}
+  </style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="deck">
+    <div class="recline"><span class="dot"></span> REC · TAPE 2026-07-08 · 01:08 AM</div>
+    <div class="clas">CONFIDENCIAL · SOLO DIRECCIÓN</div>
+    <h1>Cobra <em>sin editar</em>: el tape completo de la sala de prensa</h1>
+    <div class="sub">La crónica publicó los recortes. Esto es la cinta entera: las 5 preguntas
+    tal cual se le hicieron, las 5 respuestas tal cual las tipeó — madrugada del miércoles,
+    01:08 hora uruguaya — y lo que la redacción encontró al escucharla de nuevo.</div>
+    <div class="champ">
+      <img src="../assets/faces/cobra.png" alt="Cobra">
+      <div class="cd"><b>Cobra — campeón del Chorolo (lunes 06/07)</b>
+      223 puntos en 10 rondas. Sin una multa, sin un corte. Nachi escolta con 244.</div>
+    </div>
+    <div class="ficha">
+      <span class="chip">🏆 ganó por <b>21</b> sobre Nachi</span>
+      <span class="chip">🍮 último: <b>Negro, 417</b> (+194)</span>
+      <span class="chip">⭐ defiende la corona de la <b>T4</b></span>
+      <span class="chip">🗓️ arrancó ganando la <b>T5</b></span>
+    </div>
+  </div>
+
+  <div class="sec">🎞️ La cinta — 5 pistas</div>
+
+  <div class="track">
+    <div class="thead"><span class="tnum">TRACK 01</span><span class="ttag">Momento alarde</span></div>
+    <div class="preg">Ganaste con <b>223</b>, el score más bajo de la mesa, sin una sola multa ni corte,
+    y de paso te llevaste la <b>primera fecha de la Temporada 5</b>. Campeón otra vez:
+    ¿a qué —o a quién— se lo dedicás?</div>
+    <div class="resp">Nueva regla con mucho barro, pero algunos sabemos surfar el barro con estilo</div>
+  </div>
+
+  <div class="track">
+    <div class="thead"><span class="tnum">TRACK 02</span><span class="ttag">Los sin estrella</span></div>
+    <div class="preg">Vos ya tenés tu estrella (campeón de la T4). <b>Mac, Mata, Gael, Nachi, Negro,
+    Naso y Tano</b> todavía no ganaron ni una temporada. ¿Qué mensaje les mandás a los
+    <b>7 que siguen sin estrella</b>?</div>
+    <div class="resp">Por suerte no voy a escuchar sus ladridos por dos semanas</div>
+  </div>
+
+  <div class="track">
+    <div class="thead"><span class="tnum">TRACK 03</span><span class="ttag">Los que perdieron</span></div>
+    <div class="preg">Anoche les ganaste a los 9. El último paga postre o picada, y esta vez le tocó a
+    <b>Negro con 417</b> — casi <b>200 puntos</b> más que vos. ¿Unas palabras para los que perdieron ayer?</div>
+    <div class="resp">Qui pasó negritoooo, comiste del tupper</div>
+  </div>
+
+  <div class="track">
+    <div class="thead"><span class="tnum">TRACK 04</span><span class="ttag">Los que sufrieron</span></div>
+    <div class="preg"><b>Nachi</b> quedó segundo a solo <b>21 puntos</b>: tan cerca del campeón y tan
+    lejos. ¿Quién sufrió más tu nivel de anoche… y se lo hiciste a propósito?</div>
+    <div class="resp">Me voy dos semanas cebollita, espero que finalmente puedas ganarla y meterte
+    en el grupo de los estrellitas</div>
+  </div>
+
+  <div class="track">
+    <div class="thead"><span class="tnum">TRACK 05</span><span class="ttag">Palabras finales</span></div>
+    <div class="preg">Arrancó la <b>Temporada 5</b> y ganaste la primera. ¿Te ves <b>bicampeón</b>?
+    Tu declaración final para toda la mesa.</div>
+    <div class="resp">Diviertanse con la regla mientras no estoy</div>
+  </div>
+
+  <div class="sec">🔎 Lo que dejó picando</div>
+
+  <div class="nota alerta">
+    <h3>🚨 El campeón se va: dos lunes sin defensa de la corona</h3>
+    <p>Lo dijo dos veces en la misma cinta: <i>«no voy a escuchar sus ladridos por dos
+    semanas»</i> (track 02) y <i>«Me voy dos semanas»</i> (track 04). Leído literal desde el
+    08/07, Cobra se perdería los lunes <b>13/07 y 20/07</b> — el ganador de la fecha 1 de la T5
+    mirando de afuera las fechas 2 y 3, sumando el peor puntaje base de cada noche por la regla
+    de ausencias. ¿Sabías de este viaje?</p>
+    <span class="src">Fuente: declaraciones textuales de Cobra, tracks 02 y 04.</span>
+  </div>
+  <div class="qbox">
+    <div class="ql">📋 Para el archivo de la redacción:</div>
+    ¿Cobra falta los próximos dos lunes?
+    <button onclick="engageAnswer('cobra-ausente-2-semanas','confirmado',this)">✈️ Confirmado, se va</button>
+    <button onclick="engageAnswer('cobra-ausente-2-semanas','ni-idea',this)">🤷 Ni idea</button>
+    <button onclick="engageAnswer('cobra-ausente-2-semanas','falso',this)">❌ No, va a estar</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="nota duda">
+    <h3>🕵️ La «regla con mucho barro» que la redacción no tiene registrada</h3>
+    <p>Abre la cinta con <i>«Nueva regla con mucho barro»</i> y la cierra con <i>«Diviertanse
+    con la regla mientras no estoy»</i>. En los datos de la app no hay rastro de ninguna regla
+    nueva: los puntajes del Chorolo se computaron igual que siempre (base + multas + cortes).
+    Sea lo que sea, se habló en la mesa y el sistema no se enteró.</p>
+    <span class="src">Fuente: tracks 01 y 05; scoring del 06/07 recalculado sin anomalías.</span>
+  </div>
+  <div class="qbox">
+    <div class="ql">📋 Segunda consulta del archivo:</div>
+    ¿Existe esa regla nueva?
+    <button onclick="engageAnswer('regla-barro','existe',this)">🟢 Existe, después te cuento</button>
+    <button onclick="engageAnswer('regla-barro','no-existe',this)">🔴 No existe, Cobra delira</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="nota">
+    <h3>📖 Diccionario del campeón (interpretación de la redacción)</h3>
+    <p><b>«negritoooo… comiste del tupper»</b> — llegó como respuesta a la pregunta por Negro,
+    que pagó la noche con 417. <b>«cebollita… los estrellitas»</b> — llegó en la pregunta por
+    Nachi, el escolta a 21 puntos que sigue sin temporada ganada. La redacción traduce por
+    contexto; el tupper queda sin explicar y quizás sea mejor así.</p>
+    <span class="src">Interpretación editorial: cada apodo se asigna por la pregunta que respondía.</span>
+  </div>
+
+  <div class="sec">🗂️ Escritorio del director</div>
+
+  <div class="desk">
+    <h3>Decisiones pendientes de tu firma</h3>
+    <div class="dl">Dos piezas de esta semana siguen sin veredicto y <b>expiran el 14/07</b>:
+    sin tu firma se archivan solas. Mata ya votó que la crónica quede, pero acá la única
+    firma que vale es la tuya.</div>
+    <div class="item">
+      <div class="ti">🎤 La entrevista al campeón (formato «sala de prensa»)</div>
+      <div class="exp">La página que Cobra contestó. Si queda, el formato se repite con cada
+      ganador; si no, muere el 14/07.</div>
+      <button onclick="engageApprove('2026-07-06-entrevista-cobra',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-06-entrevista-cobra',this)">✕ Archivar</button>
+      <span class="engage-hint"></span>
+    </div>
+    <div class="item">
+      <div class="ti">📰 La crónica del Chorolo (con la sala de prensa integrada)</div>
+      <div class="exp">El tabloide del martes: la remontada de Cobra, el box score y las
+      declaraciones. Si queda, es el archivo histórico de la fecha.</div>
+      <button onclick="engageApprove('2026-07-06-cronica',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-06-cronica',this)">✕ Archivar</button>
+      <span class="engage-hint"></span>
+    </div>
+  </div>
+
+  <div class="react">¿Qué tal el tape completo?
+    <button onclick="engageReact('2026-07-10-cobra-sin-editar','love',this)">😍</button>
+    <button onclick="engageReact('2026-07-10-cobra-sin-editar','like',this)">🙂</button>
+    <button onclick="engageReact('2026-07-10-cobra-sin-editar','meh',this)">😐</button>
+    <button onclick="engageReact('2026-07-10-cobra-sin-editar','no',this)">🙅</button>
+    <span class="react-hint"></span>
+  </div>
+
+  <div class="cta">¿La sala de prensa queda como sección fija después de cada fecha
+    (entrevista al ganador + citas en la crónica)?
+    <button onclick="engageAnswer('sala-de-prensa-fija','si',this)">🎙️ Sí, sección fija</button>
+    <button onclick="engageAnswer('sala-de-prensa-fija','no',this)">🙅 No, fue puntual</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="engage-actions">¿Y esta página exclusiva?
+    <button onclick="engageApprove('2026-07-10-cobra-sin-editar',this)">✅ Que quede</button>
+    <button onclick="engageRejected('2026-07-10-cobra-sin-editar',this)">✕ No me interesa</button>
+    <span class="engage-hint"></span>
+  </div>
+
+  <div class="fine-print">Edición exclusiva para la dirección (device <code>andres</code>) pedida el
+  10/07. Respuestas textuales de los docs <code>answer-cobra-entrevista-q1…q5</code> de
+  <code>engagement</code> (08/07 04:08Z = 01:08 UY). Números recalculados hoy de
+  <code>games/game_1783387875567</code>: Cobra 223 (0 multas, 0 cortes), Nachi 244, Negro 417,
+  Naso 345 (única multa de la noche: 50), ausente Carucha. Preguntas citadas tal cual de
+  <code>2026-07-06-entrevista-cobra.html</code>.</div>
+
+  <script src="engage.js"></script>
+</body>
+</html>

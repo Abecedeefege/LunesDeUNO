@@ -57,6 +57,18 @@
       "hypothesis": "El relato de la remontada real (Gael 4 rondas líder, Gordo 1 sola mano, Cobra la roba en la 9na) + box score + multa/falta/deuda nueva de Negro convierte igual o mejor que records/chusmerio. Métrica: reacción + answer suscripción + approve. Push retenido en draft hasta OK de Andrés (protocolo del 07/07).",
       "notified_by": [],
       "result_notes": null
+    },
+    {
+      "id": "2026-07-10-cobra-sin-editar",
+      "title": "🎙️ Cobra sin editar — el tape completo (exclusiva para la dirección)",
+      "page": "engage/2026-07-10-cobra-sin-editar.html",
+      "created": "2026-07-10",
+      "status": "pending",
+      "hypothesis": "Pedida por Andres por chat (10/07): la entrevista completa de Cobra solo para el. Ademas de las 5 Q&A textuales, embebe el escritorio de decisiones (approve/reject de las 2 proposals que vencen 14/07) y 3 preguntas de archivo (ausencia de Cobra 2 semanas, regla del barro, sala de prensa fija). Metrica: answers/decisiones de andres desde esta pagina.",
+      "notified_by": [
+        "2026-07-10-a"
+      ],
+      "result_notes": null
     }
   ]
 }

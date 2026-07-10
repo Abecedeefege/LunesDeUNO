@@ -200,6 +200,21 @@
       "created_by": "manual-andres 2026-07-07 (reenvio entrevista a cobra, recordatorio, SOLO cobra)"
     },
     {
+      "id": "2026-07-10-a",
+      "title": "🎙️ Solo para vos: el tape de Cobra",
+      "body": "Las 5 respuestas sin editar + lo que dejó picando: se va 2 semanas y una «regla con mucho barro». Hay 2 decisiones esperándote.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-10T21:15:00-03:00",
+      "expires_at": "2026-07-10T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-10 (pedido directo de Andrés por chat: entrevista de Cobra solo para él)"
+    },
+    {
       "id": "2026-07-07-test-andres",
       "title": "🎴 Test de canal — Andrés",
       "body": "Si ves esto, tu suscripción está viva. Tocá para confirmar que el push llega.",
