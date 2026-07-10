@@ -101,11 +101,19 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   cerrar que venía arrastrándose desde el 07/07 desapareció de `games`
   (asumida abandonada). Purga de queue.json todavía no toca (los `sent` del
   03/07 recién pasan de 7 días mañana 11/07).
-- 📬 Vie 10/07 ~20:00 (corrida extra, pedido de Andrés por chat): experiencia
-  exclusiva `2026-07-10-cobra-sin-editar.html` (el tape completo de la
-  entrevista de Cobra) + push `2026-07-10-a` SOLO al device andres, 21:15.
-  No cuenta contra la regla de un push editorial por día: es dirigido y
-  pedido explícitamente por el dueño del canal.
+- 📬 Vie 10/07 ~20:00-20:35 (corrida extra, pedidos de Andrés por chat): DOS
+  exclusivas al device andres: `2026-07-10-cobra-sin-editar.html` (tape
+  completo de la entrevista) y `2026-07-10-el-feed.html` (newsfeed
+  interactivo: stories con visor, likes con señal `feed_like`/`feed_story`,
+  contadores de deuda en vivo, encuesta `pronostico-2026-07-13`). Pushes
+  `2026-07-10-a` y `2026-07-10-b` con envío inmediato (~20:35, pedido
+  explícito "que llegue ahora"; páginas verificadas 200 en Pages antes de
+  soltar). No cuentan contra la regla del push editorial diario: dirigidos y
+  pedidos por el dueño del canal.
+- 🔧 CORRECCIÓN FACTUAL en la crónica: decía que PT "ni jugó anoche" — FALSO,
+  PT jugó el Chorolo y quedó 6º con 269 (recalculado de games). Corregido en
+  la crónica y evitado en el feed. Lección: no heredar frases de páginas
+  anteriores sin re-verificar contra games.
 - Próximo push: **sábado 11/07, récords** — pendiente decidir sub-formato (el
   clásico ya se usó el 04/07; considerar remontadas/horóscopo/archivo para no
   repetir). Si no hay partida nueva el lunes 13/07, la crónica del martes
@@ -133,15 +141,19 @@ Negro, y el Gael/T4 sin verificar sigue ahí). Cambios reales: actualicé los
 contadores de días de deuda en el ledger y registré la desaparición de la
 partida sin cerrar. Sin push editorial (viernes = silencio).
 
-**Corrida extra (~20:00 UY, pedido de Andrés):** creada la exclusiva
-`2026-07-10-cobra-sin-editar` (tape completo: 5 Q&A textuales de los docs
-`answer-cobra-entrevista-q1…q5`, números re-verificados de
-`games/game_1783387875567`, análisis de la ausencia/regla, escritorio de
-decisiones con las 2 proposals que vencen 14/07 y 3 preguntas de archivo).
-Push `2026-07-10-a` encolado SOLO a andres (21:15, expira 23:00). Proposal
-registrada `pending`. Mirar mañana: answers de andres a
-`cobra-ausente-2-semanas`, `regla-barro`, `sala-de-prensa-fija` y las
-decisiones de permanencia — condicionan el ángulo del sábado récords.
+**Corridas extra (20:00-20:35 UY, pedidos de Andrés):** (1) exclusiva
+`2026-07-10-cobra-sin-editar` (tape completo: 5 Q&A textuales, números
+re-verificados, escritorio de decisiones con las 2 proposals que vencen
+14/07, preguntas `cobra-ausente-2-semanas`/`regla-barro`/
+`sala-de-prensa-fija`); (2) exclusiva `2026-07-10-el-feed` (newsfeed
+interactivo pedido "moderno, expert UX": stories, likes, deuda en vivo,
+encuesta `pronostico-2026-07-13`, pregunta `feed-en-rotacion` — si el answer
+es "si", el formato entra a la rotación de sub-formatos de sáb/dom). Ambos
+pushes (`2026-07-10-a`, `2026-07-10-b`) SOLO a andres, envío inmediato
+~20:35. Tabla anual re-verificada completa; victoria nº5 de Cobra y 4
+liderazgos de Gael confirmados ronda a ronda. Mirar mañana: TODOS los
+answers/decisiones de andres desde estas dos páginas + eventos
+`feed_like`/`feed_story` — condicionan el ángulo y formato del sábado.
 
 ## TODO / ángulos sin usar
 
