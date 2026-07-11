@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-11T00:26:58.312Z",
+  "_updated_at": "2026-07-11T17:50:53.858Z",
   "notifications": [
     {
       "id": "2026-07-11-a",
@@ -8,8 +8,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-11-horoscopo.html",
       "send_at": "2026-07-11T14:00:00-03:00",
       "expires_at": "2026-07-11T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
     },
