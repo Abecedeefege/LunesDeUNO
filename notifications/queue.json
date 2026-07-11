@@ -260,6 +260,18 @@
       "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: rediseño del tape + reenvío para revisarlo; versión nueva verificada en Pages antes de encolar)"
     },
     {
+      "id": "2026-07-10-e",
+      "title": "🎙️ Se filtró el tape de Cobra",
+      "body": "La cinta completa del campeón, sin editar: las 5 respuestas, el viaje de dos semanas y la «regla con mucho barro».",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
+      "send_at": "2026-07-10T21:25:00-03:00",
+      "expires_at": "2026-07-10T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: el tape remasterizado a TODOS los activos, encuadre de filtración; página ya deployada y aprobada de facto por Andrés)"
+    },
+    {
       "id": "2026-07-07-test-andres",
       "title": "🎴 Test de canal — Andrés",
       "body": "Si ves esto, tu suscripción está viva. Tocá para confirmar que el push llega.",

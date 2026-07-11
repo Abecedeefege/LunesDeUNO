@@ -66,9 +66,11 @@
       "status": "pending",
       "hypothesis": "Pedida por Andres por chat (10/07): la entrevista completa de Cobra solo para el. Ademas de las 5 Q&A textuales, embebe el escritorio de decisiones (approve/reject de las 2 proposals que vencen 14/07) y 3 preguntas de archivo (ausencia de Cobra 2 semanas, regla del barro, sala de prensa fija). Metrica: answers/decisiones de andres desde esta pagina.",
       "notified_by": [
-        "2026-07-10-a"
+        "2026-07-10-a",
+        "2026-07-10-d",
+        "2026-07-10-e"
       ],
-      "result_notes": null
+      "result_notes": "Remasterizada el 10/07 a pedido de Andres (diseno casete, encuadre: victoria del Chorolo por 21 a Nachi). Andres pidio mandarla a TODOS (push -e, encuadre de filtracion): dejo de ser exclusiva de la direccion."
     },
     {
       "id": "2026-07-10-el-feed",

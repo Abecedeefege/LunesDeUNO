@@ -122,6 +122,11 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   (diseño casete: reels animados, contador de cinta, 5 pistas). El ángulo
   "dos heridas de Nachi en 15 días (8 en la T4, 21 el lunes)" sigue siendo
   oro editorial y quedó en tape + feed.
+- 📢 21:26: Andrés pidió mandar el tape remasterizado a TODOS los activos
+  (push `2026-07-10-e`, encuadre "se filtró el tape") y un reporte de quién
+  lo vio. El tape dejó de ser exclusiva de la dirección. Mañana: revisar
+  nclicks/visits/dwell del tape por device (post 21:26 UY) además de las
+  señales de las exclusivas.
 - 📵 INCIDENTE DE ENTREGA: push `2026-07-10-b` (feed) aceptado con 201 al
   device andres pero NO se mostró; el `-a` (enviado 100ms antes) sí llegó.
   sw.js OK (tags distintos por nid), dispatcher OK (TTL 4h, urgency high,
