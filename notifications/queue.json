@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-10T23:53:00.885Z",
+  "_updated_at": "2026-07-11T00:26:58.312Z",
   "notifications": [
     {
       "id": "2026-07-03-g",
@@ -266,8 +266,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
       "send_at": "2026-07-10T21:25:00-03:00",
       "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-11T00:26:58.311Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: el tape remasterizado a TODOS los activos, encuadre de filtración; página ya deployada y aprobada de facto por Andrés)"
     },
