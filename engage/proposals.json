@@ -41,22 +41,24 @@
       "title": "🎤 Sala de prensa del campeón (entrevista a Cobra, 5 preguntas)",
       "page": "engage/2026-07-06-entrevista-cobra.html",
       "created": "2026-07-07",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Entrevista dirigida al ganador (Cobra) para que alardee y opine de los sin-estrella, los perdedores y los que sufrieron; sus respuestas (engageAnswer q1..q5) se citan en la cronica del martes. Metrica: >=1 answer de cobra-entrevista-qN desde el device cobra.",
       "notified_by": [
         "2026-07-07-b"
       ],
-      "result_notes": null
+      "result_notes": "Aprobada por andres (boton proposal_approved 10/07 21:24:38 UY, desde el escritorio de decisiones embebido en el tape). Promovida: la pagina queda. Cobra ya habia contestado las 5 preguntas el 08/07."
     },
     {
       "id": "2026-07-06-cronica",
       "title": "📰 La Crónica (tabloide deportivo del martes: Cobra le roba la punta a Gordo)",
       "page": "engage/2026-07-06-cronica.html",
       "created": "2026-07-07",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "El relato de la remontada real (Gael 4 rondas líder, Gordo 1 sola mano, Cobra la roba en la 9na) + box score + multa/falta/deuda nueva de Negro convierte igual o mejor que records/chusmerio. Métrica: reacción + answer suscripción + approve. Push retenido en draft hasta OK de Andrés (protocolo del 07/07).",
-      "notified_by": [],
-      "result_notes": null
+      "notified_by": [
+        "2026-07-07-a"
+      ],
+      "result_notes": "Aprobada por andres (boton proposal_approved 10/07 21:24:38 UY, desde el escritorio de decisiones embebido en el tape). Promovida: la pagina queda. Reaccion previa de mata (07/07) fue solo señal secundaria, no decidio."
     },
     {
       "id": "2026-07-10-cobra-sin-editar",
@@ -77,10 +79,23 @@
       "title": "📱 El Feed de la mesa (newsfeed interactivo, exclusiva para la dirección)",
       "page": "engage/2026-07-10-el-feed.html",
       "created": "2026-07-10",
-      "status": "pending",
+      "status": "dropped",
       "hypothesis": "Pedida por Andres por chat (10/07): formato newsfeed moderno e interactivo (stories con visor, likes con señal real, contadores de deuda en vivo, encuesta de pronostico). Prueba si el formato feed merece entrar a la rotacion editorial. Metrica: answer feed-en-rotacion + eventos feed_like/feed_story + dwell.",
       "notified_by": [
-        "2026-07-10-b"
+        "2026-07-10-b",
+        "2026-07-10-c"
+      ],
+      "result_notes": "Rechazada por andres (boton proposal_rejected 10/07 20:47:10 UY) tras dwell 33s y scroll 100% — la vio completa y no le convencio. Sin eventos feed_like/feed_story ni answer a feed-en-rotacion. git rm de la pagina. Hipotesis del porque: dos exclusivas nuevas el mismo dia (tape + feed) fue demasiado volumen, o el formato stories/likes no calzo con el tono editorial vigente (tabloide/cartelera). No repetir el formato feed sin replantearlo."
+    },
+    {
+      "id": "2026-07-11-horoscopo",
+      "title": "🔮 Horóscopo Unístico (11 cartas, una por jugador)",
+      "page": "engage/2026-07-11-horoscopo.html",
+      "created": "2026-07-11",
+      "status": "pending",
+      "hypothesis": "Sub-formato del slot de récords del sábado para no repetir el clásico (usado el 04/07): cada jugador recibe una 'carta' de UNO como signo, justificada con stats reales recalculadas de games (victorias, sequías, faltas, multas, peor score). Cierre fijo 'récords que se pueden romper el lunes'. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-11-a"
       ],
       "result_notes": null
     }

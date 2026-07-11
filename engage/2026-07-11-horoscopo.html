@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🔮 Horóscopo Unístico</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+  .hero {
+    background: radial-gradient(circle at 30% 20%, rgba(168,85,247,.25), transparent 60%),
+                linear-gradient(160deg, #1d1330 0%, #17171f 65%);
+    border: 2px solid #A855F7; border-radius: 16px; text-align: center;
+    padding: 1.3rem 1rem; margin-bottom: .5rem; box-shadow: 0 0 26px rgba(168,85,247,.25);
+  }
+  .hero .kicker { font-size: .7rem; letter-spacing: 3px; color: #A855F7; font-weight: 800; }
+  .hero h1 { font-size: 1.6rem; font-weight: 900; margin: .25rem 0; text-transform: uppercase; }
+  .hero .sub { font-size: .82rem; color: #c9b6e8; }
+  .cutoff { text-align: center; color: #8f8f9c; font-size: .72rem; letter-spacing: 1px; margin-bottom: 1rem; }
+  .sign {
+    display: flex; gap: .85rem; align-items: flex-start;
+    background: #17171f; border: 1px solid #2a2a35; border-left: 4px solid #A855F7; border-radius: 12px;
+    padding: .85rem .9rem; margin-bottom: .7rem;
+  }
+  .sign .icon { font-size: 1.6rem; min-width: 34px; text-align: center; }
+  .sign .body { flex: 1; }
+  .sign .who { display: flex; align-items: center; gap: .4rem; margin-bottom: .15rem; }
+  .face { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid #2a2a35; }
+  .sign .cardname { font-weight: 800; color: #FFDE00; font-size: .95rem; }
+  .sign .txt { font-size: .86rem; line-height: 1.5; color: #d9d9e2; }
+  .sign .txt b { color: #A855F7; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+  .card h2 { color: #FFDE00; font-size: 1rem; margin-bottom: .5rem; }
+  button {
+    margin: .35rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .9rem; font-weight: 600; cursor: pointer;
+  }
+  .react button { font-size: 1.25rem; padding: .4rem .7rem; }
+  .react-hint, .q-hint, .engage-hint { display: block; font-size: .75rem; color: #8f8f9c; margin-top: .35rem; }
+  .breakable { background: #1d1420; border: 1px dashed #ED1C24; border-radius: 12px; padding: .9rem; margin: 1rem 0; font-size: .88rem; line-height: 1.55; color: #d9d9e2; }
+  .breakable b { color: #ED1C24; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="hero">
+    <div class="kicker">HORÓSCOPO UNÍSTICO</div>
+    <h1>🔮 Qué carta sos vos</h1>
+    <div class="sub">11 jugadores, 11 cartas. La carta es humor — la justificación son números reales.</div>
+  </div>
+  <div class="cutoff">DATOS AL CIERRE DEL 07/07 (CHOROLO) — 16 FECHAS VÁLIDAS DEL AÑO</div>
+
+  <div class="sign"><div class="icon">🃏</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/cobra.png" alt="">Cobra</div>
+    <div class="cardname">Comodín +4</div>
+    <div class="txt">La carta que te cambia toda la mano. <b>5 victorias</b> en el año — nadie tiene más — y presencia perfecta: <b>16 de 16</b>, cero faltas. Pero también <b>3 últimos puestos</b>. El mejor y el peor de la mesa, en la misma persona.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">0️⃣</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/pt.png" alt="">PT</div>
+    <div class="cardname">El Cero</div>
+    <div class="txt">Una sola victoria en todo el año y aun así lidera la tabla anual con <b>4906</b>. La carta que no grita, no rompe nada, y nunca te deja pagando.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">↩️</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/gordo.png" alt="">Gordo</div>
+    <div class="cardname">Reversa</div>
+    <div class="txt">Ganó las primeras dos fechas del año (2 y 9 de marzo) y no volvió a ganar ninguna más: <b>12 fechas</b> de sequía activa. El arranque de campeón, el resto de la temporada al revés.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">🎨</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/carucha.png" alt="">Carucha</div>
+    <div class="cardname">Cambio de Color</div>
+    <div class="txt">Abrió la Temporada 2 con dos victorias seguidas (6 y 13 de abril) y no repitió más: <b>7 fechas</b> sin ganar. Cambió de color una vez y se quedó ahí.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">➕</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/gael.png" alt="">Gael</div>
+    <div class="cardname">Roba Acumulado</div>
+    <div class="txt"><b>20 multas</b> en el año — la segunda ficha más castigada de la mesa — con una sola victoria (28/04) para mostrar. Siempre suma cartas, casi nunca suma triunfos.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">🔁</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/nachi.png" alt="">Nachi</div>
+    <div class="cardname">Racha (breve)</div>
+    <div class="txt">Ganó dos lunes seguidos en mayo (18 y 25) — el único récord de racha del año, compartido con Gordo, Carucha y Cobra — y lleva <b>5 fechas</b> sin volver a repetirlo.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">👻</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/mata.png" alt="">Mata</div>
+    <div class="cardname">Carta Fantasma</div>
+    <div class="txt"><b>7 faltas</b> en el año, empatado con Negro en el podio de la ausencia. Pero cuando se sienta a jugar, jamás terminó último: <b>cero veces</b> en todo 2026. El misterio de la mesa.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">💥</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/tano.png" alt="">Tano</div>
+    <div class="cardname">+150 El Maldito</div>
+    <div class="txt">La multa más grande del año (<b>150 puntos</b>, el 4 de mayo) y debe postre o picada hace <b>18 días</b> sin contestar ni un botón. La carta que te explota en la cara.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">🔄</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/mac.png" alt="">Mac</div>
+    <div class="cardname">Roba Dos (eterno)</div>
+    <div class="txt"><b>13 fechas jugadas, cero victorias</b>. Cuatro últimos puestos (empatado con Naso). La sequía más profunda del grupo, y no da ninguna señal de cortarse.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">🌈</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/naso.png" alt="">Naso</div>
+    <div class="cardname">Empate en la vergüenza</div>
+    <div class="txt">Una victoria, cuatro últimos puestos (empatado con Mac) y el peor score individual del año: <b>648</b>, el 25 de mayo. La carta que nadie quiere que le toque.</div>
+  </div></div>
+
+  <div class="sign"><div class="icon">⏭️</div><div class="body">
+    <div class="who"><img class="face" src="../assets/faces/negro.png" alt="">Negro</div>
+    <div class="cardname">Salta Turno</div>
+    <div class="txt"><b>7 faltas</b> (empatado con Mata) y debe postre o picada hace apenas <b>5 días</b> — la deuda más fresca de toda la mesa.</div>
+  </div></div>
+
+  <div class="breakable">
+    <b>⚔️ Récords que se pueden romper el lunes:</b> Cobra está a solo <b>35
+    puntos</b> de sacarle el 2º puesto de la tabla anual a Gordo · nadie ganó
+    3 lunes seguidos en el año — Cobra viene de ganar el pasado lunes, y si
+    repite el 13/07 empata el techo de racha (2) con la puerta abierta a ser
+    el primero en 3 · el <b>648</b> de Naso sigue de pie como la peor noche
+    del año, cualquiera se lo puede robar · y la sequía de Mac (13 fechas sin
+    ganar) puede seguir estirándose… o el lunes puede ser el día.
+  </div>
+
+  <div class="card react">
+    <h2>¿Qué tal tu carta?</h2>
+    <button onclick="engageReact('2026-07-11-horoscopo','love',this)">😍</button>
+    <button onclick="engageReact('2026-07-11-horoscopo','like',this)">🙂</button>
+    <button onclick="engageReact('2026-07-11-horoscopo','meh',this)">😐</button>
+    <button onclick="engageReact('2026-07-11-horoscopo','no',this)">🙅</button>
+    <span class="react-hint"></span>
+  </div>
+
+  <div class="card">
+    <h2>¿Querés que esto llegue todas las semanas?</h2>
+    <button onclick="engageAnswer('2026-07-11-horoscopo-suscripcion','si',this)">Sí, obvio</button>
+    <button onclick="engageAnswer('2026-07-11-horoscopo-suscripcion','no',this)">No hace falta</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="card">
+    ¿Esta sección merece existir?
+    <div>
+      <button onclick="engageApprove('2026-07-11-horoscopo',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-11-horoscopo',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+  </div>
+
+<script src="engage.js"></script>
+</body>
+</html>

@@ -11,182 +11,131 @@ sáb/dom rotan sub-formatos si se queman (horóscopo, feed, confesiones, archivo
 2026-07-10 con answer `sala-de-prensa-fija=si` desde device andres):**
 entrevista "Sala de prensa" (5 preguntas) al ganador del lunes, a su device,
 ~10:00. Si el ganador no tiene push activa, no se envía nada. La crónica de
-las 14:00 cita sus respuestas si llegan a tiempo; si no, sale igual
-(protocolo de OK condicional de Andrés) y las citas se agregan como addendum
-si llegan después. El formato "tape completo" (sin editar, diseño casete)
-quedó promovido como pieza complementaria.
+las 14:00 cita sus respuestas si llegan a tiempo; si no, sale igual y las
+citas se agregan como addendum si llegan después.
 
-## 💸 DEUDAS (ledger vigente al 2026-07-10)
+## 💸 DEUDAS (ledger vigente al 2026-07-11)
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. 17 días al 10/07. Cero answers pese a 4+ experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
-| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. 4 días al 10/07. | `deuda-negro-postre-2026-07-06` |
+| Tano | 🍮/🧀 postre o picada | 23/06 | IMPAGA. **18 días** al 11/07. Cero answers pese a 5+ experiencias con el botón. | `deuda-tano-postre-2026-06-23` |
+| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | pendiente. **5 días** al 11/07. | `deuda-negro-postre-2026-07-06` |
 
 Saldadas / archivadas: **Mac** — sus dos deudas (postre 30/06, cena T4)
-desaparecieron de los divs `naso-disclaimer` de index.html en commits
-directos de otra sesión (`62dff76` 07/07 12:47Z quitó la cena T4;
-`db3a453` 08/07 01:05Z quitó el postre 30/06). Sin `answer` de pago
-registrado en `engagement` — se asume resuelto administrativamente fuera del
-sistema de botones. No se recontarán salvo que reaparezcan en el home.
+desaparecieron de index.html en commits directos de otra sesión (07-08/07).
+Sin `answer` de pago registrado — se asume resuelto fuera del sistema de
+botones. No se recontarán salvo que reaparezcan en el home.
 
-🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, 3 días):**
-commit `cca7dde` (08/07 01:16Z) agregó "Gael debe postre por perder T4" y
-sigue en index.html hoy 10/07. Chequeado contra `seasons` (doc `4`):
-`winnerPlayerId: cobra`, **`loserPlayerId: mac`** — el perdedor de la T4 es
-Mac, no Gael (Gael perdió la T3, doc `seasons/3`). Además el tipo de deuda no
-cierra: perder una TEMPORADA paga **cena**, no postre. No se incorpora esta
-deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
-**Reportado de nuevo en el chat de esta corrida.**
+🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, 4
+días):** `index.html` sigue con "Gael debe postre por perder T4" (commit
+`cca7dde`, 08/07). Chequeado contra `seasons/4`: `winnerPlayerId: cobra`,
+**`loserPlayerId: mac`** — el perdedor de la T4 es Mac, no Gael. Además
+perder una TEMPORADA paga **cena**, no postre. No se incorpora al ledger ni
+a contenido hasta que Andrés lo confirme/corrija. Sin novedad hoy.
+
+## 🔧 CORRECCIÓN DE DATOS (esta corrida, 11/07)
+
+Al recalcular TODO desde `games` para el horóscopo del sábado, encontré que
+el cálculo de "quién gana/pierde la fecha" usa el **puntaje BASE (solo
+rondas)** — verificado en el código fuente de `index.html` (`getTotals()` vs
+`getFinalTotals()`, comentarios explícitos "el ranking del partido se decide
+por puntaje base; multas/cortes NO cuentan para el partido, solo para la
+tabla anual"). Esto NO coincide literalmente con la fórmula abreviada del
+playbook (que suma fines+cortes al puntaje de la fecha), pero SÍ coincide
+100% con cada fila de `AUDIT.md` sección 3 (historial verificado) al
+recalcularla — así que el error estaba en mi lectura previa, no en los datos.
+
+Con la fórmula correcta (base-only para ganador/último, tabla anual =
+base+multas+cortes+faltas), encontré que **"Más últimos puestos: Mac, 5"**
+(en `engage/2026-07-04-records.html`, página PROMOVIDA/permanente) está mal:
+recalculado de las 16 fechas, Mac tiene **4** últimos puestos (02/03, 13/04,
+02/06, 30/06), exactamente igual que **Naso** (4: 09/03, 23/03, 21/04,
+25/05) — es un EMPATE, no una marca única de Mac. Corregí el texto de esa
+página (nota visible del cambio) porque es una página mía (`engage/*.html`),
+no `index.html`. `AUDIT.md` (sección 4, tabla agregada) tiene el mismo error
+pero es "referencia estable" de otro corte de fecha — no la toco, solo lo
+dejo anotado acá para que no se repita el dato viejo en contenido futuro.
+
+Tabla anual recalculada completa al 07/07 (Chorolo), 16 fechas válidas:
+PT 4906 · Gordo 5097 · Cobra 5132 · Carucha 5460 · Gael 5721 · Nachi 5776 ·
+Mata 5934 · Tano 6107 · Mac 6186 · Naso 6266 · Negro 6467. **Cobra está a
+solo 35 puntos de sacarle el 2º puesto a Gordo** — ángulo fuerte para la
+previa del lunes si se mantiene cerca.
 
 ## 🚀 SÍNTESIS: qué convierte (números reales)
 
-- **andres clickea todo**: reacción 😍 + answer "sí, obvio" en las 4
-  experiencias que tuvo enfrente (récords, chusmerío, previa, crónica — esta
-  última la reaccionó `mata`, no andres).
-- **pt activo desde 06/07**: sub activa, dwell 127–170s en la previa.
-- **mata SÍ interactuó con la crónica** (07/07 18:08 UY): reacción 😍, answer
-  "sí" a la suscripción, y clickeó "✅ Que quede" — pero esa aprobación NO
-  cuenta como decisión de permanencia (solo decide `device:"andres"`; queda
-  como señal secundaria). La crónica sigue `pending` en proposals.json (2 días,
-  vence 14/07 si no hay decisión de andres).
-- **cobra respondió la entrevista** el 08/07 (~01:09–04:08 UY) y la leyó a
-  fondo (dwell 31842s de background-tab/idle, 100% scroll — número inflado por
-  la pestaña abierta, no dwell activo real). Sección "Sala de prensa" ya
-  integrada a la crónica (gestión del 08/07, sin push nuevo). La entrevista
-  también sigue `pending` en proposals.json (2 días).
-- **negro, cara y mac** interactuaron tarde con la crónica (07/07 tarde y
-  08/07 madrugada) — ya contabilizado, sin eventos nuevos desde entonces.
-- Sin eventos nuevos en `engagement` desde el 08/07 12:48 UY (0 nuevos hoy).
-- Anomalía `sin-nombre`/`cara`: sigue sin resolverse, sin nuevos datos hoy.
+- **andres clickea todo**: abrió los 3 pushes del tape/feed de la noche del
+  10/07, con reacción 😍 en el tape (love, dwell 21-256s según la versión) y
+  RECHAZÓ el feed (`proposal_rejected` 10/07 20:47 UY, dwell 33s scroll 100%
+  — lo vio completo y no le convenció). Aprobó **2026-07-06-cronica** y
+  **2026-07-06-entrevista-cobra** el 10/07 21:24 UY (vía el escritorio de
+  decisiones embebido en el tape) — quedaron promovidas esta corrida (ver
+  abajo, estaban sin procesar de una corrida anterior).
+- **cara y pt** abrieron el tape remasterizado (push `-e`, "se filtró")
+  horas después de mandado (00:45 y 01:11 UY del 11/07) — aperturas tardías
+  nocturnas, consistente con el patrón de "revisan antes de dormir".
+- **El feed (`2026-07-10-el-feed`) NO convirtió**: rechazado por andres pese
+  al pedido explícito de armarlo "moderno, expert UX". Sin eventos
+  `feed_like`/`feed_story` de nadie, sin answer a `feed-en-rotacion`. git rm
+  hecho, proposal `dropped`. Hipótesis: dos exclusivas el mismo día fue
+  demasiado volumen, o el formato stories/likes no calzó con el tono
+  editorial (tabloide/cartelera) del resto del sistema. **No repetir sin
+  replantear el formato.**
+- **Sin respuesta aún** a `cobra-ausente-2-semanas`, `regla-barro` (preguntas
+  de archivo embebidas en el tape) — Cobra mencionó en la entrevista que se
+  va "dos semanas", sin confirmar. Sigue sin confirmarse.
+- 0 eventos nuevos en `engagement` desde las 01:31 UY del 11/07 hasta la hora
+  de esta corrida (06:06 UY).
 
-## 📊 Estado del sistema (2026-07-10)
+## 📊 Estado del sistema (2026-07-11)
 
-- Subs push activas: **7** — andres (decide), pt, mata, negro, cobra, mac,
-  cara. `mc` disabled. Sin cambios desde 07/07.
-- Datos: **17 docs en `games`** (bajó de 18) — la partida en curso sin
-  cerrar `game_1783469788259` (creada 08/07 00:16Z, ~07/07 21:16 UY) **ya no
-  existe** en la colección; se asume abandonada/borrada por otra sesión, no
-  se cuenta como fecha jugada. Las 17 restantes son todas `finished:true` con
-  winner. 16 fechas válidas para tabla anual (una sin `winnerPlayerId`, la de
-  12/05), cutoff sigue siendo Chorolo (06/07, ganó Cobra 223). Temporada 4
-  cerrada (Cobra ganó, Mac perdió). T5 en curso, fecha 1 jugada. No hay
-  partida nueva que crónica todavía — el próximo martes de crónica (14/07)
-  depende de que se juegue el lunes 13/07.
-- Eventos `engagement`: 91 totales, 0 nuevos hoy (el último sigue siendo
-  08/07 12:48 UY). Nada para compactar (el más viejo es del 03/07, cutoff de
-  14 días recién en ~17/07).
-- Queue: todo `sent`/`cancelled`, nada `pending`/`draft` para reconciliar.
-  Nada purgado hoy — medí la antigüedad exacta de los ítems del 03/07 contra
-  ahora (10/07 ~09:06 UTC): el más viejo tiene 6d15h, ninguno pasa aún de 7
-  días. Purga real recién mañana (11/07).
-- Proposals `pending` sin decisión de andres: `2026-07-06-entrevista-cobra`
-  y `2026-07-06-cronica`, ambas creadas 07/07 → vencen 14/07 si nadie decide.
-  Sin novedad hoy (sin `proposal_approved`/`proposal_rejected` de `andres`
-  para ninguna de las dos).
-- Viernes 10/07: día de silencio, sin push. Solo gestión (sin cambios que
-  hacer más allá de actualizar contadores de deuda y notar la desaparición
-  de la partida sin cerrar — repo ya estaba al día).
+- Subs push activas: **7 personas** (8 docs, Cobra tiene 2 dispositivos):
+  andres, pt, mata, negro, cobra, mac, cara. `mc` disabled. Sin cambios.
+- Datos: **17 docs en `games`**, 16 válidos (`finished` + `winnerPlayerId`).
+  Sin partida nueva desde el Chorolo (07/07, ganó Cobra). Próxima fecha:
+  lunes 13/07. Temporada 5 en curso, 1 fecha jugada (Chorolo).
+- Eventos `engagement`: **121 totales** (subieron de 91 el 10/07 por la
+  sesión extra de esa noche). Nada para compactar (el más viejo es del
+  03/07, cutoff de 14 días recién ~17/07).
+- Queue: **purgados los 7 ítems `sent` del 03/07** (pasaron los 7 días,
+  eran pruebas de bienvenida/galera, ya redundantes con `send_log.json`
+  histórico). Quedan 14 ítems + el nuevo push de hoy. Nada `pending`/`draft`
+  para reconciliar además del que encolé hoy.
+- Proposals: **2026-07-06-cronica** y **2026-07-06-entrevista-cobra**
+  promovidas (aprobación de andres del 10/07 21:24 UY, procesada recién esta
+  corrida). **2026-07-10-el-feed** dropped (rechazo de andres, página
+  eliminada). **2026-07-10-cobra-sin-editar** sigue promovida (sin cambios).
+  Nueva: **2026-07-11-horoscopo** pendiente de decisión (vence 18/07).
+- Home (`index.html`): deudas sin cambios (Tano, Negro, Gael/T4 sin
+  verificar sigue ahí).
 
-## 🗓️ Semana en curso (editorial del lunes 06/07 — martes 07/07)
+## 🗓️ Semana en curso
 
-- ✅ Sáb 04/07 récords, ✅ Dom 05/07 chusmerío, ✅ Lun 06/07 previa: promovidos.
-- ✅ Mar 07/07: entrevista a Cobra enviada (~10:17 UY) y crónica enviada
-  (~15:08 UY, sin citas, según protocolo). Ambas siguen `pending` en
-  proposals.json, vencen 14/07.
-- 🔧 Mié 08/07: sin push. Se agregó la sala de prensa de Cobra a la crónica.
-  Se detectó y reportó la inconsistencia de la deuda de Gael/T4 en el home.
-- 🔧 Jue 09/07: sin push, sin eventos nuevos, sin proposals para
-  decidir, sin nada para compactar/reconciliar. Solo se actualizaron los
-  contadores de deuda (Tano 16 días, Negro 3 días) y se reafirmó el flag de
-  Gael/T4.
-- 🔧 Vie 10/07 (hoy): sin push editorial. Gestión y memoria. La partida sin
-  cerrar que venía arrastrándose desde el 07/07 desapareció de `games`
-  (asumida abandonada). Purga de queue.json todavía no toca (los `sent` del
-  03/07 recién pasan de 7 días mañana 11/07).
-- 📬 Vie 10/07 ~20:00-20:35 (corrida extra, pedidos de Andrés por chat): DOS
-  exclusivas al device andres: `2026-07-10-cobra-sin-editar.html` (tape
-  completo de la entrevista) y `2026-07-10-el-feed.html` (newsfeed
-  interactivo: stories con visor, likes con señal `feed_like`/`feed_story`,
-  contadores de deuda en vivo, encuesta `pronostico-2026-07-13`). Pushes
-  `2026-07-10-a` y `2026-07-10-b` con envío inmediato (~20:35, pedido
-  explícito "que llegue ahora"; páginas verificadas 200 en Pages antes de
-  soltar). No cuentan contra la regla del push editorial diario: dirigidos y
-  pedidos por el dueño del canal.
-- 🔧 CORRECCIÓN FACTUAL en la crónica: decía que PT "ni jugó anoche" — FALSO,
-  PT jugó el Chorolo y quedó 6º con 269 (recalculado de games). Corregido en
-  la crónica y evitado en el feed. Lección: no heredar frases de páginas
-  anteriores sin re-verificar contra games.
-- 🔧 ENCUADRE DEFINITIVO de la entrevista (Andrés se corrigió a sí mismo por
-  chat, 10/07 — esta versión MANDA): la entrevista fue por la **victoria en
-  el Chorolo (última fecha, 06/07): le ganó a Nachi por 21**. El título de la
-  T4 por 8 sobre el mismo Nachi (seasons/4: 1155 vs 1163; Mac último 1453) es
-  CONTEXTO verificado, no la ocasión. Tape remasterizado con este encuadre
-  (diseño casete: reels animados, contador de cinta, 5 pistas). El ángulo
-  "dos heridas de Nachi en 15 días (8 en la T4, 21 el lunes)" sigue siendo
-  oro editorial y quedó en tape + feed.
-- 📢 21:26: Andrés pidió mandar el tape remasterizado a TODOS los activos
-  (push `2026-07-10-e`, encuadre "se filtró el tape") y un reporte de quién
-  lo vio. Los 7 devices aceptaron 201.
-- 📊 22:08 (corte del vigía de 40 min): lo abrieron **andres** (21:34: click,
-  😍, approve del tape → PROMOVIDO, answer `sala-de-prensa-fija=si`, dwell
-  21s/100%) y **cara** (21:45: click + visita, sin dwell aún). pt, mata,
-  negro, cobra y mac recibieron pero no abrieron al corte. Sin respuestas
-  todavía a `cobra-ausente-2-semanas` ni `regla-barro`; las proposals de la
-  entrevista y la crónica siguen sin decisión (vencen 14/07). Mañana:
-  re-mirar aperturas tardías de la noche.
-- 📵 INCIDENTE DE ENTREGA: push `2026-07-10-b` (feed) aceptado con 201 al
-  device andres pero NO se mostró; el `-a` (enviado 100ms antes) sí llegó.
-  sw.js OK (tags distintos por nid), dispatcher OK (TTL 4h, urgency high,
-  sin Topic). Hipótesis: dos pushes casi simultáneos al mismo device → el
-  sistema mostró solo el primero. REGLA NUEVA: espaciar pushes al mismo
-  device ≥2 min (o mandar de a uno). Reintento como `2026-07-10-c` (solo).
-- Próximo push: **sábado 11/07, récords** — pendiente decidir sub-formato (el
-  clásico ya se usó el 04/07; considerar remontadas/horóscopo/archivo para no
-  repetir). Si no hay partida nueva el lunes 13/07, la crónica del martes
-  14/07 no se inventa (ver regla de "semana de descanso").
-
-🚨 **SEÑAL SIN CONFIRMAR — AUSENCIA DE COBRA:** en la entrevista (08/07)
-Cobra dijo DOS veces que se va «dos semanas» → se perdería los lunes 13/07 y
-20/07 (la corona sin defensa, fechas 2 y 3 de la T5). Pregunta de archivo
-`cobra-ausente-2-semanas` (confirmado/ni-idea/falso) embebida en la exclusiva
-del 10/07 para que Andrés confirme. Si se confirma, es EL ángulo del sábado
-récords y de la previa del lunes. También mencionó una «regla nueva con
-barro» que el sistema no registra — pregunta `regla-barro` embebida ídem.
-
-## 🔭 Corrida de HOY (2026-07-10, viernes, 06:06 UY + corrida extra ~20:00 UY)
-
-Repo limpio y actualizado (`git pull` sin commits nuevos desde ayer).
-Revisados: engagement (0 eventos nuevos, sigue en 91 totales / último
-08/07 12:48 UY), pushSubs (sin cambios, 7 activas), games (bajó de 18 a 17
-docs — la partida en curso sin cerrar `game_1783469788259` ya no está;
-ninguna partida nueva finalizada), queue.json (nada `pending`/`draft`;
-medí antigüedad exacta de los ítems del 03/07 y ninguno pasa aún de 7 días,
-purga real mañana), proposals.json (2 `pending` de 07/07, ninguna con
-decisión de `andres`, vencen 14/07), index.html (deudas sin cambios: Tano,
-Negro, y el Gael/T4 sin verificar sigue ahí). Cambios reales: actualicé los
-contadores de días de deuda en el ledger y registré la desaparición de la
-partida sin cerrar. Sin push editorial (viernes = silencio).
-
-**Corridas extra (20:00-20:35 UY, pedidos de Andrés):** (1) exclusiva
-`2026-07-10-cobra-sin-editar` (tape completo: 5 Q&A textuales, números
-re-verificados, escritorio de decisiones con las 2 proposals que vencen
-14/07, preguntas `cobra-ausente-2-semanas`/`regla-barro`/
-`sala-de-prensa-fija`); (2) exclusiva `2026-07-10-el-feed` (newsfeed
-interactivo pedido "moderno, expert UX": stories, likes, deuda en vivo,
-encuesta `pronostico-2026-07-13`, pregunta `feed-en-rotacion` — si el answer
-es "si", el formato entra a la rotación de sub-formatos de sáb/dom). Ambos
-pushes (`2026-07-10-a`, `2026-07-10-b`) SOLO a andres, envío inmediato
-~20:35. Tabla anual re-verificada completa; victoria nº5 de Cobra y 4
-liderazgos de Gael confirmados ronda a ronda. Mirar mañana: TODOS los
-answers/decisiones de andres desde estas dos páginas + eventos
-`feed_like`/`feed_story` — condicionan el ángulo y formato del sábado.
+- ✅ Semana del 06/07 (previa) cerrada: previa, chusmerío, récords clásico y
+  crónica todos promovidos o en vías. El tape/feed del viernes 10/07 fueron
+  exclusivas fuera de cadencia (pedido directo de Andrés), no cuentan contra
+  la regla de 1 push/día.
+- 🔮 **Sábado 11/07 (hoy): récords con sub-formato HORÓSCOPO UNÍSTICO** (no
+  el clásico, ya usado el 04/07). `engage/2026-07-11-horoscopo.html`: 11
+  cartas de UNO, una por jugador, cada una justificada con stats reales
+  recalculadas (victorias, sequías, faltas, multas, peor score, tabla
+  anual). Cierre fijo "récords que se pueden romper el lunes" con el dato
+  fuerte de los 35 puntos entre Cobra y Gordo. Push `2026-07-11-a` encolado
+  para las 14:00, `pending`.
+- Próximo: domingo 12/07 chusmerío (rotar sub-formato: no usar feed —
+  recién rechazado — considerar confesiones del mazo o archivo). Lunes
+  13/07 la previa (actualizar deudas: Tano 20 días, Negro 7 días si nadie
+  paga antes; sección padres e hijos recalculada; ojo si Cobra confirma
+  ausencia). Martes 14/07: crónica SI hay partida nueva el lunes; si no,
+  push de "cargá el resultado" y semana de descanso.
 
 ## TODO / ángulos sin usar
 
-🔮 Horóscopo unístico · 📱 Feed 1ª persona · 🎤 Confesiones del mazo ·
-especial "remontadas" · especial sedes · aniversarios (648 de Naso, multa 150
-de Tano) · copy dirigido con nombre para reactivar a negro/cara si siguen sin
-eventos propios · investigar el device `sin-nombre`/`cara` · confirmar con
-Andrés la deuda de Gael/T4 antes de usarla en cualquier experiencia · decidir
-sub-formato del sábado 11/07 para no repetir récords clásico.
+📱 Feed 1ª persona (RECHAZADO 10/07, no repetir sin replantear) ·
+🎤 Confesiones del mazo · especial "remontadas" · especial sedes ·
+aniversarios (648 de Naso, multa 150 de Tano) · copy dirigido con nombre
+para reactivar a negro/cara si siguen sin eventos propios · investigar el
+device `sin-nombre`/`cara` (sigue sin resolverse) · confirmar con Andrés la
+deuda de Gael/T4 antes de usarla en cualquier experiencia · seguir la
+respuesta a `cobra-ausente-2-semanas`/`regla-barro` — si se confirma la
+ausencia, es EL ángulo de la previa del 13/07.

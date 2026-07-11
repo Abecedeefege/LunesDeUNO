@@ -2,100 +2,16 @@
   "_updated_at": "2026-07-11T00:26:58.312Z",
   "notifications": [
     {
-      "id": "2026-07-03-g",
-      "title": "🎩 Bienvenido al club, Cobra",
-      "body": "El campeón de la T4 ya está adentro. La previa del lunes te espera — defendés la corona.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "devices": [
-        "cobra"
-      ],
-      "send_at": "2026-07-03T18:10:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T21:15:56.351Z",
+      "id": "2026-07-11-a",
+      "title": "🔮 ¿Qué carta sos vos?",
+      "body": "Cobra: Comodín +4. Mac: Roba Dos eterno. Vos: entrá y mirá qué te tocó — con los números reales de cada uno.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-11-horoscopo.html",
+      "send_at": "2026-07-11T14:00:00-03:00",
+      "expires_at": "2026-07-11T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
       "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (bienvenida cobra)"
-    },
-    {
-      "id": "2026-07-03-f",
-      "title": "🎩 Probando la galera (toma 2)",
-      "body": "Ahora sí: tu teléfono volvió a tener canal vivo. Si ves la galera acá arriba, quedó perfecto.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "devices": [
-        "mata"
-      ],
-      "send_at": "2026-07-03T18:09:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T21:14:37.542Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (test galera toma 2)"
-    },
-    {
-      "id": "2026-07-03-d",
-      "title": "🎩 Bienvenido al club, Negro",
-      "body": "El canal respira y vos ya estás adentro. La previa del lunes está en el horno — espiala.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "devices": [
-        "negro"
-      ],
-      "send_at": "2026-07-03T18:06:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T21:12:07.443Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (bienvenida negro)"
-    },
-    {
-      "id": "2026-07-03-e",
-      "title": "🎩 Probando la galera nueva",
-      "body": "Si arriba de este aviso ves una galera y no un cuadrado, el sombrero anda. La previa del lunes te espera.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "devices": [
-        "mata"
-      ],
-      "send_at": "2026-07-03T18:06:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T21:12:07.576Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (test galera)"
-    },
-    {
-      "id": "2026-07-03-c",
-      "title": "🎩 Bienvenido al club",
-      "body": "Prueba de sonido oficial: el canal respira. La previa del lunes ya está en el horno — espiala.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "send_at": "2026-07-03T17:45:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T20:56:59.157Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (bienvenida c)"
-    },
-    {
-      "id": "2026-07-03-test",
-      "title": "🎩 Bienvenido al club",
-      "body": "Prueba de sonido oficial: el canal respira. La previa del lunes ya está en el horno — espiala.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "send_at": "2026-07-03T13:00:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T17:56:24.937Z",
-      "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03"
-    },
-    {
-      "id": "2026-07-03-b",
-      "title": "🎩 Bienvenido al club",
-      "body": "Prueba de sonido oficial: el canal respira. La previa del lunes ya está en el horno — espiala.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "send_at": "2026-07-03T17:30:00-03:00",
-      "expires_at": "2026-07-03T23:59:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-03T20:42:36.433Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-03 (re-bienvenida)"
+      "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
     },
     {
       "id": "2026-07-04-a",
