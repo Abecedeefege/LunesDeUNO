@@ -7,11 +7,14 @@ H2H en juego) · Martes la crónica.** Miércoles a viernes: SILENCIO (solo
 gestión y memoria). Nunca dos pushes de DIFUSIÓN el mismo día. Los slots
 sáb/dom rotan sub-formatos si se queman (horóscopo, feed, confesiones, archivo).
 
-**🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante):** entrevista
-"Sala de prensa" (5 preguntas) al ganador del lunes, a su device, ~10:00. Si
-el ganador no tiene push activa, no se envía nada. La crónica de las 14:00
-cita sus respuestas si llegan a tiempo; si no, sale igual (protocolo de OK
-condicional de Andrés) y las citas se agregan como addendum si llegan después.
+**🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante — RATIFICADA
+2026-07-10 con answer `sala-de-prensa-fija=si` desde device andres):**
+entrevista "Sala de prensa" (5 preguntas) al ganador del lunes, a su device,
+~10:00. Si el ganador no tiene push activa, no se envía nada. La crónica de
+las 14:00 cita sus respuestas si llegan a tiempo; si no, sale igual
+(protocolo de OK condicional de Andrés) y las citas se agregan como addendum
+si llegan después. El formato "tape completo" (sin editar, diseño casete)
+quedó promovido como pieza complementaria.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-10)
 
@@ -124,9 +127,14 @@ deuda al ledger ni a ningún contenido hasta que Andrés lo confirme o corrija.
   oro editorial y quedó en tape + feed.
 - 📢 21:26: Andrés pidió mandar el tape remasterizado a TODOS los activos
   (push `2026-07-10-e`, encuadre "se filtró el tape") y un reporte de quién
-  lo vio. El tape dejó de ser exclusiva de la dirección. Mañana: revisar
-  nclicks/visits/dwell del tape por device (post 21:26 UY) además de las
-  señales de las exclusivas.
+  lo vio. Los 7 devices aceptaron 201.
+- 📊 22:08 (corte del vigía de 40 min): lo abrieron **andres** (21:34: click,
+  😍, approve del tape → PROMOVIDO, answer `sala-de-prensa-fija=si`, dwell
+  21s/100%) y **cara** (21:45: click + visita, sin dwell aún). pt, mata,
+  negro, cobra y mac recibieron pero no abrieron al corte. Sin respuestas
+  todavía a `cobra-ausente-2-semanas` ni `regla-barro`; las proposals de la
+  entrevista y la crónica siguen sin decisión (vencen 14/07). Mañana:
+  re-mirar aperturas tardías de la noche.
 - 📵 INCIDENTE DE ENTREGA: push `2026-07-10-b` (feed) aceptado con 201 al
   device andres pero NO se mostró; el `-a` (enviado 100ms antes) sí llegó.
   sw.js OK (tags distintos por nid), dispatcher OK (TTL 4h, urgency high,
