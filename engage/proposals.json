@@ -92,10 +92,22 @@
       "title": "🔮 Horóscopo Unístico (11 cartas, una por jugador)",
       "page": "engage/2026-07-11-horoscopo.html",
       "created": "2026-07-11",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Sub-formato del slot de récords del sábado para no repetir el clásico (usado el 04/07): cada jugador recibe una 'carta' de UNO como signo, justificada con stats reales recalculadas de games (victorias, sequías, faltas, multas, peor score). Cierre fijo 'récords que se pueden romper el lunes'. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-11-a"
+      ],
+      "result_notes": "Aprobada por andres (boton proposal_approved 11/07 17:57:06 UY) + reaccion love + answer suscripcion=si + dwell 178s scroll 100%. Ademas abierta por mac (dwell 62s) y pt (dwell 161s, scroll 100%). Promovida: la pagina queda."
+    },
+    {
+      "id": "2026-07-12-confesiones",
+      "title": "🎴 Confesiones del Mazo (H2H inéditos narrados en 1ª persona por el mazo)",
+      "page": "engage/2026-07-12-confesiones.html",
+      "created": "2026-07-12",
+      "status": "pending",
+      "hypothesis": "Sub-formato del slot de chusmerío del domingo para no repetir el clásico (usado el 05/07, ya promovido) ni el feed (rechazado 10/07). Narrador en 1ª persona (el mazo) revela head-to-head inéditos recalculados de games: PT le gana a Cobra mano a mano (7-6) pese a tener solo 1 victoria en el año, Mata nunca perdió con Negro (5-0 en 5 fechas compartidas), y Gordo+Carucha como los únicos sin multas/cortes/últimos puestos en 26 fechas combinadas. Cierra con el estado de las deudas de Tano (19 días) y Negro (6 días). Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-12-a"
       ],
       "result_notes": null
     }

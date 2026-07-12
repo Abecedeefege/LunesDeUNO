@@ -2,6 +2,18 @@
   "_updated_at": "2026-07-11T17:50:53.858Z",
   "notifications": [
     {
+      "id": "2026-07-12-a",
+      "title": "🎴 El mazo tiene algo que confesar",
+      "body": "El mazo vio todo: PT le gana a Cobra 7-6 mano a mano y Mata nunca perdió con Negro (5-0). Entrá:",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-12-confesiones.html",
+      "send_at": "2026-07-12T14:00:00-03:00",
+      "expires_at": "2026-07-12T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-12 (chusmerío del domingo, sub-formato confesiones del mazo para no repetir el clásico del 05/07 ni el feed rechazado del 10/07)"
+    },
+    {
       "id": "2026-07-11-a",
       "title": "🔮 ¿Qué carta sos vos?",
       "body": "Cobra: Comodín +4. Mac: Roba Dos eterno. Vos: entrá y mirá qué te tocó — con los números reales de cada uno.",
@@ -12,18 +24,6 @@
       "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
-    },
-    {
-      "id": "2026-07-04-a",
-      "title": "🏆 Récords del grupo",
-      "body": "El 648 de Naso, la multa de 150 de Tano, la sequía de Mac y todo lo que se puede romper el lunes.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-04-records.html",
-      "send_at": "2026-07-04T14:00:00-03:00",
-      "expires_at": "2026-07-04T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-04T18:05:38.314Z",
-      "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03"
     },
     {
       "id": "2026-07-05-a",
