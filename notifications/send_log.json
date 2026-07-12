@@ -412,6 +412,62 @@
       "device": "andres",
       "ts": "2026-07-12T14:40:00.935Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "negro",
+      "ts": "2026-07-12T17:56:08.599Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "mata",
+      "ts": "2026-07-12T17:56:08.755Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "cara",
+      "ts": "2026-07-12T17:56:08.914Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "mac",
+      "ts": "2026-07-12T17:56:09.193Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "cobra",
+      "ts": "2026-07-12T17:56:09.350Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "andres",
+      "ts": "2026-07-12T17:56:09.501Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "cobra",
+      "ts": "2026-07-12T17:56:09.586Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a",
+      "device": "pt",
+      "ts": "2026-07-12T17:56:09.672Z",
+      "status_code": 201
     }
   ]
 }

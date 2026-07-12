@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-12T14:40:00.936Z",
+  "_updated_at": "2026-07-12T17:56:09.673Z",
   "notifications": [
     {
       "id": "2026-07-12-a-preview",
@@ -23,8 +23,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-12-confesiones.html",
       "send_at": "2026-07-12T14:00:00-03:00",
       "expires_at": "2026-07-12T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-12T17:56:09.672Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-12 (chusmerío del domingo, sub-formato confesiones del mazo para no repetir el clásico del 05/07 ni el feed rechazado del 10/07)"
     },
