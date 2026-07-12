@@ -8,6 +8,23 @@ gestión y memoria). Nunca dos pushes de DIFUSIÓN el mismo día. Los slots
 sáb/dom rotan sub-formatos si se queman (horóscopo, feed —quemado—,
 confesiones, archivo).
 
+**📬 REGLA FIJA DE PREVIEW (Andrés, 2026-07-12 por chat, vinculante, aplica
+a TODOS los pushes futuros):** todo push del día se le manda ANTES a Andrés,
+y SOLO a él, a las **09:00 locales** del mismo día, para que pueda corregir
+algo antes del envío general. Implementación: por cada push que encoles,
+encolá un item gemelo con id `<id>-preview`, **copia idéntica** (mismo
+title/body/url — es lo que él revisa), `devices: ["andres"]`,
+`send_at` 09:00 del día del push, `expires_at` ~13:30 (para que un
+dispatcher atrasado nunca lo entregue después del envío general). El envío
+general de las 14:00 (o el horario que tenga) NO cambia: va a todos los
+activos, Andrés incluido. Si la corrida crea el push DESPUÉS de las 09:00,
+el preview sale lo antes posible en vez de a las 09:00. Excepción única:
+pushes que Andrés pide por chat con envío inmediato (no tiene sentido
+preview de lo que él mismo dictó). Si Andrés corrige algo entre el preview
+y las 14:00 (por chat o answer), se edita o cancela el push general ANTES
+de que salga. Aplica también al push del martes de sala de prensa (10:00
+al ganador → preview a andres a las 09:00).
+
 **🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante — RATIFICADA
 2026-07-10 con answer `sala-de-prensa-fija=si` desde device andres):**
 entrevista "Sala de prensa" (5 preguntas) al ganador del lunes, a su device,
@@ -92,6 +109,9 @@ a contenido hasta que Andrés lo confirme/corrija. Sin novedad hoy.
   los únicos sin multas/cortes/últimos puestos en 26 fechas combinadas —
   más el estado de las deudas de Tano (19 días) y Negro (6 días). Cierre
   "mañana se juega". Push `2026-07-12-a` encolado para las 14:00, `pending`.
+  A las 10:49 Andrés fijó por chat la regla de preview (ver CADENCIA):
+  `2026-07-12-a-preview` encolado solo para su device, ASAP (11:00, las
+  09:00 ya habían pasado). Desde mañana el preview va SIEMPRE a las 09:00.
 - Próximo: lunes 13/07 la previa (actualizar deudas: Tano 20 días, Negro 7
   días si nadie paga antes; sección padres e hijos recalculada — candidatos
   fuertes: PT vs Cobra 7-6 o Mata vs Negro 5-0, ya usados hoy en confesiones,
