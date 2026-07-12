@@ -405,6 +405,13 @@
       "device": "cobra",
       "ts": "2026-07-11T17:50:53.858Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-12-a-preview",
+      "device": "andres",
+      "ts": "2026-07-12T14:40:00.935Z",
+      "status_code": 201
     }
   ]
 }

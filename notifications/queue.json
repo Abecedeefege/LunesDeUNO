@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-11T17:50:53.858Z",
+  "_updated_at": "2026-07-12T14:40:00.936Z",
   "notifications": [
     {
       "id": "2026-07-12-a-preview",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-12T11:00:00-03:00",
       "expires_at": "2026-07-12T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-12T14:40:00.935Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-12 (PREVIEW solo para andres del push 2026-07-12-a, regla nueva fijada por Andres 12/07: cada push del dia le llega a el a las 09:00 — hoy sale ASAP porque la regla llego a las 10:49; expira 13:30 para no pisar el envio general de las 14:00)"
     },
