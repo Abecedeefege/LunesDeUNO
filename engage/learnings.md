@@ -17,13 +17,17 @@ title/body/url — es lo que él revisa), `devices: ["andres"]`,
 `send_at` 09:00 del día del push, `expires_at` ~13:30 (para que un
 dispatcher atrasado nunca lo entregue después del envío general). El envío
 general de las 14:00 (o el horario que tenga) NO cambia: va a todos los
-activos, Andrés incluido. Si la corrida crea el push DESPUÉS de las 09:00,
-el preview sale lo antes posible en vez de a las 09:00. Excepción única:
-pushes que Andrés pide por chat con envío inmediato (no tiene sentido
-preview de lo que él mismo dictó). Si Andrés corrige algo entre el preview
-y las 14:00 (por chat o answer), se edita o cancela el push general ANTES
-de que salga. Aplica también al push del martes de sala de prensa (10:00
-al ganador → preview a andres a las 09:00).
+activos, **Andrés incluido — RATIFICADO por él por chat el 12/07: quiere
+recibir SIEMPRE también la de las 14:00, nunca excluirlo del envío
+general**. Si la corrida crea el push DESPUÉS de las 09:00, el preview sale
+lo antes posible en vez de a las 09:00. Excepción única: pushes que Andrés
+pide por chat con envío inmediato (no tiene sentido preview de lo que él
+mismo dictó). Si Andrés corrige algo entre el preview y las 14:00 (por chat
+o answer), se edita o cancela el push general ANTES de que salga. Aplica
+también al push del martes de sala de prensa (10:00 al ganador → preview a
+andres a las 09:00) — **RATIFICADO por Andrés por chat el 12/07**: el
+preview de la entrevista le llega a él aunque el push real vaya solo al
+device del ganador.
 
 **🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante — RATIFICADA
 2026-07-10 con answer `sala-de-prensa-fija=si` desde device andres):**
