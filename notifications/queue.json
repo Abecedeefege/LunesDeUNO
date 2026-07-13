@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-13T13:18:27.958Z",
   "notifications": [
     {
+      "id": "2026-07-13-test-andres",
+      "title": "🔧 Test de entrega — Andrés",
+      "body": "Si ves esto, tu canal de push funciona y lo de esta mañana fue un drop aislado. Tocá para confirmar.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-13T12:45:00-03:00",
+      "expires_at": "2026-07-13T14:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "debug 2026-07-13 (Andres reporta que el preview de hoy no se mostró en su device pese al 201; test dirigido SOLO a andres aprobado por él por chat; expira 14:30 para no pisar el envío general de las 14:00)"
+    },
+    {
       "id": "2026-07-13-a-preview",
       "title": "🔥 Tano pagó, Negro no",
       "body": "Tano se salvó tras 19 días. Negro debe hace 7. Cobra manda la T5 y Tano-Negro ya es 7-2. Entrá:",
