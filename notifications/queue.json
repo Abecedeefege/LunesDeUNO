@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-13T15:48:12.583Z",
+  "_updated_at": "2026-07-13T18:16:16.536Z",
   "notifications": [
     {
       "id": "2026-07-13-test-andres",
@@ -38,8 +38,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
       "send_at": "2026-07-13T14:00:00-03:00",
       "expires_at": "2026-07-13T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-13T18:16:16.535Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-13 (la previa del lunes, T5 fecha 2, edicion semana 2 del formato ya promovido el 06/07)"
     },
