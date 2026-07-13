@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-13T13:18:27.958Z",
+  "_updated_at": "2026-07-13T15:48:12.583Z",
   "notifications": [
     {
       "id": "2026-07-13-test-andres",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-13T12:45:00-03:00",
       "expires_at": "2026-07-13T14:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-13T15:48:12.583Z",
       "fail_reason": null,
       "created_by": "debug 2026-07-13 (Andres reporta que el preview de hoy no se mostró en su device pese al 201; test dirigido SOLO a andres aprobado por él por chat; expira 14:30 para no pisar el envío general de las 14:00)"
     },
