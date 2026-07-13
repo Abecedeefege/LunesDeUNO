@@ -468,6 +468,13 @@
       "device": "pt",
       "ts": "2026-07-12T17:56:09.672Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-13-a-preview",
+      "device": "andres",
+      "ts": "2026-07-13T13:18:27.957Z",
+      "status_code": 201
     }
   ]
 }
