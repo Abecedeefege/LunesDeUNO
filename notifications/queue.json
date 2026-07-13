@@ -1,6 +1,33 @@
 {
-  "_updated_at": "2026-07-12T17:56:09.673Z",
+  "_updated_at": "2026-07-13T09:06:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-13-a-preview",
+      "title": "🔥 Tano pagó, Negro no",
+      "body": "Tano se salvó tras 19 días. Negro debe hace 7. Cobra manda la T5 y Tano-Negro ya es 7-2. Entrá:",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-13T09:00:00-03:00",
+      "expires_at": "2026-07-13T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-13 (PREVIEW solo para andres del push 2026-07-13-a, regla fija de preview a las 09:00)"
+    },
+    {
+      "id": "2026-07-13-a",
+      "title": "🔥 Tano pagó, Negro no",
+      "body": "Tano se salvó tras 19 días. Negro debe hace 7. Cobra manda la T5 y Tano-Negro ya es 7-2. Entrá:",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
+      "send_at": "2026-07-13T14:00:00-03:00",
+      "expires_at": "2026-07-13T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-13 (la previa del lunes, T5 fecha 2, edicion semana 2 del formato ya promovido el 06/07)"
+    },
     {
       "id": "2026-07-12-a-preview",
       "title": "🎴 El mazo tiene algo que confesar",
@@ -39,18 +66,6 @@
       "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
-    },
-    {
-      "id": "2026-07-05-a",
-      "title": "🍿 Chusmerío de la mesa",
-      "body": "El expediente Mac (0-12 y doble deuda), la final por 8 puntos, la multa del siglo y una picada que ya es leyenda.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-05-chusmerio.html",
-      "send_at": "2026-07-05T14:00:00-03:00",
-      "expires_at": "2026-07-05T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-05T17:03:16.650Z",
-      "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03"
     },
     {
       "id": "2026-07-06-a",

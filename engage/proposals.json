@@ -104,10 +104,22 @@
       "title": "🎴 Confesiones del Mazo (H2H inéditos narrados en 1ª persona por el mazo)",
       "page": "engage/2026-07-12-confesiones.html",
       "created": "2026-07-12",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Sub-formato del slot de chusmerío del domingo para no repetir el clásico (usado el 05/07, ya promovido) ni el feed (rechazado 10/07). Narrador en 1ª persona (el mazo) revela head-to-head inéditos recalculados de games: PT le gana a Cobra mano a mano (7-6) pese a tener solo 1 victoria en el año, Mata nunca perdió con Negro (5-0 en 5 fechas compartidas), y Gordo+Carucha como los únicos sin multas/cortes/últimos puestos en 26 fechas combinadas. Cierra con el estado de las deudas de Tano (19 días) y Negro (6 días). Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-12-a"
+      ],
+      "result_notes": "Aprobada por andres (boton proposal_approved 12/07 19:24:00 UY) + reaccion like + answer suscripcion=si + dwell 34s. Ademas abierta por pt (dwell 63s, scroll 100%). Promovida: la pagina queda. En la misma visita Andres respondio que la deuda de Tano ya esta pagada (19 dias) y que la de Negro sigue."
+    },
+    {
+      "id": "2026-07-13-la-previa",
+      "title": "🔥 La Previa — edición semana 2 (T5 Fecha 2: tabla + deudas + padres/hijos + pronóstico)",
+      "page": "engage/2026-07-13-la-previa.html",
+      "created": "2026-07-13",
+      "status": "pending",
+      "hypothesis": "Segunda edición del formato La Previa (ya promovido el 06/07) con datos frescos: tabla anual tras el Chorolo (16 fechas), Tano saldó su deuda (19 días) y Negro pasa a deber (7 días), 3 pares padres-e-hijos nuevos (Cobra-Gordo 8-7, Tano-Negro 7-2, PT-Mata 6-2) no repetidos de la previa anterior ni de confesiones del 12/07, y el interrogante abierto de si Cobra falta 2 semanas como dijo en su entrevista. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-13-a"
       ],
       "result_notes": null
     }
