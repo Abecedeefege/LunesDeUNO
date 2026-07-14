@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-14T17:08:35.568Z",
+  "_updated_at": "2026-07-14T18:08:01.583Z",
   "notifications": [
     {
       "id": "2026-07-14-a3",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-14T15:00:00-03:00",
       "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T18:08:01.489Z",
       "fail_reason": null,
       "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés: a Carucha le falló el envío de las 14:00 con 410 — suscripción muerta; reactivó su push a las 15:04 UY como device 'carucha', este es su envío de la crónica con Experiences by: Gordo)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-14T14:12:00-03:00",
       "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T18:08:01.583Z",
       "fail_reason": null,
       "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés por chat: el push de las 14:00 salió 201 a su device pero no se mostró — reenvío dirigido solo a él; sirve de test del drop silencioso)"
     },
