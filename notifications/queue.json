@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-14T14:22:40.017Z",
+  "_updated_at": "2026-07-14T17:08:35.568Z",
   "notifications": [
     {
       "id": "2026-07-14-d2",
@@ -83,8 +83,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
       "send_at": "2026-07-14T14:00:00-03:00",
       "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T17:08:35.567Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-14 (crónica del martes: fecha 2 de la T5 jugada anoche en Carucha, Gordo gana, Cobra ausente confirmando su propia entrevista. Sin sala de prensa: Gordo no tiene push activo)"
     },
