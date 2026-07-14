@@ -4,7 +4,11 @@
 
 **Sábado récords · Domingo chusmerío · Lunes la previa (con "padres e hijos"
 H2H en juego) · Martes la crónica.** Miércoles a viernes: SILENCIO (solo
-gestión y memoria). Nunca dos pushes de DIFUSIÓN el mismo día. Los slots
+gestión y memoria). **RATIFICADO por Andrés por chat el 14/07: pushes SOLO
+sáb/dom/lun/mar — se terminan las exclusivas de viernes a la noche (como el
+tape del 10/07); el material de entrevista vive LINKEADO desde la crónica,
+nunca como push independiente a todos.** Nunca dos pushes de DIFUSIÓN el
+mismo día. Los slots
 sáb/dom rotan sub-formatos si se queman (horóscopo, feed —quemado—,
 confesiones, archivo). Lunes/martes NO rotan sub-formato: son el mismo
 formato evergreen (La Previa / La Crónica), refrescado con datos nuevos cada
@@ -23,14 +27,15 @@ push real vaya solo al device del ganador) — si no hay sala de prensa esa
 semana (ganador sin push activa), no aplica.
 
 **🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante — RATIFICADA
-2026-07-10):** entrevista "Sala de prensa" (5 preguntas) al ganador del
-lunes, a su device, ~10:00. **Si el ganador no tiene push activa, no se
-envía nada** — pasó por primera vez hoy (14/07): ganó Gordo y no está en
-`pushSubs`. **PRECEDENTE NUEVO (Andrés por chat, 14/07): en ese caso la
-entrevista se crea igual y se le manda a ANDRÉS por push inmediato para que
-él se la reenvíe por WhatsApp, junto con el link del club (el link va por
-chat privado, JAMÁS en la página ni en el push).** La crónica referencia el
-"correo humano" en vez de fingir que no existe.
+2026-07-10, AMPLIADA por chat 14/07):** entrevista "Sala de prensa" (5
+preguntas) al ganador del lunes, a su device SOLO, ~10:00 (con preview a
+andres 09:00). **Además la entrevista queda LINKEADA desde la crónica del
+día (link "abrir el expediente") — es la única difusión al resto: nunca push
+independiente de entrevista a todos** (la filtración estilo tape del 10/07
+no se repite). Si el ganador no tiene push activa: la entrevista se crea
+igual y se le manda a ANDRÉS por push inmediato para reenviar por WhatsApp
++ link del club por chat privado (JAMÁS en página ni push) — pasó el 14/07
+con Gordo, que se suscribió esa misma mañana tras recibir el link.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-14)
 
@@ -87,9 +92,11 @@ hasta que Andrés lo confirme/corrija. Sin novedad hoy.
 
 ## 📊 Estado del sistema (2026-07-14)
 
-- Subs push activas: **8 personas** (9 docs, Cobra 2 dispositivos): andres,
-  pt, mata, negro, cobra, mac, cara, **gael (nuevo)**. `mc` disabled. Gordo
-  sigue sin suscripción — por eso no hay sala de prensa esta semana.
+- Subs push activas: **9 personas** (10 docs, Cobra 2 dispositivos): andres,
+  pt, mata, negro, cobra, mac, cara, **gael (nuevo 13-14/07)** y **gordo
+  (nuevo 14/07** — se suscribió la misma mañana tras recibir el link del
+  club via Andrés: el flujo push-a-Andrés → WhatsApp → club funcionó en
+  horas). `mc` disabled. Solo faltan nachi, naso, tano y carucha.
 - Datos: **19 docs en `games`** (antes 18), 17 válidos (`finished` +
   `winnerPlayerId`). Nueva: Carucha (13/07 = fecha 2 de la T5), ganó Gordo
   127, último Naso 414, ausente Cobra.
@@ -145,6 +152,13 @@ hasta que Andrés lo confirme/corrija. Sin novedad hoy.
   por push inmediato (`2026-07-14-b`) para reenviar a Gordo por WhatsApp;
   el link del club fue por chat. Ids de answers: `gordo-entrevista-q1..q5`
   — si llegan antes de las 14:00, citarlas en la crónica como addendum.
+- 🎯 **Tercera pasada (~10:45, pedidos de Andrés por chat):** Gordo ya
+  prendió las push → (1) quitado el aviso "correo humano" de la entrevista;
+  (2) entrevista linkeada desde la sala de prensa de la crónica ("abrir el
+  expediente"); (3) push `2026-07-14-c` SOLO a gordo con la entrevista;
+  (4) push `2026-07-14-d` SOLO a andres con la crónica nueva para revisar
+  antes de las 14:00. Reglas nuevas ratificadas: pushes solo sáb/dom/lun/
+  mar; entrevistas nunca como push independiente a todos.
 - Próximo: miércoles a viernes, silencio (solo gestión/memoria). Sábado
   19/07 vuelve el slot de récords — evaluar sub-formato nuevo (no repetir
   horóscopo, ya usado el 11/07); ángulo fuerte disponible: la caída de
@@ -158,10 +172,10 @@ Especial "remontadas" · especial sedes · aniversarios (648 de Naso, multa
 dwell propio · investigar el device `sin-nombre` (dwell bajísimo, patrón
 repetido el 06/07 y el 12/07) · confirmar con Andrés la deuda de Gael/T4
 antes de usarla en cualquier experiencia · preguntar a Negro/Naso el estado
-de sus deudas en la próxima previa/chusmerío con `engageAnswer` · seguir si
-Gordo se suscribe tras recibir el link del club via Andrés (14/07) — si
-aparece `gordo` en pushSubs, la sala de prensa vuelve a ser directa ·
-posible especial "el regreso de Cobra" para
+de sus deudas en la próxima previa/chusmerío con `engageAnswer` · replicar
+el flujo del club con nachi/naso/tano/carucha (los 4 que faltan) — el caso
+Gordo demostró que funciona en horas · posible especial "el regreso de
+Cobra" para
 cuando vuelva a aparecer, si se confirman las 2 semanas de ausencia ·
 H2H sin publicar todavía: Carucha 8–4 Cobra (sin cambios, Carucha no jugó
 con Cobra desde el 07/07).
