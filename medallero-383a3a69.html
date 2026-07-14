@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>El Medallero — Salón Eterno · Lunes de UNO</title>
+<meta name="description" content="Salón Eterno de Campeones de Lunes de UNO. 23 temporadas, 9 campeones, una sola mesa.">
+<script>
+// Fuentes de Google cargadas por fetch (no <link>) para no bloquear el primer
+// render y degradar en silencio si la red falla (ej. QA offline / file://).
+(function loadGoogleFonts(){
+  try{
+    var controller = new AbortController();
+    var timeout = setTimeout(function(){ controller.abort(); }, 7000);
+    fetch('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;600;700;800&display=swap', { signal: controller.signal })
+      .then(function(r){ clearTimeout(timeout); if(!r.ok) throw new Error('font css'); return r.text(); })
+      .then(function(css){
+        var style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
+      })
+      .catch(function(){ /* silencioso: quedan las fuentes de sistema */ });
+  }catch(e){ /* silencioso */ }
+})();
+</script>
+<style>
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+img{max-width:100%;display:block;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+ul{list-style:none;}
+a{color:inherit;}
+
+/* ============ TOKENS ============ */
+@property --lx{syntax:'<percentage>';inherits:true;initial-value:30%;}
+@property --ly{syntax:'<percentage>';inherits:true;initial-value:20%;}
+:root{
+  --bg:#0d0d12;
+  --surface:#1a1a2e;
+  --surface2:#242442;
+  --text:#f0f0f5;
+  --muted:#8888a8;
+  --gold:#FFD700;
+  --gold2:#D4AF37;
+  --gold3:#B8860B;
+  --silver:#C0C0C0;
+  --bronze:#CD7F32;
+  --red:#ED1C24;
+  --yellow:#FFDE00;
+  --green:#00A651;
+  --blue:#0072BC;
+  --lx:30%;
+  --ly:20%;
+  --gold-grad: radial-gradient(circle at var(--lx) var(--ly), #fff8dc 0%, #FFD700 12%, #D4AF37 45%, #B8860B 100%);
+  --serif-title:'Fredoka One',cursive;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+html.sun-drift{animation:sunDrift 18s linear infinite;}
+@keyframes sunDrift{
+  0%{--lx:20%;--ly:15%;}
+  25%{--lx:75%;--ly:25%;}
+  50%{--lx:80%;--ly:70%;}
+  75%{--lx:25%;--ly:75%;}
+  100%{--lx:20%;--ly:15%;}
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.5;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body.modal-open{overflow:hidden;}
+
+.container{max-width:1100px;margin:0 auto;padding:0 20px;}
+.oro-text{
+  background:var(--gold-grad);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* ============ BREATHE ============ */
+[data-breathe]{animation:breathe var(--dur,3.2s) ease-in-out infinite;animation-delay:var(--delay,0s);}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.82;}50%{transform:scale(1.025);opacity:1;}}
+@media (prefers-reduced-motion:reduce){[data-breathe]{animation:none;}}
+
+/* ============ HERO ============ */
+#hero{
+  position:relative;
+  min-height:640px;
+  min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:80px 20px 40px;
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(255,215,0,.10), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 110%, rgba(184,134,11,.12), transparent 60%),
+    var(--bg);
+}
+#dust-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:640px;}
+.trophy{
+  font-size:clamp(64px,18vw,112px);
+  filter:drop-shadow(0 0 18px rgba(255,215,0,.55)) drop-shadow(0 0 42px rgba(255,215,0,.3));
+  line-height:1;
+}
+.hero-title{
+  font-family:var(--serif-title);
+  font-weight:400;
+  font-size:clamp(2.4rem,11vw,5.4rem);
+  line-height:1.02;
+  letter-spacing:.01em;
+  background:linear-gradient(100deg,#B8860B 15%,#FFD700 38%,#FFF6D6 50%,#FFD700 62%,#B8860B 85%);
+  background-size:240% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmerSweep 4s ease-in-out infinite;
+  cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;
+  padding:6px 10px;
+  filter:drop-shadow(0 4px 24px rgba(0,0,0,.5));
+}
+@keyframes shimmerSweep{0%{background-position:130% 0;}50%{background-position:-30% 0;}100%{background-position:130% 0;}}
+@media (prefers-reduced-motion:reduce){.hero-title{animation:none;background-position:20% 0;}}
+.subtitle{font-size:clamp(1rem,3.4vw,1.25rem);font-weight:600;color:var(--text);opacity:.92;}
+.stats-line{font-size:.92rem;color:var(--muted);font-weight:500;letter-spacing:.02em;}
+.stats-line b{color:var(--gold);font-weight:700;}
+.credit{font-size:.78rem;color:var(--muted);opacity:.75;margin-top:2px;}
+.scroll-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:2;font-size:1.6rem;color:var(--gold2);opacity:.8;animation:bounceCue 1.8s ease-in-out infinite;}
+@keyframes bounceCue{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,10px);}}
+@media (prefers-reduced-motion:reduce){.scroll-cue{animation:none;}}
+
+/* MODO GALA */
+body.gala-mode{position:relative;}
+body.gala-mode::after{
+  content:'';position:fixed;inset:0;z-index:40;pointer-events:none;
+  background:
+    radial-gradient(circle at 22% 28%, rgba(255,223,90,.30), transparent 55%),
+    radial-gradient(circle at 78% 68%, rgba(255,215,0,.24), transparent 55%),
+    rgba(3,3,6,.6);
+  animation:spotlightSweep 3s ease-in-out infinite alternate;
+}
+@keyframes spotlightSweep{
+  0%{background-position:0 0,0 0,0 0;filter:brightness(1);}
+  100%{background-position:30px -20px,-30px 20px,0 0;filter:brightness(1.08);}
+}
+@media (prefers-reduced-motion:reduce){body.gala-mode::after{animation:none;}}
+
+/* TOAST */
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+  background:var(--surface2);color:var(--gold);font-weight:700;font-size:.9rem;
+  padding:10px 20px;border-radius:999px;border:1px solid rgba(255,215,0,.35);
+  box-shadow:0 10px 30px rgba(0,0,0,.5);z-index:80;opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* ============ SECTION HEADERS ============ */
+section{padding:70px 0;position:relative;}
+.section-title{
+  font-family:var(--serif-title);font-weight:400;
+  font-size:clamp(1.6rem,5vw,2.4rem);
+  text-align:center;margin-bottom:8px;
+}
+.section-sub{text-align:center;color:var(--muted);font-size:.92rem;margin-bottom:40px;}
+
+/* ============ PODIO ============ */
+#podio{background:linear-gradient(180deg,var(--bg) 0%, #101018 100%);}
+.podio-wrap{
+  display:flex;align-items:flex-end;justify-content:center;gap:clamp(6px,3vw,26px);
+  max-width:560px;margin:0 auto;padding:0 8px;
+  opacity:0;transform:translateY(24px);transition:opacity .7s ease, transform .7s cubic-bezier(.22,1,.36,1);
+}
+#podio.in-view .podio-wrap{opacity:1;transform:translateY(0);}
+.step{
+  flex:1 1 0;min-width:0;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:18px 6px 16px;border-radius:18px 18px 6px 6px;
+  position:relative;
+  transition:transform .7s cubic-bezier(.22,1,.36,1), opacity .7s ease;
+  opacity:0;transform:translateY(30px);
+}
+#podio.in-view .step-plata{transition-delay:.05s;}
+#podio.in-view .step-oro{transition-delay:.2s;}
+#podio.in-view .step-bronce{transition-delay:.1s;}
+#podio.in-view .step{opacity:1;transform:translateY(0);}
+.step-plata{order:1;background:linear-gradient(160deg,#2c2c38,#1a1a24);border:1px solid rgba(192,192,192,.25);min-height:190px;}
+.step-oro{order:2;background:linear-gradient(160deg,#3a2f10,#1e1806);border:1px solid rgba(255,215,0,.4);min-height:238px;box-shadow:0 0 50px -10px rgba(255,215,0,.25);}
+.step-bronce{order:3;background:linear-gradient(160deg,#33261a,#1c140d);border:1px solid rgba(205,127,50,.3);min-height:160px;}
+.step-label{font-family:var(--serif-title);font-size:clamp(.7rem,2.4vw,.85rem);letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+.step-oro .step-label{color:var(--gold);}
+.step-plata .step-label{color:var(--silver);}
+.step-bronce .step-label{color:var(--bronze);}
+.step-titulos{font-family:var(--serif-title);font-size:clamp(.95rem,3vw,1.3rem);}
+.step-oro .step-titulos{color:var(--gold);}
+.step-plata .step-titulos{color:var(--silver);}
+.step-bronce .step-titulos{color:var(--bronze);}
+.medallions-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:relative;}
+.crown-float{font-size:clamp(1.4rem,4.5vw,2rem);margin-bottom:-6px;filter:drop-shadow(0 2px 8px rgba(255,215,0,.5));}
+
+.medallion{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  cursor:pointer;transform-style:preserve-3d;will-change:transform;
+  transition:transform .25s ease;
+}
+.medallion:hover .face-wrap, .medallion:focus-visible .face-wrap{filter:brightness(1.08);}
+.medallion .m-name{font-size:.72rem;font-weight:700;color:var(--text);white-space:nowrap;}
+
+.face-wrap{
+  position:relative;border-radius:50%;overflow:hidden;
+  width:var(--fsize,58px);height:var(--fsize,58px);
+  border:3px solid var(--pcolor,#FFD700);
+  background:var(--surface2);
+  box-shadow:0 1px 0 #B8860B,0 2px 0 #a67a0f,0 3px 0 #8f6a0d,0 4px 0 #785a0b,0 7px 14px rgba(0,0,0,.55);
+}
+.face-wrap img{width:100%;height:100%;object-fit:cover;}
+.face-fallback{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  background:var(--pcolor,#333);color:#fff;font-weight:800;font-size:calc(var(--fsize,58px) * .42);
+  font-family:var(--serif-title);
+}
+/* anillo campeón anual: wrapper propio (sin overflow:hidden) por fuera de
+   .face-wrap, así el conic-gradient con inset negativo no queda recortado
+   ni tapado por el fondo opaco de la cara. */
+.ring-annual-wrap{position:relative;display:inline-block;}
+.ring-annual-wrap::before,.ring-annual-wrap::after{content:'';position:absolute;inset:-6px;border-radius:50%;pointer-events:none;}
+.ring-annual-wrap::before{background:conic-gradient(from 0deg,#B8860B,#FFD700,#FFF6D6,#D4AF37,#B8860B);animation:ringSpin 6s linear infinite;}
+.ring-annual-wrap::after{background:radial-gradient(circle,#fff 0%,transparent 70%);-webkit-mask:conic-gradient(from 0deg,#000 0deg 40deg,transparent 40deg 360deg);mask:conic-gradient(from 0deg,#000 0deg 40deg,transparent 40deg 360deg);animation:ringSpinRev 3.5s linear infinite;}
+.ring-annual-wrap>.face-wrap{position:relative;z-index:1;}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
+@keyframes ringSpinRev{to{transform:rotate(-360deg);}}
+@media (prefers-reduced-motion:reduce){
+  .ring-annual-wrap::before,.ring-annual-wrap::after{animation:none;transform:rotate(45deg);}
+}
+
+/* ============ TABLA ============ */
+#tabla{background:var(--bg);}
+.medal-card{
+  max-width:820px;margin:0 auto;background:linear-gradient(160deg,var(--surface),#151524);
+  border-radius:20px;border:1px solid rgba(255,215,0,.14);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.03);
+  overflow:hidden;
+}
+.medal-card-head{
+  padding:20px 20px 16px;text-align:center;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg,rgba(255,215,0,.06),transparent);
+}
+.medal-card-head h3{font-family:var(--serif-title);font-weight:400;font-size:clamp(1.1rem,3.4vw,1.5rem);letter-spacing:.06em;color:var(--gold);}
+.rows{padding:6px 8px 14px;}
+.row{
+  display:grid;
+  grid-template-columns:24px 42px 1fr auto;
+  grid-template-areas:
+    "puesto face name total"
+    "chips  chips chips chips";
+  column-gap:10px;row-gap:9px;align-items:center;
+  padding:12px 10px;border-radius:12px;
+  cursor:pointer;position:relative;
+  border:1px solid transparent;
+  transition:background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.row:hover,.row:focus-visible{background:rgba(255,255,255,.035);border-color:rgba(255,215,0,.18);transform:translateX(2px);}
+.row.tied-top{background:linear-gradient(90deg,rgba(255,215,0,.10),rgba(255,215,0,.02));}
+.row-puesto{
+  grid-area:puesto;text-align:center;font-family:var(--serif-title);font-size:.95rem;color:var(--muted);
+}
+.row-puesto .crown{display:block;font-size:1rem;margin-bottom:-2px;}
+.row-face{grid-area:face;}
+.row-name{grid-area:name;min-width:0;}
+.row-name .m-name{font-weight:700;font-size:.92rem;display:block;overflow-wrap:break-word;}
+.row-name .m-name small{display:block;font-weight:500;color:var(--muted);font-size:.66rem;margin-top:1px;}
+.row-chips{
+  grid-area:chips;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+  padding:1px 0;
+  -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent 100%);
+  mask-image:linear-gradient(90deg,#000 92%,transparent 100%);
+}
+.row-chips::-webkit-scrollbar{display:none;}
+.chip-year{
+  flex:0 0 auto;font-size:.66rem;font-weight:700;color:var(--muted);
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:4px 7px;white-space:nowrap;
+}
+.chip-year.has{color:var(--text);background:rgba(255,215,0,.10);border-color:rgba(255,215,0,.22);}
+.row-total{
+  grid-area:total;text-align:right;
+  font-family:var(--serif-title);font-size:1.2rem;
+}
+.row-total .oro-text{display:inline-flex;justify-content:flex-end;}
+
+@media (min-width:600px){
+  .row{
+    grid-template-columns:30px 46px 1fr auto auto;
+    grid-template-areas:"puesto face name chips total";
+    column-gap:14px;
+  }
+  .row-chips{-webkit-mask-image:none;mask-image:none;max-width:230px;}
+}
+.empate-badge{
+  text-align:center;font-size:.68rem;font-weight:800;letter-spacing:.1em;
+  color:var(--gold2);padding:5px 0 9px;text-transform:uppercase;
+}
+.empate-badge::before,.empate-badge::after{content:'✦';margin:0 8px;color:var(--gold3);opacity:.6;}
+
+/* odómetro */
+.odo{display:inline-flex;}
+.odo-digit{display:inline-block;height:1.2em;line-height:1.2;overflow:hidden;vertical-align:top;}
+.odo-strip{display:flex;flex-direction:column;transform:translateY(0);}
+.odo-digit.play .odo-strip{transition:transform 900ms cubic-bezier(.16,1,.3,1);transform:translateY(calc(var(--d,0) * -1.2em));}
+.odo-num{height:1.2em;line-height:1.2;display:block;text-align:center;}
+@media (prefers-reduced-motion:reduce){.odo-digit.play .odo-strip{transition:none;}}
+
+/* ============ ERAS ============ */
+#eras{background:linear-gradient(180deg,#101018,var(--bg));}
+.eras-track{
+  display:flex;gap:16px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+  padding:6px 20px 20px;max-width:100%;
+  scrollbar-width:none;
+}
+.eras-track::-webkit-scrollbar{display:none;}
+.era-card{
+  flex:0 0 82%;max-width:340px;scroll-snap-align:center;
+  background:linear-gradient(160deg,var(--surface),#141420);
+  border:1px solid rgba(255,255,255,.08);border-radius:18px;
+  padding:22px 18px;display:flex;flex-direction:column;gap:14px;
+  box-shadow:0 20px 40px -18px rgba(0,0,0,.55);
+}
+.era-card.edge-bounce{animation:edgeBounce .22s ease;}
+@keyframes edgeBounce{0%{transform:translateX(0);}40%{transform:translateX(6px);}100%{transform:translateX(0);}}
+.era-year{font-family:var(--serif-title);font-size:1.6rem;color:var(--gold);}
+.era-title{font-weight:800;font-size:.86rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text);}
+.era-sub{color:var(--muted);font-size:.82rem;}
+.era-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.era-chip{
+  display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);
+  border:1px solid var(--ccolor,#333);border-radius:999px;padding:4px 10px 4px 4px;
+  font-size:.74rem;font-weight:600;cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.era-chip:hover,.era-chip:focus-visible{transform:translateY(-3px);box-shadow:0 8px 18px -6px var(--ccolor,#333);}
+.era-chip .mini-face{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:0 0 22px;background:var(--pcolor,#333);position:relative;}
+.era-chip .mini-face img{width:100%;height:100%;object-fit:cover;}
+.era-chip .mini-num{color:var(--muted);font-size:.66rem;}
+.era-banner{
+  margin-top:auto;padding-top:12px;border-top:1px dashed rgba(255,255,255,.1);
+  font-size:.82rem;font-weight:700;color:var(--gold);text-align:center;
+}
+.era-banner.live{
+  color:var(--bg);background:var(--gold-grad);border:none;border-radius:999px;
+  padding:7px 10px;animation:breathe 2.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion:reduce){.era-banner.live{animation:none;}}
+.eras-dots{display:flex;justify-content:center;gap:8px;margin-top:6px;}
+.era-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.18);transition:transform .3s ease, background .3s ease;}
+.era-dot.active{background:var(--gold);transform:scale(1.3);}
+@media (prefers-reduced-motion:reduce){.era-dot.active{animation:none;transform:scale(1.15);}}
+
+@media (min-width:760px){
+  .eras-track{display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;padding:0;margin:0;}
+  .era-card{flex:none;max-width:none;}
+  .eras-dots{display:none;}
+}
+
+/* ============ SALA ============ */
+#sala{background:var(--bg);}
+.sala-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;max-width:760px;margin:0 auto;}
+.vitrina-glass{
+  position:relative;border-radius:18px;padding:22px 16px 18px;text-align:center;
+  background:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.09);
+  backdrop-filter:blur(2px);
+  overflow:hidden;
+}
+.vitrina-glass::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 40%, rgba(255,255,255,.08) 50%, transparent 60%);
+  transform:translateX(-40%);
+}
+.vitrina-glass .face-wrap{margin:0 auto 10px;filter:grayscale(1) brightness(.75);}
+.vitrina-glass .v-name{font-weight:800;font-size:.9rem;margin-bottom:8px;color:var(--muted);}
+.plate-engraved{
+  background:linear-gradient(160deg,#2a2a1a,#1a1a12);
+  color:#a8a088;font-size:.78rem;line-height:1.45;
+  text-shadow:-1px -1px 1px rgba(0,0,0,.9), 1px 1px 0 rgba(255,255,255,.12);
+  box-shadow:inset 2px 2px 4px rgba(0,0,0,.6), inset -1px -1px 2px rgba(255,255,255,.08);
+  border-radius:8px;padding:10px 12px;
+}
+.sala-plate-shared{
+  max-width:600px;margin:26px auto 0;text-align:center;font-size:.8rem;
+}
+
+/* ============ FOOTER ============ */
+footer{padding:50px 20px 60px;text-align:center;color:var(--muted);}
+footer .f-main{font-weight:700;color:var(--text);margin-bottom:6px;}
+footer .f-mini{font-size:.76rem;opacity:.75;}
+
+/* ============ MODAL VITRINA ============ */
+#vitrina-modal{
+  position:fixed;inset:0;z-index:100;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(4,4,8,.78);backdrop-filter:blur(6px);
+}
+#vitrina-modal.open{display:flex;}
+.modal-content{
+  position:relative;width:100%;max-width:420px;max-height:88svh;overflow-y:auto;
+  background:linear-gradient(170deg,#1c1c30,#111120);
+  border:1px solid rgba(255,215,0,.2);border-radius:22px;
+  padding:32px 24px 26px;text-align:center;
+  box-shadow:0 40px 80px -20px rgba(0,0,0,.7);
+  transform:scale(.94);opacity:0;transition:transform .32s cubic-bezier(.22,1,.36,1), opacity .28s ease;
+}
+#vitrina-modal.open .modal-content{transform:scale(1);opacity:1;}
+@media (prefers-reduced-motion:reduce){
+  .modal-content{transition:opacity .2s ease;transform:none;}
+}
+.modal-close{
+  position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.06);color:var(--text);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{background:rgba(255,255,255,.12);}
+.modal-face-wrap{--fsize:118px;margin:0 auto 14px;}
+.modal-name{font-family:var(--serif-title);font-size:1.7rem;margin-bottom:2px;}
+.modal-alias{display:block;font-family:var(--sans);font-style:italic;font-weight:500;font-size:.72rem;color:var(--muted);margin-top:2px;}
+.modal-total{font-size:.9rem;color:var(--muted);margin-bottom:14px;}
+.modal-total b{color:var(--gold);font-family:var(--serif-title);font-size:1.05rem;}
+.modal-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
+.modal-chips .chip-t{
+  font-size:.7rem;font-weight:700;background:rgba(255,215,0,.08);
+  border:1px solid rgba(255,215,0,.25);color:var(--gold2);
+  border-radius:8px;padding:4px 8px;
+}
+.modal-plate{margin-bottom:18px;}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.btn{
+  font-weight:700;font-size:.82rem;padding:11px 16px;border-radius:12px;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.btn-gold{background:var(--gold-grad);color:#2a1e00;box-shadow:0 8px 20px -8px rgba(255,215,0,.6);}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid rgba(255,255,255,.12);}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+
+/* sello Junta de Honor */
+.sello{
+  position:absolute;top:52px;right:-10px;
+  font-family:var(--serif-title);font-size:.72rem;letter-spacing:.06em;
+  color:#c0392b;border:3px double #c0392b;padding:8px 12px;
+  transform:rotate(-11deg);text-transform:uppercase;text-align:center;
+  mix-blend-mode:screen;pointer-events:none;
+  clip-path:polygon(2% 8%,96% 0%,100% 88%,6% 100%,0% 40%);
+  animation:stampIn .22s cubic-bezier(.36,1.8,.4,1);
+}
+@keyframes stampIn{0%{transform:scale(2.2) rotate(-11deg);opacity:0;}60%{transform:scale(.85) rotate(-11deg);}100%{transform:scale(1) rotate(-11deg);opacity:1;}}
+@media (prefers-reduced-motion:reduce){.sello{animation:none;}}
+
+/* ============ CONFETTI CANVAS ============ */
+/* z-index por encima del modal (100) para que el burst de "al abrir" (3.6)
+   no quede pintado debajo del backdrop translúcido de la Vitrina. */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:110;width:100%;height:100%;}
+
+/* ============ SCROLLBAR NICETY ============ */
+::selection{background:rgba(255,215,0,.3);color:#fff;}
+
+/* general small screen safety */
+@media (max-width:360px){
+  .face-wrap{--fsize:50px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ HERO ============ -->
+<header id="hero">
+  <canvas id="dust-canvas" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="trophy" data-breathe aria-hidden="true">🏆</div>
+    <h1 class="hero-title" id="hero-title" tabindex="0" role="button" aria-label="El Medallero — tocá 5 veces para el modo gala">EL MEDALLERO</h1>
+    <p class="subtitle">Salón Eterno de Campeones — Lunes de UNO</p>
+    <p class="stats-line" id="stats-line"></p>
+    <p class="credit">Curaduría: Gordo · Auditoría: la mesa</p>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">⌄</div>
+</header>
+
+<!-- ============ PODIO ============ -->
+<section id="podio">
+  <h2 class="section-title">Podio <span class="oro-text">All-Time</span></h2>
+  <p class="section-sub">Por cantidad de títulos de temporada</p>
+  <div class="podio-wrap" id="podio-wrap"></div>
+</section>
+
+<!-- ============ TABLA ============ -->
+<section id="tabla">
+  <div class="container">
+    <div class="medal-card">
+      <div class="medal-card-head"><h3>MEDALLERO HISTÓRICO</h3></div>
+      <div class="rows" id="rows-wrap"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ERAS ============ -->
+<section id="eras">
+  <div class="container">
+    <h2 class="section-title">Las Tres Eras</h2>
+    <p class="section-sub">Una mesa, tres épocas</p>
+  </div>
+  <div class="eras-track" id="eras-track"></div>
+  <div class="eras-dots" id="eras-dots"></div>
+</section>
+
+<!-- ============ SALA DE LOS QUE MIRAN ============ -->
+<section id="sala">
+  <div class="container">
+    <h2 class="section-title">La Sala de los que Miran</h2>
+    <p class="section-sub">Vitrinas vacías, esperando</p>
+    <div class="sala-grid" id="sala-grid"></div>
+    <p class="plate-engraved sala-plate-shared" id="sala-plate-shared"></p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p class="f-main">🎴 lunes de uno — Salón Eterno de Campeones</p>
+  <p class="f-mini">Documento histórico consolidado por el Departamento de Estadísticas (Gordo). 2024–∞</p>
+</footer>
+
+<!-- ============ MODAL VITRINA ============ -->
+<div id="vitrina-modal" aria-hidden="true">
+  <div class="modal-content" role="dialog" aria-modal="true" id="modal-content">
+    <button class="modal-close" id="modal-close" aria-label="Cerrar">✕</button>
+    <div id="modal-sello-slot"></div>
+    <div class="modal-face-wrap" id="modal-face"></div>
+    <h3 class="modal-name" id="modal-name"></h3>
+    <p class="modal-total" id="modal-total"></p>
+    <div class="modal-chips" id="modal-chips"></div>
+    <p class="plate-engraved modal-plate" id="modal-plate"></p>
+    <div class="modal-actions">
+      <button class="btn btn-gold" id="btn-presumir">🏆 Presumir</button>
+      <button class="btn btn-ghost" id="btn-postal">📸 Guardar postal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= DATA CANÓNICA ================= */
+const ROSTER = {
+  pt:      { name: 'PT',      color: '#ED1C24' },
+  mac:     { name: 'Mac',     color: '#FFDE00' },
+  mata:    { name: 'Mata',    color: '#00A651' },
+  gael:    { name: 'Gael',    color: '#0072BC' },
+  nachi:   { name: 'Nachi',   color: '#FF6B35' },
+  carucha: { name: 'Carucha', color: '#A855F7' },
+  negro:   { name: 'Negro',   color: '#EC4899' },
+  naso:    { name: 'Naso',    color: '#14B8A6' },
+  tano:    { name: 'Tano',    color: '#F97316' },
+  gordo:   { name: 'Gordo',   color: '#6366F1' },
+  cobra:   { name: 'Cobra',   color: '#84CC16' }
+};
+// Expediente Manu resuelto: los títulos 2024/2025 registrados como 'Manu' en
+// la planilla son de Gael (confirmado 14/07/2026).
+
+const CHAMPIONS = {
+  2024: ['pt','gael','naso','gordo','naso','tano','mac','mata','naso','pt'],
+  2025: ['tano','gael','gordo','gael','pt','carucha','carucha','gael','cobra'],
+  2026: ['gordo','pt','carucha','cobra']
+};
+const ANNUAL = { 2024: 'naso', 2025: 'cobra' };
+
+const PLATES = {
+  pt: "Cuatro títulos repartidos en tres años. El único que entendió que esto es una carrera de fondo. En 2026 lidera la anual con UNA victoria: ganar sin ganar, un arte.",
+  gael: "Cuatro títulos ganados bajo el alias 'Manu'. Dos años de expediente abierto hasta que llegó la confesión: era Gael. El campeón mejor encubierto en la historia de la mesa.",
+  naso: "Tricampeón 2024 y dueño de la primera anual. Después llegó la era digital, el 648 histórico, y la humildad.",
+  gordo: "Un título por año, en las tres eras. Curador de este Salón. La dinastía se administra sola.",
+  carucha: "Bicampeón consecutivo en 2025, espalda con espalda. Cuando la casa pone la sede, la casa cobra.",
+  tano: "Campeón en 2024 y en 2025. En 2026 cambió los títulos por multas: récord histórico, 150 en una noche.",
+  cobra: "👑 Campeón Anual 2025. Cero faltas en su vida, sangre fría, memoria de elefante. Especialista en cerrar años: T9 2025 y T4 2026.",
+  mac: "Un título en 2024 y desde entonces una peregrinación. En 2026: cinco últimos puestos. La picada es ley, y él la financia.",
+  mata: "Un título en 2024 y una sede con nombre propio: MATABA. La casa ganó. Una vez."
+};
+
+const SALA_TEXTS = {
+  nachi: "Dos fechas seguidas en mayo. Cerca no es adentro.",
+  negro: "La vitrina vacía y un postre impago. Doble deuda."
+};
+const SALA_PLATE = "⚖️ Expediente Manu: RESUELTO. Los 4 títulos registrados como 'Manu' fueron reclamados por Gael. El Salón agradece la confesión.";
+
+const ERA_META = {
+  2024: { title:'LA ERA FUNDACIONAL', subtitle:'10 temporadas, papel y birome' },
+  2025: { title:'LA ERA DORADA', subtitle:'9 temporadas, la mesa ya era ley' },
+  2026: { title:'LA ERA DIGITAL', subtitle:'el algoritmo ve todo' }
+};
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= HELPERS DE JUGADOR ================= */
+function faceWrapHTML(slug, opts){
+  opts = opts || {};
+  const extraClass = opts.extraClass || '';
+  const sizeStyle = opts.size ? `--fsize:${opts.size}px;` : '';
+  const p = ROSTER[slug];
+  // el anillo de campeón anual va en un wrapper aparte (ver .ring-annual-wrap)
+  // para que no quede recortado por el overflow:hidden de .face-wrap.
+  const ringOpen = opts.ring ? '<div class="ring-annual-wrap">' : '';
+  const ringClose = opts.ring ? '</div>' : '';
+  return `${ringOpen}<div class="face-wrap ${extraClass}" style="${sizeStyle}--pcolor:${p.color}">`
+    + `<img src="assets/faces/${slug}.png" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+    + `<div class="face-fallback" style="--pcolor:${p.color}">${(p.name||'?')[0]}</div>`
+    + `</div>${ringClose}`;
+}
+function miniFaceHTML(slug){
+  const p = ROSTER[slug];
+  // fallback a inicial sobre --pcolor si la imagen falla (mismo patrón que faceWrapHTML).
+  return `<div class="mini-face" style="--pcolor:${p.color}">`
+    + `<img src="assets/faces/${slug}.png" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+    + `<div class="mini-face-fallback" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.68rem;font-family:var(--serif-title);">${(p.name||'?')[0]}</div>`
+    + `</div>`;
+}
+
+/* ================= COMPUTO DE DATOS ================= */
+function computeData(){
+  const years = Object.keys(CHAMPIONS).map(Number).sort((a,b)=>a-b);
+  const flat = [];
+  years.forEach(year=>{
+    (CHAMPIONS[year]||[]).forEach((slug,i)=>{
+      flat.push({ slug, year, season:i+1, order:flat.length });
+    });
+  });
+  const bySlug = {};
+  flat.forEach(t=>{
+    if(!bySlug[t.slug]){
+      bySlug[t.slug] = { slug:t.slug, total:0, titles:[], firstOrder:t.order, yearCounts:{} };
+    }
+    const b = bySlug[t.slug];
+    b.total++;
+    b.titles.push(t);
+    b.yearCounts[t.year] = (b.yearCounts[t.year]||0) + 1;
+  });
+  const ranking = Object.values(bySlug).sort((a,b)=> b.total - a.total || a.firstOrder - b.firstOrder);
+  const totalsOrder = [];
+  ranking.forEach(r=>{ if(!totalsOrder.includes(r.total)) totalsOrder.push(r.total); });
+  const podiumTotals = totalsOrder.slice(0,3);
+  const podiumTiers = podiumTotals.map(t=>({ total:t, members: ranking.filter(r=>r.total===t) }));
+  return { years, flat, bySlug, ranking, podiumTiers };
+}
+
+let DATA = computeData();
+
+/* ================= RENDER: STATS LINE ================= */
+function renderStatsLine(){
+  const el = document.getElementById('stats-line');
+  el.innerHTML = `<b>${DATA.flat.length}</b> temporadas · <b>${DATA.ranking.length}</b> campeones · una sola mesa`;
+}
+
+/* ================= RENDER: PODIO ================= */
+const TIER_CLASS = ['step-oro','step-plata','step-bronce'];
+const TIER_LABEL = ['ORO','PLATA','BRONCE'];
+// orden visual olímpico: plata, oro, bronce (el oro queda en el medio)
+const VISUAL_ORDER = [1,0,2];
+
+function renderPodio(){
+  const wrap = document.getElementById('podio-wrap');
+  wrap.innerHTML = '';
+  VISUAL_ORDER.forEach(idx=>{
+    const tier = DATA.podiumTiers[idx];
+    if(!tier) return;
+    const step = document.createElement('div');
+    step.className = `step ${TIER_CLASS[idx]}`;
+    const crown = idx===0 ? `<div class="crown-float" data-breathe aria-hidden="true">👑</div>` : '';
+    const medallions = tier.members.map(m=>{
+      const isAnnual = Object.values(ANNUAL).includes(m.slug);
+      return `<button class="medallion" data-open-champ="${m.slug}" aria-label="Ver a ${ROSTER[m.slug].name}">
+        ${faceWrapHTML(m.slug, { extraClass:'coin-edge', ring:isAnnual })}
+        <span class="m-name">${ROSTER[m.slug].name}</span>
+      </button>`;
+    }).join('');
+    step.innerHTML = `${crown}<div class="medallions-row">${medallions}</div>
+      <div class="step-label">${TIER_LABEL[idx]}</div>
+      <div class="step-titulos">${tier.total} TÍTULO${tier.total===1?'':'S'}</div>`;
+    wrap.appendChild(step);
+  });
+}
+
+/* ================= RENDER: TABLA ================= */
+function buildOdometer(value){
+  const str = String(value);
+  const digits = [...str].map((ch,i)=>{
+    const nums = Array.from({length:10},(_,d)=>`<span class="odo-num">${d}</span>`).join('');
+    return `<span class="odo-digit" data-target="${ch}" style="transition-delay:${(str.length-1-i)*70}ms"><span class="odo-strip">${nums}</span></span>`;
+  }).join('');
+  return `<span class="odo">${digits}</span>`;
+}
+
+function renderTabla(){
+  const wrap = document.getElementById('rows-wrap');
+  wrap.innerHTML = '';
+  const ranking = DATA.ranking;
+  const tiedTop = ranking.length>1 && ranking[0].total === ranking[1].total;
+  ranking.forEach((r,i)=>{
+    if(tiedTop && i===1){
+      const badge = document.createElement('div');
+      badge.className = 'empate-badge';
+      badge.textContent = 'EMPATE EN LA CIMA';
+      wrap.appendChild(badge);
+    }
+    const isAnnual = Object.values(ANNUAL).includes(r.slug);
+    const annualYear = Object.keys(ANNUAL).find(y=>ANNUAL[y]===r.slug);
+    const row = document.createElement('div');
+    row.className = 'row' + (tiedTop && i<2 ? ' tied-top' : '');
+    row.setAttribute('data-open-champ', r.slug);
+    row.setAttribute('tabindex','0');
+    row.setAttribute('role','button');
+    const chips = DATA.years.map(y=>{
+      const n = r.yearCounts[y] || 0;
+      return `<span class="chip-year ${n?'has':''}">${y}${n?': '+n:' —'}</span>`;
+    }).join('');
+    row.innerHTML = `
+      <div class="row-puesto">${i===0?'<span class="crown" aria-hidden="true">👑</span>':''}${i+1}º</div>
+      <div class="row-face">${faceWrapHTML(r.slug, { extraClass:'coin-edge', ring:isAnnual, size:38 })}</div>
+      <div class="row-name"><span class="m-name">${ROSTER[r.slug].name}${isAnnual?`<small title="Campeón Anual 2024/2025">👑 Campeón Anual ${annualYear}</small>`:''}</span></div>
+      <div class="row-chips">${chips}</div>
+      <div class="row-total oro-text">${buildOdometer(r.total)}</div>
+    `;
+    wrap.appendChild(row);
+  });
+}
+
+/* ================= RENDER: ERAS ================= */
+function renderEras(){
+  const track = document.getElementById('eras-track');
+  const dotsWrap = document.getElementById('eras-dots');
+  track.innerHTML = '';
+  dotsWrap.innerHTML = '';
+  DATA.years.forEach((year,i)=>{
+    const meta = ERA_META[year] || { title:`LA ERA ${year}`, subtitle:'el legado continúa' };
+    const champs = CHAMPIONS[year] || [];
+    const chips = champs.map((slug,idx)=>`
+      <button class="era-chip" style="--ccolor:${ROSTER[slug].color}" data-open-champ="${slug}">
+        ${miniFaceHTML(slug)}
+        <span>${ROSTER[slug].name}</span>
+        <span class="mini-num">T${idx+1}</span>
+      </button>`).join('');
+    let banner;
+    if(ANNUAL[year]){
+      banner = `<div class="era-banner">👑 Campeón Anual: ${ROSTER[ANNUAL[year]].name}</div>`;
+    } else {
+      banner = `<div class="era-banner live">T${champs.length+1} EN DISPUTA</div>`;
+    }
+    const card = document.createElement('div');
+    card.className = 'era-card';
+    card.dataset.eraYear = year;
+    card.innerHTML = `
+      <div class="era-year">${year}</div>
+      <div class="era-title">${meta.title}</div>
+      <div class="era-sub">${meta.subtitle}</div>
+      <div class="era-chips">${chips}</div>
+      ${banner}
+    `;
+    track.appendChild(card);
+    const dot = document.createElement('div');
+    dot.className = 'era-dot' + (i===0?' active':'');
+    dot.dataset.eraYear = year;
+    dotsWrap.appendChild(dot);
+  });
+}
+
+/* ================= RENDER: SALA ================= */
+function renderSala(){
+  const grid = document.getElementById('sala-grid');
+  grid.innerHTML = '';
+  Object.keys(SALA_TEXTS).forEach(slug=>{
+    const box = document.createElement('div');
+    box.className = 'vitrina-glass';
+    box.innerHTML = `
+      ${faceWrapHTML(slug)}
+      <div class="v-name">${ROSTER[slug].name}</div>
+      <p class="plate-engraved">${SALA_TEXTS[slug]}</p>
+    `;
+    grid.appendChild(box);
+  });
+  document.getElementById('sala-plate-shared').textContent = SALA_PLATE;
+}
+
+/* ================= RENDER MASTER ================= */
+function renderAll(){
+  renderStatsLine();
+  renderPodio();
+  renderTabla();
+  renderEras();
+  renderSala();
+  initBreathe();
+  initTilt();
+  initEraObservers();
+}
+
+/* ================= BREATHE INIT ================= */
+function initBreathe(){
+  document.querySelectorAll('[data-breathe]').forEach(el=>{
+    el.style.setProperty('--dur', (2.4 + Math.random()*2).toFixed(2)+'s');
+    el.style.setProperty('--delay', (Math.random()*-4).toFixed(2)+'s');
+  });
+}
+
+/* ================= RIG DE LUZ ================= */
+(function initLightRig(){
+  const root = document.documentElement;
+  if(reducedMotion) return;
+  if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    let ticking = false, lx = 30, ly = 20;
+    document.addEventListener('pointermove', e=>{
+      lx = (e.clientX / window.innerWidth * 100);
+      ly = (e.clientY / window.innerHeight * 100);
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(()=>{
+          root.style.setProperty('--lx', lx.toFixed(2)+'%');
+          root.style.setProperty('--ly', ly.toFixed(2)+'%');
+          ticking = false;
+        });
+      }
+    }, { passive:true });
+  } else {
+    // en touch (la mayoría de celulares) el drift automático corre todo el
+    // tiempo: lo apagamos mientras el hero no está en pantalla o la pestaña
+    // está en segundo plano, para no repintar --lx/--ly sin necesidad.
+    const heroEl = document.getElementById('hero');
+    let heroVisible = true;
+    const applyDrift = ()=>{
+      root.classList.toggle('sun-drift', heroVisible && !document.hidden);
+    };
+    if(heroEl && 'IntersectionObserver' in window){
+      new IntersectionObserver(entries=>{
+        heroVisible = entries[0].isIntersecting;
+        applyDrift();
+      }, { threshold:0 }).observe(heroEl);
+    }
+    document.addEventListener('visibilitychange', applyDrift);
+    applyDrift();
+  }
+})();
+
+/* ================= TILT 3D PODIO/CARAS ================= */
+function initTilt(){
+  if(reducedMotion) return;
+  if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  document.querySelectorAll('.medallion').forEach(m=>{
+    let ticking = false, rx = 0, ry = 0;
+    m.addEventListener('pointermove', e=>{
+      const rect = m.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      rx = py * -14; ry = px * 14;
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(()=>{
+          m.style.transform = `perspective(600px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+          ticking = false;
+        });
+      }
+    });
+    m.addEventListener('pointerleave', ()=>{ m.style.transform = ''; });
+  });
+}
+
+/* ================= DUST PARTICLES (HERO) ================= */
+(function initDust(){
+  const canvas = document.getElementById('dust-canvas');
+  if(!canvas || reducedMotion) return;
+  const ctx = canvas.getContext('2d');
+  let dw, dh, particles = [];
+  function resize(){
+    dw = canvas.width = canvas.offsetWidth;
+    dh = canvas.height = canvas.offsetHeight;
+  }
+  function init(){
+    particles = Array.from({ length: 70 }, ()=>({
+      x: Math.random()*dw, y: Math.random()*dh,
+      r: 0.6 + Math.random()*1.7,
+      vx: (Math.random()-0.5)*0.15,
+      vy: -0.05 - Math.random()*0.18,
+      a: 0.15 + Math.random()*0.5,
+      tw: Math.random()*Math.PI*2
+    }));
+  }
+  resize(); init();
+  window.addEventListener('resize', ()=>{ resize(); });
+  function draw(){
+    if(!document.hidden){
+      ctx.clearRect(0,0,dw,dh);
+      particles.forEach(p=>{
+        p.x += p.vx; p.y += p.vy; p.tw += 0.02;
+        if(p.y < -5){ p.y = dh+5; p.x = Math.random()*dw; }
+        if(p.x < -5) p.x = dw+5;
+        if(p.x > dw+5) p.x = -5;
+        const alpha = p.a * (0.6 + 0.4*Math.sin(p.tw));
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,215,0,${alpha})`;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= CONFETTI ENGINE (único, autodestructivo) ================= */
+const confettiCanvas = document.getElementById('confetti-canvas');
+const cctx = confettiCanvas.getContext('2d');
+let confettiParticles = [];
+let confettiRunning = false;
+function resizeConfetti(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeConfetti);
+resizeConfetti();
+
+function burstConfetti(colors, opts){
+  if(reducedMotion) return;
+  opts = opts || {};
+  resizeConfetti();
+  const count = opts.count || 70;
+  const originX = opts.originX != null ? opts.originX : window.innerWidth/2;
+  const originY = opts.originY != null ? opts.originY : window.innerHeight*0.25;
+  for(let i=0;i<count;i++){
+    confettiParticles.push({
+      x: originX, y: originY,
+      vx: (Math.random()-0.5)*9,
+      vy: -Math.random()*10 - 3,
+      g: 0.26 + Math.random()*0.12,
+      size: 4 + Math.random()*5,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*Math.PI*2,
+      vr: (Math.random()-0.5)*0.3,
+      life: 0,
+      maxLife: 85 + Math.random()*45,
+      shape: (opts.trophies && Math.random() < 0.12) ? 'trophy' : 'rect'
+    });
+  }
+  if(!confettiRunning){
+    confettiRunning = true;
+    requestAnimationFrame(tickConfetti);
+  }
+}
+function tickConfetti(){
+  if(document.hidden){
+    requestAnimationFrame(tickConfetti);
+    return;
+  }
+  cctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  confettiParticles = confettiParticles.filter(p=> p.life < p.maxLife && p.y < confettiCanvas.height + 40);
+  confettiParticles.forEach(p=>{
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+    cctx.save();
+    cctx.translate(p.x, p.y);
+    cctx.rotate(p.rot);
+    cctx.globalAlpha = Math.max(0, 1 - p.life/p.maxLife);
+    if(p.shape === 'trophy'){
+      cctx.font = (p.size*2.6)+'px sans-serif';
+      cctx.textAlign = 'center'; cctx.textBaseline = 'middle';
+      cctx.fillText('🏆', 0, 0);
+    } else {
+      cctx.fillStyle = p.color;
+      cctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+    }
+    cctx.restore();
+  });
+  if(confettiParticles.length > 0){
+    requestAnimationFrame(tickConfetti);
+  } else {
+    confettiRunning = false;
+    cctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  }
+}
+const ROSTER_COLORS = Object.values(ROSTER).map(p=>p.color);
+
+/* ================= TOAST ================= */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+/* ================= EASTER EGG: MODO GALA ================= */
+(function initGala(){
+  const title = document.getElementById('hero-title');
+  let taps = 0, tapTimer = null;
+  function onTap(){
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(()=>{ taps = 0; }, 1400);
+    if(taps >= 5){
+      taps = 0;
+      triggerGala();
+    }
+  }
+  title.addEventListener('click', onTap);
+  title.addEventListener('keydown', e=>{
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); onTap(); }
+  });
+  function triggerGala(){
+    document.body.classList.add('gala-mode');
+    showToast('MODO GALA');
+    if(!reducedMotion){
+      burstConfetti(ROSTER_COLORS, { count:130, trophies:true, originX: window.innerWidth*0.5, originY: window.innerHeight*0.12 });
+      setTimeout(()=> burstConfetti(ROSTER_COLORS, { count:90, trophies:true, originX: window.innerWidth*0.18 }), 280);
+      setTimeout(()=> burstConfetti(ROSTER_COLORS, { count:90, trophies:true, originX: window.innerWidth*0.82 }), 560);
+    }
+    setTimeout(()=> document.body.classList.remove('gala-mode'), 10000);
+  }
+})();
+
+/* ================= OBSERVERS: PODIO + TABLA ================= */
+// bandera de módulo: el burst dorado del Podio es "solo la primera vez" y
+// debe sobrevivir a un re-render por datos vivos (fetchLiveSeasons), no
+// reiniciarse con cada llamada a initEntranceObservers().
+let podioConfettiFired = false;
+let ioPodioRef = null;
+let ioTablaRef = null;
+function initEntranceObservers(){
+  const podioSection = document.getElementById('podio');
+  // desconectar cualquier observer previo antes de crear uno nuevo: evita
+  // acumular listeners/observers en cada re-render (fuga de memoria).
+  if(ioPodioRef){ ioPodioRef.disconnect(); ioPodioRef = null; }
+  if(!podioConfettiFired){
+    ioPodioRef = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting && !podioConfettiFired){
+          podioConfettiFired = true;
+          podioSection.classList.add('in-view');
+          if(!reducedMotion){
+            const r = entry.boundingClientRect;
+            burstConfetti(['#FFD700','#D4AF37','#FFF6D6'], { count:85, trophies:true, originX: window.innerWidth/2, originY: r.top + 100 });
+          }
+          ioPodioRef.disconnect();
+        }
+      });
+    }, { threshold:0.3 });
+    ioPodioRef.observe(podioSection);
+  } else {
+    podioSection.classList.add('in-view');
+  }
+
+  const tablaSection = document.getElementById('tabla');
+  if(ioTablaRef){ ioTablaRef.disconnect(); ioTablaRef = null; }
+  let tablaDone = false;
+  ioTablaRef = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting && !tablaDone){
+        tablaDone = true;
+        document.querySelectorAll('.odo-digit').forEach(d=>{
+          const digit = d.dataset.target;
+          d.style.setProperty('--d', digit);
+          if(reducedMotion){
+            d.classList.add('play');
+          } else {
+            requestAnimationFrame(()=> d.classList.add('play'));
+          }
+        });
+        ioTablaRef.disconnect();
+      }
+    });
+  }, { threshold:0.15 });
+  ioTablaRef.observe(tablaSection);
+}
+
+/* ================= ERAS: dots + edge bounce ================= */
+// el listener 'scroll' de #eras-track se ata UNA sola vez (nodo persistente);
+// las cards sí se recrean en cada renderEras(), así que el observer de dots
+// se reconstruye siempre, y el listener de scroll lee la lista de cards
+// vigente desde esta variable de módulo en vez de quedar clausurado sobre
+// nodos ya eliminados.
+let eraScrollBound = false;
+let eraCardsCurrent = [];
+let ioEraRef = null;
+function initEraObservers(){
+  const track = document.getElementById('eras-track');
+  const cards = [...track.querySelectorAll('.era-card')];
+  eraCardsCurrent = cards;
+  const dots = [...document.getElementById('eras-dots').children];
+  if(ioEraRef){ ioEraRef.disconnect(); ioEraRef = null; }
+  if(cards.length && window.matchMedia('(max-width:759px)').matches){
+    ioEraRef = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        const idx = cards.indexOf(entry.target);
+        if(idx === -1) return;
+        if(entry.isIntersecting && entry.intersectionRatio >= 0.55){
+          dots.forEach(d=>d.classList.remove('active'));
+          if(dots[idx]) dots[idx].classList.add('active');
+        }
+      });
+    }, { root: track, threshold:[0.55] });
+    cards.forEach(c=> ioEraRef.observe(c));
+
+    if(!eraScrollBound){
+      eraScrollBound = true;
+      let scrollTicking = false;
+      track.addEventListener('scroll', ()=>{
+        if(scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(()=>{
+          scrollTicking = false;
+          if(reducedMotion) return;
+          const liveCards = eraCardsCurrent;
+          const atStart = track.scrollLeft <= 0;
+          const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 1;
+          if(atStart || atEnd){
+            const edgeCard = atStart ? liveCards[0] : liveCards[liveCards.length-1];
+            if(edgeCard && !edgeCard.classList.contains('edge-bounce')){
+              edgeCard.classList.add('edge-bounce');
+              edgeCard.addEventListener('animationend', ()=> edgeCard.classList.remove('edge-bounce'), { once:true });
+            }
+          }
+        });
+      }, { passive:true });
+    }
+  }
+}
+
+/* ================= VITRINA (MODAL) ================= */
+const modal = document.getElementById('vitrina-modal');
+const modalContent = document.getElementById('modal-content');
+let currentChampion = null;
+
+function championData(slug){
+  const r = DATA.bySlug[slug];
+  if(!r) return null;
+  const isAnnual = Object.values(ANNUAL).includes(slug);
+  return {
+    slug,
+    name: ROSTER[slug].name,
+    total: r.total,
+    titles: r.titles,
+    isAnnual
+  };
+}
+
+function openVitrina(slug, originEl){
+  const champ = championData(slug);
+  if(!champ) return;
+  currentChampion = champ;
+
+  const doVT = !reducedMotion && typeof document.startViewTransition === 'function';
+
+  function fill(){
+    document.getElementById('modal-face').innerHTML = faceWrapHTML(slug, { extraClass:'coin-edge', ring:champ.isAnnual });
+    // Gael lleva la línea de alias del expediente resuelto bajo su nombre.
+    const aliasLine = slug === 'gael' ? '<span class="modal-alias">a.k.a. "Manu" · 2024–2025</span>' : '';
+    document.getElementById('modal-name').innerHTML = champ.name + aliasLine;
+    document.getElementById('modal-total').innerHTML = `<b>${champ.total}</b> título${champ.total===1?'':'s'} en el Salón`;
+    document.getElementById('modal-chips').innerHTML = champ.titles.map(t=>`<span class="chip-t">T${t.season} ${t.year}</span>`).join('');
+    document.getElementById('modal-plate').textContent = PLATES[slug] || '';
+    const selloSlot = document.getElementById('modal-sello-slot');
+    if(slug === 'gael'){
+      selloSlot.innerHTML = `<div class="sello">CASO CERRADO</div>`;
+      if(!reducedMotion && navigator.vibrate) navigator.vibrate(15);
+    } else {
+      selloSlot.innerHTML = '';
+    }
+    // el nombre de transición pasa del origen al destino en el mismo instante
+    // (nunca coexisten dos elementos con el mismo view-transition-name)
+    if(originEl) originEl.style.viewTransitionName = '';
+    const bigFace = document.querySelector('#modal-face .face-wrap');
+    if(bigFace) bigFace.style.viewTransitionName = 'vt-face';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    if(!reducedMotion){
+      burstConfetti([ROSTER[slug].color, '#FFD700'], { count:70, originX: window.innerWidth/2, originY: window.innerHeight*0.3 });
+    }
+  }
+
+  if(doVT){
+    if(originEl) originEl.style.viewTransitionName = 'vt-face';
+    const vt = document.startViewTransition(fill);
+    vt.finished.catch(()=>{}).finally(()=>{
+      const bigFace = document.querySelector('#modal-face .face-wrap');
+      if(bigFace) bigFace.style.viewTransitionName = '';
+    });
+  } else {
+    fill();
+  }
+}
+
+function closeVitrina(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+}
+
+document.getElementById('modal-close').addEventListener('click', closeVitrina);
+modal.addEventListener('click', e=>{ if(e.target === modal) closeVitrina(); });
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && modal.classList.contains('open')) closeVitrina();
+});
+
+document.addEventListener('click', e=>{
+  const trigger = e.target.closest('[data-open-champ]');
+  if(trigger){ openVitrina(trigger.dataset.openChamp, trigger); }
+});
+document.addEventListener('keydown', e=>{
+  if((e.key === 'Enter' || e.key === ' ') ){
+    const el = e.target.closest && e.target.closest('[data-open-champ]');
+    if(el){ e.preventDefault(); openVitrina(el.dataset.openChamp, el); }
+  }
+});
+
+/* ================= COPIAR AL PORTAPAPELES ================= */
+async function copyText(txt){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(txt);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  }catch(e){ /* silencioso */ }
+  showToast('Copiado');
+}
+
+document.getElementById('btn-presumir').addEventListener('click', async ()=>{
+  if(!currentChampion) return;
+  const text = `🏆 ${currentChampion.name} — ${currentChampion.total} título${currentChampion.total===1?'':'s'} en el Salón Eterno de Lunes de UNO`;
+  const url = location.href;
+  if(navigator.share){
+    try{ await navigator.share({ text, url }); }
+    catch(e){ /* usuario canceló, silencioso */ }
+  } else {
+    await copyText(text + ' ' + url);
+  }
+});
+
+/* ================= POSTAL PARA WHATSAPP ================= */
+function loadImgPromise(src){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=> resolve(img);
+    img.onerror = ()=> reject(new Error('no-image'));
+    img.src = src;
+  });
+}
+function tierColorsFor(total){
+  const totals = DATA.podiumTiers.map(t=>t.total);
+  if(total === totals[0]) return ['#4a3608','#0d0d12'];
+  if(total === totals[1]) return ['#3a3a42','#0d0d12'];
+  if(total === totals[2]) return ['#4a2a12','#0d0d12'];
+  return ['#1c1c2c','#0d0d12'];
+}
+async function drawPostal(champ){
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext('2d');
+  const [c1,c2] = tierColorsFor(champ.total);
+  const g = ctx.createRadialGradient(540,460,60,540,460,900);
+  g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.fillRect(0,0,1080,1350);
+
+  const cx=540, cy=560, r=250;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.closePath(); ctx.clip();
+  try{
+    // por file:// Chromium marca el canvas como "tainted" al dibujar una
+    // imagen de origen opaco y luego toDataURL() tira SecurityError: en
+    // ese modo (QA local) vamos directo al fallback de color+inicial.
+    if(location.protocol === 'file:') throw new Error('file-protocol');
+    const img = await loadImgPromise(`assets/faces/${champ.slug}.png`);
+    ctx.drawImage(img, cx-r, cy-r, r*2, r*2);
+  }catch(e){
+    ctx.fillStyle = ROSTER[champ.slug].color;
+    ctx.fillRect(cx-r,cy-r,r*2,r*2);
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 210px Inter, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(champ.name[0], cx, cy+16);
+  }
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.lineWidth = 14; ctx.strokeStyle = ROSTER[champ.slug].color; ctx.stroke();
+
+  ctx.fillStyle = '#f0f0f5';
+  ctx.font = '700 74px "Fredoka One", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(champ.name.toUpperCase(), 540, 940);
+
+  ctx.fillStyle = '#FFD700';
+  ctx.font = '800 126px "Fredoka One", sans-serif';
+  ctx.fillText(String(champ.total), 540, 1080);
+  ctx.fillStyle = '#c9c9d8';
+  ctx.font = '600 32px Inter, sans-serif';
+  ctx.fillText(champ.total===1 ? 'TÍTULO' : 'TÍTULOS', 540, 1128);
+
+  ctx.fillStyle = 'rgba(0,0,0,.35)';
+  ctx.fillRect(0,1250,1080,100);
+  ctx.fillStyle = '#FFD700';
+  ctx.font = '700 38px "Fredoka One", sans-serif';
+  ctx.fillText('EL MEDALLERO · Lunes de UNO', 540, 1298);
+
+  // export separado en su propio try/catch: si el canvas quedó "tainted"
+  // (p.ej. imagen real cargada por file://) que lo diga, no que falle mudo.
+  try{
+    return canvas.toDataURL('image/png');
+  }catch(e){
+    throw new Error('export-failed');
+  }
+}
+document.getElementById('btn-postal').addEventListener('click', ()=>{
+  if(!currentChampion) return;
+  drawPostal(currentChampion).then(url=>{
+    const a = document.createElement('a');
+    a.href = url; a.download = `medallero-${currentChampion.slug}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+  }).catch(()=>{ showToast('No se pudo generar la postal, usá Presumir'); });
+});
+
+/* ================= DATOS VIVOS (Firestore, opcional y silencioso) ================= */
+async function fetchLiveSeasons(){
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(()=> controller.abort(), 6000);
+    const res = await fetch('https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents/seasons?pageSize=100&key=AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM', { signal: controller.signal });
+    clearTimeout(timeout);
+    if(!res.ok) return;
+    const data = await res.json();
+    const docs = data.documents || [];
+    const byYear = {};
+    docs.forEach(doc=>{
+      const f = doc.fields || {};
+      const winner = f.winnerPlayerId && f.winnerPlayerId.stringValue;
+      const endedAt = (f.endedAt && (f.endedAt.timestampValue || f.endedAt.stringValue)) || null;
+      const seasonNumber = f.seasonNumber && f.seasonNumber.integerValue != null ? parseInt(f.seasonNumber.integerValue,10) : null;
+      if(!winner || !endedAt || !seasonNumber || !ROSTER[winner]) return;
+      const year = new Date(endedAt).getFullYear();
+      if(!year || isNaN(year)) return;
+      if(!byYear[year]) byYear[year] = [];
+      byYear[year][seasonNumber-1] = winner;
+    });
+    let changed = false;
+    Object.keys(byYear).forEach(yearStr=>{
+      const y = Number(yearStr);
+      const arr = byYear[yearStr];
+      const merged = arr.map((v,i)=> v || (CHAMPIONS[y] && CHAMPIONS[y][i]) || null).filter(Boolean);
+      if(!CHAMPIONS[y] || merged.length > CHAMPIONS[y].length){
+        CHAMPIONS[y] = merged;
+        changed = true;
+      }
+    });
+    if(changed){
+      DATA = computeData();
+      renderAll();
+      initEntranceObservers();
+    }
+  }catch(e){
+    /* silencioso: la data estática ya está renderizada */
+  }
+}
+
+/* ================= INIT ================= */
+renderAll();
+initEntranceObservers();
+if('requestIdleCallback' in window){
+  requestIdleCallback(()=> fetchLiveSeasons());
+} else {
+  setTimeout(fetchLiveSeasons, 400);
+}
+
+})();
+</script>
+</body>
+</html>
