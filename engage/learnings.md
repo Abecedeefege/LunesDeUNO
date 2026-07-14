@@ -14,150 +14,139 @@ se registra en `proposals.json` y necesita su propio approve para quedar.
 
 **📬 REGLA FIJA DE PREVIEW (Andrés, 2026-07-12 por chat, vinculante, aplica
 a TODOS los pushes futuros):** todo push del día se le manda ANTES a Andrés,
-y SOLO a él, a las **09:00 locales** del mismo día, para que pueda corregir
-algo antes del envío general. Implementación: por cada push que encoles,
-encolá un item gemelo con id `<id>-preview`, **copia idéntica** (mismo
-title/body/url — es lo que él revisa), `devices: ["andres"]`,
-`send_at` 09:00 del día del push, `expires_at` ~13:30 (para que un
-dispatcher atrasado nunca lo entregue después del envío general). El envío
-general de las 14:00 (o el horario que tenga) NO cambia: va a todos los
-activos, **Andrés incluido — RATIFICADO por él por chat el 12/07: quiere
-recibir SIEMPRE también la de las 14:00, nunca excluirlo del envío
-general**. Si la corrida crea el push DESPUÉS de las 09:00, el preview sale
-lo antes posible en vez de a las 09:00. Excepción única: pushes que Andrés
-pide por chat con envío inmediato (no tiene sentido preview de lo que él
-mismo dictó). Si Andrés corrige algo entre el preview y las 14:00 (por chat
-o answer), se edita o cancela el push general ANTES de que salga. Aplica
-también al push del martes de sala de prensa (10:00 al ganador → preview a
-andres a las 09:00) — **RATIFICADO por Andrés por chat el 12/07**: el
-preview de la entrevista le llega a él aunque el push real vaya solo al
-device del ganador.
+y SOLO a él, a las **09:00 locales** del mismo día. Implementación: item
+gemelo `<id>-preview`, copia idéntica, `devices:["andres"]`, `send_at` 09:00,
+`expires_at` ~13:30. El envío general de las 14:00 NO cambia: va a todos los
+activos, Andrés incluido (RATIFICADO 12/07, nunca excluirlo del general).
+Aplica también al martes de sala de prensa (preview a andres 09:00 aunque el
+push real vaya solo al device del ganador) — si no hay sala de prensa esa
+semana (ganador sin push activa), no aplica.
 
 **🎤 REGLA FIJA DEL MARTES (Andrés, 2026-07-07, vinculante — RATIFICADA
-2026-07-10 con answer `sala-de-prensa-fija=si` desde device andres):**
-entrevista "Sala de prensa" (5 preguntas) al ganador del lunes, a su device,
-~10:00. Si el ganador no tiene push activa, no se envía nada. La crónica de
-las 14:00 cita sus respuestas si llegan a tiempo; si no, sale igual y las
-citas se agregan como addendum si llegan después.
+2026-07-10):** entrevista "Sala de prensa" (5 preguntas) al ganador del
+lunes, a su device, ~10:00. **Si el ganador no tiene push activa, no se
+envía nada** — pasó por primera vez hoy (14/07): ganó Gordo y no está en
+`pushSubs`. Sin entrevista ni preview de entrevista. La crónica lo menciona
+con humor ("che, activá las notis") en vez de fingir contenido que no existe.
 
-## 💸 DEUDAS (ledger vigente al 2026-07-13)
+## 💸 DEUDAS (ledger vigente al 2026-07-14)
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | IMPAGA. **7 días** al 13/07. Confirmada vigente por answer `sigue` (andres, 12/07 19:23 UY). | `deuda-negro-postre-2026-07-06` |
+| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | IMPAGA. **8 días** al 14/07. Confirmada vigente por answer `sigue` (andres, 12/07 19:23 UY). | `deuda-negro-postre-2026-07-06` |
+| Naso | 🍮/🧀 postre o picada | 13/07 (Carucha, quedó último con 414) | NUEVA hoy, sin preguntar aún. | `deuda-naso-postre-2026-07-13` |
 
 Saldadas / archivadas:
 - **Tano** — postre/picada desde 23/06. **PAGADA**: answer `pagada` de
-  device andres el 12/07 19:23:41 UY. Duración final: **19 días** (23/06 →
-  12/07), el récord de demora del año. Celebrado en la previa del 13/07.
-  ⚠️ `index.html` **todavía muestra el div "Tano debe postre/picada por
-  perder el 23 de Junio"** — diverge del ledger (que manda para contenido
-  por regla del playbook). Recomendado: que Andrés borre ese div del home
-  cuando pueda.
+  device andres el 12/07 19:23:41 UY. Duración final: **19 días**, récord de
+  demora del año. ⚠️ `index.html` **todavía muestra el div** de esta deuda —
+  diverge del ledger (que manda para contenido). Sin novedad hoy.
 - **Mac** — sus dos deudas (postre 30/06, cena T4) desaparecieron de
   index.html en commits directos de otra sesión (07-08/07). Sin `answer` de
-  pago registrado — se asume resuelto fuera del sistema de botones. No se
-  recontarán salvo que reaparezcan en el home.
+  pago registrado — no se recontarán salvo que reaparezcan en el home.
 
-🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, ~5
+🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, ~6
 días):** `index.html` sigue con "Gael debe postre por perder T4" (commit
 `cca7dde`, 08/07). Chequeado contra `seasons/4`: `winnerPlayerId: cobra`,
-**`loserPlayerId: mac`** — el perdedor de la T4 es Mac, no Gael. Además
-perder una TEMPORADA paga **cena**, no postre. No se incorpora al ledger ni
-a contenido hasta que Andrés lo confirme/corrija. Sin novedad hoy.
+**`loserPlayerId: mac`** — el perdedor de la T4 es Mac, no Gael, y perder
+temporada paga **cena**, no postre. No se incorpora al ledger ni a contenido
+hasta que Andrés lo confirme/corrija. Sin novedad hoy.
 
 ## 🚀 SÍNTESIS: qué convierte (números reales)
 
-- **Confesiones del mazo (domingo 12/07) promovida**: aprobada por andres
-  (`proposal_approved` 12/07 19:24 UY) con reacción 🙂(like) + answer
-  suscripción `si` + dwell 34s. También abierta por **pt** (dwell 63s,
-  scroll 100%, a las 21:32 UY). Dwell más bajo que el horóscopo (178s) pero
-  aprobación igual de rápida (misma sesión que abrió el push). En la MISMA
-  visita Andrés resolvió las dos deudas pendientes (Tano pagada, Negro
-  sigue) — la experiencia funcionó también como panel de gestión, no solo
-  contenido.
-- **El horóscopo (sábado 11/07) sigue siendo el techo de dwell** (178s/
-  100% scroll de andres, 161s/100% de pt). Confirma que los sub-formatos
-  con "una carta/dato por persona" sostienen dwell alto mejor que el
-  narrador único (confesiones).
-- **negro y cara siguen abriendo sin dejar dwell propio** en varios pushes
-  (solo `notification_clicked`/`page_visit`). Señal débil y repetida — no
-  accionable todavía, pero ya son 3 semanas seguidas del mismo patrón.
-- **El feed sigue sin repetirse** (dropped 10/07, sin intentos nuevos).
-- **Nueva fecha jugada**: 07/07 (Chorolo), ganó **Cobra 223** sobre
-  **Gordo 258** (la más ajustada del año, 35 pts), **Negro último con 417**
-  y ausente **Carucha**. Arrancó a computar la Fecha 2 de la T5 para hoy
-  13/07.
-- **Sin respuesta aún** a `cobra-ausente-2-semanas` / `regla-barro`
-  (preguntas de archivo del 10/07). Usado igual como gancho en la previa de
-  hoy citando la propia entrevista de Cobra ("dijo que se iba 2 semanas,
-  nadie lo confirmó") sin afirmarlo como hecho.
+- **La Previa (13/07) promovida con el dwell más alto registrado hasta
+  ahora**: andres 271s + 285s en dos visitas separadas, reacción 😍(love),
+  answer suscripción `si`, approve a las 19:21:42 UY. También abierta por
+  **pt** (dwell 285s, scroll 100%) y **cara** (dwell 288s, scroll 91%, tras
+  un primer intento de 8s/0% — volvió a entrar y esta vez se quedó). El
+  interrogante que dejó abierto ("¿Cobra falta como dijo?") se confirmó esa
+  misma noche: faltó a la fecha 2. Cerrar la previa con una pregunta real
+  sin afirmar el hecho funcionó — y le dio gancho automático a la crónica
+  del día siguiente.
+- **Nuevo suscriptor: Gael** apareció en `pushSubs` como `active` (no estaba
+  el 13/07). Sin eventos de página todavía a su nombre — primera vez que
+  crece el canal sin que sea Andrés/otro forzando un reenvío. Sube a 8
+  personas / 9 dispositivos activos.
+- **negro y cara siguen abriendo con dwell irregular** — cara esta vez sí se
+  quedó (288s) tras un primer intento fallido de 8s, distinto al patrón de
+  "abre y no deja dwell" de semanas previas. A seguir.
+- **Nueva fecha jugada anoche (13/07, en Carucha)**: ganó **Gordo con 127**,
+  robándosela en la última mano (-10). Último **Naso con 414** (nuevo
+  moroso), de punta a punta desde la ronda 3 (naso sumó 148 en una sola
+  mano). **Cobra ausente** — primera vez que falta, confirmando lo que dijo
+  en su propia entrevista del 08/07. Cae del 1º al 7º lugar de la T5 (se
+  lleva el peor puntaje de la noche, 414, a la tabla). Sin multas ni cortes.
+- **Corrección de dato**: el H2H Cobra–Gordo que la corrida del 13/07 citó
+  como "8–7" (post-Chorolo) no cuadra: recalculado desde cero sobre los 14
+  partidos que jugaron juntos hasta el Chorolo inclusive, da **7–7** (7+7=14,
+  consistente). Se usa el valor recalculado de ahora en más; no se volvió a
+  citar el "8–7" en ningún push.
 
-## 📊 Estado del sistema (2026-07-13)
+## 📊 Estado del sistema (2026-07-14)
 
-- Subs push activas: **7 personas** (8 docs, Cobra tiene 2 dispositivos):
-  andres, pt, mata, negro, cobra, mac, cara. `mc` disabled. Sin cambios.
-- Datos: **18 docs en `games`** (antes 17), 16 válidos (`finished` +
-  `winnerPlayerId`). Nueva: Chorolo (07/07, editorial 06/07), ganó Cobra
-  223. Temporada 5: 1 fecha jugada, hoy se juega la 2ª.
-- Tabla anual recalculada al 13/07 (16 fechas): PT 4906(1) · Gordo 5097(2)
-  · Cobra 5132(5) · Carucha 5460(2) · Gael 5721(1) · Nachi 5776(2) ·
-  Mata 5934(0) · Tano 6107(1) · Mac 6186(0) · Naso 6266(1) · Negro 6467(1).
-  Orden sin cambios respecto al 03/07. Multas: Naso +50 (fine en el
-  Chorolo) → 72 total. Cortes: sin cambios. Últimos puestos: Negro +1.
-- H2H nuevos calculados con el Chorolo (no usados antes en ningún push):
-  Cobra 8–7 Gordo (se estrechó, antes 7–7 antes del Chorolo), Tano 7–2
-  Negro, PT 6–2 Mata (casi se le escapa: 269 a 268). Reservados para
-  próximas fechas si no se usan hoy: Gordo 10–1 Mac (ya usado el 06/07 como
-  9–1), Carucha 8–4 Cobra (ya usado el 06/07).
-- Eventos `engagement`: **152 totales** (subieron de 136 el 12/07). Nada
+- Subs push activas: **8 personas** (9 docs, Cobra 2 dispositivos): andres,
+  pt, mata, negro, cobra, mac, cara, **gael (nuevo)**. `mc` disabled. Gordo
+  sigue sin suscripción — por eso no hay sala de prensa esta semana.
+- Datos: **19 docs en `games`** (antes 18), 17 válidos (`finished` +
+  `winnerPlayerId`). Nueva: Carucha (13/07 = fecha 2 de la T5), ganó Gordo
+  127, último Naso 414, ausente Cobra.
+- Tabla anual recalculada al 14/07 (17 fechas): PT 5073(1) · Gordo 5224(3)
+  · Cobra 5546(5) · Carucha 5711(2) · Nachi 5985(2) · Gael 6040(1) ·
+  Mata 6079(0) · Tano 6240(1) · Mac 6575(0) · Naso 6680(1) · Negro 6706(1).
+  Nachi le pasó a Gael (único cambio de orden desde el 03/07). La distancia
+  Gordo–Cobra pasó de 35 a 322 puntos en una fecha (el costo de faltar).
+- Temporada 5 (2 de 4 fechas jugadas), suma de las dos fechas por jugador:
+  Gordo 385(1) · Mata 413 · Tano 429 · PT 436 · Nachi 453 · Gael 579 ·
+  Cobra 637(1, pero ausente hoy) · Negro 656 · Carucha 668 · Mac 713 ·
+  Naso 759. Cobra lideraba después del Chorolo; hoy cayó a 7º.
+- Eventos `engagement`: **171 totales** (subieron de 152 el 13/07). Nada
   para compactar (el más viejo es del 03/07, cutoff de 14 días recién
   ~17/07).
-- Queue: purgado **2026-07-05-a** (`sent`, >7 días). Encolados hoy:
-  `2026-07-13-a` (14:00) + `2026-07-13-a-preview` (09:00, solo andres).
-  Sin otros ítems `pending`/`draft` para reconciliar.
-- Proposals: **2026-07-12-confesiones** promovida esta corrida (aprobación
-  de andres 12/07 19:24 UY). Nueva: **2026-07-13-la-previa** pendiente de
-  decisión (vence 20/07) — 2ª edición del formato ya promovido el 06/07,
-  con datos frescos. Resto sin cambios (records, la-previa original,
-  chusmerio 05/07, entrevista-cobra, cronica y cobra-sin-editar promovidas;
-  el-feed dropped).
+- Queue: purgados **2026-07-06-a** y **2026-07-06-reenvio** (`sent`, >7
+  días). Encolados hoy: `2026-07-14-a` (14:00) + `2026-07-14-a-preview`
+  (09:00, solo andres). Sin sala de prensa (Gordo sin push). Sin otros
+  ítems `pending`/`draft` para reconciliar.
+- Proposals: **2026-07-13-la-previa promovida** esta corrida (aprobación de
+  andres 13/07 19:21:42 UY). Nueva: **2026-07-13-cronica** pendiente de
+  decisión (vence 21/07). Resto sin cambios (records, la-previa original,
+  chusmerio 05/07, entrevista-cobra, cronica 06/07 y cobra-sin-editar
+  promovidas; el-feed dropped).
 - Home (`index.html`): deuda de Tano sigue en el div pese a estar pagada
-  en el ledger (ver sección DEUDAS); Gael/T4 sin verificar sigue ahí.
+  en el ledger; Gael/T4 sin verificar sigue ahí. Sin cambios hoy.
 
 ## 🗓️ Semana en curso
 
-- ✅ Sábado 11/07 cerrado: récords con sub-formato horóscopo unístico,
-  promovido, dwell alto.
+- ✅ Sábado 11/07 cerrado: récords con sub-formato horóscopo, promovido,
+  dwell alto (178s).
 - ✅ Domingo 12/07 cerrado: chusmerío con sub-formato confesiones del mazo,
-  promovido, dwell 34s + aprobación misma sesión + resolvió las 2 deudas
-  pendientes.
-- 🎴 **Lunes 13/07 (hoy): La Previa, 2ª edición** (`engage/2026-07-13-la-
-  previa.html`). Contenido: tabla anual con el Chorolo incorporado (16
-  fechas), conteo de deuda de Negro (7 días) + celebración del pago de
-  Tano (19 días, récord de demora), 3 pares padres-e-hijos nuevos (Cobra-
-  Gordo 8-7, Tano-Negro 7-2, PT-Mata 6-2, ninguno repetido de la previa
-  anterior ni de confesiones), racha en juego (nadie con racha activa
-  hoy), y el interrogante abierto de la ausencia de Cobra (citando su
-  propia entrevista, sin afirmarlo). Push `2026-07-13-a` encolado 14:00 +
-  preview `2026-07-13-a-preview` a andres 09:00, ambos `pending`.
-- Próximo: martes 14/07 la crónica — SI hay partida nueva anoche (13/07)
-  en `games`, escribir la crónica real (ojo si Cobra jugó o no, dato clave
-  para el gancho). Si NO hay partida nueva, push de "cargá el resultado" y
-  anotar semana de descanso. También corresponde la entrevista "Sala de
-  prensa" (~10:00) al ganador de hoy si tiene push activa, con preview a
-  andres a las 09:00 igual que el resto.
+  promovido, resolvió las 2 deudas pendientes en la misma visita.
+- ✅ Lunes 13/07 cerrado: La Previa 2ª edición, promovida con el dwell más
+  alto de la semana (271-288s en tres visitas distintas), interrogante de
+  Cobra confirmado esa misma noche.
+- 🎴 **Martes 14/07 (hoy): La Crónica, 2ª edición**
+  (`engage/2026-07-13-cronica.html`, fecha del lunes editorial). Contenido:
+  Gordo se roba la fecha 2 en la última mano (-10, pasó de 137 a 127), Naso
+  se hunde en la ronda 3 (148 en una mano) y no sale más del fondo, Cobra
+  confirma su ausencia anunciada y cae al 7º en la T5, tabla anual con el
+  cambio Nachi-Gael, nota liviana sobre la sala de prensa que no salió
+  (Gordo sin notis). Push `2026-07-14-a` encolado 14:00 + preview
+  `2026-07-14-a-preview` a andres 09:00, ambos `pending`.
+- Próximo: miércoles a viernes, silencio (solo gestión/memoria). Sábado
+  19/07 vuelve el slot de récords — evaluar sub-formato nuevo (no repetir
+  horóscopo, ya usado el 11/07); ángulo fuerte disponible: la caída de
+  Cobra en la T5 puede alimentar un "récords que se pueden romper" sobre
+  rachas de ausencia o remontadas.
 
 ## TODO / ángulos sin usar
 
 Especial "remontadas" · especial sedes · aniversarios (648 de Naso, multa
-150 de Tano) · copy dirigido con nombre para reactivar a negro/cara si
-siguen sin dwell propio (van 3 semanas abriendo sin quedarse) · investigar
-el device `sin-nombre` (dwell bajísimo, patrón repetido el 06/07 y el
-12/07) · confirmar con Andrés la deuda de Gael/T4 antes de usarla en
-cualquier experiencia · seguir la respuesta a `cobra-ausente-2-semanas`/
-`regla-barro` — si Cobra falta hoy, es EL ángulo de la crónica del martes
-(o de un push de emergencia) · H2H sin publicar todavía: Gordo 10–1 Mac
-(actualizado, ya usado como 9-1 el 06/07 pero puede reforzarse si hay
-novedad), Carucha 8–4 Cobra (ya usado el 06/07, sin cambios porque Carucha
-faltó el 07/07).
+150 de Tano) · copy dirigido con nombre para reactivar a negro si sigue sin
+dwell propio · investigar el device `sin-nombre` (dwell bajísimo, patrón
+repetido el 06/07 y el 12/07) · confirmar con Andrés la deuda de Gael/T4
+antes de usarla en cualquier experiencia · preguntar a Negro/Naso el estado
+de sus deudas en la próxima previa/chusmerío con `engageAnswer` · avisar a
+Gordo (fuera del sistema, es humano) que active las notificaciones para no
+perderse otra sala de prensa · posible especial "el regreso de Cobra" para
+cuando vuelva a aparecer, si se confirman las 2 semanas de ausencia ·
+H2H sin publicar todavía: Carucha 8–4 Cobra (sin cambios, Carucha no jugó
+con Cobra desde el 07/07).

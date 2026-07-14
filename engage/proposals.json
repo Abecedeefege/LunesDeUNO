@@ -116,10 +116,22 @@
       "title": "🔥 La Previa — edición semana 2 (T5 Fecha 2: tabla + deudas + padres/hijos + pronóstico)",
       "page": "engage/2026-07-13-la-previa.html",
       "created": "2026-07-13",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Segunda edición del formato La Previa (ya promovido el 06/07) con datos frescos: tabla anual tras el Chorolo (16 fechas), Tano saldó su deuda (19 días) y Negro pasa a deber (7 días), 3 pares padres-e-hijos nuevos (Cobra-Gordo 8-7, Tano-Negro 7-2, PT-Mata 6-2) no repetidos de la previa anterior ni de confesiones del 12/07, y el interrogante abierto de si Cobra falta 2 semanas como dijo en su entrevista. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-13-a"
+      ],
+      "result_notes": "Aprobada por andres (boton proposal_approved 13/07 19:21:42 UY) + reaccion love + answer suscripcion=si, tras dwell altisimo (271s y 285s en dos visitas). Tambien abierta por pt (dwell 285s, scroll 100%) y cara (dwell 288s, scroll 91%). Promovida: la pagina queda. El interrogante de Cobra se confirmo esa misma noche: falto a la fecha 2."
+    },
+    {
+      "id": "2026-07-13-cronica",
+      "title": "📰 La Crónica (tabloide del martes: Gordo se roba la fecha 2, Cobra ausente)",
+      "page": "engage/2026-07-13-cronica.html",
+      "created": "2026-07-14",
+      "status": "pending",
+      "hypothesis": "Segunda edición del formato La Crónica (ya promovido el 07/07) con la partida de anoche: Gordo se robó la fecha 2 con -10 en la última mano, Naso se hundió en la ronda 3 (148 puntos en una mano) y no salió más del último puesto, y Cobra confirmó su propia profecía de la entrevista faltando por primera vez — cae del 1º al 7º lugar de la T5. Sin sala de prensa esta semana: Gordo (el ganador) no tiene notificaciones push activas. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-14-a"
       ],
       "result_notes": null
     }

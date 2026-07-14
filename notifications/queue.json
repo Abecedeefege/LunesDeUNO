@@ -1,6 +1,33 @@
 {
-  "_updated_at": "2026-07-13T18:16:16.536Z",
+  "_updated_at": "2026-07-14T09:14:15.000Z",
   "notifications": [
+    {
+      "id": "2026-07-14-a-preview",
+      "title": "🎴 Gordo se la robó en la última mano",
+      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-14T09:00:00-03:00",
+      "expires_at": "2026-07-14T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-14 (PREVIEW solo para andres del push 2026-07-14-a, regla fija de preview a las 09:00)"
+    },
+    {
+      "id": "2026-07-14-a",
+      "title": "🎴 Gordo se la robó en la última mano",
+      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
+      "send_at": "2026-07-14T14:00:00-03:00",
+      "expires_at": "2026-07-14T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-14 (crónica del martes: fecha 2 de la T5 jugada anoche en Carucha, Gordo gana, Cobra ausente confirmando su propia entrevista. Sin sala de prensa: Gordo no tiene push activo)"
+    },
     {
       "id": "2026-07-13-test-andres",
       "title": "🔧 Test de entrega — Andrés",
@@ -81,30 +108,6 @@
       "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
-    },
-    {
-      "id": "2026-07-06-a",
-      "title": "🔥 Hoy se juega.",
-      "body": "Arranca la T5: Cobra defiende la corona, Tano debe hace 13 días, Mac el doble… y Gordo puede adoptar a Mac (9-1). La previa:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "send_at": "2026-07-06T14:00:00-03:00",
-      "expires_at": "2026-07-06T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-06T17:19:27.653Z",
-      "fail_reason": null,
-      "created_by": "primer-ciclo-manual 2026-07-03"
-    },
-    {
-      "id": "2026-07-06-reenvio",
-      "title": "🔥 Hoy se juega.",
-      "body": "Arranca la T5: Cobra defiende la corona, Tano debe hace 13 días, Mac el doble… y Gordo puede adoptar a Mac (9-1). La previa:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-la-previa.html",
-      "send_at": "2026-07-06T14:00:00-03:00",
-      "expires_at": "2026-07-06T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-06T17:56:04.079Z",
-      "fail_reason": null,
-      "created_by": "reenvio-manual 2026-07-06 (la previa no le llego a todos; sin filtro devices = todos los activos)"
     },
     {
       "id": "2026-07-07-a",
