@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-14T17:08:35.568Z",
   "notifications": [
     {
+      "id": "2026-07-14-a3",
+      "title": "🎴 Gordo se la robó en la última mano",
+      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
+      "devices": [
+        "carucha"
+      ],
+      "send_at": "2026-07-14T15:00:00-03:00",
+      "expires_at": "2026-07-14T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés: a Carucha le falló el envío de las 14:00 con 410 — suscripción muerta; reactivó su push a las 15:04 UY como device 'carucha', este es su envío de la crónica con Experiences by: Gordo)"
+    },
+    {
       "id": "2026-07-14-a2",
       "title": "🎴 Gordo se la robó en la última mano (reenvío)",
       "body": "Tu cel dropeó el de las 14:08. La crónica ya trae Experiences by: Gordo → El Medallero, y el botón de WhatsApp para pedir experiencias.",
