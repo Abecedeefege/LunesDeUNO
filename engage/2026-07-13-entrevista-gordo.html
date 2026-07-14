@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🎤 Sala de interrogatorios — Gordo, el del robo</title>
+<style>
+  :root{
+    --bg:#0d0d12; --card:#17171f; --line:#2a2a35;
+    --red:#ED1C24; --yellow:#FFDE00; --green:#00A651; --blue:#0072BC;
+    --gold:#e8c453; --felt:#0e2a1c;
+    --txt:#f0f0f5; --mut:#8f8f9c;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1100px 480px at 50% -10%, rgba(0,166,81,.16), transparent 60%),
+      radial-gradient(800px 380px at 50% 4%, rgba(232,196,83,.10), transparent 55%),
+      var(--bg);
+    color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-bottom:3rem;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 1rem}
+
+  .back{
+    display:inline-flex;align-items:center;gap:.35rem;
+    margin:1rem 0 .4rem;padding:.4rem .8rem;
+    font:600 13px/1 inherit;color:#cfcfe0;text-decoration:none;
+    background:#17171f;border:1px solid var(--line);border-radius:999px;
+  }
+
+  /* ---- cinta de escena del crimen ---- */
+  .tape{
+    display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+    background:repeating-linear-gradient(-45deg,#f5d020 0 18px,#141018 18px 36px);
+    border-radius:14px 14px 0 0;
+    padding:.55rem .9rem;margin-top:.3rem;
+  }
+  .tape .lbl{
+    font:900 12px/1 inherit;letter-spacing:.14em;color:#0d0d12;
+    background:#f5d020;border-radius:6px;padding:.3rem .5rem;
+  }
+  .tape .caso{font:800 10px/1 inherit;color:#f5d020;letter-spacing:.1em;
+    background:rgba(13,13,18,.85);border-radius:6px;padding:.32rem .5rem}
+
+  /* ---- hero: rueda de reconocimiento ---- */
+  .hero{
+    position:relative;overflow:hidden;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 44px, rgba(255,255,255,.045) 44px 46px),
+      radial-gradient(320px 200px at 50% -30%, rgba(232,196,83,.22), transparent 70%),
+      linear-gradient(180deg,#13241b,#101418);
+    border:1px solid var(--line);border-top:none;
+    border-radius:0 0 6px 6px;
+    padding:1.4rem 1rem 1.2rem;text-align:center;
+  }
+  .altura{position:absolute;left:.6rem;top:.9rem;text-align:left;
+    font:800 9px/2.4 inherit;color:#4e5a52;letter-spacing:.12em}
+  .face{position:relative;width:104px;height:104px;border-radius:50%;
+    object-fit:cover;border:3px solid var(--gold);
+    box-shadow:0 0 30px rgba(232,196,83,.35);background:#0d0d12}
+  .badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+    font-size:1.5rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6))}
+  .kicker{margin:.7rem 0 .1rem;font:800 12px/1 inherit;letter-spacing:.22em;color:var(--gold)}
+  .name{margin:.1rem 0;font:900 2.15rem/1 inherit;letter-spacing:-.01em}
+  .sub{margin:.15rem 0 0;color:var(--mut);font:600 13px/1.3 inherit}
+
+  .chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-top:.9rem}
+  .chip{font:800 12px/1 inherit;padding:.42rem .6rem;border-radius:999px;
+    background:#0d0d12;border:1px solid var(--line);color:#e7e7ef}
+  .chip b{color:var(--gold)}
+  .chip.g b{color:var(--green)}
+
+  .lead{margin:1.3rem 0 .6rem;color:#d7d7e0;font:600 14.5px/1.5 inherit;text-align:center}
+  .lead b{color:var(--gold)}
+
+  /* ---- preguntas (interrogatorio) ---- */
+  .q{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:1rem;margin:.85rem 0;position:relative}
+  .q .qhead{display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem}
+  .q .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+    font-size:1.25rem;background:#0d0d12;border:1px solid var(--line);flex:none}
+  .q .who{font:800 12px/1.1 inherit;color:#cfcfe0}
+  .q .medio{font:600 11px/1 inherit;color:var(--mut);margin-top:.15rem}
+  .q .num{margin-left:auto;font:900 13px/1 inherit;color:var(--gold);
+    background:#1e1a0d;border:1px solid #3a331a;border-radius:999px;padding:.3rem .55rem}
+  .q .txt{font:600 15px/1.45 inherit;color:var(--txt)}
+  .q .txt b{color:var(--gold)}
+  .q .tag{display:inline-block;margin-top:.55rem;font:800 10px/1 inherit;letter-spacing:.1em;
+    text-transform:uppercase;color:#0d0d12;background:var(--gold);border-radius:6px;padding:.28rem .45rem}
+  .q .tag.red{background:var(--red);color:#fff}
+  .q .tag.blue{background:var(--blue);color:#fff}
+  .q .tag.grn{background:var(--green);color:#fff}
+  textarea{
+    width:100%;margin-top:.7rem;min-height:74px;resize:vertical;
+    background:#0d0d12;color:var(--txt);border:1px solid var(--line);border-radius:12px;
+    padding:.7rem .8rem;font:500 14.5px/1.5 inherit;
+  }
+  textarea:focus{outline:none;border-color:var(--gold)}
+  textarea::placeholder{color:#5c5c68}
+
+  .send{
+    width:100%;margin:1.1rem 0 .3rem;padding:1rem;border:none;border-radius:14px;cursor:pointer;
+    font:900 16px/1 inherit;letter-spacing:.02em;color:#0d0d12;
+    background:linear-gradient(90deg,var(--gold),#d4a937);
+    box-shadow:0 6px 22px rgba(232,196,83,.25);
+  }
+  .send:active{transform:translateY(1px)}
+  .send:disabled{filter:grayscale(.4);opacity:.7;cursor:default}
+  .sent-note{text-align:center;color:var(--green);font:700 13px/1.4 inherit;min-height:1.2em;margin-top:.4rem}
+  .hint{text-align:center;color:var(--mut);font:500 12px/1.4 inherit;margin:.2rem 0 0}
+
+  .aviso{
+    margin:1.4rem 0 0;background:#17171f;border:1px dashed #3a331a;border-radius:14px;
+    padding: .9rem 1rem;font:600 13px/1.55 inherit;color:#cfcfe0;
+  }
+  .aviso b{color:var(--gold)}
+
+  .foot{margin-top:1.6rem;text-align:center;color:#55555f;font:600 11px/1.5 inherit;letter-spacing:.05em}
+</style>
+</head><body>
+<div class="wrap">
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="tape">
+    <span class="lbl">🚧 NO PASAR</span>
+    <span class="caso">EXPEDIENTE 13/07 · DIVISIÓN ÚLTIMA MANO</span>
+  </div>
+
+  <div class="hero">
+    <div class="altura">180—<br>170—<br>160—</div>
+    <div style="position:relative;display:inline-block">
+      <span class="badge">🥷</span>
+      <img class="face" src="../assets/faces/gordo.png" alt="Gordo">
+    </div>
+    <div class="kicker">EL AUTOR CONFESO DEL ROBO</div>
+    <h1 class="name">Gordo</h1>
+    <p class="sub">Ganador del lunes 13/7 en lo de Carucha · se la llevó en la última mano</p>
+    <div class="chips">
+      <span class="chip">🏆 <b>127</b> pts</span>
+      <span class="chip">🥷 <b>−10</b> en la mano final</span>
+      <span class="chip g">🧼 <b>0</b> multas · <b>0</b> cortes en el año</span>
+      <span class="chip">👑 líder de la <b>T5</b></span>
+    </div>
+  </div>
+
+  <p class="lead">Diez rondas sin liderar ni una, y en la última te llevaste todo.
+  La división de robos quiere tu versión de los hechos. Contestá lo que quieras —
+  <b>tus declaraciones salen en la crónica del martes</b>.</p>
+
+  <!-- Q1 · EL ROBO -->
+  <div class="q">
+    <div class="qhead">
+      <div class="av">🕵️</div>
+      <div><div class="who">Detective de última mano</div><div class="medio">División Robos</div></div>
+      <div class="num">01</div>
+    </div>
+    <div class="txt">Entraste a la última mano <b>tercero</b>, a 24 puntos de Tano. Cerraste con
+    <b>−10</b>, pasaste de 137 a <b>127</b> y les pasaste por arriba a Tano y a Mata en una sola
+    jugada. En toda la noche no lideraste <b>ni una ronda</b>… hasta la que importaba.
+    ¿Plan maestro o te salió solo?</div>
+    <span class="tag">El robo</span>
+    <textarea data-q="gordo-entrevista-q1" placeholder="Confesá. Todo lo que digas será usado en la crónica…"></textarea>
+  </div>
+
+  <!-- Q2 · LA SEQUÍA -->
+  <div class="q">
+    <div class="qhead">
+      <div class="av">⏳</div>
+      <div><div class="who">Perito en sequías</div><div class="medio">El Observador Unístico</div></div>
+      <div class="num">02</div>
+    </div>
+    <div class="txt">Tu última victoria era del <b>9 de marzo</b>. Pasaron <b>126 días</b> sin ganar…
+    y volviste ganando con <b>127 puntos</b>: uno por cada día de sequía, más uno de propina.
+    ¿Dónde estuviste metido todo este tiempo?</div>
+    <span class="tag blue">La sequía</span>
+    <textarea data-q="gordo-entrevista-q2" placeholder="126 días dan para pensar una coartada…"></textarea>
+  </div>
+
+  <!-- Q3 · EL QUE PAGA -->
+  <div class="q">
+    <div class="qhead">
+      <div class="av">🍮</div>
+      <div><div class="who">Fiscalía del postre</div><div class="medio">Radio Postre</div></div>
+      <div class="num">03</div>
+    </div>
+    <div class="txt">Mientras vos robabas, <b>Naso</b> se hundía: una mano de <b>148 puntos</b> en la
+    tercera ronda y no salió más del fondo. Terminó último con <b>414</b> y ahora debe postre o
+    picada. ¿Unas palabras para el nuevo moroso de la mesa?</div>
+    <span class="tag red">El que paga</span>
+    <textarea data-q="gordo-entrevista-q3" placeholder="Dedicatoria para el que trae el postre…"></textarea>
+  </div>
+
+  <!-- Q4 · EL AUSENTE -->
+  <div class="q">
+    <div class="qhead">
+      <div class="av">🌍</div>
+      <div><div class="who">Interpol UNO</div><div class="medio">Buscando a Cobra</div></div>
+      <div class="num">04</div>
+    </div>
+    <div class="txt"><b>Cobra</b> avisó que se iba dos semanas y cumplió: su silla vacía le costó
+    caer del <b>1° al 7°</b> de la Temporada 5, y el nuevo líder sos <b>vos</b>. ¿Algún mensaje
+    para la serpiente cuando vuelva y vea la tabla?</div>
+    <span class="tag grn">El ausente</span>
+    <textarea data-q="gordo-entrevista-q4" placeholder="Se lo guardamos para cuando aterrice…"></textarea>
+  </div>
+
+  <!-- Q5 · LA ANUAL -->
+  <div class="q">
+    <div class="qhead">
+      <div class="av">⚖️</div>
+      <div><div class="who">Juez de la tabla anual</div><div class="medio">Lunes de UNO</div></div>
+      <div class="num">05</div>
+    </div>
+    <div class="txt">Estás <b>2° en la anual</b>, a <b>151 puntos</b> de PT, con la ficha más limpia
+    de la mesa: <b>cero multas, cero cortes y cero últimos puestos</b> en 17 fechas. ¿Vas por la
+    punta o te alcanza con robar los lunes?</div>
+    <span class="tag">Palabras finales</span>
+    <textarea data-q="gordo-entrevista-q5" placeholder="El titular del martes lo escribís vos…"></textarea>
+  </div>
+
+  <button class="send" id="sendBtn" onclick="publicar(this)">🎙️ Firmar mi declaración</button>
+  <div class="sent-note" id="sentNote"></div>
+  <p class="hint">Se guardan en el teléfono y sincronizan solas. Podés editar y volver a publicar.</p>
+
+  <div class="aviso">📵 <b>Gordo</b>: esta entrevista te llegó por correo humano porque sos el único
+  campeón de la mesa <b>sin las notificaciones prendidas</b>. Pedile el link del club a Andrés y la
+  próxima te llega sola al teléfono, como a todos los demás.</div>
+
+  <div class="foot">🎴 LUNES DE UNO · SALA DE INTERROGATORIOS · EDICIÓN 14/07/2026</div>
+</div>
+
+<script>
+  function publicar(btn){
+    var areas = document.querySelectorAll('textarea[data-q]');
+    var n = 0;
+    areas.forEach(function(a){
+      var val = (a.value || '').trim();
+      if (val && window.engageAnswer){ window.engageAnswer(a.getAttribute('data-q'), val, null); n++; }
+    });
+    var note = document.getElementById('sentNote');
+    if (!n){ note.style.color = '#FFDE00'; note.textContent = 'Escribí al menos una respuesta antes de firmar 🖋️'; return; }
+    note.style.color = '#00A651';
+    note.textContent = '✓ ' + n + ' declaracion' + (n===1?'':'es') + ' firmada' + (n===1?'':'s') + '. La división de robos te lo agradece.';
+    btn.textContent = '✓ Declaración firmada';
+    btn.disabled = true;
+  }
+</script>
+<script src="engage.js"></script>
+</body></html>

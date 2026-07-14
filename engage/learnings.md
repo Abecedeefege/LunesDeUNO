@@ -26,8 +26,11 @@ semana (ganador sin push activa), no aplica.
 2026-07-10):** entrevista "Sala de prensa" (5 preguntas) al ganador del
 lunes, a su device, ~10:00. **Si el ganador no tiene push activa, no se
 envía nada** — pasó por primera vez hoy (14/07): ganó Gordo y no está en
-`pushSubs`. Sin entrevista ni preview de entrevista. La crónica lo menciona
-con humor ("che, activá las notis") en vez de fingir contenido que no existe.
+`pushSubs`. **PRECEDENTE NUEVO (Andrés por chat, 14/07): en ese caso la
+entrevista se crea igual y se le manda a ANDRÉS por push inmediato para que
+él se la reenvíe por WhatsApp, junto con el link del club (el link va por
+chat privado, JAMÁS en la página ni en el push).** La crónica referencia el
+"correo humano" en vez de fingir que no existe.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-14)
 
@@ -104,13 +107,16 @@ hasta que Andrés lo confirme/corrija. Sin novedad hoy.
   ~17/07).
 - Queue: purgados **2026-07-06-a** y **2026-07-06-reenvio** (`sent`, >7
   días). Encolados hoy: `2026-07-14-a` (14:00) + `2026-07-14-a-preview`
-  (09:00, solo andres). Sin sala de prensa (Gordo sin push). Sin otros
-  ítems `pending`/`draft` para reconciliar.
+  (09:00, solo andres) + `2026-07-14-b` (inmediato, solo andres: la
+  entrevista de Gordo para reenviar — pedido de Andrés por chat, sin
+  preview por ser envío inmediato dictado por él). Sin otros ítems
+  `pending`/`draft` para reconciliar.
 - Proposals: **2026-07-13-la-previa promovida** esta corrida (aprobación de
-  andres 13/07 19:21:42 UY). Nueva: **2026-07-13-cronica** pendiente de
-  decisión (vence 21/07). Resto sin cambios (records, la-previa original,
-  chusmerio 05/07, entrevista-cobra, cronica 06/07 y cobra-sin-editar
-  promovidas; el-feed dropped).
+  andres 13/07 19:21:42 UY). Nuevas: **2026-07-13-cronica** y
+  **2026-07-13-entrevista-gordo** pendientes de decisión (vencen 21/07).
+  Resto sin cambios (records, la-previa original, chusmerio 05/07,
+  entrevista-cobra, cronica 06/07 y cobra-sin-editar promovidas; el-feed
+  dropped).
 - Home (`index.html`): deuda de Tano sigue en el div pese a estar pagada
   en el ledger; Gael/T4 sin verificar sigue ahí. Sin cambios hoy.
 
@@ -131,6 +137,14 @@ hasta que Andrés lo confirme/corrija. Sin novedad hoy.
   cambio Nachi-Gael, nota liviana sobre la sala de prensa que no salió
   (Gordo sin notis). Push `2026-07-14-a` encolado 14:00 + preview
   `2026-07-14-a-preview` a andres 09:00, ambos `pending`.
+- 🎤 **Segunda pasada del martes (pedido de Andrés por chat ~06:30):**
+  entrevista a Gordo creada (`engage/2026-07-13-entrevista-gordo.html`,
+  estética expediente policial del robo). Preguntas: el robo con −10, la
+  sequía de 126 días (última victoria 09/03, volvió con 127 pts), Naso
+  moroso, mensaje a Cobra ausente, la anual a 151 de PT. Enviada a Andrés
+  por push inmediato (`2026-07-14-b`) para reenviar a Gordo por WhatsApp;
+  el link del club fue por chat. Ids de answers: `gordo-entrevista-q1..q5`
+  — si llegan antes de las 14:00, citarlas en la crónica como addendum.
 - Próximo: miércoles a viernes, silencio (solo gestión/memoria). Sábado
   19/07 vuelve el slot de récords — evaluar sub-formato nuevo (no repetir
   horóscopo, ya usado el 11/07); ángulo fuerte disponible: la caída de
@@ -144,9 +158,10 @@ Especial "remontadas" · especial sedes · aniversarios (648 de Naso, multa
 dwell propio · investigar el device `sin-nombre` (dwell bajísimo, patrón
 repetido el 06/07 y el 12/07) · confirmar con Andrés la deuda de Gael/T4
 antes de usarla en cualquier experiencia · preguntar a Negro/Naso el estado
-de sus deudas en la próxima previa/chusmerío con `engageAnswer` · avisar a
-Gordo (fuera del sistema, es humano) que active las notificaciones para no
-perderse otra sala de prensa · posible especial "el regreso de Cobra" para
+de sus deudas en la próxima previa/chusmerío con `engageAnswer` · seguir si
+Gordo se suscribe tras recibir el link del club via Andrés (14/07) — si
+aparece `gordo` en pushSubs, la sala de prensa vuelve a ser directa ·
+posible especial "el regreso de Cobra" para
 cuando vuelva a aparecer, si se confirman las 2 semanas de ausencia ·
 H2H sin publicar todavía: Carucha 8–4 Cobra (sin cambios, Carucha no jugó
 con Cobra desde el 07/07).
