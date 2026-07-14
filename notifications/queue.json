@@ -1,6 +1,25 @@
 {
+<<<<<<< Updated upstream
   "_updated_at": "2026-07-14T13:35:42.763Z",
+=======
+  "_updated_at": "2026-07-14T13:48:00.000Z",
+>>>>>>> Stashed changes
   "notifications": [
+    {
+      "id": "2026-07-14-d2",
+      "title": "📰 La crónica, versión nueva (reenvío)",
+      "body": "Tu cel dropeó el anterior. El expediente de la entrevista ya está linkeado en la sala de prensa. Revisala antes de las 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-14T10:46:00-03:00",
+      "expires_at": "2026-07-14T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-14 (reenvio del 2026-07-14-d: 201 pero no se mostró en el device de andres — 3er drop matutino silencioso en 2 días; este va solo en su dispatch)"
+    },
     {
       "id": "2026-07-14-c",
       "title": "🎤 Gordo, la división de robos te cita",
