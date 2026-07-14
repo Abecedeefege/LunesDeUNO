@@ -538,6 +538,13 @@
       "device": "pt",
       "ts": "2026-07-13T18:16:16.535Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-14-a-preview",
+      "device": "andres",
+      "ts": "2026-07-14T12:07:15.202Z",
+      "status_code": 201
     }
   ]
 }
