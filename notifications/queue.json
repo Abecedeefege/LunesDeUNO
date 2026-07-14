@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-14T17:08:35.568Z",
   "notifications": [
     {
+      "id": "2026-07-14-a2",
+      "title": "🎴 Gordo se la robó en la última mano (reenvío)",
+      "body": "Tu cel dropeó el de las 14:08. La crónica ya trae Experiences by: Gordo → El Medallero, y el botón de WhatsApp para pedir experiencias.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-14T14:12:00-03:00",
+      "expires_at": "2026-07-14T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés por chat: el push de las 14:00 salió 201 a su device pero no se mostró — reenvío dirigido solo a él; sirve de test del drop silencioso)"
+    },
+    {
       "id": "2026-07-14-d2",
       "title": "📰 La crónica, versión nueva (reenvío)",
       "body": "Tu cel dropeó el anterior. El expediente de la entrevista ya está linkeado en la sala de prensa. Revisala antes de las 14:00.",
