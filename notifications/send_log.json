@@ -552,6 +552,20 @@
       "device": "andres",
       "ts": "2026-07-14T13:27:26.796Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-14-c",
+      "device": "gordo",
+      "ts": "2026-07-14T13:35:42.433Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-14-d",
+      "device": "andres",
+      "ts": "2026-07-14T13:35:42.762Z",
+      "status_code": 201
     }
   ]
 }

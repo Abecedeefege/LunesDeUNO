@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-14T13:35:00.000Z",
+  "_updated_at": "2026-07-14T13:35:42.763Z",
   "notifications": [
     {
       "id": "2026-07-14-c",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-14T10:33:00-03:00",
       "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T13:35:42.434Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-14 (Gordo activó su push esta mañana via link del club; entrevista directa SOLO a él, envío inmediato pedido por Andres por chat; página redeployada sin el aviso de correo humano, verificada 10:34)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-14T10:33:00-03:00",
       "expires_at": "2026-07-14T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T13:35:42.763Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-14 (pedido de Andres por chat: la crónica actualizada con el link a la entrevista, SOLO a él para revisar antes del envío general de las 14:00; expira 13:30 para no pisarlo)"
     },
