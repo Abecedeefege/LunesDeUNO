@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-14T13:27:00.000Z",
+  "_updated_at": "2026-07-14T13:27:26.797Z",
   "notifications": [
     {
       "id": "2026-07-14-b",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-14T10:25:00-03:00",
       "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-14T13:27:26.797Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-14 (pedido de Andres por chat: sala de prensa de Gordo — que gano anoche pero no tiene push activa — enviada a Andres para reenviar por WhatsApp; envio inmediato dictado por el, sin preview; pagina verificada 200 en Pages a las 10:26 antes de encolar)"
     },
