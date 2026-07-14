@@ -468,21 +468,6 @@
       border: max(3px, 0.44vh) solid #ffd700;
       box-sizing: border-box;
     }
-    /* Cobra "Diseño B": estrella (temporada pasada) + copa (anual) sobre la cara */
-    .tv-face { position: relative; display: inline-block; line-height: 0; flex-shrink: 0; }
-    .tv-champ-star {
-      position: absolute; left: 50%; top: -0.9vh; transform: translateX(-50%);
-      background: #0f0f1a; color: #ffd400; font-size: 1.7vh; line-height: 1;
-      padding: 0.1vh 0.6vh; border-radius: 999px; pointer-events: none; z-index: 2;
-    }
-    .tv-champ-cup {
-      position: absolute; top: -0.6vh; right: -0.6vh;
-      width: 2.6vh; height: 2.6vh; min-width: 17px; min-height: 17px; border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #fff7cc, #ffd700 55%, #b8860b);
-      border: 1px solid #fff3b0; box-shadow: 0 1px 3px rgba(0,0,0,.5);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5vh; line-height: 1; pointer-events: none; z-index: 3;
-    }
     .tv-annual-note {
       margin: .6vh 0 0;
       color: #ffd400;
@@ -681,16 +666,14 @@
   }
   function _tvNameSuffix(slug) {
     let s = '';
-    if (slug === 'cobra') s += ' 👑';                              // campeón anual (la copa va sobre la cara)
+    if (slug === 'cobra') s += ' 👑';                              // campeón anual
     else if (slug && slug === TV.lastSeasonWinner) s += ' 🏆';
     return s;
   }
-  // Markup de la cara para la tabla. Cobra suma estrella (temporada pasada) + copa
-  // (anual) como medallones sobre la cara ("Diseño B").
+  // Markup de la cara para la tabla: img pelada. El campeón anual sólo lleva la
+  // corona junto al nombre y el anillo dorado con glow (CSS); sin medallones encima.
   function _tvFaceHtml(slug) {
-    const img = `<img src="${FACE_PATH(slug)}" alt=""${_tvFaceAttrs(slug)} onerror="this.style.visibility='hidden'">`;
-    if (slug !== 'cobra') return img;
-    return `<span class="tv-face">${img}<span class="tv-champ-star">⭐</span><span class="tv-champ-cup">🏆</span></span>`;
+    return `<img src="${FACE_PATH(slug)}" alt=""${_tvFaceAttrs(slug)} onerror="this.style.visibility='hidden'">`;
   }
 
   // ----- Render -----
