@@ -159,6 +159,25 @@ hasta que Andrés lo confirme/corrija. Sin novedad hoy.
   (4) push `2026-07-14-d` SOLO a andres con la crónica nueva para revisar
   antes de las 14:00. Reglas nuevas ratificadas: pushes solo sáb/dom/lun/
   mar; entrevistas nunca como push independiente a todos.
+- 🎙️ **Gordo CONVIRTIÓ en 10 minutos**: push 10:35 → click 10:41 →
+  firmó q1 y q2 a las 10:45 ("Arrancar 1ero y después caer, es para sin
+  estrellas" / "Lo importante es el proceso"). Citas agregadas a la crónica
+  como addendum ANTES del envío general de las 14:00 (q3-q5 sin contestar
+  aún — si llegan, agregarlas mañana). Mata leyó la crónica con dwell
+  altísimo (1321s + 729s) y el expediente (159s) ANTES del push general —
+  llegó por el link interno desde la previa o URL compartida.
+- 📵 **Device de andres: 3 drops matutinos en 2 días** (previews 13/07
+  09:18 y 14/07 09:07, y el -d de hoy 10:35 — todos 201 sin mostrarse; el
+  test del 13/07 a las 12:45 sí se mostró). Reenvío `2026-07-14-d2`
+  entregado 11:22. Si el patrón sigue, sugerirle recrear la sub desde el
+  club y/o mover el preview de 09:00 a mediodía.
+- ⚠️ **INCIDENTE RESUELTO (lección de proceso):** `git pull --rebase
+  --autostash` con cambios sin commitear en queue.json dejó MARCADORES DE
+  CONFLICTO en el JSON y se pusheó roto a main (~3 min, commit ed08f9d;
+  hotfix c4b9046). Regla para toda corrida futura: commitear SIEMPRE antes
+  de `pull --rebase` (rebasear commits es seguro; autostash sobre JSONs de
+  la cola no lo es), y validar con `python3 -m json.tool` DESPUÉS del
+  rebase, antes de pushear.
 - Próximo: miércoles a viernes, silencio (solo gestión/memoria). Sábado
   19/07 vuelve el slot de récords — evaluar sub-formato nuevo (no repetir
   horóscopo, ya usado el 11/07); ángulo fuerte disponible: la caída de
