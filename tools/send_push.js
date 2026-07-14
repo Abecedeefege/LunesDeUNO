@@ -25,9 +25,9 @@ const readJson  = (p, fb) => { try { return JSON.parse(fs.readFileSync(p, 'utf8'
 const writeJson = (p, d)  => fs.writeFileSync(p, JSON.stringify(d, null, 2) + '\n');
 const sval = (f) => (f && f.stringValue) || null;
 
-// Tope de socios del club: 8 dispositivos activos (los jugadores de la mesa).
+// Tope de socios del club: 11 dispositivos activos (los jugadores de la mesa).
 // El orden por updated_at asc hace el corte determinístico si alguien se pasa.
-const MAX_ACTIVE_SUBS = 8;
+const MAX_ACTIVE_SUBS = 11;
 
 async function loadActiveSubs() {
   const r = await fetch(`${FS_BASE}/pushSubs?key=${FS_KEY}&pageSize=100`);

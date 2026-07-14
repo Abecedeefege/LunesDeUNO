@@ -74,7 +74,7 @@
     </div>
     <div class="card">
       <div style="font-size:.85rem;color:#b9b9c4;margin-bottom:.8rem;">
-        Socio: <b id="whoami" style="color:#FFDE00;"></b> · lugares del club: <b id="cupo">–</b>/8
+        Socio: <b id="whoami" style="color:#FFDE00;"></b> · lugares del club: <b id="cupo">–</b>/11
       </div>
       <div id="joinBox">
         <button class="primary" onclick="enablePush()">Activar los avisos en este dispositivo</button>
@@ -98,7 +98,7 @@ const FS_KEY  = 'AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
 const LS_DEVICE_ID   = 'lunesdeuno_device_id';
 const LS_DEVICE_NAME = 'lunesdeuno_device_name';
 const LS_CLUB_OK     = 'lunesdeuno_club_ok';
-const MAX_ACTIVE_SUBS = 8;
+const MAX_ACTIVE_SUBS = 11;
 // Validación client-side alcanza: el riesgo es bajo y el canal es de amigos.
 const CODE_OK = 'lapicadaesley';
 
@@ -239,10 +239,10 @@ async function enablePush() {
     const reg = await navigator.serviceWorker.register('sw.js');
     await navigator.serviceWorker.ready;
 
-    // Tope de socios: 8 dispositivos activos (los jugadores de la mesa).
+    // Tope de socios: 11 dispositivos activos (los jugadores de la mesa).
     const others = await activeSubCount(deviceId());
     if (others >= MAX_ACTIVE_SUBS) {
-      setStatus('El club está lleno (8/8). Que alguien libere su lugar primero.', 'err');
+      setStatus('El club está lleno (11/11). Que alguien libere su lugar primero.', 'err');
       return;
     }
 
