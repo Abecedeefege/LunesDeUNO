@@ -452,12 +452,13 @@
       border: 2px solid var(--border);
       flex-shrink: 0;
     }
-    /* Cobra: Campeón anual 2025 — anillo dorado animado (~8% del ancho) */
+    /* Campeones anuales — Cobra (2025) y Naso: anillo dorado animado (~8% del ancho) */
     @keyframes cobraGoldTV {
       0%, 100% { box-shadow: 0 0 6px rgba(255,215,0,.6); border-color: #ffd700; }
       50%      { box-shadow: 0 0 14px rgba(255,215,0,1); border-color: #fff3b0; }
     }
-    .tv-player img[src$="faces/cobra.png"] {
+    .tv-player img[src$="faces/cobra.png"],
+    .tv-player img[src$="faces/naso.png"] {
       border: max(3px, 0.44vh) solid #ffd700;
       box-shadow: 0 0 8px rgba(255,215,0,.7);
       animation: cobraGoldTV 1.8s ease-in-out infinite;
