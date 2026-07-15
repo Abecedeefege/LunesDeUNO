@@ -200,18 +200,6 @@
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
     },
     {
-      "id": "2026-07-07-a",
-      "title": "📰 Cobra le robó la punta a Gordo",
-      "body": "Gael lideró 4 rondas, Gordo 1 sola mano y Cobra se la robó en la 9na. 223 a 258. Negro último con 417.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-cronica.html",
-      "send_at": "2026-07-07T14:00:00-03:00",
-      "expires_at": "2026-07-07T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-07T18:08:08.054Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-07 (crónica; OK condicional de Andrés: sale 14:00 como está si Cobra no contesta antes)"
-    },
-    {
       "id": "2026-07-09-a",
       "title": "🍿 Chusmerío de la mesa",
       "body": "El expediente Mac (0-12 y doble deuda), la final por 8 puntos, la multa del siglo y una picada que ya es leyenda.",
@@ -222,36 +210,6 @@
       "sent_at": null,
       "fail_reason": "semana editorial nueva: el chusmerío pasó al domingo 05/07",
       "created_by": "primer-ciclo-manual 2026-07-03"
-    },
-    {
-      "id": "2026-07-07-b",
-      "title": "🎤 Cobra, la prensa te espera",
-      "body": "Ganaste con 223 y sin una sola multa. Te armamos la rueda de prensa del campeón: 5 preguntas para que hables. Pasá al micrófono 🎙️",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-entrevista-cobra.html",
-      "devices": [
-        "cobra"
-      ],
-      "send_at": "2026-07-07T10:05:00-03:00",
-      "expires_at": "2026-07-07T22:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-07T13:17:26.716Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-07 (entrevista al campeon, SOLO cobra, envio inmediato pedido por andres)"
-    },
-    {
-      "id": "2026-07-07-c",
-      "title": "🎤 Cobra, la crónica te espera",
-      "body": "Sos el campeón y todavía no dijiste nada. 5 preguntas para alardear — contestá antes de las 2 y salís en la crónica 🎙️",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-06-entrevista-cobra.html",
-      "devices": [
-        "cobra"
-      ],
-      "send_at": "2026-07-07T12:08:00-03:00",
-      "expires_at": "2026-07-07T22:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-07T15:17:43.604Z",
-      "fail_reason": null,
-      "created_by": "manual-andres 2026-07-07 (reenvio entrevista a cobra, recordatorio, SOLO cobra)"
     },
     {
       "id": "2026-07-10-a",
@@ -324,21 +282,6 @@
       "sent_at": "2026-07-11T00:26:58.311Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: el tape remasterizado a TODOS los activos, encuadre de filtración; página ya deployada y aprobada de facto por Andrés)"
-    },
-    {
-      "id": "2026-07-07-test-andres",
-      "title": "🎴 Test de canal — Andrés",
-      "body": "Si ves esto, tu suscripción está viva. Tocá para confirmar que el push llega.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-07T16:00:00-03:00",
-      "expires_at": "2026-07-07T22:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-07T19:04:09.321Z",
-      "fail_reason": null,
-      "created_by": "debug 2026-07-07 (test de entrega dirigido SOLO a andres; verificar sub viva/zombie)"
     }
   ]
 }

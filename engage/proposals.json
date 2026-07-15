@@ -128,12 +128,12 @@
       "title": "📰 La Crónica (tabloide del martes: Gordo se roba la fecha 2, Cobra ausente)",
       "page": "engage/2026-07-13-cronica.html",
       "created": "2026-07-14",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Segunda edición del formato La Crónica (ya promovido el 07/07) con la partida de anoche: Gordo se robó la fecha 2 con -10 en la última mano, Naso se hundió en la ronda 3 (148 puntos en una mano) y no salió más del último puesto, y Cobra confirmó su propia profecía de la entrevista faltando por primera vez — cae del 1º al 7º lugar de la T5. Sin sala de prensa esta semana: Gordo (el ganador) no tiene notificaciones push activas. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-14-a"
       ],
-      "result_notes": null
+      "result_notes": "Aprobada por andres (boton proposal_approved 14/07 17:09:21 UY). Promovida: la pagina queda. Ademas reaccion love + answer suscripcion=si de andres, y reaccion love + answer suscripcion=si + approve tambien de mac (17:29 UY, señal secundaria, no decide). Abierta tambien por gordo, cobra, gael, pt, carucha (dwell 16-147s)."
     },
     {
       "id": "2026-07-13-entrevista-gordo",
