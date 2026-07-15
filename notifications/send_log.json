@@ -643,6 +643,20 @@
       "device": "gordo",
       "ts": "2026-07-14T17:08:35.567Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-14-a3",
+      "device": "carucha",
+      "ts": "2026-07-14T18:08:01.488Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-14-a2",
+      "device": "andres",
+      "ts": "2026-07-14T18:08:01.582Z",
+      "status_code": 201
     }
   ]
 }
