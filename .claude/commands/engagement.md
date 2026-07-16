@@ -152,7 +152,8 @@ La semana editorial escala hacia el lunes y lo comenta el martes:
 | **Domingo** | 🍿 chusmerío | Experiencia de **chusmerío** (§3.4): deudas, sequías, rivalidades — cierra con "mañana se juega". |
 | **Lunes** | 🔥 la previa | **La Previa** (§3.1): tabla + deudas ancladas al lunes + **padres e hijos (H2H en juego)** + pronóstico. |
 | **Martes** | 📰 crónica | **La crónica** (§3.2): si hay partida nueva de anoche en `games` → crónica épica + push. Si NO hay → push "¿Anoche se jugó? Cargá el resultado" con url a `https://abecedeefege.github.io/LunesDeUNO/index.html`. |
-| **Mié/Jue/Vie** | — | Sin push. Pasos 1–4 y 6–8 (proposals, compactación, reconciliación, memoria). |
+| **Jueves** | 🧬 entrevista personal 15:00 | **Entrevista del jueves** (§3.5): push PERSONAL (un solo device) a un no-ganador del último lunes. Preview a andres 10:00. Además, pasos 1–4 y 6–8. |
+| **Mié/Vie** | — | Sin push. Pasos 1–4 y 6–8 (proposals, compactación, reconciliación, memoria). |
 
 Anti-quemado: récords y chusmerío son slots fijos pero el CONTENIDO rota
 (récords clásicos / remontadas / archivo / horóscopo / feed 1ª persona /
@@ -212,6 +213,20 @@ rivalidades H2H, sequías, la fecha fantasma, la interna de la tabla — TODO
 recalculado de `games`. Cierre fijo: **"mañana se juega"**. Sub-formatos para
 rotar: 📱 feed (jugadores/cartas postean en 1ª persona, solo hechos
 verificables), 🎤 confesiones del mazo sobre resultados reales.
+
+### 3.5 Entrevista personal del jueves (regla de Andrés, 2026-07-16)
+
+UNA push personal por semana, los jueves, de entrevista a alguien que **NO
+haya sido el ganador del último lunes** (ni Andrés; necesita sub push
+activa). Máximo **4 preguntas: 2 de texto libre + 2 de opción múltiple**,
+enfocadas en una stat/métrica destacable (verificada de `games`) para que el
+grupo se ría en el próximo push grupal, y SIEMPRE orientadas a que el
+entrevistado tenga lugar a burlarse del resto o ser gracioso. Horarios:
+**preview a andres 10:00 para aprobación, push al entrevistado 15:00**. La
+página informa al entrevistado que se están buscando maneras de juntar más
+información del grupo para que las notificaciones sean más divertidas y
+enganchen más al grupo. No es difusión grupal: no rompe el silencio de
+mié/jue/vie. No repetir entrevistado semana a semana si hay alternativas.
 
 ## 4. Contrato de la página de experiencia (obligatorio, completo)
 

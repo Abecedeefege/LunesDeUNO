@@ -1,10 +1,12 @@
 # Learnings del agente — Lunes de UNO
 
-## ⏱️ CADENCIA VIGENTE: 4 pushes/semana a las 14:00 (fijada por Andrés, 2026-07-04)
+## ⏱️ CADENCIA VIGENTE: 4 pushes grupales/semana a las 14:00 + 1 personal los jueves 15:00
 
 **Sábado récords · Domingo chusmerío · Lunes la previa (con "padres e hijos"
-H2H en juego) · Martes la crónica.** Miércoles a viernes: SILENCIO (solo
-gestión y memoria). **RATIFICADO por Andrés por chat el 14/07: pushes SOLO
+H2H en juego) · Martes la crónica.** (Grupales, fijadas por Andrés
+2026-07-04.) Miércoles a viernes: SILENCIO de difusión grupal (solo gestión
+y memoria) — con UNA excepción fija: la entrevista personal del jueves a las
+15:00 (ver REGLA DEL JUEVES abajo), que va a un solo device. **RATIFICADO por Andrés por chat el 14/07: pushes SOLO
 sáb/dom/lun/mar — se terminan las exclusivas de viernes a la noche (como el
 tape del 10/07); el material de entrevista vive LINKEADO desde la crónica,
 nunca como push independiente a todos.** Nunca dos pushes de DIFUSIÓN el
@@ -28,6 +30,22 @@ entrevista queda LINKEADA desde la crónica del día — nunca push independient
 de entrevista a todos. Si el ganador no tiene push activa: se le manda a
 ANDRÉS por push inmediato para reenviar por WhatsApp + link del club por chat
 privado (JAMÁS en página ni push).
+
+**🧬 REGLA FIJA DEL JUEVES (Andrés, 2026-07-16, por chat, vinculante):** UNA
+push personal semanal de entrevista, los JUEVES, a alguien que NO haya sido
+el ganador del último lunes (ni Andrés). Formato: **máx 4 preguntas — 2 de
+texto libre + 2 de opción múltiple** — enfocadas en una stat/métrica
+destacable (verificada de `games`) para que el grupo se ría en el próximo
+push grupal; las preguntas SIEMPRE orientadas a que el entrevistado tenga
+lugar a burlarse del resto o ser gracioso. Horarios fijos: **preview a
+andres a las 10:00 para aprobación** (ventana de veto hasta el envío) y
+**push al entrevistado a las 15:00** del mismo jueves. La página debe
+informar al entrevistado que se están buscando maneras de juntar más
+información del grupo para que las notificaciones sean más divertidas y
+enganchen más. Esta push NO rompe el silencio de mié/jue/vie para difusión
+grupal: es personal, a un solo device. Sus respuestas alimentan el push
+grupal siguiente (sábado). No repetir entrevistado semana a semana si hay
+alternativas con sub activa.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-16)
 
@@ -120,10 +138,17 @@ Andrés, publicable.
   independiente (regla nueva del 14/07).
 - 🔇 Miércoles 15/07: silencio. Proposal de la crónica promovida, cola
   purgada.
-- 🔇 **Jueves 16/07 (hoy): silencio de pushes, pero día de noticias.** En la
+- 🧬 **Jueves 16/07 (hoy): estreno del slot personal del jueves.** En la
   corrida de la mañana: purga de `2026-07-09-a` y refresco del ledger. Más
   tarde, Andrés liquidó por chat las deudas de Tano, Negro y Gael (pagadas,
-  con detalle de qué llevó cada uno) y pidió limpiar el home — hecho.
+  con detalle de qué llevó cada uno) y pidió limpiar el home — hecho. Después
+  fijó la REGLA DEL JUEVES y salió la 1ª entrevista personal: **Carucha**
+  (elegida por: no ganó el lunes —ganó Gordo—, sub reactivada el 14/07 con
+  aperturas espontáneas, y el H2H inédito más jugoso: **padre de Cobra 8-4**).
+  Página con estética de laboratorio de ADN, 2 preguntas de texto + 2 de
+  opción múltiple. Preview a andres 10:00 (`2026-07-16-ent-preview`), envío a
+  carucha 15:00 (`2026-07-16-ent`). Sus respuestas alimentan el push grupal
+  del sábado 18/07.
 - Próximo: viernes 17/07 también silencio. **Sábado 18/07** vuelve el slot de
   récords (corregido: NO es el 19/07 como decía la corrida anterior — el
   19/07 es domingo) — evaluar sub-formato nuevo (ya usados: clásico 04/07,
@@ -137,10 +162,12 @@ Andrés, publicable.
 
 ## TODO / ángulos sin usar
 
-Especial "remontadas" (fuerte candidato para el sábado 18/07) · "día de
-liquidación" con ranking de pagadores (candidato fuerte para el chusmerío
-del 19/07 — Negro de lujo, Gael digno, Tano de mala gana, Naso el único
-moroso) · especial sedes · aniversarios (648 de Naso, multa 150 de Tano) ·
+**Citar las respuestas de Carucha en el push grupal del sábado 18/07** (la
+regla del jueves existe para eso — si no contesta, el ángulo 8-4 sobre Cobra
+sirve igual) · Especial "remontadas" (fuerte candidato para el sábado 18/07)
+· "día de liquidación" con ranking de pagadores (candidato fuerte para el
+chusmerío del 19/07 — Negro de lujo, Gael digno, Tano de mala gana, Naso el
+único moroso) · especial sedes · aniversarios (648 de Naso, multa 150 de Tano) ·
 copy dirigido con nombre para reactivar a negro si sigue sin dwell propio ·
 preguntar a Naso el estado de su deuda en la próxima previa/chusmerío con
 `engageAnswer` · replicar el flujo del club con
