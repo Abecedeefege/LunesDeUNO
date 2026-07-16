@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>☢️ El Kryptonita de Cobra — Piña Directa #001</title>
+<style>
+  :root{
+    --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
+    --red:#ED1C24; --yellow:#FFDE00; --green:#00A651; --blue:#0072BC;
+    --text:#eaeaf0; --dim:#9a9aa8; --kry:#39ff14; --pur:#A855F7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 60px}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--text)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+
+  /* ---- puerta VIP ---- */
+  #gate{margin-top:14px;border:2px dashed var(--kry);border-radius:14px;padding:26px 16px;text-align:center;background:radial-gradient(ellipse at 50% 0%, rgba(57,255,20,.08), transparent 60%)}
+  #gate .lock{font-size:2.6rem}
+  #gate h1{font-size:1.15rem;margin:10px 0 6px}
+  #gate p{font-size:.85rem;color:var(--dim);line-height:1.55}
+  #gate .st{margin-top:12px;font-size:.8rem;font-weight:700}
+  #vip{display:none}
+
+  .poster{
+    margin-top:14px;border:2px solid var(--kry);border-radius:14px;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%, rgba(57,255,20,.14), transparent 55%), #0c120c;
+    box-shadow:0 0 30px rgba(57,255,20,.18);
+  }
+  .vipbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(57,255,20,.35);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase}
+  .vipbar .l{color:var(--kry);font-weight:800}
+  .vipbar .r{color:var(--dim)}
+  .poster .body{padding:18px 14px;text-align:center}
+  .poster .serie{font-size:.68rem;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+  .poster h1{font-size:1.8rem;line-height:1.15;margin:8px 0;color:var(--kry);text-shadow:0 0 18px rgba(57,255,20,.6)}
+  .poster .sub{font-size:.85rem;color:var(--dim)}
+  .duo{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px 0 4px}
+  .duo img{width:84px;height:84px;border-radius:50%;object-fit:cover;background:#222}
+  .duo .cobra{border:3px solid var(--kry);filter:drop-shadow(0 0 10px rgba(57,255,20,.5))}
+  .duo .caru{border:3px solid var(--pur);filter:drop-shadow(0 0 10px rgba(168,85,247,.6))}
+  .duo .zap{font-size:1.6rem}
+
+  h2{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--kry);margin:26px 0 10px;border-bottom:1px dashed rgba(57,255,20,.3);padding-bottom:6px}
+  .nums{display:flex;gap:10px}
+  .num{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center}
+  .num.k{border-color:rgba(57,255,20,.4);background:rgba(57,255,20,.05)}
+  .num .v{font-size:2rem;font-weight:900}
+  .num.k .v{color:var(--kry)}
+  .num.p .v{color:var(--pur)}
+  .num .d{font-size:.68rem;color:var(--dim);margin-top:4px;line-height:1.4}
+  .x45{text-align:center;margin-top:12px;font-size:.9rem;color:var(--dim)}
+  .x45 b{color:var(--kry);font-size:1.2rem}
+
+  .fact{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:12px;font-size:.9rem;line-height:1.6;color:var(--dim)}
+  .fact b{color:var(--text)}
+  .fact .big{color:var(--kry);font-weight:800}
+  .fact .pur{color:var(--pur);font-weight:800}
+
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.78rem}
+  th{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+  td{padding:7px 8px;border-bottom:1px solid #1e1e28;color:var(--text)}
+  tr.win td{color:var(--kry);font-weight:700}
+  tr.last td{color:#ff8c90}
+  .leyenda{font-size:.68rem;color:var(--dim);margin-top:6px}
+
+  .diag{margin-top:12px;border:1px solid rgba(237,28,36,.4);border-left:4px solid var(--red);border-radius:10px;background:rgba(237,28,36,.05);padding:14px;font-size:.88rem;line-height:1.6;color:var(--dim)}
+  .diag b{color:#ff8c90}
+  .diag .titulo{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#ff8c90;margin-bottom:8px;font-weight:800}
+
+  .quiero{margin-top:26px;border:2px solid var(--yellow);border-radius:14px;padding:16px 14px;text-align:center;background:rgba(255,222,0,.05)}
+  .quiero h3{font-size:1.05rem}
+  .quiero p{font-size:.82rem;color:var(--dim);margin-top:6px;line-height:1.5}
+  .quiero a{display:block;margin-top:12px;background:var(--yellow);color:#1a1400;text-decoration:none;border-radius:10px;padding:13px;font-weight:900;font-size:.95rem}
+
+  .react,.engage-actions{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .react button,.engage-actions button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
+  .react button:hover,.engage-actions button:hover{border-color:var(--kry)}
+  .react-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+  .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <!-- PUERTA VIP -->
+    <div id="gate">
+      <div class="lock">🔐</div>
+      <h1>Experiencia VIP · Piña Directa</h1>
+      <p>Este expediente es solo para socios del club con notificaciones activas.
+      Estamos validando tu dispositivo…</p>
+      <div class="st" id="gateSt">⏳ Verificando credenciales…</div>
+    </div>
+
+    <!-- CONTENIDO VIP -->
+    <div id="vip">
+
+      <div class="poster">
+        <div class="vipbar"><span class="l">⭐ VIP validado: <span id="whoami">socio</span></span><span class="r">Piña Directa #001</span></div>
+        <div class="body">
+          <div class="serie">División de Fobias · Expediente clasificado</div>
+          <h1>☢️ EL KRYPTONITA<br>DE COBRA</h1>
+          <div class="sub">Toda serpiente tiene su encantador. La ciencia lo encontró.</div>
+          <div class="duo">
+            <img class="caru" src="../assets/faces/carucha.png" alt="Carucha">
+            <span class="zap">⚡</span>
+            <img class="cobra" src="../assets/faces/cobra.png" alt="Cobra">
+          </div>
+        </div>
+      </div>
+
+      <h2>📊 La estadística pura (16 fechas de Cobra en 2026)</h2>
+      <div class="nums">
+        <div class="num p"><div class="v">17%</div><div class="d">gana con Carucha en la mesa<br><b>2 de 12</b></div></div>
+        <div class="num k"><div class="v">75%</div><div class="d">gana si Carucha falta<br><b>3 de 4</b></div></div>
+      </div>
+      <p class="x45">Cobra multiplica <b>×4,5</b> sus chances de ganar cuando el padre no viene.<br>
+      Esto no es mala suerte. Esto es <b style="color:#ff8c90">miedo</b>.</p>
+
+      <h2>🔬 Las pruebas del temblor</h2>
+
+      <div class="fact">🏆 <b>Las últimas 3 coronas de Cobra</b> (09/06 en MATABA, 23/06 en su
+      propia casa, 07/07 en el Chorolo) son <span class="big">exactamente las últimas 3 noches que
+      Carucha faltó</span>. No falló ni una: papá afuera → Cobra campeón. Tres de tres.</div>
+
+      <div class="fact">📏 <b>El margen no miente:</b> sin Carucha, Cobra gana por paliza —
+      <span class="big">por 70, por 107 y por 21 puntos</span>. ¿Sus únicas 2 victorias con el
+      padre presente? Una por 16… y la otra, el 21/04, <span class="pur">por UN (1) punto</span>
+      (178 a 179 sobre Tano). Ganó mirando la puerta, transpirando, pidiendo permiso.</div>
+
+      <div class="fact">🕳️ <b>Con Carucha en la mesa, Cobra fue ÚLTIMO dos veces</b> (06/04 y
+      28/04, ambas en mesas de 8). ¿El detalle sádico? El 06/04, mientras el hijo se hundía en el
+      fondo de la tabla, <span class="pur">el padre ganaba la fecha</span>. Eso en psicología se
+      llama trauma. En UNO se llama paternidad.</div>
+
+      <div class="fact">📉 <b>Desde mayo, con Carucha presente:</b> 5 fechas, <span class="big">cero
+      victorias</span> (salió 6º, 4º, 4º, 7º y 6º). Desde junio, sin Carucha: <span class="big">3
+      fechas, 3 victorias</span>. El experimento se repitió y dio siempre igual — eso, señores, ya
+      es ciencia.</div>
+
+      <div class="fact">🎭 <b>Y sin el padre no existe el término medio:</b> en las 4 noches sin
+      Carucha, Cobra salió campeón 3 veces… y la restante (16/03) salió <b>último</b>. Libre de la
+      mirada paterna, la serpiente o devora la mesa o se desarma. Nunca aprendió a simplemente
+      estar.</div>
+
+      <h2>🗂️ El expediente, fecha por fecha (las 12 con el padre presente)</h2>
+      <table>
+        <tr><th>Fecha</th><th>Sede</th><th>Cobra salió</th><th>Ganó</th></tr>
+        <tr><td>02/03</td><td>—</td><td>4º de 8</td><td>Gordo</td></tr>
+        <tr><td>09/03</td><td>—</td><td>4º de 7</td><td>Gordo</td></tr>
+        <tr class="win"><td>23/03</td><td>—</td><td>🏆 1º de 8</td><td>Cobra (por 16)</td></tr>
+        <tr class="last"><td>06/04</td><td>—</td><td>💀 8º de 8</td><td><b>Carucha</b></td></tr>
+        <tr><td>13/04</td><td>—</td><td>6º de 8</td><td>Carucha</td></tr>
+        <tr class="win"><td>21/04</td><td>Carucha</td><td>🏆 1º de 7</td><td>Cobra (por 1)</td></tr>
+        <tr class="last"><td>28/04</td><td>Gordo</td><td>💀 8º de 8</td><td>Gael</td></tr>
+        <tr><td>05/05</td><td>Carucha</td><td>6º de 9</td><td>Naso</td></tr>
+        <tr><td>19/05</td><td>Negro</td><td>4º de 10</td><td>Nachi</td></tr>
+        <tr><td>26/05</td><td>Cara</td><td>4º de 11</td><td>Nachi</td></tr>
+        <tr><td>02/06</td><td>—</td><td>7º de 8</td><td>Tano</td></tr>
+        <tr><td>30/06</td><td>África</td><td>6º de 10</td><td>PT</td></tr>
+      </table>
+      <div class="leyenda">Fuente: los registros oficiales de las 17 fechas de 2026. Verde = ganó · rojo = último y pagando.</div>
+
+      <div class="diag">
+        <div class="titulo">🩺 Diagnóstico clínico de la División de Fobias</div>
+        <b>Cobrafobia Paterna Aguda (CPA).</b> El paciente presenta el mazo firme, la mirada
+        asesina y 5 coronas anuales (récord absoluto de la mesa)… hasta que suena el timbre y
+        entra Carucha. A partir de ahí se documentan: manos que barajan en cámara lenta, +4
+        guardados «para después» que nunca llegan, y una tendencia compulsiva a decir «UNO» en
+        voz baja para no molestar a papá. Pronóstico: irreversible. Tratamiento sugerido:
+        agradecer, que a los padres no se les gana.
+      </div>
+
+      <div class="quiero">
+        <h3>🥊 ¿Querés tu propia Piña Directa?</h3>
+        <p>Esta fue la #001 de la serie. Los socios VIP pueden pedir la suya: el laboratorio
+        busca en TUS números la estadística que te deja mejor parado y te la convierte en un
+        golpe sobre la mesa.</p>
+        <a href="pina-directa.html">🥊 Ir al Gimnasio de las Piñas</a>
+      </div>
+
+      <div class="react">¿Qué tal la primera Piña Directa?
+        <button onclick="engageReact('2026-07-17-kryptonita-cobra','love',this)">😍</button>
+        <button onclick="engageReact('2026-07-17-kryptonita-cobra','like',this)">🙂</button>
+        <button onclick="engageReact('2026-07-17-kryptonita-cobra','meh',this)">😐</button>
+        <button onclick="engageReact('2026-07-17-kryptonita-cobra','no',this)">🙅</button>
+        <span class="react-hint"></span>
+      </div>
+
+      <div class="engage-actions">¿El formato Piña Directa queda?
+        <button onclick="engageApprove('2026-07-17-kryptonita-cobra',this)">✅ Que quede</button>
+        <button onclick="engageRejected('2026-07-17-kryptonita-cobra',this)">✕ No me interesa</button>
+        <span class="engage-hint"></span>
+      </div>
+
+    </div><!-- /vip -->
+
+    <div class="foot">🎴 LUNES DE UNO · PIÑA DIRECTA #001 · SOLO SOCIOS · 17/07/2026</div>
+  </div>
+
+<script>
+  // Puerta VIP: valida que el device de este navegador tenga una sub push activa.
+  (function(){
+    var FS='https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
+    var KEY='AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
+    var st=document.getElementById('gateSt');
+    function locked(msg){
+      st.style.color='#ED1C24';
+      st.innerHTML=msg+'<br><span style="font-weight:400;color:#9a9aa8;font-size:.75rem">Si sos de la mesa y querés el pase VIP, pedile la invitación al club a Andrés.</span>';
+      if (window.engageTrack) engageTrack('vip_locked',{exp:'2026-07-17-kryptonita-cobra'});
+    }
+    function unlock(dev){
+      document.getElementById('gate').style.display='none';
+      document.getElementById('vip').style.display='block';
+      var w=document.getElementById('whoami'); if(w) w.textContent=dev;
+      if (window.engageTrack) engageTrack('vip_unlock',{exp:'2026-07-17-kryptonita-cobra'});
+    }
+    var dev=null; try{dev=localStorage.getItem('lunesdeuno_device_name');}catch(e){}
+    if(!dev){locked('🔒 Este dispositivo no es socio del club.');return;}
+    fetch(FS+':runQuery?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({structuredQuery:{from:[{collectionId:'pushSubs'}],
+        where:{fieldFilter:{field:{fieldPath:'device'},op:'EQUAL',value:{stringValue:dev}}}}})})
+      .then(function(r){return r.json();})
+      .then(function(rows){
+        var ok=(rows||[]).some(function(x){return x.document&&x.document.fields&&x.document.fields.status&&x.document.fields.status.stringValue==='active';});
+        if(ok) unlock(dev); else locked('🔒 Tu dispositivo («'+dev+'») no tiene notificaciones activas.');
+      })
+      .catch(function(){locked('⚠️ No pudimos validar tu credencial (¿sin conexión?). Reintentá.');});
+  })();
+</script>
+<script src="engage.js"></script>
+</body></html>
