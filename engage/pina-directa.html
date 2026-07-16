@@ -104,8 +104,7 @@
     function requisito(msg){
       note.innerHTML='<span class="aviso">🔐 <b>Falta un paso para forjarla:</b> '+msg+
         ' Para reclamar tu Piña Directa tenés que asociar tu nombre de jugador a un dispositivo '+
-        'con las notificaciones activas — ahí te llega por push. Si sos de la mesa, pedile la '+
-        'invitación a Andrés y volvé.</span>';
+        'con las notificaciones activas — ahí te llega por push.</span>';
       if (window.engageTrack) engageTrack('pina_request_blocked',{});
     }
     var dev=null; try{dev=localStorage.getItem('lunesdeuno_device_name');}catch(e){}
