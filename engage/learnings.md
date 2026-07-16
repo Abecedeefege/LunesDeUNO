@@ -147,8 +147,10 @@ Andrés, publicable.
   aperturas espontáneas, y el H2H inédito más jugoso: **padre de Cobra 8-4**).
   Página con estética de laboratorio de ADN, 2 preguntas de texto + 2 de
   opción múltiple. Preview a andres 10:00 (`2026-07-16-ent-preview`), envío a
-  carucha 15:00 (`2026-07-16-ent`). Sus respuestas alimentan el push grupal
-  del sábado 18/07.
+  carucha 15:00 (`2026-07-16-ent`). **APROBADA por Andrés por chat a las
+  10:15 ("Buenísimo el push al carucha, podés enviarle")** — el envío de las
+  15:00 va confirmado, sin veto. Sus respuestas alimentan el push grupal del
+  sábado 18/07.
 - Próximo: viernes 17/07 también silencio. **Sábado 18/07** vuelve el slot de
   récords (corregido: NO es el 19/07 como decía la corrida anterior — el
   19/07 es domingo) — evaluar sub-formato nuevo (ya usados: clásico 04/07,
