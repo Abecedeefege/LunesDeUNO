@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>El Medallero — La Biblioteca de la Galera · Lunes de UNO</title>
-<meta name="description" content="La Biblioteca de la Galera: reading room de campeones de Lunes de UNO. 23 temporadas catalogadas en tres estantes. Prohibido gritar UNO.">
+<title>El Medallero — La Biblioteca del UNO · Lunes de UNO</title>
+<link rel="icon" href="assets/icon-192.png">
+<meta name="description" content="La Biblioteca del UNO: reading room de campeones de Lunes de UNO. 23 temporadas catalogadas en tres estantes. Prohibido gritar UNO.">
 <script>
 // Fuentes de Google cargadas por fetch (no <link>) para no bloquear el primer
 // render y degradar en silencio a serif de sistema si la red falla.
@@ -52,6 +53,11 @@ a{color:inherit;}
   --serif:'Playfair Display',Georgia,'Times New Roman',serif;
   --sans:'Inter',system-ui,-apple-system,sans-serif;
   --star-base:44px;         /* tamaño de referencia de estrella (generación 2025) */
+  --fire-glow:.72;          /* intensidad viva del hogar: la escribe el loop del fuego en canvas */
+  /* veta de madera: feTurbulence en data-URI (sin assets externos) */
+  --veta:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012 0.14' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.30  0 0 0 0 0.18  0 0 0 0 0.07  0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23w)'/%3E%3C/svg%3E");
+  /* ladrillos del firebox, aparejo trabado */
+  --ladrillo:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='52'%3E%3Crect width='84' height='52' fill='%23200e07'/%3E%3Cg fill='%23341a0e'%3E%3Crect x='1' y='1' width='40' height='24' rx='2'/%3E%3Crect x='43' y='1' width='40' height='24' rx='2'/%3E%3Crect x='-20' y='27' width='40' height='24' rx='2'/%3E%3Crect x='22' y='27' width='40' height='24' rx='2'/%3E%3Crect x='64' y='27' width='40' height='24' rx='2'/%3E%3C/g%3E%3C/svg%3E");
 }
 @media (max-width:520px){:root{--star-base:36px;}}
 
@@ -192,19 +198,12 @@ body.luces-altas .dim-overlay{opacity:.12;}
 }
 @media (max-width:600px){.sala{margin:0 10px;padding:0 8px 30px;}}
 
-/* reflejo cálido del hogar sobre toda la sala (flicker sutil) */
+/* reflejo cálido del hogar sobre toda la sala: flickerea en sincronía con el
+   fuego real porque lee --fire-glow, que escribe el mismo loop del canvas */
 .sala::after{
   content:'';position:absolute;inset:0;pointer-events:none;z-index:6;
-  background:radial-gradient(ellipse 70% 42% at 50% 100%, rgba(255,140,50,.14), transparent 70%);
-  animation:fuegoFlicker 3.4s ease-in-out infinite;
-}
-@keyframes fuegoFlicker{
-  0%,100%{opacity:.55;}
-  18%{opacity:.9;}
-  34%{opacity:.62;}
-  52%{opacity:1;}
-  71%{opacity:.7;}
-  86%{opacity:.88;}
+  background:radial-gradient(ellipse 70% 42% at 50% 100%, rgba(255,140,50,.18), transparent 70%);
+  opacity:var(--fire-glow);
 }
 
 /* -------- fila de decoración: ventana / lámpara / reloj -------- */
@@ -342,16 +341,85 @@ body.luces-altas .haz{opacity:.45;}
 /* canvas de polvo dorado en el haz */
 #polvo-canvas{position:absolute;top:0;left:0;width:100%;height:470px;pointer-events:none;z-index:4;}
 
-/* -------- ESTANTES -------- */
-.estanteria{position:relative;z-index:2;display:flex;flex-direction:column;gap:34px;margin-top:14px;}
+/* -------- EL MUEBLE: biblioteca victoriana tallada --------
+   Madera marrón casi negra con brillos cálidos en los cantos. El remate de
+   arcos tallados es SVG inline, las pilastras llevan acanaladuras con
+   capitel y basa, y la veta viene del feTurbulence en --veta. */
+.mueble{
+  position:relative;z-index:2;margin-top:18px;
+  padding:82px clamp(24px,4.6vw,46px) 16px;
+  border-radius:12px 12px 6px 6px;
+  background:
+    var(--veta),
+    linear-gradient(90deg, rgba(0,0,0,.6), transparent 8%, transparent 92%, rgba(0,0,0,.6)),
+    linear-gradient(180deg,#1c1006 0%,#150b04 40%,#0e0703 100%);
+  border:3px solid #0a0502;
+  outline:1px solid rgba(201,165,74,.16);
+  box-shadow:
+    0 34px 90px -24px rgba(0,0,0,.95),
+    inset 0 1px 0 rgba(255,190,110,.14),
+    inset 0 0 120px rgba(0,0,0,.6);
+}
+.mueble::after{ /* penumbra: viñeta interior densa, el mueble emerge de la sombra */
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:5;border-radius:inherit;
+  background:radial-gradient(ellipse 94% 88% at 50% 34%, transparent 50%, rgba(0,0,0,.48) 100%);
+}
+.mueble-remate{position:absolute;top:-8px;left:-3px;right:-3px;height:80px;pointer-events:none;}
+.mueble-remate svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 12px rgba(0,0,0,.7));}
+.pilastra{
+  position:absolute;top:70px;bottom:14px;width:clamp(16px,2.8vw,32px);z-index:4;pointer-events:none;
+  background:
+    var(--veta),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.5) 0 3px, rgba(255,190,110,.14) 3px 5px, rgba(0,0,0,.15) 5px 8px),
+    linear-gradient(90deg,#170d05,#3a2511 30%,#4a3018 50%,#2c1a0b 75%,#120a04);
+  border-radius:3px;
+  box-shadow:inset 2px 0 0 rgba(255,190,110,.30), inset -2px 0 0 rgba(0,0,0,.85),
+    inset 0 0 10px rgba(0,0,0,.55), 0 0 14px rgba(0,0,0,.6);
+}
+.pilastra-l{left:4px;}
+.pilastra-r{right:4px;}
+.pilastra::before,.pilastra::after{ /* capitel y basa tallados */
+  content:'';position:absolute;left:-5px;right:-5px;height:22px;border-radius:4px;
+  background:linear-gradient(180deg,#3f2a12,#241307 55%,#120a04);
+  box-shadow:inset 0 2px 0 rgba(255,190,110,.22), inset 0 -3px 5px rgba(0,0,0,.7), 0 3px 6px rgba(0,0,0,.6);
+}
+.pilastra::before{top:-8px;}
+.pilastra::after{bottom:-4px;height:26px;}
+.mueble-zocalo{ /* gabinete inferior con paneles rehundidos y repisa */
+  position:relative;margin-top:26px;height:62px;border-radius:4px;
+  background:var(--veta), linear-gradient(180deg,#241307 0%,#170d05 45%,#0d0703 100%);
+  box-shadow:inset 0 2px 0 rgba(255,190,110,.16), inset 0 -8px 16px rgba(0,0,0,.7), 0 10px 24px -8px rgba(0,0,0,.8);
+}
+.mueble-zocalo::before,.mueble-zocalo::after{
+  content:'';position:absolute;top:11px;bottom:11px;width:34%;border-radius:3px;
+  border:2px solid #0a0502;
+  background:linear-gradient(135deg,#1c1006,#120a04);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.8), inset 0 -1px 0 rgba(255,190,110,.10);
+}
+.mueble-zocalo::before{left:7%;}
+.mueble-zocalo::after{right:7%;}
+@media (max-width:600px){
+  .mueble{padding:64px 18px 12px;}
+  .mueble-remate{height:62px;top:-5px;}
+  .pilastra{top:54px;}
+  .mueble-zocalo{height:46px;margin-top:20px;}
+}
+
+/* -------- ESTANTES (cavidades del mueble) -------- */
+.estanteria{position:relative;display:flex;flex-direction:column;gap:30px;}
 .estante{
   position:relative;
-  border-radius:8px;
-  background:linear-gradient(180deg,#171008 0%,#100a04 100%);
-  border:3px solid #382410;
-  outline:1px solid rgba(201,165,74,.2);
-  box-shadow:inset 0 14px 40px rgba(0,0,0,.75), 0 12px 30px -14px rgba(0,0,0,.7);
+  border-radius:6px;
+  background:linear-gradient(180deg,#0b0602 0%,#070300 100%);
+  border:2px solid #241307;
+  box-shadow:inset 0 16px 44px rgba(0,0,0,.85), inset 0 -6px 18px rgba(0,0,0,.6), inset 0 0 60px rgba(0,0,0,.5);
   padding-top:34px;
+}
+.estante::before{ /* moldura dentada tallada bajo el canto superior */
+  content:'';position:absolute;top:0;left:0;right:0;height:7px;pointer-events:none;
+  background:repeating-linear-gradient(90deg,#2c1a0b 0 12px,#170d05 12px 16px);
+  border-bottom:1px solid rgba(255,190,110,.12);
+  opacity:.85;
 }
 .estante-label{
   position:absolute;top:-14px;left:50%;transform:translateX(-50%);
@@ -379,19 +447,27 @@ body.luces-altas .haz{opacity:.45;}
   --plank-h:16px;
   display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;
   align-content:flex-start;
-  column-gap:10px;row-gap:var(--plank-h);
-  padding:6px 16px var(--plank-h);
+  column-gap:7px;row-gap:var(--plank-h);
+  padding:6px 14px var(--plank-h);
   background-origin:content-box;
-  background-image:repeating-linear-gradient(180deg,
-    transparent 0,
-    transparent var(--row-h),
-    #0d0703 var(--row-h),
-    #5a3f22 calc(var(--row-h) + 3px),
-    #3a2917 calc(var(--row-h) + 6px),
-    #241708 calc(var(--row-h) + var(--plank-h) - 2px),
-    #0a0502 calc(var(--row-h) + var(--plank-h)));
+  background-image:
+    /* sombra densa que cae del estante superior: los libros emergen de la oscuridad */
+    repeating-linear-gradient(180deg,
+      rgba(0,0,0,.6) 0,
+      rgba(0,0,0,.3) 26px,
+      transparent 58px,
+      transparent calc(var(--row-h) + var(--plank-h))),
+    /* tabla de madera bajo CADA fila envuelta (mobile incluido) */
+    repeating-linear-gradient(180deg,
+      transparent 0,
+      transparent var(--row-h),
+      #0d0703 var(--row-h),
+      #5a3f22 calc(var(--row-h) + 3px),
+      #3a2917 calc(var(--row-h) + 6px),
+      #241708 calc(var(--row-h) + var(--plank-h) - 2px),
+      #0a0502 calc(var(--row-h) + var(--plank-h)));
 }
-@media (max-width:520px){.estante-items{--row-h:158px;column-gap:8px;padding:6px 8px var(--plank-h);}}
+@media (max-width:520px){.estante-items{--row-h:158px;column-gap:6px;padding:6px 8px var(--plank-h);}}
 .slot{
   height:var(--row-h);
   display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
@@ -416,8 +492,8 @@ svg.star{
   display:block;flex:0 0 auto;
   overflow:visible;
 }
-.star-2024 use{fill:url(#met24);stroke:#3a2c17;stroke-width:2.5;}
-.star-2024{filter:drop-shadow(0 2px 2px rgba(0,0,0,.65)) saturate(.8) brightness(.9);}
+.star-2024 use{fill:url(#met24);stroke:#a8813f;stroke-width:2.5;}
+.star-2024{filter:drop-shadow(0 2px 2px rgba(0,0,0,.65)) drop-shadow(0 0 5px rgba(201,165,74,.4)) saturate(.85) brightness(1.1);}
 .star-2025 use{fill:url(#met25);stroke:#8a6a1f;stroke-width:2;}
 .star-2025{filter:drop-shadow(0 2px 6px rgba(212,175,55,.4));}
 .star-2026 use{fill:url(#met26);stroke:rgba(255,255,255,.8);stroke-width:1.6;}
@@ -431,10 +507,13 @@ svg.star{
   50%{filter:drop-shadow(0 0 8px rgba(140,240,255,.9)) drop-shadow(0 0 20px rgba(190,140,255,.55)) hue-rotate(-50deg) brightness(1.15);}
 }
 
-/* -------- peanas (cluster por jugador) -------- */
+/* -------- peanas (cluster por jugador) --------
+   Las estrellas son las piezas de museo: llevan su propia luz cenital
+   para seguir leyéndose con claridad entre la penumbra de los libros. */
 .peana{
-  gap:5px;padding:0 2px 4px;
+  gap:5px;padding:0 6px 4px;
   border-radius:6px;
+  background:radial-gradient(ellipse 86% 60% at 50% 72%, rgba(255,214,140,.08), transparent 78%);
   transition:transform .22s ease;
   -webkit-tap-highlight-color:transparent;
 }
@@ -491,14 +570,16 @@ svg.star{
 .cordon::before{left:-3px;}
 .cordon::after{right:-3px;}
 
-/* -------- libros -------- */
+/* -------- libros titulados (los chistes del lomo) -------- */
 .slot-libro{-webkit-tap-highlight-color:transparent;}
 .libro{
   width:clamp(24px,4vw,30px);height:var(--bh,130px);
   border-radius:3px 6px 2px 2px;
   position:relative;display:flex;align-items:center;justify-content:center;
-  box-shadow:inset -5px 0 9px rgba(0,0,0,.55), inset 2px 0 3px rgba(255,255,255,.09), 0 2px 5px rgba(0,0,0,.5);
-  transition:transform .28s ease;
+  box-shadow:inset -5px 0 9px rgba(0,0,0,.55), inset 2px 0 3px rgba(255,255,255,.09),
+    inset 0 26px 18px -12px rgba(0,0,0,.5), inset 0 -16px 16px -12px rgba(255,190,110,.22),
+    0 2px 5px rgba(0,0,0,.5);
+  transition:transform .28s ease, box-shadow .28s ease;
 }
 .slot-libro:hover .libro,.slot-libro:focus-visible .libro{transform:translateY(-11px) rotate(-3.5deg);}
 .libro::before,.libro::after{ /* nervios dorados del lomo */
@@ -507,26 +588,95 @@ svg.star{
 }
 .libro::before{top:9px;}
 .libro::after{bottom:9px;}
+
+/* -------- libros de relleno (escenografía, generados por JS) --------
+   Cuero viejo: lomo con luz de canto a la izquierda, sombra al fondo a la
+   derecha, nervios en relieve y filetes dorados tenues. La parte alta se
+   hunde en la sombra del estante (gradiente negro superior). */
+.run{display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-start;padding:0 1px;}
+.flibro{
+  display:block;position:relative;flex:0 0 auto;
+  width:var(--bw,20px);height:var(--bh,120px);
+  margin-left:2px;
+  border-radius:2px 4px 1px 1px;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.16) 26%, transparent 46%),
+    /* luz cálida en la base: los lomos apoyan sobre madera iluminada, no negro */
+    linear-gradient(0deg, rgba(255,190,110,.16), rgba(255,190,110,.05) 22%, transparent 40%),
+    linear-gradient(90deg, var(--c1,#432915), var(--c2,#5a3619) 45%, var(--c3,#331e0d));
+  box-shadow:
+    inset -4px 0 7px rgba(0,0,0,.6),
+    inset 1px 0 2px rgba(255,255,255,.10),
+    0 2px 4px rgba(0,0,0,.55);
+}
+.flibro::before{ /* nervios en relieve, período variable por libro */
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:repeating-linear-gradient(180deg,
+    transparent 0 calc(var(--nv,26px) - 3px),
+    rgba(0,0,0,.35) calc(var(--nv,26px) - 3px) calc(var(--nv,26px) - 1px),
+    rgba(255,255,255,.10) calc(var(--nv,26px) - 1px) var(--nv,26px));
+}
+.flibro::after{ /* filetes dorados tenues arriba y abajo */
+  content:'';position:absolute;left:2px;right:2px;top:7px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.35),transparent);
+  box-shadow:0 calc(var(--bh,120px) - 16px) 0 rgba(212,175,55,.28);
+}
+.flibro.lean-l{transform:rotate(-8deg);transform-origin:14% 100%;margin-left:-1px;margin-right:-4px;z-index:1;}
+.flibro.lean-r{transform:rotate(7deg);transform-origin:86% 100%;margin-left:-4px;margin-right:-1px;z-index:1;}
+
+/* pila horizontal de 2-3 libros acostados */
+.pila{justify-content:flex-end;align-items:center;padding:0 2px;}
+.pila i{
+  display:block;height:13px;border-radius:2px 3px 3px 2px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.14), transparent 32%),
+    linear-gradient(180deg, var(--c2,#4e2f16), var(--c1,#3a2412) 60%, #120a04);
+  box-shadow:0 2px 3px rgba(0,0,0,.6), inset -3px 0 5px rgba(0,0,0,.4);
+}
+.pila i:nth-child(1){width:62px;transform:rotate(-1.5deg);}
+.pila i:nth-child(2){width:74px;}
+.pila i:nth-child(3){width:56px;transform:rotate(1deg);}
+
+/* objetos de anticuario entre los libros */
+.slot-obj{justify-content:flex-end;padding:0 3px;}
+.obj{display:block;flex:0 0 auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.7));}
+.vela-flama{
+  animation:velaTitila 1.7s ease-in-out infinite alternate;
+  transform-box:fill-box;transform-origin:50% 100%;
+}
+@keyframes velaTitila{
+  0%{opacity:.72;transform:scaleY(.9) scaleX(1.05);}
+  45%{opacity:1;transform:scaleY(1.08) scaleX(.96);}
+  100%{opacity:.85;transform:scaleY(.97) scaleX(1);}
+}
+.vela-glow{animation:velaGlowPulsa 1.7s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 50%;}
+@keyframes velaGlowPulsa{0%{opacity:.55;}45%{opacity:1;}100%{opacity:.75;}}
 .libro-titulo{
   writing-mode:vertical-rl;
   font-family:var(--serif);font-size:.54rem;font-weight:700;
   letter-spacing:.1em;text-transform:uppercase;color:#dcb765;
-  max-height:calc(100% - 26px);overflow:hidden;white-space:nowrap;
+  max-height:calc(100% - 18px);overflow:hidden;white-space:nowrap;
   text-shadow:0 1px 2px rgba(0,0,0,.8);
 }
 .b-green{background:linear-gradient(90deg,#12281c,#1e3a2a 45%,#142c1f);}
 .b-oxblood{background:linear-gradient(90deg,#33100d,#4a1512 45%,#380f0c);}
 .b-navy{background:linear-gradient(90deg,#101a2c,#1a2438 45%,#131d2e);}
 .b-brown{background:linear-gradient(90deg,#291807,#3a2312 45%,#2c1a09);}
-/* el Expediente Manu: lomo oxblood lacrado, único libro clickeable */
+/* el Expediente Manu: lomo oxblood lacrado, único libro clickeable.
+   Al hover resalta sutil (dorado que despierta) para que sea encontrable. */
 .libro-manu .libro{
   background:linear-gradient(90deg,#3f130e,#571c15 45%,#41130d);
   outline:1px solid rgba(212,175,55,.4);
   cursor:pointer;
 }
+.libro-manu:hover .libro,.libro-manu:focus-visible .libro{
+  outline-color:rgba(212,175,55,.85);
+  box-shadow:0 0 16px rgba(212,175,55,.45), inset -5px 0 9px rgba(0,0,0,.55),
+    inset 2px 0 3px rgba(255,255,255,.09), 0 2px 5px rgba(0,0,0,.5);
+}
 .libro-manu .libro-titulo{color:#f0cf7c;}
 .libro-sello{
-  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
   width:12px;height:12px;border-radius:50% 48% 52% 50%;
   background:radial-gradient(circle at 40% 32%,#c33a3a,#6e1010 70%);
   box-shadow:0 1px 3px rgba(0,0,0,.8);
@@ -549,7 +699,7 @@ svg.star{
   background:linear-gradient(165deg, rgba(255,255,255,.045), rgba(255,255,255,.01));
   border:1px solid rgba(255,255,255,.09);
 }
-.sillon .face-wrap{--fsize:54px;margin:0 auto 8px;filter:grayscale(1) brightness(.75);}
+.sillon .face-wrap{--fsize:54px;margin:0 auto 8px;filter:sepia(.6) saturate(.75) brightness(.9);}
 .sillon-name{font-family:var(--serif);font-weight:700;font-size:.95rem;color:var(--muted);margin-bottom:6px;}
 .sillon-plate{
   font-size:.74rem;line-height:1.5;color:#a8a088;
@@ -563,77 +713,206 @@ svg.star{
   margin-top:12px;padding:0 10px;
 }
 
-/* -------- hogar a leña -------- */
-.hogar-zona{position:relative;z-index:2;margin:40px auto 0;max-width:430px;}
+/* -------- hogar a leña (rehecho: marco tallado + fuego real en canvas) --------
+   Marco de madera tallada acorde al mueble, firebox de ladrillos con hollín,
+   troncos con brasas incandescentes que laten, y el fuego vivo dibujado en
+   #fuego-canvas (llamas bezier con ruido, chispas y humo). En reduced-motion
+   quedan las brasas encendidas estáticas: nunca un hogar negro. */
+.hogar-zona{position:relative;z-index:2;margin:44px auto 0;max-width:520px;}
 .manto{
-  position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding-bottom:6px;
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:0;
+  padding-bottom:8px;
 }
-.manto-galera{width:56px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.8));margin-bottom:-2px;}
-.manto-tabla{
-  width:100%;height:14px;border-radius:3px;
-  background:linear-gradient(180deg,#5a3f22,#33200e 60%,#1a0f05);
-  box-shadow:0 4px 10px rgba(0,0,0,.7);
+.manto-galera{width:58px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.8));margin-bottom:4px;}
+.manto-repisa{
+  width:108%;height:18px;border-radius:4px 4px 2px 2px;
+  background:var(--veta), linear-gradient(180deg,#4a2f16,#2c1a0b 55%,#150b04);
+  box-shadow:0 4px 0 #0a0502, 0 10px 20px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,190,110,.28);
 }
 .manto-placa{
   position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
   font-family:var(--serif);font-size:.5rem;letter-spacing:.12em;color:#20140a;
   background:linear-gradient(180deg,var(--brass-hi),var(--brass));
-  padding:2px 10px;border-radius:2px;white-space:nowrap;z-index:2;
+  padding:2px 10px;border-radius:2px;white-space:nowrap;z-index:3;
 }
 .hogar{
-  position:relative;height:170px;
-  border-radius:6px 6px 0 0;
+  position:relative;height:236px;
+  border-radius:8px 8px 0 0;
+  background:var(--veta), linear-gradient(180deg,#241307,#170d05 60%,#0d0703);
+  border:3px solid #0a0502;border-bottom:none;
+  box-shadow:inset 0 0 34px rgba(0,0,0,.8), 0 18px 40px -18px rgba(0,0,0,.9);
+}
+.hogar-dintel{
+  position:absolute;top:0;left:0;right:0;height:22px;z-index:2;
+  background:repeating-linear-gradient(90deg,#2c1a0b 0 14px,#170d05 14px 18px),
+    linear-gradient(180deg,#3a2511,#1c1006);
+  border-bottom:2px solid #0a0502;
+  box-shadow:0 4px 8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,190,110,.2);
+}
+.hogar-jamba{
+  position:absolute;top:12px;bottom:0;width:32px;z-index:2;
   background:
-    repeating-linear-gradient(0deg, #2c1a10 0 18px, #1d1109 18px 20px),
-    #241509;
-  border:3px solid #382410;border-bottom:none;
-  box-shadow:inset 0 0 30px rgba(0,0,0,.8);
+    repeating-linear-gradient(90deg, rgba(0,0,0,.45) 0 3px, rgba(255,190,110,.10) 3px 5px, rgba(0,0,0,.12) 5px 8px),
+    linear-gradient(90deg,#0d0703,#33200e 35%,#3f2a12 50%,#241307 78%,#0a0502);
+  border-radius:3px;
+  box-shadow:inset 0 -8px 14px rgba(0,0,0,.7);
+}
+.hogar-jamba::before{ /* capitel de la jamba */
+  content:'';position:absolute;top:-4px;left:-4px;right:-4px;height:16px;border-radius:3px;
+  background:linear-gradient(180deg,#4a2f16,#241307);
+  box-shadow:inset 0 2px 0 rgba(255,190,110,.25), 0 3px 5px rgba(0,0,0,.6);
+}
+.jamba-l{left:8px;}
+.jamba-r{right:8px;}
+.firebox{
+  position:absolute;top:30px;left:46px;right:46px;bottom:0;
+  border-radius:110px 110px 0 0;
+  background:
+    radial-gradient(ellipse 130% 100% at 50% -10%, rgba(0,0,0,.92), rgba(0,0,0,.35) 55%, transparent 80%),
+    var(--ladrillo);
+  background-color:#180b05;
+  border:6px solid #120a04;border-bottom:none;
   overflow:hidden;
+  box-shadow:inset 0 10px 30px rgba(0,0,0,.9);
 }
-.hogar-arco{
-  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
-  width:72%;height:78%;
-  border-radius:120px 120px 0 0;
-  background:radial-gradient(ellipse 90% 70% at 50% 100%, #1a0800 0%, #050100 80%);
-  border:6px solid #170d05;border-bottom:none;
-  overflow:hidden;
+.firebox::after{ /* baño de luz del propio fuego sobre ladrillos y hollín */
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 92% 64% at 50% 100%, rgba(255,110,26,.32), rgba(255,60,10,.10) 55%, transparent 78%);
+  opacity:var(--fire-glow);
 }
-.tronco{position:absolute;bottom:8px;height:14px;border-radius:7px;background:linear-gradient(180deg,#4a3018,#2a1a0c);box-shadow:inset 0 2px 3px rgba(255,255,255,.12);}
-.tronco.t1{left:22%;width:56%;transform:rotate(-4deg);}
-.tronco.t2{left:28%;width:46%;transform:rotate(5deg);bottom:16px;}
-.fuego{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:120px;height:96px;mix-blend-mode:screen;}
-.llama{
-  position:absolute;bottom:0;border-radius:50% 50% 22% 22% / 68% 68% 32% 32%;
-  filter:blur(5px);transform-origin:50% 100%;
+.morillo{ /* morillos de latón — delante del fuego, enmarcan el lecho */
+  position:absolute;bottom:0;width:7px;height:40px;z-index:5;
+  background:linear-gradient(180deg,#8a6a1f,#4a3a12 40%,#241c08);
+  border-radius:3px 3px 0 0;
 }
-.llama-1{left:14px;width:88px;height:82px;background:radial-gradient(ellipse at 50% 85%, #ff9a2a 0%, #e0480c 55%, transparent 75%);animation:llamaDanza 1.7s ease-in-out infinite alternate;}
-.llama-2{left:30px;width:58px;height:64px;background:radial-gradient(ellipse at 50% 85%, #ffd24a 0%, #ff7a1a 60%, transparent 78%);animation:llamaDanza 1.15s ease-in-out infinite alternate-reverse;}
-.llama-3{left:44px;width:30px;height:44px;background:radial-gradient(ellipse at 50% 88%, #fff2b0 0%, #ffb43a 65%, transparent 80%);animation:llamaDanza .8s ease-in-out infinite alternate;}
-@keyframes llamaDanza{
-  0%{transform:scaleY(1) scaleX(1) skewX(0);}
-  40%{transform:scaleY(1.12) scaleX(.94) skewX(-3deg);}
-  100%{transform:scaleY(.94) scaleX(1.05) skewX(3.5deg);}
+.morillo::before{
+  content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  width:13px;height:13px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--brass-hi),#5c4a1e);
 }
-#brasas-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-.hogar-glow{
+.mo-l{left:15%;}
+.mo-r{right:15%;}
+/* lecho de brasas VISIBLE bajo los troncos: late en naranja-rojo */
+.brasa-lecho{
+  position:absolute;left:6%;right:6%;bottom:0;height:30px;z-index:1;
+  border-radius:60% 60% 0 0 / 100% 100% 0 0;
+  background:
+    radial-gradient(ellipse 62% 100% at 50% 100%, rgba(255,196,90,.95), rgba(255,100,18,.7) 45%, rgba(160,32,4,.4) 74%, transparent 96%),
+    radial-gradient(ellipse 26% 80% at 22% 100%, rgba(255,140,32,.85), transparent 82%),
+    radial-gradient(ellipse 24% 76% at 78% 100%, rgba(255,120,26,.8), transparent 82%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(90,16,2,.9), transparent 100%);
+  filter:blur(1px);
+  animation:brasaLate 2.4s ease-in-out infinite alternate;
+}
+/* lecho de troncos rehecho: 3 troncos cortos y gordos, CRUZADOS, con
+   corteza de contraste, nudos, corte anillado y panza incandescente.
+   Profundidad real: brasas(1) → troncos traseros(2) → llamas canvas(3)
+   → tronco frontal(4) → morillos(5). Las llamas nacen ENTRE los troncos. */
+.tronco{
+  position:absolute;
+  background:
+    /* nudos de la madera */
+    radial-gradient(circle 5px at 32% 38%, #140a04 0 38%, #4e341c 55%, transparent 74%),
+    radial-gradient(circle 4px at 71% 60%, #170c05 0 40%, #46301a 60%, transparent 78%),
+    /* corteza marcada: estrías anchas con sombra franca */
+    repeating-linear-gradient(93deg, #55381e 0 5px, #1f1106 5px 9px, #3e2812 9px 15px, #170c04 15px 18px),
+    linear-gradient(180deg,#5a3c22,#241608);
+  box-shadow:inset 0 4px 5px rgba(255,255,255,.16), inset 0 -7px 9px rgba(0,0,0,.7), 0 4px 9px rgba(0,0,0,.7);
+}
+.tronco::before{ /* corte del tronco: anillos concéntricos francos */
+  content:'';position:absolute;top:50%;transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, #e0b880 0 2px, #8a5f33 2px 4.5px, #cfa268 4.5px 7px, #7a5028 7px 9px, #b08d57 9px 11px, #5c3a17 11px);
+  border:2px solid #2c1a0b;
+  box-shadow:0 0 5px rgba(0,0,0,.7);
+}
+.tronco::after{ /* panza incandescente: naranja-rojo que late SOLO abajo,
+                   así la corteza de arriba sigue leyéndose como madera */
+  content:'';position:absolute;inset:0;border-radius:inherit;mix-blend-mode:screen;
+  background:
+    radial-gradient(ellipse 42% 58% at 34% 108%, rgba(255,150,36,1), rgba(255,54,8,.5) 58%, transparent 82%),
+    radial-gradient(ellipse 30% 48% at 58% 104%, rgba(255,96,14,.9), transparent 74%),
+    radial-gradient(ellipse 22% 40% at 80% 106%, rgba(255,170,56,.8), transparent 78%);
+  opacity:.9; /* base encendida: en reduced-motion queda así, fija y viva */
+  animation:brasaLate 2.9s ease-in-out infinite alternate;
+}
+@keyframes brasaLate{
+  0%{opacity:.62;filter:brightness(.92);}
+  55%{opacity:1;filter:brightness(1.2);}
+  100%{opacity:.8;filter:brightness(1);}
+}
+.tr-back{left:11%;width:34%;height:26px;bottom:24px;transform:rotate(7deg);border-radius:13px;z-index:2;}
+.tr-back::before{right:-9px;left:auto;}
+.tr-back::after{animation-duration:2.2s;animation-delay:.5s;}
+.tr-mid{right:12%;width:33%;height:25px;bottom:22px;transform:rotate(-8deg);border-radius:12px;z-index:2;}
+.tr-mid::before{left:-9px;}
+.tr-mid::after{animation-duration:3.4s;animation-delay:1.1s;}
+.tr-front{left:31%;width:35%;height:28px;bottom:3px;transform:rotate(-4deg);border-radius:14px;z-index:4;}
+.tr-front::before{left:-9px;}
+.tr-front::after{ /* el frontal recibe el grueso del fuego por abajo, al rojo */
+  background:
+    radial-gradient(ellipse 46% 66% at 30% 106%, rgba(255,160,40,1), rgba(255,50,8,.55) 60%, transparent 84%),
+    radial-gradient(ellipse 32% 54% at 58% 102%, rgba(255,100,14,.9), transparent 74%),
+    radial-gradient(ellipse 24% 46% at 82% 104%, rgba(255,180,60,.85), transparent 78%);
+  opacity:.95;
+}
+#fuego-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;}
+.hogar-piso{ /* solera de piedra con ceniza */
+  position:relative;height:16px;margin:0 2px;
+  background:linear-gradient(180deg,#3a332c,#211d18 60%,#12100c);
+  border:2px solid #0a0502;border-top-color:#000;
+  border-radius:0 0 4px 4px;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.7), 0 6px 14px rgba(0,0,0,.6);
+}
+.hogar-glow{ /* resplandor que late con --fire-glow (mismo loop del canvas) */
   position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
-  width:150%;height:190px;pointer-events:none;z-index:-1;
-  background:radial-gradient(ellipse 55% 60% at 50% 100%, rgba(255,140,50,.28), transparent 70%);
-  animation:fuegoFlicker 2.8s ease-in-out infinite;
+  width:160%;height:230px;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse 55% 60% at 50% 100%, rgba(255,140,50,.36), transparent 70%);
+  opacity:var(--fire-glow);
+}
+@media (max-width:600px){
+  .hogar{height:198px;}
+  .firebox{left:36px;right:36px;top:26px;}
+  .hogar-jamba{width:24px;}
+  .jamba-l{left:6px;}
+  .jamba-r{right:6px;}
 }
 .alfombra{
-  margin:0 auto;width:88%;height:26px;
+  position:relative;width:134%;margin-left:-17%;height:36px;
   border-radius:50%;
-  background:radial-gradient(ellipse at 50% 50%, #4a1512 0%, #33100d 60%, #240a08 100%);
-  border:2px solid rgba(201,165,74,.25);
-  box-shadow:0 6px 18px rgba(0,0,0,.6);
+  background:radial-gradient(ellipse at 50% 50%, #5c1d16 0%, #481410 48%, #38110d 72%, #26100b 100%);
+  border:2px solid rgba(201,165,74,.45);
+  box-shadow:inset 0 0 0 5px rgba(201,165,74,.16), inset 0 0 0 12px rgba(163,18,46,.25),
+    inset 0 0 22px rgba(0,0,0,.45), 0 8px 20px rgba(0,0,0,.6);
+  overflow:hidden;
 }
+.alfombra::before{ /* dibujo tenue del tejido: rombos dorados */
+  content:'';position:absolute;inset:4px 7%;border-radius:50%;
+  background:
+    repeating-linear-gradient(45deg, rgba(201,165,74,.13) 0 2px, transparent 2px 11px),
+    repeating-linear-gradient(-45deg, rgba(201,165,74,.11) 0 2px, transparent 2px 11px);
+}
+@media (max-width:600px){.alfombra{width:110%;margin-left:-5%;height:28px;}}
+/* flancos del hogar (solo desktop): leñero con reserva y mesita con whisky */
+.flanco{
+  position:absolute;bottom:30px;z-index:1;display:none;pointer-events:none;
+  filter:drop-shadow(0 8px 14px rgba(0,0,0,.7));
+}
+.flanco-l{left:-212px;}
+.flanco-r{right:-198px;}
+@media (min-width:900px){.flanco{display:block;}}
 
 /* ============ FOOTER ============ */
 footer{padding:54px 20px 64px;text-align:center;color:var(--muted);position:relative;z-index:2;}
 footer .f-main{font-weight:700;color:var(--cream);margin-bottom:6px;}
 footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
+/* mobile: sin mar de negro entre el hogar y el footer */
+@media (max-width:600px){
+  #biblioteca{padding-bottom:14px;}
+  footer{padding:22px 20px 36px;}
+  .hogar-zona{margin-top:30px;}
+}
 
 /* ============ TOAST ============ */
 .toast{
@@ -667,7 +946,8 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
   outline:1px solid rgba(201,165,74,.25);
   outline-offset:4px;
   border-radius:8px;
-  padding:26px 20px 22px;text-align:center;position:relative;
+  /* bottom generoso: el lacre vive ahí y no pisa la última línea del texto */
+  padding:26px 20px 50px;text-align:center;position:relative;
 }
 .ex-borde::before{
   content:'❦';position:absolute;top:-2px;left:50%;transform:translate(-50%,-55%);
@@ -707,7 +987,7 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
   box-shadow:inset 2px 2px 5px rgba(0,0,0,.6);
 }
 .ex-lacre{ /* sello de lacre rojo con el monograma del club */
-  position:absolute;bottom:-6px;right:-4px;width:62px;height:62px;
+  position:absolute;bottom:-4px;right:2px;width:56px;height:56px;
   border-radius:47% 53% 50% 50% / 52% 48% 55% 45%;
   background:radial-gradient(circle at 38% 30%, #b03030 0%, #7a1a1a 45%, #4a0d0d 100%);
   box-shadow:0 6px 14px rgba(0,0,0,.7), inset 0 2px 4px rgba(255,255,255,.22), inset 0 -4px 8px rgba(0,0,0,.5);
@@ -722,7 +1002,7 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
 }
 /* sello CASO CERRADO (expediente Manu) */
 .sello-caso{
-  position:absolute;top:44px;right:-8px;z-index:2;
+  position:absolute;top:84px;right:12px;z-index:2;
   font-family:var(--serif);font-size:.7rem;font-weight:700;letter-spacing:.06em;
   color:#c0392b;border:3px double #c0392b;padding:7px 11px;
   transform:rotate(-11deg);text-transform:uppercase;text-align:center;
@@ -774,10 +1054,10 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
   <defs>
     <path id="star5" d="M50 2 L61.8 33.8 L95.7 35.2 L69 56.2 L78.2 88.8 L50 70 L21.8 88.8 L31 56.2 L4.3 35.2 L38.2 33.8 Z"/>
     <linearGradient id="met24" x1="0" y1="0" x2=".3" y2="1">
-      <stop offset="0" stop-color="#b08d57"/>
-      <stop offset=".4" stop-color="#7c5a33"/>
-      <stop offset=".72" stop-color="#5c4526"/>
-      <stop offset="1" stop-color="#6e7d5a"/>
+      <stop offset="0" stop-color="#cfa668"/>
+      <stop offset=".4" stop-color="#946c3e"/>
+      <stop offset=".72" stop-color="#6e5330"/>
+      <stop offset="1" stop-color="#82936c"/>
     </linearGradient>
     <linearGradient id="met25" x1="0" y1="0" x2=".3" y2="1">
       <stop offset="0" stop-color="#fff6d6"/>
@@ -792,6 +1072,34 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
       <stop offset=".8" stop-color="#ff9ff3"/>
       <stop offset="1" stop-color="#7afcff"/>
     </linearGradient>
+    <!-- materiales de los objetos de anticuario de los estantes -->
+    <radialGradient id="globoMar" cx=".38" cy=".32" r=".85">
+      <stop offset="0" stop-color="#2e4a42"/>
+      <stop offset=".6" stop-color="#16302a"/>
+      <stop offset="1" stop-color="#0a1a15"/>
+    </radialGradient>
+    <linearGradient id="metalOscuro" x1="0" y1="0" x2="1" y2=".15">
+      <stop offset="0" stop-color="#1f1f26"/>
+      <stop offset=".2" stop-color="#5c5c66"/>
+      <stop offset=".36" stop-color="#a4a4b2"/>
+      <stop offset=".52" stop-color="#44444e"/>
+      <stop offset=".74" stop-color="#75757e"/>
+      <stop offset="1" stop-color="#14141a"/>
+    </linearGradient>
+    <radialGradient id="velaGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffc85a" stop-opacity=".6"/>
+      <stop offset=".55" stop-color="#ff8c1a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#ff8c1a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="flamaGrad" cx=".5" cy=".72" r=".85">
+      <stop offset="0" stop-color="#fff6d6"/>
+      <stop offset=".55" stop-color="#ffd76a"/>
+      <stop offset="1" stop-color="#ff8c1a"/>
+    </radialGradient>
+    <linearGradient id="cofreTapa" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a2c14"/>
+      <stop offset="1" stop-color="#241307"/>
+    </linearGradient>
   </defs>
 </svg>
 
@@ -803,7 +1111,6 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
 <!-- ============ NAV ============ -->
 <nav class="nav-club" aria-label="Salones del Medallero">
   <a class="nav-link" href="medallero-383a3a69.html">← Salón Eterno</a>
-  <a class="nav-link" href="medallero-saloon-383a3a69.html">🤠 El Saloon →</a>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -813,7 +1120,7 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
       <img src="assets/tophat-logo.png" alt="" id="crest-hat">
     </button>
     <h1 class="hero-title">EL MEDALLERO</h1>
-    <p class="hero-sub2">La Biblioteca de la Galera</p>
+    <p class="hero-sub2">La Biblioteca del UNO</p>
     <p class="subtitle">Reading room de campeones. Prohibido gritar UNO.</p>
     <p class="stats-line" id="stats-line"></p>
     <p class="credit">Catálogo a cargo del Comité de la Galera · Se ruega silencio</p>
@@ -853,7 +1160,46 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
       </div>
     </div>
 
-    <div class="estanteria" id="estanteria"></div>
+    <!-- EL MUEBLE: la biblioteca victoriana tallada que llena el cuadro -->
+    <div class="mueble">
+      <div class="mueble-remate" aria-hidden="true">
+        <!-- remate de arcos tallados (acanto + rosetón) coronando los módulos -->
+        <svg viewBox="0 0 900 80" preserveAspectRatio="none" focusable="false">
+          <defs>
+            <linearGradient id="remWood" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#3a2511"/>
+              <stop offset=".45" stop-color="#241307"/>
+              <stop offset="1" stop-color="#140b04"/>
+            </linearGradient>
+            <g id="arcoT">
+              <path d="M6 80 L6 42 Q6 16 75 16 Q144 16 144 42 L144 80 L132 80 L132 44 Q132 26 75 26 Q18 26 18 44 L18 80 Z"
+                fill="#241608" stroke="#6b4520" stroke-width="1.8"/>
+              <!-- doble trazo: filete cálido siguiendo el arco exterior -->
+              <path d="M10 80 L10 42 Q10 20 75 20 Q140 20 140 42 L140 80" fill="none" stroke="#8a6532" stroke-width="1.2" opacity=".75"/>
+              <!-- sombra interna: el hueco del arco se hunde -->
+              <path d="M18 44 Q18 26 75 26 Q132 26 132 44" fill="none" stroke="#000" stroke-width="4.5" opacity=".55"/>
+              <path d="M20 47 Q20 30 75 30 Q130 30 130 47" fill="none" stroke="#7a5028" stroke-width="1.3" opacity=".7"/>
+              <!-- keystone central tallado -->
+              <path d="M66 15 L84 15 L80 30 L70 30 Z" fill="#3f2a12" stroke="#8a6532" stroke-width="1.2"/>
+              <circle cx="75" cy="21" r="6.5" fill="#33200e" stroke="#8a6532" stroke-width="1.5"/>
+              <circle cx="75" cy="21" r="2.2" fill="#c9a06a"/>
+              <path d="M20 72 q-12 -12 2 -22 q10 -7 16 4 q-14 -2 -18 18 Z" fill="#33200e" stroke="#7a5028" stroke-width="1.3"/>
+              <path d="M130 72 q12 -12 -2 -22 q-10 -7 -16 4 q14 -2 18 18 Z" fill="#33200e" stroke="#7a5028" stroke-width="1.3"/>
+            </g>
+          </defs>
+          <rect width="900" height="80" fill="url(#remWood)"/>
+          <rect width="900" height="10" fill="#3f2a12"/>
+          <rect y="9" width="900" height="3" fill="#0a0502"/>
+          <rect y="12" width="900" height="2" fill="#6b4520" opacity=".5"/>
+          <use href="#arcoT" x="0"/><use href="#arcoT" x="150"/><use href="#arcoT" x="300"/>
+          <use href="#arcoT" x="450"/><use href="#arcoT" x="600"/><use href="#arcoT" x="750"/>
+        </svg>
+      </div>
+      <div class="pilastra pilastra-l" aria-hidden="true"></div>
+      <div class="pilastra pilastra-r" aria-hidden="true"></div>
+      <div class="estanteria" id="estanteria"></div>
+      <div class="mueble-zocalo" aria-hidden="true"></div>
+    </div>
 
     <div class="sala-lectura">
       <div class="estante-label">SALA DE LECTURA — SOCIOS SIN CONDECORACIONES</div>
@@ -862,23 +1208,65 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
     </div>
 
     <div class="hogar-zona">
+      <!-- flancos del hogar: leñero de reserva y mesita con whisky (desktop) -->
+      <div class="flanco flanco-l" aria-hidden="true">
+        <svg width="152" height="122" viewBox="0 0 152 122" focusable="false">
+          <ellipse cx="76" cy="116" rx="62" ry="6" fill="rgba(0,0,0,.55)"/>
+          <circle cx="49" cy="52" r="17" fill="#3e2812" stroke="#241307" stroke-width="3"/>
+          <circle cx="49" cy="52" r="12" fill="none" stroke="#8a5f33" stroke-width="2"/>
+          <circle cx="49" cy="52" r="6" fill="none" stroke="#7a5028" stroke-width="2"/>
+          <circle cx="49" cy="52" r="1.8" fill="#c9a06a"/>
+          <circle cx="83" cy="46" r="19" fill="#46301a" stroke="#241307" stroke-width="3"/>
+          <circle cx="83" cy="46" r="13" fill="none" stroke="#8a5f33" stroke-width="2"/>
+          <circle cx="83" cy="46" r="7" fill="none" stroke="#7a5028" stroke-width="2"/>
+          <circle cx="83" cy="46" r="2" fill="#c9a06a"/>
+          <circle cx="113" cy="54" r="15" fill="#3a2410" stroke="#241307" stroke-width="3"/>
+          <circle cx="113" cy="54" r="10" fill="none" stroke="#8a5f33" stroke-width="2"/>
+          <circle cx="113" cy="54" r="4.5" fill="none" stroke="#7a5028" stroke-width="2"/>
+          <path d="M19 62 L133 62 L125 114 L27 114 Z" fill="#3f2a14" stroke="#1c1006" stroke-width="3"/>
+          <path d="M22 73 L130 73 M24 83 L128 83 M25 93 L127 93 M26 103 L126 103" stroke="#5c3e1f" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M22 78 L130 78 M24 88 L128 88 M25 98 L127 98" stroke="#241407" stroke-width="2" fill="none"/>
+          <rect x="15" y="57" width="122" height="9" rx="4.5" fill="#5a3c22" stroke="#1c1006" stroke-width="2"/>
+          <path d="M133 64 L125 112" stroke="rgba(255,150,60,.4)" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="flanco flanco-r" aria-hidden="true">
+        <svg width="140" height="140" viewBox="0 0 140 140" focusable="false">
+          <ellipse cx="70" cy="134" rx="52" ry="5" fill="rgba(0,0,0,.55)"/>
+          <path d="M64 74 L76 74 L74 126 L66 126 Z" fill="#2c1a0b"/>
+          <path d="M52 130 Q70 120 88 130 L88 134 L52 134 Z" fill="#241307"/>
+          <ellipse cx="70" cy="68" rx="54" ry="12" fill="#2c1a0b" stroke="#170d05" stroke-width="3"/>
+          <ellipse cx="70" cy="64" rx="54" ry="12" fill="#4a3018" stroke="#1c1006" stroke-width="2"/>
+          <ellipse cx="70" cy="64" rx="44" ry="9" fill="none" stroke="rgba(255,190,110,.3)" stroke-width="1.5"/>
+          <path d="M52 20 L58 20 L58 30 Q66 34 66 44 L66 60 L44 60 L44 44 Q44 34 52 30 Z" fill="#2c1408" stroke="#170d05" stroke-width="2"/>
+          <rect x="51" y="14" width="8" height="8" rx="2" fill="#8a6a1f"/>
+          <rect x="46" y="42" width="18" height="12" rx="2" fill="#c9bd9e" opacity=".85"/>
+          <path d="M47 24 L47 54" stroke="rgba(255,190,110,.32)" stroke-width="2" fill="none"/>
+          <path d="M78 42 L98 42 L96 60 L80 60 Z" fill="rgba(210,225,235,.16)" stroke="rgba(230,240,250,.4)" stroke-width="2"/>
+          <path d="M80.5 50 L95.5 50 L94.8 58 L81.2 58 Z" fill="rgba(222,138,32,.85)"/>
+          <path d="M96 44 L95 52" stroke="rgba(255,255,255,.45)" stroke-width="1.5"/>
+        </svg>
+      </div>
       <div class="manto">
         <img class="manto-galera" src="assets/tophat-logo.png" alt="La galera del club presidiendo el hogar">
-        <div class="manto-tabla" aria-hidden="true"></div>
+        <div class="manto-repisa" aria-hidden="true"></div>
         <div class="manto-placa">HOGAR DONADO POR LA COMISIÓN DE MULTAS</div>
       </div>
       <div class="hogar" aria-hidden="true">
-        <div class="hogar-arco">
-          <div class="tronco t1"></div>
-          <div class="tronco t2"></div>
-          <div class="fuego">
-            <div class="llama llama-1"></div>
-            <div class="llama llama-2"></div>
-            <div class="llama llama-3"></div>
-          </div>
-          <canvas id="brasas-canvas"></canvas>
+        <div class="hogar-dintel"></div>
+        <div class="hogar-jamba jamba-l"></div>
+        <div class="hogar-jamba jamba-r"></div>
+        <div class="firebox">
+          <div class="brasa-lecho"></div>
+          <div class="tronco tr-back"></div>
+          <div class="tronco tr-mid"></div>
+          <canvas id="fuego-canvas"></canvas>
+          <div class="tronco tr-front"></div>
+          <div class="morillo mo-l"></div>
+          <div class="morillo mo-r"></div>
         </div>
       </div>
+      <div class="hogar-piso" aria-hidden="true"></div>
       <div class="hogar-glow" aria-hidden="true"></div>
       <div class="alfombra" aria-hidden="true"></div>
     </div>
@@ -887,7 +1275,7 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
 
 <!-- ============ FOOTER ============ -->
 <footer>
-  <p class="f-main">🎴 lunes de uno — La Biblioteca de la Galera</p>
+  <p class="f-main">🎴 lunes de uno — La Biblioteca del UNO</p>
   <p class="f-mini">Catalogación: el Comité de la Galera. Se ruega no doblar las esquinas de las páginas. 2024–∞</p>
 </footer>
 
@@ -896,7 +1284,7 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
   <div class="exlibris" role="dialog" aria-modal="true" aria-labelledby="ex-name">
     <button class="ex-close" id="ex-close" aria-label="Cerrar">✕</button>
     <div class="ex-borde">
-      <p class="ex-eyebrow">EX LIBRIS · LA BIBLIOTECA DE LA GALERA</p>
+      <p class="ex-eyebrow">EX LIBRIS · LA BIBLIOTECA DEL UNO</p>
       <div id="ex-sello-slot"></div>
       <div class="ex-face" id="ex-face"></div>
       <h3 class="ex-name" id="ex-name"></h3>
@@ -964,25 +1352,138 @@ const ERA_META = {
    clickeable: se desliza fuera del estante y abre el EX LIBRIS de Gael. */
 const BOOKS = {
   2024: [
-    { t:'Actas del Lunes · Vol. I', c:'b-green', h:150 },
-    { t:'Reglamento del Club · 7ª ed.', c:'b-oxblood', h:136 },
+    { t:'Actas del Lunes I', c:'b-green', h:150 },
+    { t:'Reglamento · 7ª ed.', c:'b-oxblood', h:150 },
     { t:'Anuario MMXXIV', c:'b-brown', h:124 },
-    { t:'Elogio de la Picada', c:'b-navy', h:132 }
+    { t:'Elogio de la Picada', c:'b-navy', h:154 }
   ],
   2025: [
     { t:'Expediente Manu', manu:true, h:146 },
-    { t:'El Arte de Robar +4', c:'b-green', h:140 },
-    { t:'El 648: una Tragedia', c:'b-oxblood', h:128 },
-    { t:'Jurisprudencia del Contra-UNO', c:'b-navy', h:134 }
+    { t:'El Arte de Robar +4', c:'b-green', h:154 },
+    { t:'El 648: una Tragedia', c:'b-oxblood', h:158 },
+    { t:'Ley del Contra-UNO', c:'b-navy', h:150 }
   ],
   2026: [
     { t:'Multas · Tomo CL', c:'b-oxblood', h:142 },
-    { t:'Protocolo del Grito UNO', c:'b-green', h:128 },
+    { t:'Protocolo del Grito', c:'b-green', h:152 },
     { t:'Cartas al Comité', c:'b-brown', h:134 }
   ]
 };
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= ESCENOGRAFÍA DEL MUEBLE =================
+   Libros de relleno y objetos de anticuario. Todo determinístico por índice
+   (nada de Math.random en el layout): la biblioteca se ve igual en cada
+   carga y en cada re-render de fetchLiveSeasons. */
+const LEATHER = [
+  ['#432915','#5a3619','#331e0d'],  /* marrón */
+  ['#553317','#7b5525','#432912'],  /* tostado */
+  ['#481612','#6a1e17','#3b120e'],  /* bordó */
+  ['#622b15','#8c4619','#4e2510'],  /* óxido */
+  ['#152e20','#234330','#102519'],  /* verde oscuro */
+  ['#1c1c1c','#2c2c2c','#141414'],  /* negro */
+  ['#121e33','#1e2940','#0e1727']   /* azul noche */
+];
+/* pseudo-azar determinístico: mismo índice → mismo libro, siempre */
+function det(seed){
+  const x = Math.sin(seed * 127.1 + 43.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+function fillerBookHTML(year, i){
+  const s = year * 100 + i;
+  const pal = LEATHER[Math.floor(det(s) * LEATHER.length)];
+  const bw = 13 + Math.round(det(s + 1) * 14);
+  const bh = 92 + Math.round(det(s + 2) * 54);
+  const lean = det(s + 3);
+  const leanCls = lean > 0.88 ? ' lean-l' : (lean < 0.08 ? ' lean-r' : '');
+  const nv = 22 + Math.round(det(s + 4) * 12);
+  return `<i class="flibro${leanCls}" style="--bw:${bw}px;--bh:${bh}px;--nv:${nv}px;--c1:${pal[0]};--c2:${pal[1]};--c3:${pal[2]}"></i>`;
+}
+function runHTML(year, runIdx, count){
+  let out = '';
+  for(let k = 0; k < count; k++) out += fillerBookHTML(year, runIdx * 9 + k);
+  return `<span class="slot run" aria-hidden="true">${out}</span>`;
+}
+function pilaHTML(year){
+  const libs = [0,1,2].map(k=>{
+    const pal = LEATHER[Math.floor(det(year * 7 + k * 3 + 1) * LEATHER.length)];
+    return `<i style="--c1:${pal[0]};--c2:${pal[1]}"></i>`;
+  }).join('');
+  return `<span class="slot pila" aria-hidden="true">${libs}</span>`;
+}
+/* objetos de museo: globo terráqueo, copa/urna de metal oscuro, cofre, candelabro */
+const OBJ_SVGS = {
+  globo: `<svg class="obj" width="66" height="104" viewBox="0 0 66 104" focusable="false">
+    <ellipse cx="33" cy="98" rx="20" ry="5.5" fill="#120a04"/>
+    <path d="M30 78 L36 78 L35 96 L31 96 Z" fill="#241307"/>
+    <ellipse cx="33" cy="79" rx="9" ry="3" fill="#2c1a0b"/>
+    <circle cx="33" cy="44" r="28" fill="url(#globoMar)"/>
+    <ellipse cx="33" cy="44" rx="28" ry="10" fill="none" stroke="rgba(201,165,74,.28)" stroke-width="1"/>
+    <ellipse cx="33" cy="44" rx="12" ry="28" fill="none" stroke="rgba(201,165,74,.22)" stroke-width="1"/>
+    <ellipse cx="33" cy="44" rx="22" ry="28" fill="none" stroke="rgba(201,165,74,.14)" stroke-width="1"/>
+    <path d="M20 30 q8 -6 16 -2 q6 3 4 10 q-8 4 -14 -1 q-6 -4 -6 -7 Z" fill="rgba(154,143,118,.30)"/>
+    <path d="M36 56 q9 -2 12 5 q-2 6 -9 5 q-6 -2 -3 -10 Z" fill="rgba(154,143,118,.24)"/>
+    <path d="M33 12 A32 32 0 0 1 33 76" fill="none" stroke="#c9a54a" stroke-width="2.5" opacity=".8"/>
+    <circle cx="33" cy="12" r="2.6" fill="#c9a54a"/>
+  </svg>`,
+  copa: `<svg class="obj" width="42" height="78" viewBox="0 0 42 78" focusable="false">
+    <ellipse cx="21" cy="73" rx="15" ry="4.5" fill="#111"/>
+    <path d="M13 72 L29 72 L26 58 L16 58 Z" fill="url(#metalOscuro)"/>
+    <rect x="18.5" y="42" width="5" height="18" fill="url(#metalOscuro)"/>
+    <path d="M6 12 L36 12 Q35 34 21 40 Q7 34 6 12 Z" fill="url(#metalOscuro)"/>
+    <ellipse cx="21" cy="12" rx="15" ry="4" fill="#7d7d8a"/>
+    <path d="M10 16 q2 12 8 18" stroke="rgba(255,255,255,.4)" stroke-width="2" fill="none"/>
+    <path d="M31 16 q-1 10 -6 16" stroke="rgba(255,190,110,.28)" stroke-width="1.6" fill="none"/>
+  </svg>`,
+  urna: `<svg class="obj" width="44" height="66" viewBox="0 0 44 66" focusable="false">
+    <ellipse cx="22" cy="61" rx="14" ry="4" fill="#111"/>
+    <path d="M14 60 L30 60 L27 50 L17 50 Z" fill="url(#metalOscuro)"/>
+    <path d="M8 14 Q8 44 22 50 Q36 44 36 14 Q29 19 22 19 Q15 19 8 14 Z" fill="url(#metalOscuro)"/>
+    <ellipse cx="22" cy="14" rx="14" ry="4.5" fill="#7d7d8a"/>
+    <path d="M8 16 Q0 20 6 28" stroke="#55555e" stroke-width="3" fill="none"/>
+    <path d="M36 16 Q44 20 38 28" stroke="#55555e" stroke-width="3" fill="none"/>
+    <path d="M13 22 q2 16 8 24" stroke="rgba(255,255,255,.34)" stroke-width="2.4" fill="none"/>
+    <path d="M31 22 q-1 14 -6 22" stroke="rgba(255,190,110,.26)" stroke-width="1.8" fill="none"/>
+  </svg>`,
+  cofre: `<svg class="obj" width="76" height="54" viewBox="0 0 76 54" focusable="false">
+    <ellipse cx="38" cy="51" rx="34" ry="2.5" fill="rgba(0,0,0,.6)"/>
+    <rect x="4" y="22" width="68" height="28" rx="3" fill="url(#cofreTapa)" stroke="#0a0502" stroke-width="2"/>
+    <path d="M4 24 Q4 6 38 6 Q72 6 72 24 Z" fill="#33200e" stroke="#0a0502" stroke-width="2"/>
+    <rect x="14" y="8" width="5" height="42" fill="#8a6a1f" opacity=".85"/>
+    <rect x="57" y="8" width="5" height="42" fill="#8a6a1f" opacity=".85"/>
+    <rect x="33" y="24" width="10" height="12" rx="2" fill="#c9a54a"/>
+    <circle cx="38" cy="29" r="2" fill="#241307"/>
+  </svg>`,
+  candelabro: `<svg class="obj" width="72" height="92" viewBox="0 0 72 92" focusable="false">
+    <ellipse cx="36" cy="87" rx="17" ry="4" fill="#111"/>
+    <path d="M31 86 L41 86 L39 72 L33 72 Z" fill="url(#metalOscuro)"/>
+    <rect x="34" y="34" width="4" height="40" fill="url(#metalOscuro)"/>
+    <path d="M36 52 Q12 50 12 30" stroke="url(#metalOscuro)" stroke-width="4" fill="none"/>
+    <path d="M36 52 Q60 50 60 30" stroke="url(#metalOscuro)" stroke-width="4" fill="none"/>
+    <rect x="8" y="22" width="8" height="9" fill="#4a4a52"/>
+    <rect x="56" y="22" width="8" height="9" fill="#4a4a52"/>
+    <rect x="32" y="22" width="8" height="12" fill="#4a4a52"/>
+    <rect x="9.5" y="12" width="5" height="11" rx="2" fill="#e8dcc0"/>
+    <rect x="57.5" y="12" width="5" height="11" rx="2" fill="#e8dcc0"/>
+    <rect x="33.5" y="9" width="5" height="14" rx="2" fill="#e8dcc0"/>
+    <circle class="vela-glow" cx="12" cy="7" r="10" fill="url(#velaGlow)"/>
+    <circle class="vela-glow" cx="60" cy="7" r="10" fill="url(#velaGlow)" style="animation-delay:.6s"/>
+    <circle class="vela-glow" cx="36" cy="4" r="12" fill="url(#velaGlow)" style="animation-delay:.3s"/>
+    <ellipse class="vela-flama" cx="12" cy="8" rx="2.6" ry="5" fill="url(#flamaGrad)"/>
+    <ellipse class="vela-flama" cx="60" cy="8" rx="2.6" ry="5" fill="url(#flamaGrad)" style="animation-delay:.6s"/>
+    <ellipse class="vela-flama" cx="36" cy="5" rx="2.8" ry="5.5" fill="url(#flamaGrad)" style="animation-delay:.3s"/>
+  </svg>`
+};
+/* reparto fijo de objetos por estante */
+const OBJETOS = {
+  2026: ['copa','globo','urna'],
+  2025: ['candelabro','urna','cofre'],
+  2024: ['cofre','copa','candelabro']
+};
+function objetoHTML(kind){
+  return `<span class="slot slot-obj" aria-hidden="true">${OBJ_SVGS[kind] || ''}</span>`;
+}
 
 /* ================= HELPERS ================= */
 function faceWrapHTML(slug, opts){
@@ -1069,29 +1570,65 @@ function libroHTML(b){
     + `<span class="libro ${b.c}" style="--bh:${b.h}px"><span class="libro-titulo">${b.t}</span></span></span>`;
 }
 
-/* intercala: un libro cada dos peanas, sobrantes al final del estante */
-function interleave(clusters, books, year){
+/* Arma el estante DENSO: las peanas con estrellas se exhiben entre corridas
+   de libros de cuero, con objetos de anticuario, una pila horizontal y los
+   libros titulados intercalados. Determinístico: mismo render siempre. */
+function buildShelfItems(year){
+  const clusters = clustersFor(year);
+  const titled = (BOOKS[year] || []).slice();
+  const objs = (OBJETOS[year] || []).slice();
   const items = [];
-  let bi = 0;
+  let runIdx = 0;
+  const runOf = n => runHTML(year, runIdx++, n);
+  items.push(runOf(4 + Math.floor(det(year * 13) * 3)));
   clusters.forEach((cl, i)=>{
-    if(i % 2 === 0 && bi < books.length){ items.push(libroHTML(books[bi++])); }
     items.push(peanaHTML(cl, year));
+    if(i % 2 === 1 && titled.length) items.push(libroHTML(titled.shift()));
+    if(i % 3 === 2 && objs.length) items.push(objetoHTML(objs.shift()));
+    if(i === Math.floor(clusters.length / 2)) items.push(pilaHTML(year));
+    if(i === 1) items.push(pilaHTML(year * 3 + 5));
+    items.push(runOf(3 + Math.floor(det(year * 31 + i) * 4)));
   });
-  while(bi < books.length){ items.push(libroHTML(books[bi++])); }
+  titled.forEach(b=> items.push(libroHTML(b)));
+  objs.forEach(o=> items.push(objetoHTML(o)));
+  items.push(runOf(4));
   return items.join('');
+}
+
+/* Relleno adaptativo: después del render mide la última fila de cada estante
+   y la completa con más libros de cuero (índices determinísticos: misma fila,
+   mismos libros) hasta que el mueble se vea LLENO, sin filas raquíticas. */
+function topUpEstantes(){
+  document.querySelectorAll('#estanteria .estante').forEach(est=>{
+    const year = Number(est.dataset.year) || 0;
+    const cont = est.querySelector('.estante-items');
+    if(!cont || !cont.children.length) return;
+    let idx = 5000, guard = 0;
+    while(guard++ < 140){
+      const kids = Array.prototype.slice.call(cont.children);
+      const lastTop = Math.max.apply(null, kids.map(k=> k.offsetTop));
+      const lastRow = kids.filter(k=> Math.abs(k.offsetTop - lastTop) < 4);
+      const left = Math.min.apply(null, lastRow.map(k=> k.offsetLeft));
+      const right = Math.max.apply(null, lastRow.map(k=> k.offsetLeft + k.offsetWidth));
+      if((right - left) / cont.clientWidth >= 0.93) break;
+      cont.insertAdjacentHTML('beforeend', runHTML(year, idx++, 1));
+    }
+  });
 }
 
 function renderEstantes(){
   const wrap = document.getElementById('estanteria');
   wrap.innerHTML = '';
-  DATA.years.forEach(year=>{
+  /* Lo más nuevo corona el mueble: 2026 arriba del todo y se baja hacia el
+     pasado (2025, 2024). La regla de materiales/tamaños no cambia. */
+  [...DATA.years].sort((a,b)=> b - a).forEach(year=>{
     const meta = ERA_META[year] || { label:`${year}`, nota:'colección en curso' };
     const est = document.createElement('div');
     est.className = 'estante';
     est.dataset.year = year;
     est.innerHTML = `
       <div class="estante-label">${meta.label}</div>
-      <div class="estante-items">${interleave(clustersFor(year), BOOKS[year]||[], year)}</div>
+      <div class="estante-items">${buildShelfItems(year)}</div>
       <div class="estante-nota">${meta.nota}</div>
     `;
     wrap.appendChild(est);
@@ -1119,6 +1656,7 @@ function renderLectura(){
 function renderAll(){
   renderStatsLine();
   renderEstantes();
+  topUpEstantes();
   renderLectura();
 }
 
@@ -1400,43 +1938,203 @@ function tickConfetti(){
   requestAnimationFrame(draw);
 })();
 
-/* ================= BRASAS DEL HOGAR ================= */
-(function initBrasas(){
-  const canvas = document.getElementById('brasas-canvas');
-  if(!canvas || reducedMotion) return;
+/* ================= EL FUEGO DEL HOGAR (canvas) =================
+   Llamas orgánicas: tres lenguas bezier con flicker de ruido (sumas de senos
+   de frecuencias inconmensurables — el loop nunca se percibe), tres capas por
+   lengua (puntas rojas translúcidas, cuerpo naranja, núcleo blanco-amarillo),
+   lecho de brasas que late, chispas que suben y humo tenue. El mismo loop
+   escribe --fire-glow: toda la sala flickerea en sincronía con el fuego.
+   reduced-motion → un solo frame de brasas encendidas, sin loop. */
+(function initFuego(){
+  const canvas = document.getElementById('fuego-canvas');
+  if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  let w, h, chispas = [];
+  const root = document.documentElement;
+  let w, h;
+
+  /* ruido suave 1D */
+  function noi(x){
+    return Math.sin(x)*0.52 + Math.sin(x*2.317 + 1.7)*0.28 + Math.sin(x*4.721 + 4.1)*0.2;
+  }
+
+  function drawStill(){
+    /* brasas encendidas quietas: el hogar jamás queda negro */
+    ctx.clearRect(0,0,w,h);
+    const base = h - 6;
+    const grd = ctx.createRadialGradient(w/2, base, 4, w/2, base, w*0.42);
+    grd.addColorStop(0,'rgba(255,170,60,.95)');
+    grd.addColorStop(.35,'rgba(255,90,15,.6)');
+    grd.addColorStop(1,'rgba(120,20,0,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,w,h);
+    for(let i=0;i<14;i++){
+      const x = w*0.24 + det(i*3)*w*0.52;
+      const y = base - 4 - det(i*7)*16;
+      const r = (1.5 + det(i*11)*3) * 3;
+      const g2 = ctx.createRadialGradient(x,y,0,x,y,r);
+      g2.addColorStop(0,'rgba(255,190,90,.9)');
+      g2.addColorStop(1,'rgba(255,60,0,0)');
+      ctx.fillStyle = g2;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    }
+  }
+
   function resize(){
     w = canvas.width = canvas.offsetWidth;
     h = canvas.height = canvas.offsetHeight;
+    if(reducedMotion) drawStill();
   }
   resize();
   window.addEventListener('resize', resize);
+
+  if(reducedMotion){
+    root.style.setProperty('--fire-glow','.72');
+    return;
+  }
+
+  const sparks = [];
+  const smokes = [];
+  const flamelets = []; /* lenguas secundarias: se desprenden y mueren */
+  let t = Math.random()*100;
+  let frame = 0;
+
+  /* la base de las llamas queda ENTRE los troncos (el frontal las tapa abajo) */
+  function flameBaseY(){ return h - 14; }
+
+  function tongue(cx, bw, bh, seed){
+    const flick = 0.74 + 0.30*(noi(t*1.9 + seed*7)*0.5 + 0.5);
+    const hgt = bh * flick;
+    const swayT = noi(t*1.15 + seed*13) * bw * 0.42;
+    const swayM = noi(t*0.85 + seed*29 + 2.2) * bw * 0.3;
+    const baseY = flameBaseY();
+    /* tres capas: rojo translúcido → naranja → núcleo blanco-amarillo */
+    const layers = [
+      { k:1.28, kh:1.0,  sw:1,   base:'rgba(255,46,10,.30)',  top:'rgba(255,30,0,0)' },
+      { k:1.0,  kh:0.94, sw:1,   base:'rgba(255,120,16,.62)', top:'rgba(255,60,0,.05)' },
+      { k:0.52, kh:0.6,  sw:0.7, base:'rgba(255,232,160,.92)', top:'rgba(255,170,60,.14)' }
+    ];
+    layers.forEach((L, li)=>{
+      const wl = bw * L.k, hl = hgt * L.kh;
+      /* ruido de contorno: cada punto de control respira con fase propia,
+         así el borde nunca es la misma bezier limpia dos frames seguidos */
+      const j1 = noi(t*3.4 + seed*17 + li*3.1) * wl * 0.15;
+      const j2 = noi(t*4.1 + seed*23 + li*5.7 + 1.3) * wl * 0.17;
+      const j3 = noi(t*3.7 + seed*31 + li*2.3 + 3.1) * wl * 0.13;
+      const j4 = noi(t*4.6 + seed*11 + li*4.9 + 5.2) * hl * 0.07;
+      const tX = cx + swayT * L.sw + j3;
+      const tY = baseY - hl + j4;
+      const mlX = cx - wl*0.36 + swayM*0.5 + j1;
+      const mlY = baseY - hl*0.52 + j2*0.5;
+      const mrX = cx + wl*0.38 + swayM*0.55 + j2;
+      const mrY = baseY - hl*0.48 - j1*0.5;
+      const g = ctx.createLinearGradient(0, baseY, 0, tY);
+      g.addColorStop(0, L.base);
+      g.addColorStop(1, L.top);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(cx - wl/2, baseY);
+      ctx.bezierCurveTo(cx - wl/2 + j2*0.6, baseY - hl*0.3, mlX - wl*0.1, mlY + hl*0.12, mlX, mlY);
+      ctx.bezierCurveTo(mlX + wl*0.06, mlY - hl*0.16, tX - wl*0.14 + j1, tY + hl*0.28, tX, tY);
+      ctx.bezierCurveTo(tX + wl*0.14 + j2*0.5, tY + hl*0.28, mrX - wl*0.04, mrY - hl*0.16, mrX, mrY);
+      ctx.bezierCurveTo(mrX + wl*0.1, mrY + hl*0.12, cx + wl/2 + j1*0.6, baseY - hl*0.28, cx + wl/2, baseY);
+      ctx.closePath();
+      ctx.fill();
+    });
+  }
+
   function draw(){
     if(!document.hidden && w > 0){
+      t += 0.035;
+      frame++;
       ctx.clearRect(0,0,w,h);
-      if(chispas.length < 34 && Math.random() < 0.3){
-        chispas.push({
-          x: w/2 + (Math.random()-0.5)*w*0.34,
-          y: h - 8,
-          r: 0.8 + Math.random()*1.8,
-          vy: -(0.5 + Math.random()*1.1),
-          sway: Math.random()*Math.PI*2,
-          life: 0,
-          maxLife: 70 + Math.random()*70
+
+      /* humo tenue pero VISIBLE subiendo del fuego, detrás de todo */
+      if(Math.random() < 0.1 && smokes.length < 10){
+        smokes.push({ x: w/2 + (Math.random()-0.5)*w*0.24, y: h-42, r: 6+Math.random()*8,
+          vy: -(0.28+Math.random()*0.32), life:0, maxLife:180 });
+      }
+      for(let i=smokes.length-1;i>=0;i--){
+        const s = smokes[i];
+        s.life++; s.y += s.vy; s.x += noi(t + i)*0.35; s.r += 0.08;
+        if(s.life >= s.maxLife || s.y < -10){ smokes.splice(i,1); continue; }
+        const k = 1 - s.life/s.maxLife;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(168,168,178,${(0.11*k).toFixed(3)})`;
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      /* lecho de brasas: late con el ruido */
+      const emberA = 0.5 + 0.22*(noi(t*2.6)*0.5 + 0.5);
+      const base = h - 10;
+      const grd = ctx.createRadialGradient(w/2, base, 2, w/2, base, w*0.4);
+      grd.addColorStop(0, `rgba(255,150,40,${emberA.toFixed(3)})`);
+      grd.addColorStop(.4, `rgba(255,70,10,${(emberA*0.55).toFixed(3)})`);
+      grd.addColorStop(1, 'rgba(120,20,0,0)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, h*0.4, w, h*0.6);
+
+      /* llamas aditivas: el contorno orgánico lo pone el jitter de ruido
+         (nada de ctx.filter blur por frame: carísimo en áreas grandes) */
+      ctx.globalCompositeOperation = 'lighter';
+      tongue(w*0.36, w*0.26, h*0.56, 1);
+      tongue(w*0.52, w*0.34, h*0.78, 2);
+      tongue(w*0.66, w*0.22, h*0.48, 3);
+
+      /* lenguas secundarias: gotas de fuego que se desprenden y mueren */
+      if(flamelets.length < 9 && Math.random() < 0.12){
+        const lane = [0.36, 0.52, 0.66][Math.floor(Math.random()*3)];
+        flamelets.push({
+          x: w*lane + (Math.random()-0.5)*w*0.1,
+          y: flameBaseY() - h*(0.3 + Math.random()*0.3),
+          vy: -(0.5 + Math.random()*0.9),
+          r: 2.4 + Math.random()*3.4,
+          ph: Math.random()*Math.PI*2,
+          life: 0, maxLife: 34 + Math.random()*30
         });
       }
-      chispas = chispas.filter(c=> c.life < c.maxLife && c.y > -6);
-      chispas.forEach(c=>{
-        c.life++; c.sway += 0.08;
-        c.y += c.vy;
-        c.x += Math.sin(c.sway)*0.4;
+      for(let i=flamelets.length-1;i>=0;i--){
+        const f = flamelets[i];
+        f.life++; f.y += f.vy; f.ph += 0.18; f.x += Math.sin(f.ph)*0.6;
+        if(f.life >= f.maxLife || f.y < 4){ flamelets.splice(i,1); continue; }
+        const k = 1 - f.life/f.maxLife;
+        const r = f.r * (0.35 + 0.65*k);
+        const gf = ctx.createLinearGradient(0, f.y + r*1.4, 0, f.y - r*2.4);
+        gf.addColorStop(0, `rgba(255,110,14,${(0.5*k).toFixed(3)})`);
+        gf.addColorStop(1, `rgba(255,225,150,${(0.12*k).toFixed(3)})`);
+        ctx.fillStyle = gf;
+        ctx.beginPath();
+        ctx.moveTo(f.x, f.y - r*2.4);
+        ctx.quadraticCurveTo(f.x + r*1.1, f.y - r*0.5, f.x, f.y + r*1.4);
+        ctx.quadraticCurveTo(f.x - r*1.1, f.y - r*0.5, f.x, f.y - r*2.4);
+        ctx.fill();
+      }
+
+      /* chispas que suben y se apagan */
+      if(sparks.length < 26 && Math.random() < 0.34){
+        sparks.push({
+          x: w*0.5 + (Math.random()-0.5)*w*0.34, y: h-16,
+          vy: -(0.7+Math.random()*1.5), sway: Math.random()*Math.PI*2,
+          r: 0.7+Math.random()*1.6, life:0, maxLife: 60+Math.random()*70
+        });
+      }
+      for(let i=sparks.length-1;i>=0;i--){
+        const c = sparks[i];
+        c.life++; c.sway += 0.09; c.y += c.vy; c.x += Math.sin(c.sway)*0.5;
+        if(c.life >= c.maxLife || c.y < -4){ sparks.splice(i,1); continue; }
         const k = 1 - c.life/c.maxLife;
         ctx.beginPath();
-        ctx.fillStyle = `rgba(${255},${Math.round(120+110*k)},${Math.round(40*k)},${(0.7*k).toFixed(3)})`;
+        ctx.fillStyle = `rgba(255,${Math.round(140+100*k)},${Math.round(50*k)},${(0.85*k).toFixed(3)})`;
         ctx.arc(c.x, c.y, c.r*Math.max(.3,k), 0, Math.PI*2);
         ctx.fill();
-      });
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
+      /* la sala respira con el fuego (cada 3 frames alcanza y sobra) */
+      if(frame % 3 === 0){
+        const glow = 0.58 + 0.3*(noi(t*2.2 + 5)*0.5 + 0.5);
+        root.style.setProperty('--fire-glow', glow.toFixed(3));
+      }
     }
     requestAnimationFrame(draw);
   }
