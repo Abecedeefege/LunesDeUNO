@@ -21,16 +21,20 @@ sub-formato (feed quemado; horóscopo y confesiones usados la semana pasada).
 lunes (máx 4 preguntas: 2 texto + 2 opción), preview andres 10:00, envío 15:00.
 Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
 
-**⭐ EXPERIENCIAS VIP + 🥊 PIÑA DIRECTA (Andrés, 16/07 por chat, vinculante):**
-- **VIP** = página con puerta que valida el device (`lunesdeuno_device_name` de
-  localStorage) contra `pushSubs` (status active) vía runQuery. Emite eventos
-  `vip_unlock` / `vip_locked`. Primera VIP: el Kryptonita de Cobra.
+**⭐ EXPERIENCIAS VIP + 🥊 PIÑA DIRECTA (Andrés, 16/07 por chat, vinculante;
+REVISADO por Andrés el 16/07 a la noche):**
+- **SIN puertas/login**: las experiencias VIP se VEN abiertas (VIP es marca,
+  no barrera). La activación de push se exige ÚNICAMENTE para forjar/reclamar
+  una Piña Directa, y el mensaje de requisito aparece SOLO al solicitar.
 - **Piña Directa** = la estadística real que mejor deja parado a UN jugador,
   exagerada al infinito, en formato póster de boxeo. La #001 (Kryptonita) es la
   excepción fundacional: pega A Cobra (pedido de Andrés, derivada de la
   entrevista de Carucha).
-- **El Gimnasio** (`engage/pina-directa.html`, sin fecha, vault): un socio
-  validado solicita SU piña → evento `pina_request` (id `pina-req-<device>`).
+- **El Gimnasio** (`engage/pina-directa.html`, sin fecha, vault): página
+  abierta; al tocar "solicitar" valida `lunesdeuno_device_name` contra
+  `pushSubs` (active) vía runQuery. OK → evento `pina_request` (id
+  `pina-req-<device>`); sin nombre o sin push → mensaje "asociá tu nombre de
+  jugador a un device con push activas" + evento `pina_request_blocked`.
 - **PROTOCOLO DE SOLICITUD (cada corrida):** buscar eventos `pina_request`
   nuevos → si el device tiene sub activa y su piña está en el vault → encolar
   push personal a ESE device con su URL secreta (preview a andres 09:00 del

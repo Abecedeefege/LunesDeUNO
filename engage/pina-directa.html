@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es-UY"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>🥊 El Gimnasio de las Piñas — VIP</title>
+<title>🥊 El Gimnasio de las Piñas</title>
 <style>
   :root{
     --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
@@ -13,13 +13,6 @@
   .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
   .back:hover{color:var(--text)}
   .wrap{max-width:560px;margin:0 auto;padding:0 14px}
-
-  #gate{margin-top:14px;border:2px dashed var(--yellow);border-radius:14px;padding:26px 16px;text-align:center;background:rgba(255,222,0,.04)}
-  #gate .lock{font-size:2.6rem}
-  #gate h1{font-size:1.15rem;margin:10px 0 6px}
-  #gate p{font-size:.85rem;color:var(--dim);line-height:1.55}
-  #gate .st{margin-top:12px;font-size:.8rem;font-weight:700}
-  #vip{display:none}
 
   .ring{
     margin-top:14px;border:2px solid var(--yellow);border-radius:14px;overflow:hidden;
@@ -34,6 +27,7 @@
   .ring .serie{font-size:.68rem;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
   .ring h1{font-size:1.7rem;line-height:1.15;margin:8px 0;color:var(--yellow);text-shadow:0 0 16px rgba(255,222,0,.4)}
   .ring .sub{font-size:.85rem;color:var(--dim);line-height:1.5}
+  .ring .sub b{color:var(--text)}
   .ring .glove{font-size:3rem;margin-top:8px}
 
   h2{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--yellow);margin:26px 0 10px;border-bottom:1px dashed rgba(255,222,0,.3);padding-bottom:6px}
@@ -42,8 +36,6 @@
   .paso b{color:var(--text)}
 
   .pedir{margin-top:24px;text-align:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 14px}
-  .pedir .quien{font-size:.85rem;color:var(--dim);margin-bottom:12px}
-  .pedir .quien b{color:var(--yellow)}
   #reqBtn{
     display:block;width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;
     padding:16px;font-size:1.05rem;font-weight:900;cursor:pointer;font-family:inherit;
@@ -51,7 +43,12 @@
   }
   #reqBtn:active{transform:translateY(2px);box-shadow:0 2px 0 #8f1015}
   #reqBtn:disabled{opacity:.7;cursor:default;box-shadow:none}
-  #reqNote{margin-top:12px;font-size:.85rem;line-height:1.5}
+  #reqNote{margin-top:12px;font-size:.85rem;line-height:1.55;text-align:left}
+  #reqNote .aviso{
+    display:block;background:rgba(255,222,0,.06);border:1px solid rgba(255,222,0,.3);
+    border-left:4px solid var(--yellow);border-radius:8px;padding:10px 12px;color:var(--dim);
+  }
+  #reqNote .aviso b{color:var(--yellow)}
   .letra{margin-top:10px;font-size:.7rem;color:var(--dim);line-height:1.5}
 
   .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
@@ -62,92 +59,78 @@
 
   <div class="wrap">
 
-    <div id="gate">
-      <div class="lock">🔐</div>
-      <h1>El Gimnasio es solo para socios VIP</h1>
-      <p>Acá se forjan las Piñas Directas. Entrada exclusiva para dispositivos del club
-      con notificaciones activas. Validando credencial…</p>
-      <div class="st" id="gateSt">⏳ Verificando…</div>
+    <div class="ring">
+      <div class="vipbar"><span class="l">⭐ Serie Piña Directa</span><span class="r">Experiencias VIP</span></div>
+      <div class="body">
+        <div class="serie">Laboratorio de Paternidad Unística · División Golpes</div>
+        <h1>🥊 EL GIMNASIO<br>DE LAS PIÑAS</h1>
+        <div class="glove">🥊</div>
+        <div class="sub">Una <b>Piña Directa</b> es tu mejor estadística del año convertida en
+        un golpe sobre la mesa: el laboratorio revisa TODOS tus números y elige el que te deja
+        mejor parado. Después te la entrega por notificación, lista para mostrar.</div>
+      </div>
     </div>
 
-    <div id="vip">
+    <h2>📋 Cómo funciona</h2>
+    <div class="paso"><div class="n">1</div><div><b>Pedís tu piña</b> con el botón de abajo.
+    Vale una por jugador — la tuya, sobre tus números. Acá no se piden piñas ajenas.</div></div>
+    <div class="paso"><div class="n">2</div><div><b>El laboratorio revisa tu expediente
+    completo</b>: victorias, mano a mano, rachas, prontuario, récords. De todo eso sale LA
+    estadística — la que te deja mejor parado, verificada contra los registros oficiales de
+    las 17 fechas de 2026.</div></div>
+    <div class="paso"><div class="n">3</div><div><b>La reclamás con las push activas:</b> tu
+    nombre de jugador tiene que estar asociado a un dispositivo con notificaciones activas,
+    porque la piña <b>te llega por push</b> ahí cuando está forjada. Es tuya: mostrala,
+    compartila, tatuátela.</div></div>
 
-      <div class="ring">
-        <div class="vipbar"><span class="l">⭐ VIP validado: <span id="whoami">socio</span></span><span class="r">Serie Piña Directa</span></div>
-        <div class="body">
-          <div class="serie">Laboratorio de Paternidad Unística · División Golpes</div>
-          <h1>🥊 EL GIMNASIO<br>DE LAS PIÑAS</h1>
-          <div class="glove">🥊</div>
-          <div class="sub">Una <b>Piña Directa</b> es tu mejor estadística del año convertida en
-          un golpe sobre la mesa: el laboratorio revisa TODOS tus números y elige el que te deja
-          mejor parado. Después, te la entrega por notificación, lista para mostrar.</div>
-        </div>
-      </div>
+    <div class="pedir">
+      <button id="reqBtn" onclick="pedirPina(this)">🥊 SOLICITAR MI PIÑA DIRECTA</button>
+      <div id="reqNote"></div>
+      <div class="letra">Al pedirla aceptás que sea con datos 100% reales. El laboratorio no
+      inventa golpes: los encuentra. Si tu mejor número es humilde, la piña sale igual — con
+      cariño y sin piedad.</div>
+    </div>
 
-      <h2>📋 Cómo funciona</h2>
-      <div class="paso"><div class="n">1</div><div><b>Pedís tu piña</b> con el botón de abajo.
-      Vale una por socio — la tuya, sobre tus números. Acá no se piden piñas ajenas.</div></div>
-      <div class="paso"><div class="n">2</div><div><b>El laboratorio revisa tu expediente
-      completo</b>: victorias, mano a mano, rachas, prontuario, récords. De todo eso sale LA
-      estadística — la que te deja mejor parado, verificada contra los registros oficiales de
-      las 17 fechas de 2026.</div></div>
-      <div class="paso"><div class="n">3</div><div><b>Te llega por notificación</b> a este
-      dispositivo cuando esté forjada. Es tuya: mostrala, compartila, tatuátela.</div></div>
-
-      <div class="pedir">
-        <div class="quien">Solicitante validado: <b id="whoami2">—</b></div>
-        <button id="reqBtn" onclick="pedirPina(this)">🥊 SOLICITAR MI PIÑA DIRECTA</button>
-        <div id="reqNote"></div>
-        <div class="letra">Al pedirla aceptás que sea con datos 100% reales. El laboratorio no
-        inventa golpes: los encuentra. Si tu mejor número es humilde, la piña sale igual — con
-        cariño y sin piedad.</div>
-      </div>
-
-    </div><!-- /vip -->
-
-    <div class="foot">🎴 LUNES DE UNO · EL GIMNASIO DE LAS PIÑAS · SOLO SOCIOS</div>
+    <div class="foot">🎴 LUNES DE UNO · EL GIMNASIO DE LAS PIÑAS</div>
   </div>
 
 <script>
-  var _dev=null;
-  (function(){
+  // La página es abierta. La validación corre SOLO al solicitar la piña:
+  // el nombre de jugador de este navegador debe tener una sub push activa,
+  // porque la piña se entrega por push a ese dispositivo.
+  function pedirPina(btn){
     var FS='https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
     var KEY='AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
-    var st=document.getElementById('gateSt');
-    function locked(msg){
-      st.style.color='#ED1C24';
-      st.innerHTML=msg+'<br><span style="font-weight:400;color:#9a9aa8;font-size:.75rem">Si sos de la mesa y querés el pase VIP, pedile la invitación al club a Andrés.</span>';
-      if (window.engageTrack) engageTrack('vip_locked',{exp:'pina-directa'});
-    }
-    function unlock(dev){
-      _dev=dev;
-      document.getElementById('gate').style.display='none';
-      document.getElementById('vip').style.display='block';
-      document.getElementById('whoami').textContent=dev;
-      document.getElementById('whoami2').textContent=dev;
-      if (window.engageTrack) engageTrack('vip_unlock',{exp:'pina-directa'});
+    var note=document.getElementById('reqNote');
+    function requisito(msg){
+      note.innerHTML='<span class="aviso">🔐 <b>Falta un paso para forjarla:</b> '+msg+
+        ' Para reclamar tu Piña Directa tenés que asociar tu nombre de jugador a un dispositivo '+
+        'con las notificaciones activas — ahí te llega por push. Si sos de la mesa, pedile la '+
+        'invitación a Andrés y volvé.</span>';
+      if (window.engageTrack) engageTrack('pina_request_blocked',{});
     }
     var dev=null; try{dev=localStorage.getItem('lunesdeuno_device_name');}catch(e){}
-    if(!dev){locked('🔒 Este dispositivo no es socio del club.');return;}
+    if(!dev){ requisito('este navegador todavía no tiene un nombre de jugador asociado.'); return; }
+    btn.disabled=true; btn.textContent='⏳ Verificando tus push…';
     fetch(FS+':runQuery?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({structuredQuery:{from:[{collectionId:'pushSubs'}],
         where:{fieldFilter:{field:{fieldPath:'device'},op:'EQUAL',value:{stringValue:dev}}}}})})
       .then(function(r){return r.json();})
       .then(function(rows){
         var ok=(rows||[]).some(function(x){return x.document&&x.document.fields&&x.document.fields.status&&x.document.fields.status.stringValue==='active';});
-        if(ok) unlock(dev); else locked('🔒 Tu dispositivo («'+dev+'») no tiene notificaciones activas.');
+        if(ok){
+          if (window.engageTrack) engageTrack('pina_request',{id:'pina-req-'+dev});
+          btn.textContent='✓ PIÑA SOLICITADA';
+          note.innerHTML='<span style="color:#00A651">🔥 <b>El horno ya está prendido, '+dev+'.</b> El laboratorio está revisando tu expediente — tu Piña Directa te llega por notificación cuando esté forjada.</span>';
+        } else {
+          btn.disabled=false; btn.textContent='🥊 SOLICITAR MI PIÑA DIRECTA';
+          requisito('tu dispositivo («'+dev+'») no tiene las notificaciones activas.');
+        }
       })
-      .catch(function(){locked('⚠️ No pudimos validar tu credencial (¿sin conexión?). Reintentá.');});
-  })();
-
-  function pedirPina(btn){
-    if(!_dev) return;
-    if (window.engageTrack) engageTrack('pina_request',{id:'pina-req-'+_dev});
-    btn.disabled=true;
-    btn.textContent='✓ PIÑA SOLICITADA';
-    var n=document.getElementById('reqNote');
-    n.style.color='#00A651';
-    n.innerHTML='🔥 <b>El horno ya está prendido.</b> El laboratorio está revisando tu expediente — tu Piña Directa te llega por notificación cuando esté forjada.';
+      .catch(function(){
+        btn.disabled=false; btn.textContent='🥊 SOLICITAR MI PIÑA DIRECTA';
+        note.innerHTML='<span class="aviso">⚠️ No pudimos verificar tus push (¿sin conexión?). Reintentá.</span>';
+      });
   }
 </script>
 <script src="engage.js"></script>
