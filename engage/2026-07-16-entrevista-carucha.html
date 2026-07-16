@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🧬 Laboratorio de Paternidad Unística — Caso Carucha</title>
+<style>
+  :root{
+    --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
+    --red:#ED1C24; --yellow:#FFDE00; --green:#00A651; --blue:#0072BC;
+    --text:#eaeaf0; --dim:#9a9aa8; --lab:#7ef0c8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 60px}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--text)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+
+  /* header laboratorio */
+  .lab{
+    margin-top:14px;border:1px solid var(--lab);border-radius:14px;overflow:hidden;
+    background:
+      repeating-linear-gradient(45deg, rgba(126,240,200,.04) 0 12px, transparent 12px 24px),
+      linear-gradient(180deg,#0f1a17,#0d0d12);
+  }
+  .lab-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed rgba(126,240,200,.4)}
+  .lab-top .logo{font-size:1.6rem}
+  .lab-top .name{font-size:.72rem;letter-spacing:.18em;color:var(--lab);text-transform:uppercase;font-weight:700}
+  .lab-top .sub{font-size:.62rem;color:var(--dim);letter-spacing:.08em}
+  .lab-body{padding:16px 14px}
+  .stamp{
+    display:inline-block;border:2px solid var(--green);color:var(--green);
+    padding:4px 10px;border-radius:6px;font-weight:800;font-size:.8rem;
+    letter-spacing:.12em;transform:rotate(-3deg);margin-bottom:12px;
+  }
+  h1{font-size:1.45rem;line-height:1.25;margin-bottom:8px}
+  h1 b{color:var(--lab)}
+  .lead{color:var(--dim);font-size:.92rem;line-height:1.5}
+  .lead b{color:var(--text)}
+
+  .faces{display:flex;align-items:center;gap:8px;margin:14px 0 4px}
+  .faces img{width:64px;height:64px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#222}
+  .faces .vs{font-size:1.1rem;color:var(--yellow);font-weight:800}
+  .faces .score{font-size:1.6rem;font-weight:900;color:var(--lab)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .chip{background:rgba(126,240,200,.08);border:1px solid rgba(126,240,200,.3);border-radius:999px;padding:4px 10px;font-size:.72rem;color:var(--text)}
+  .chip b{color:var(--lab)}
+
+  .transp{
+    margin:16px 0;background:rgba(255,222,0,.07);border:1px solid rgba(255,222,0,.3);
+    border-left:4px solid var(--yellow);border-radius:8px;padding:10px 12px;
+    font-size:.78rem;color:var(--dim);line-height:1.45;
+  }
+  .transp b{color:var(--yellow)}
+
+  /* preguntas */
+  .q{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .qhead .av{width:38px;height:38px;border-radius:50%;background:#0f1a17;border:1px solid var(--lab);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
+  .qhead .who{font-weight:700;font-size:.85rem}
+  .qhead .medio{font-size:.68rem;color:var(--dim)}
+  .qhead .num{margin-left:auto;font-size:1.3rem;font-weight:900;color:var(--border)}
+  .q .txt{font-size:.9rem;line-height:1.5;color:var(--text)}
+  .q .txt b{color:var(--lab)}
+  .tag{display:inline-block;margin-top:8px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--lab);border:1px solid rgba(126,240,200,.4);border-radius:4px;padding:2px 7px}
+  .tag.red{color:#ff8c90;border-color:rgba(237,28,36,.45)}
+  .tag.yel{color:var(--yellow);border-color:rgba(255,222,0,.4)}
+  textarea{
+    width:100%;margin-top:10px;background:#0d0d12;border:1px solid var(--border);
+    border-radius:8px;color:var(--text);padding:10px;font-size:.9rem;font-family:inherit;
+    min-height:84px;resize:vertical;
+  }
+  textarea:focus{outline:none;border-color:var(--lab)}
+  textarea::placeholder{color:#5c5c68}
+
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opts button{
+    text-align:left;background:#0d0d12;border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:.85rem;font-family:inherit;cursor:pointer;
+    line-height:1.4;
+  }
+  .opts button:hover{border-color:var(--lab)}
+  .opts button.sel{border-color:var(--green);background:rgba(0,166,81,.12)}
+  .opts button.sel::after{content:" ✓";color:var(--green);font-weight:800}
+  .opt-hint{font-size:.72rem;color:var(--green);margin-top:6px;display:block}
+
+  .send{
+    display:block;width:100%;margin-top:18px;background:var(--lab);color:#08211a;border:none;
+    border-radius:10px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit;
+  }
+  .send:disabled{opacity:.65;cursor:default}
+  .sent-note{margin-top:8px;font-size:.82rem;text-align:center}
+  .hint{margin-top:8px;font-size:.72rem;color:var(--dim);text-align:center}
+
+  .react,.engage-actions{
+    margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:14px;font-size:.85rem;color:var(--dim);
+  }
+  .react button,.engage-actions button{
+    background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);
+    padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit;
+  }
+  .react button:hover,.engage-actions button:hover{border-color:var(--lab)}
+  .react-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+
+  .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <div class="lab">
+      <div class="lab-top">
+        <div class="logo">🧬</div>
+        <div>
+          <div class="name">Laboratorio de Paternidad Unística</div>
+          <div class="sub">División Genética de Mesa · Informe 2026-0716 · Confidencial (ponele)</div>
+        </div>
+      </div>
+      <div class="lab-body">
+        <div class="stamp">RESULTADO: POSITIVO</div>
+        <h1>Carucha, el ADN no miente: <b>sos padre de Cobra</b></h1>
+        <div class="faces">
+          <img src="../assets/faces/carucha.png" alt="Carucha">
+          <span class="score">8–4</span>
+          <img src="../assets/faces/cobra.png" alt="Cobra">
+        </div>
+        <p class="lead">Compartieron <b>12 noches</b> de UNO este año y en <b>8</b> terminaste
+        arriba de la serpiente. Cobra ganó <b>5 fechas</b> — nadie ganó más — pero cuando estás
+        vos en la mesa, la genética manda. Y encima el lunes faltó y se hundió del <b>1° al 7°</b>
+        de la T5. El laboratorio necesita tu declaración: <b>4 preguntas</b>, y lo mejor sale en
+        el próximo push del grupo.</p>
+        <div class="chips">
+          <span class="chip">🧬 <b>8–4</b> sobre Cobra</span>
+          <span class="chip">🧼 <b>0 últimos puestos</b> en 13 fechas</span>
+          <span class="chip">😇 <b>0 multas · 0 cortes</b></span>
+          <span class="chip">🏆 <b>2 victorias</b> (abril, al hilo)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="transp"><b>Transparencia del laboratorio:</b> estamos buscando maneras de juntar
+    más información del grupo para que las notificaciones sean más divertidas y enganchen más al
+    grupo. Tus respuestas se citan en el próximo push grupal — escribí sabiendo que esto SALE.</div>
+
+    <!-- Q1 · TEXTO -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🧬</div>
+        <div><div class="who">Genetista forense</div><div class="medio">Laboratorio central</div></div>
+        <div class="num">01</div>
+      </div>
+      <div class="txt">El test dio <b>positivo con 8 de 12 muestras</b>: Cobra es tu hijo unístico.
+      El hombre gana fechas a todo el mundo (5 en el año, récord absoluto) pero con vos en la mesa
+      se le nubla el mazo. Ahora encima faltó al lunes y cayó del <b>1° al 7°</b> de la temporada.
+      Unas palabras para tu hijo, que está pasando un mal momento.</div>
+      <span class="tag">Declaración del padre</span>
+      <textarea data-q="carucha-entrevista-q1" placeholder="Sé el padre que Cobra necesita escuchar…"></textarea>
+    </div>
+
+    <!-- Q2 · OPCIÓN MÚLTIPLE -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🔬</div>
+        <div><div class="who">Perito en dominancia</div><div class="medio">Revista Ciencia y Mazo</div></div>
+        <div class="num">02</div>
+      </div>
+      <div class="txt">La ciencia exige una explicación: ¿por qué el jugador <b>más ganador del
+      año</b> pierde sistemáticamente con vos?</div>
+      <span class="tag yel">Hipótesis científica</span>
+      <div class="opts" data-q="carucha-entrevista-q2">
+        <button onclick="elegir(this,'me-tiene-miedo')">🐍 Me tiene miedo desde marzo y se le nota en las manos</button>
+        <button onclick="elegir(this,'talento-puro')">🧠 Talento puro mío — que le pregunte a Mac lo que es sufrir (le gano 9-2)</button>
+        <button onclick="elegir(this,'genetica')">🧬 Es genética: a los padres no se les gana, se les agradece</button>
+        <button onclick="elegir(this,'5-fechas-no-salvan')">🏆 Ganar 5 fechas no te salva de ser hijo mío</button>
+        <span class="opt-hint"></span>
+      </div>
+    </div>
+
+    <!-- Q3 · OPCIÓN MÚLTIPLE -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🍮</div>
+        <div><div class="who">Fiscalía del postre</div><div class="medio">Radio Postre</div></div>
+        <div class="num">03</div>
+      </div>
+      <div class="txt"><b>Naso</b> debe el postre desde el lunes (ya van <b>3 días</b>) y acumula
+      <b>5 últimos puestos</b> en el año, récord que comparte con Mac. La mesa espera tu veredicto
+      profesional.</div>
+      <span class="tag red">El caso Naso</span>
+      <div class="opts" data-q="carucha-entrevista-q3">
+        <button onclick="elegir(this,'pague-doble')">💸 Que pague doble: uno por la deuda y otro por hacernos esperar</button>
+        <button onclick="elegir(this,'lo-adopto')">👨‍👦 Lo adopto: claramente necesita un padre que le enseñe a jugar</button>
+        <button onclick="elegir(this,'vara-tano')">🍫 Mientras traiga algo mejor que los alfajores de Tano, zafa</button>
+        <button onclick="elegir(this,'retiro-digno')">🪦 5 últimos puestos: que evalúe el retiro con dignidad</button>
+        <span class="opt-hint"></span>
+      </div>
+    </div>
+
+    <!-- Q4 · TEXTO -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🧼</div>
+        <div><div class="who">Auditor de prontuarios</div><div class="medio">Tribunal de Ética Unística</div></div>
+        <div class="num">04</div>
+      </div>
+      <div class="txt">Tu ficha está impecable: <b>cero últimos puestos, cero multas y cero
+      cortes</b> en 13 fechas — sos uno de los tres prontuarios limpios de la mesa, con Gordo y
+      Mata. Desde esa superioridad moral: ¿quién es el jugador <b>más sucio</b> de la mesa y por
+      qué? Nombres, por favor. Esto es ciencia.</div>
+      <span class="tag">Denuncia con firma</span>
+      <textarea data-q="carucha-entrevista-q4" placeholder="El tribunal garantiza cero anonimato…"></textarea>
+    </div>
+
+    <button class="send" id="sendBtn" onclick="publicar(this)">🧬 Firmar el informe genético</button>
+    <div class="sent-note" id="sentNote"></div>
+    <p class="hint">Las opciones se envían al tocarlas; los textos, al firmar. Podés editar y volver a firmar.</p>
+
+    <div class="react">¿Qué tal estuvo el análisis?
+      <button onclick="engageReact('2026-07-16-entrevista-carucha','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-16-entrevista-carucha','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-16-entrevista-carucha','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-16-entrevista-carucha','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="engage-actions">¿Este formato de entrevista queda en el laboratorio?
+      <button onclick="engageApprove('2026-07-16-entrevista-carucha',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-16-entrevista-carucha',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div class="foot">🎴 LUNES DE UNO · LABORATORIO DE PATERNIDAD UNÍSTICA · 16/07/2026</div>
+  </div>
+
+<script>
+  function elegir(btn, val){
+    var box = btn.parentElement;
+    box.querySelectorAll('button').forEach(function(b){ b.classList.remove('sel'); });
+    btn.classList.add('sel');
+    if (window.engageAnswer) window.engageAnswer(box.getAttribute('data-q'), val, null);
+    var h = box.querySelector('.opt-hint');
+    if (h) h.textContent = '✓ Registrado en el informe';
+  }
+  function publicar(btn){
+    var areas = document.querySelectorAll('textarea[data-q]');
+    var n = 0;
+    areas.forEach(function(a){
+      var val = (a.value || '').trim();
+      if (val && window.engageAnswer){ window.engageAnswer(a.getAttribute('data-q'), val, null); n++; }
+    });
+    var note = document.getElementById('sentNote');
+    if (!n){ note.style.color = '#FFDE00'; note.textContent = 'Escribí al menos una respuesta antes de firmar 🖋️'; return; }
+    note.style.color = '#00A651';
+    note.textContent = '✓ ' + n + ' declaracion' + (n===1?'':'es') + ' firmada' + (n===1?'':'s') + '. El laboratorio te lo agradece.';
+    btn.textContent = '✓ Informe firmado';
+    btn.disabled = true;
+  }
+</script>
+<script src="engage.js"></script>
+</body></html>

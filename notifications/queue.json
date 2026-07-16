@@ -1,6 +1,36 @@
 {
-  "_updated_at": "2026-07-14T18:08:01.583Z",
+  "_updated_at": "2026-07-16T14:31:44.555Z",
   "notifications": [
+    {
+      "id": "2026-07-16-ent-preview",
+      "title": "🧬 Preview: entrevista a Carucha (sale 15:00)",
+      "body": "Test de paternidad: Carucha padre de Cobra 8-4. 4 preguntas (2 texto + 2 opción). Si algo no va, avisame antes de las 15:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-16-entrevista-carucha.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-16T10:00:00-03:00",
+      "expires_at": "2026-07-16T14:30:00-03:00",
+      "status": "sent",
+      "sent_at": "2026-07-16T14:31:44.555Z",
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-16 (PREVIEW para aprobación del primer slot personal del jueves — regla nueva de Andrés 16/07: preview 10:00, envío al entrevistado 15:00)"
+    },
+    {
+      "id": "2026-07-16-ent",
+      "title": "🧬 Carucha, el test dio positivo",
+      "body": "Sos padre de Cobra: 8-4 este año. El laboratorio te hace 4 preguntas — lo mejor sale en el próximo push del grupo 🎙️",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-16-entrevista-carucha.html",
+      "devices": [
+        "carucha"
+      ],
+      "send_at": "2026-07-16T15:00:00-03:00",
+      "expires_at": "2026-07-16T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-16 (1ª entrevista personal del jueves: Carucha, que no ganó el último lunes, stat destacada H2H 8-4 sobre Cobra; Andrés puede vetar hasta las 15:00 tras el preview de las 10:00)"
+    },
     {
       "id": "2026-07-14-a3",
       "title": "🎴 Gordo se la robó en la última mano",
@@ -198,18 +228,6 @@
       "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
-    },
-    {
-      "id": "2026-07-09-a",
-      "title": "🍿 Chusmerío de la mesa",
-      "body": "El expediente Mac (0-12 y doble deuda), la final por 8 puntos, la multa del siglo y una picada que ya es leyenda.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-09-chusmerio.html",
-      "send_at": "2026-07-09T14:00:00-03:00",
-      "expires_at": "2026-07-09T23:00:00-03:00",
-      "status": "cancelled",
-      "sent_at": null,
-      "fail_reason": "semana editorial nueva: el chusmerío pasó al domingo 05/07",
-      "created_by": "primer-ciclo-manual 2026-07-03"
     },
     {
       "id": "2026-07-10-a",

@@ -147,6 +147,19 @@
         "2026-07-14-c"
       ],
       "result_notes": null
+    },
+    {
+      "id": "2026-07-16-entrevista-carucha",
+      "title": "🧬 Laboratorio de Paternidad Unística (entrevista del jueves a Carucha)",
+      "page": "engage/2026-07-16-entrevista-carucha.html",
+      "created": "2026-07-16",
+      "status": "pending",
+      "hypothesis": "Primera edición del slot personal del jueves (regla nueva de Andrés, 16/07 por chat): entrevista de 4 preguntas (2 texto libre + 2 opción múltiple) a un no-ganador del último lunes, centrada en una stat destacable — Carucha padre de Cobra 8-4, H2H inédito recalculado de games — con preguntas orientadas a que el entrevistado se burle del resto. Carucha reactivó su sub el 14/07 y ya abre contenido espontáneamente. Métrica: >=1 answer de carucha-entrevista-qN desde device carucha + material citable para el próximo push grupal (sábado 18/07).",
+      "notified_by": [
+        "2026-07-16-ent-preview",
+        "2026-07-16-ent"
+      ],
+      "result_notes": null
     }
   ]
 }
