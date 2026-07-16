@@ -664,6 +664,13 @@
       "device": "andres",
       "ts": "2026-07-16T14:31:44.555Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-16-medallero-gordo",
+      "device": "gordo",
+      "ts": "2026-07-16T15:24:42.461Z",
+      "status_code": 201
     }
   ]
 }
