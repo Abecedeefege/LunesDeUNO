@@ -200,18 +200,6 @@
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
     },
     {
-      "id": "2026-07-09-a",
-      "title": "🍿 Chusmerío de la mesa",
-      "body": "El expediente Mac (0-12 y doble deuda), la final por 8 puntos, la multa del siglo y una picada que ya es leyenda.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-09-chusmerio.html",
-      "send_at": "2026-07-09T14:00:00-03:00",
-      "expires_at": "2026-07-09T23:00:00-03:00",
-      "status": "cancelled",
-      "sent_at": null,
-      "fail_reason": "semana editorial nueva: el chusmerío pasó al domingo 05/07",
-      "created_by": "primer-ciclo-manual 2026-07-03"
-    },
-    {
       "id": "2026-07-10-a",
       "title": "🎙️ Solo para vos: el tape de Cobra",
       "body": "Las 5 respuestas sin editar + lo que dejó picando: se va 2 semanas y una «regla con mucho barro». Hay 2 decisiones esperándote.",
