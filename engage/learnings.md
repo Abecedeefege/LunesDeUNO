@@ -26,6 +26,10 @@ REVISADO por Andrés el 16/07 a la noche):**
 - **SIN puertas/login**: las experiencias VIP se VEN abiertas (VIP es marca,
   no barrera). La activación de push se exige ÚNICAMENTE para forjar/reclamar
   una Piña Directa, y el mensaje de requisito aparece SOLO al solicitar.
+- **🏷️ REGLA FIJA "BY <ENTREVISTADO>" (Andrés, 16/07 noche):** toda
+  experiencia desprendida de una entrevista lleva SIEMPRE, automáticamente, el
+  nombre del entrevistado en el chip superior ("⭐ Experiencia VIP · By
+  Carucha"). Aplica a todas las entrevistas futuras sin que Andrés lo pida.
 - **Piña Directa** = la estadística real que mejor deja parado a UN jugador,
   exagerada al infinito, en formato póster de boxeo. La #001 (Kryptonita) es la
   excepción fundacional: pega A Cobra (pedido de Andrés, derivada de la
@@ -100,9 +104,12 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
   "Kryptonita de Cobra" desprendida de la crónica (piña directa #001, con la
   stat 17%/75%), (3) el Gimnasio de solicitudes, (4) las 11 piñas del vault.
   TODO construido y encolado en esta sesión.
-- 📰 **Vie 17/07:** preview 09:00 → push general 11:00 (crónica de la
-  entrevista). Fuera de eso, silencio; la corrida del viernes solo gestiona
-  (reconciliar que el push salió, `pina_request` nuevos, decisiones).
+- 📰 **Vie 17/07:** preview a andres 09:00 (pending). El push general
+  `2026-07-17-cronica-ent` (11:00) quedó **EN DRAFT por orden de Andrés
+  (16/07 noche): NO sale hasta que él lo apruebe por chat** — solo Andrés lo
+  convierte draft→pending; si el día pasa sin OK, no sale y se limpia. Fuera
+  de eso, silencio; la corrida del viernes solo gestiona (`pina_request`
+  nuevos, decisiones, reconciliación).
 - 🏆 **Sáb 18/07 (récords):** ¡OJO! la crónica del viernes YA quema las citas
   de Carucha — NO repetirlas como gancho. Ángulo recomendado: especial
   remontadas (pendiente del TODO) o la caída de Cobra 1º→7º. Sub-formatos ya

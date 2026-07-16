@@ -4,7 +4,7 @@
     {
       "id": "2026-07-17-cronica-ent-preview",
       "title": "🧬 Preview: la crónica de Carucha (sale 11:00)",
-      "body": "Sus 4 declaraciones + fact-check a Negro + el Kryptonita VIP (17% vs 75%). La pediste vos: sale 11:00 a todos. Avisá si algo no va.",
+      "body": "Declaraciones de Carucha + fact-check a Negro + Kryptonita. El envío general está EN BORRADOR: no sale a nadie hasta tu OK por chat.",
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-cronica-entrevista-carucha.html",
       "devices": [
         "andres"
@@ -23,10 +23,11 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-cronica-entrevista-carucha.html",
       "send_at": "2026-07-17T11:00:00-03:00",
       "expires_at": "2026-07-17T23:00:00-03:00",
-      "status": "pending",
+      "status": "draft",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00)"
+      "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00)",
+      "hold_reason": "Orden de Andres por chat (16/07 noche): la notificacion de la entrevista NO sale hasta que el la apruebe. Solo Andres convierte draft->pending."
     },
     {
       "id": "2026-07-16-medallero-gordo",
