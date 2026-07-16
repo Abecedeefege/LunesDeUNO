@@ -671,6 +671,13 @@
       "device": "gordo",
       "ts": "2026-07-16T15:24:42.461Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-16-ent",
+      "device": "carucha",
+      "ts": "2026-07-16T19:02:00.757Z",
+      "status_code": 201
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-16T15:24:42.462Z",
+  "_updated_at": "2026-07-16T19:02:00.758Z",
   "notifications": [
     {
       "id": "2026-07-16-medallero-gordo",
@@ -41,8 +41,8 @@
       ],
       "send_at": "2026-07-16T15:00:00-03:00",
       "expires_at": "2026-07-16T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-16T19:02:00.758Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-16 (1ª entrevista personal del jueves: Carucha, que no ganó el último lunes, stat destacada H2H 8-4 sobre Cobra; Andrés puede vetar hasta las 15:00 tras el preview de las 10:00)"
     },
