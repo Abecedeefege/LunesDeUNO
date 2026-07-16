@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-14T18:08:01.583Z",
+  "_updated_at": "2026-07-16T14:31:44.555Z",
   "notifications": [
     {
       "id": "2026-07-16-ent-preview",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-16T10:00:00-03:00",
       "expires_at": "2026-07-16T14:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-16T14:31:44.555Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-16 (PREVIEW para aprobación del primer slot personal del jueves — regla nueva de Andrés 16/07: preview 10:00, envío al entrevistado 15:00)"
     },
