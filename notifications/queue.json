@@ -2,6 +2,33 @@
   "_updated_at": "2026-07-16T19:02:00.758Z",
   "notifications": [
     {
+      "id": "2026-07-17-cronica-ent-preview",
+      "title": "🧬 Preview: la crónica de Carucha (sale 11:00)",
+      "body": "Sus 4 declaraciones + fact-check a Negro + el Kryptonita VIP (17% vs 75%). La pediste vos: sale 11:00 a todos. Avisá si algo no va.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-cronica-entrevista-carucha.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-17T09:00:00-03:00",
+      "expires_at": "2026-07-17T10:45:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-16 (PREVIEW regla fija de las 09:00 para el push especial del viernes pedido por Andres por chat)"
+    },
+    {
+      "id": "2026-07-17-cronica-ent",
+      "title": "🧬 Carucha declaró: «a los padres no se les gana»",
+      "body": "El informe del test, firmado. Y el hallazgo del año: Cobra gana el 75% de las fechas sin Carucha… y el 17% con él. Expediente VIP adentro.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-cronica-entrevista-carucha.html",
+      "send_at": "2026-07-17T11:00:00-03:00",
+      "expires_at": "2026-07-17T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00)"
+    },
+    {
       "id": "2026-07-16-medallero-gordo",
       "title": "🎩 Gordo, tu Medallero estrena salón",
       "body": "La Biblioteca del UNO ya está live: las estrellas de los tres años en estantes de roble, con el hogar prendido. Firmada «By Gordo» en Estadísticas → Experiencias. Compartila con el grupo 🎴",

@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🧬 Carucha declaró — Ciencia y Mazo</title>
+<style>
+  :root{
+    --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
+    --red:#ED1C24; --yellow:#FFDE00; --green:#00A651; --blue:#0072BC;
+    --text:#eaeaf0; --dim:#9a9aa8; --lab:#7ef0c8; --kry:#39ff14;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 60px}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--text)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+
+  /* cabecera de revista científica */
+  .masthead{margin-top:14px;border:1px solid var(--lab);border-radius:14px 14px 0 0;background:linear-gradient(180deg,#0f1a17,#0d0d12);padding:14px;border-bottom:3px double var(--lab)}
+  .masthead .brand{font-size:1.5rem;font-weight:900;letter-spacing:.05em}
+  .masthead .brand b{color:var(--lab)}
+  .masthead .meta{font-size:.64rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-top:4px}
+  .cover{border:1px solid var(--lab);border-top:none;border-radius:0 0 14px 14px;padding:16px 14px;background:repeating-linear-gradient(45deg, rgba(126,240,200,.03) 0 12px, transparent 12px 24px)}
+  .kicker{display:inline-block;background:var(--red);color:#fff;font-weight:800;font-size:.68rem;letter-spacing:.16em;padding:3px 9px;border-radius:4px;text-transform:uppercase}
+  h1{font-size:1.5rem;line-height:1.25;margin:10px 0 8px}
+  h1 b{color:var(--lab)}
+  .lead{color:var(--dim);font-size:.92rem;line-height:1.55}
+  .lead b{color:var(--text)}
+  .faces{display:flex;align-items:center;gap:8px;margin:14px 0 2px}
+  .faces img{width:58px;height:58px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#222}
+  .faces .score{font-size:1.5rem;font-weight:900;color:var(--lab)}
+
+  h2{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lab);margin:24px 0 10px;border-bottom:1px dashed rgba(126,240,200,.35);padding-bottom:6px}
+
+  /* declaraciones */
+  .decl{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:12px}
+  .decl .qq{font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+  .decl blockquote{border-left:4px solid var(--lab);padding:6px 0 6px 12px;font-size:.95rem;line-height:1.55;font-style:italic}
+  .decl blockquote b{color:var(--lab);font-style:normal}
+  .decl .firma{margin-top:8px;display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--dim)}
+  .decl .firma img{width:28px;height:28px;border-radius:50%;border:2px solid #fff;object-fit:cover}
+  .factcheck{margin-top:10px;background:rgba(255,222,0,.06);border:1px solid rgba(255,222,0,.25);border-left:4px solid var(--yellow);border-radius:8px;padding:8px 10px;font-size:.76rem;color:var(--dim);line-height:1.5}
+  .factcheck b{color:var(--yellow)}
+
+  /* bloque VIP kryptonita */
+  .vip{
+    margin-top:26px;border:2px solid var(--kry);border-radius:14px;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%, rgba(57,255,20,.12), transparent 60%), #0c120c;
+    box-shadow:0 0 24px rgba(57,255,20,.15);
+  }
+  .vip .tag{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(57,255,20,.35);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase}
+  .vip .tag .l{color:var(--kry);font-weight:800}
+  .vip .tag .r{color:var(--dim)}
+  .vip .body{padding:16px 14px}
+  .vip h3{font-size:1.3rem;line-height:1.25;color:var(--kry);text-shadow:0 0 14px rgba(57,255,20,.5)}
+  .vip p{margin-top:8px;font-size:.88rem;color:var(--dim);line-height:1.55}
+  .vip p b{color:var(--text)}
+  .vip .nums{display:flex;gap:10px;margin-top:14px}
+  .vip .num{flex:1;background:rgba(57,255,20,.06);border:1px solid rgba(57,255,20,.3);border-radius:10px;padding:10px;text-align:center}
+  .vip .num .v{font-size:1.7rem;font-weight:900;color:var(--kry)}
+  .vip .num .k{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+  .vip a.go{
+    display:block;margin-top:14px;background:var(--kry);color:#04140a;text-align:center;text-decoration:none;
+    border-radius:10px;padding:13px;font-weight:900;font-size:.95rem;letter-spacing:.02em;
+  }
+
+  .deuda{margin-top:24px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:12px;padding:14px;font-size:.88rem;line-height:1.55;color:var(--dim)}
+  .deuda b{color:var(--text)}
+  .cierre{margin-top:24px;text-align:center;font-size:1.05rem;font-weight:800;line-height:1.5}
+  .cierre b{color:var(--yellow)}
+
+  .react,.cta,.engage-actions{
+    margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:14px;font-size:.85rem;color:var(--dim);
+  }
+  .react button,.cta button,.engage-actions button{
+    background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);
+    padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit;
+  }
+  .react button:hover,.cta button:hover,.engage-actions button:hover{border-color:var(--lab)}
+  .react-hint,.q-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+  .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <div class="masthead">
+      <div class="brand">🧬 CIENCIA <b>&</b> MAZO</div>
+      <div class="meta">Edición especial · Viernes 17/07/2026 · El informe del Laboratorio de Paternidad Unística</div>
+    </div>
+    <div class="cover">
+      <span class="kicker">Exclusivo</span>
+      <h1>Carucha firmó el informe: <b>«a los padres no se les gana, se les agradece»</b></h1>
+      <div class="faces">
+        <img src="../assets/faces/carucha.png" alt="Carucha">
+        <span class="score">8–4</span>
+        <img src="../assets/faces/cobra.png" alt="Cobra">
+      </div>
+      <p class="lead">El jueves el laboratorio le notificó a <b>Carucha</b> el resultado del test:
+      positivo, <b>padre de Cobra 8-4</b> en las 12 noches que compartieron este año. Anoche llegó
+      su declaración completa, firmada. Y de paso, la División de Fobias descubrió algo mucho
+      más grande (seguí leyendo).</p>
+    </div>
+
+    <h2>📄 La declaración del padre</h2>
+
+    <div class="decl">
+      <div class="qq">Sobre su hijo Cobra — el más ganador del año (5 coronas), hundido del 1° al 7° de la T5 por faltar el lunes</div>
+      <blockquote>«Me encantaría decir que es un orgullo tener un hijo… Pero <b>el Cobra es una
+      excepción</b>. La última regla que puso fue tan mala que Mcclew sigue enredado después del
+      último UNO. Cuenta la leyenda que sigue en el fondo de Guayaquí sin encontrar la salida.»</blockquote>
+      <div class="firma"><img src="../assets/faces/carucha.png" alt=""> Carucha, declaración textual al laboratorio, 16/07 19:16</div>
+    </div>
+
+    <div class="decl">
+      <div class="qq">Hipótesis científica elegida: ¿por qué el más ganador del año pierde sistemáticamente con él?</div>
+      <blockquote>«🧬 Es genética: <b>a los padres no se les gana, se les agradece</b>.»</blockquote>
+      <div class="firma"><img src="../assets/faces/carucha.png" alt=""> Marcado en el informe genético, sin dudar</div>
+    </div>
+
+    <div class="decl">
+      <div class="qq">Veredicto sobre el caso Naso (debe el postre desde el lunes)</div>
+      <blockquote>«💸 Que pague doble: <b>uno por la deuda y otro por hacernos esperar</b>.»</blockquote>
+      <div class="firma"><img src="../assets/faces/carucha.png" alt=""> Fiscalía del postre, dictamen firmado</div>
+    </div>
+
+    <div class="decl">
+      <div class="qq">Denuncia con firma: el jugador más sucio de la mesa</div>
+      <blockquote>«<b>El Negro</b>. Sensei magna cum laude del arte de llorar. Jamás levanta una multa.»</blockquote>
+      <div class="firma"><img src="../assets/faces/carucha.png" alt=""> Denuncia ante el Tribunal de Ética Unística</div>
+      <div class="factcheck"><b>Verificación del laboratorio:</b> los registros muestran que Negro
+      SÍ levantó una multa este año — una sola, de 70 puntos, la segunda más cara de 2026 (el
+      récord sigue siendo el multón de 150 de Tano). O sea: llora, pero pagó caro una vez. La
+      denuncia queda <b>parcialmente confirmada</b>.</div>
+    </div>
+
+    <h2>🚨 Lo que encontró la División de Fobias</h2>
+
+    <div class="vip">
+      <div class="tag"><span class="l">⭐ Experiencia VIP</span><span class="r">Piña directa · Solo socios</span></div>
+      <div class="body">
+        <h3>☢️ EL KRYPTONITA DE COBRA</h3>
+        <p>Mientras Carucha declaraba, los peritos cruzaron <b>las 16 fechas que jugó Cobra</b>
+        este año contra la lista de presentes. El resultado es el hallazgo científico del año:
+        <b>Cobra no pierde con Carucha — Cobra juega con miedo si Carucha respira cerca.</b></p>
+        <div class="nums">
+          <div class="num"><div class="v">17%</div><div class="k">gana con Carucha en la mesa</div></div>
+          <div class="num"><div class="v">75%</div><div class="k">gana si Carucha no viene</div></div>
+        </div>
+        <p>El expediente completo — fecha por fecha, con los márgenes, los temblores y el
+        diagnóstico clínico — es la primera <b>Piña Directa</b> de la historia, y es solo para
+        socios con notificaciones activas.</p>
+        <a class="go" href="2026-07-17-kryptonita-cobra.html">☢️ Abrir el expediente VIP</a>
+      </div>
+    </div>
+
+    <div class="deuda">🍮 <b>Mientras tanto, en la Fiscalía:</b> la deuda de Naso cumple
+    <b>4 días este viernes</b> (quedó último el lunes 13/07 con 414). Ya hay dictamen de
+    Carucha: doble. La mesa espera.</div>
+
+    <p class="cierre">El lunes 20/07 se juega.<br>La única pregunta que importa:
+    <b>¿viene el padre… y aparece el hijo?</b> 🧬🐍</p>
+
+    <div class="react">¿Qué tal estuvo el informe?
+      <button onclick="engageReact('2026-07-17-cronica-entrevista-carucha','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-17-cronica-entrevista-carucha','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-17-cronica-entrevista-carucha','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-17-cronica-entrevista-carucha','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="cta">¿Querés más entrevistas como la de Carucha?
+      <button onclick="engageAnswer('cronica-entrevista-mas','si',this)">Sí, que declaren todos</button>
+      <button onclick="engageAnswer('cronica-entrevista-mas','no',this)">No hace falta</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="engage-actions">¿Este informe queda en el archivo?
+      <button onclick="engageApprove('2026-07-17-cronica-entrevista-carucha',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-17-cronica-entrevista-carucha',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div class="foot">🎴 LUNES DE UNO · CIENCIA & MAZO · 17/07/2026</div>
+  </div>
+
+<script src="engage.js"></script>
+</body></html>

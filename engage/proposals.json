@@ -153,12 +153,68 @@
       "title": "🧬 Laboratorio de Paternidad Unística (entrevista del jueves a Carucha)",
       "page": "engage/2026-07-16-entrevista-carucha.html",
       "created": "2026-07-16",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Primera edición del slot personal del jueves (regla nueva de Andrés, 16/07 por chat): entrevista de 4 preguntas (2 texto libre + 2 opción múltiple) a un no-ganador del último lunes, centrada en una stat destacable — Carucha padre de Cobra 8-4, H2H inédito recalculado de games — con preguntas orientadas a que el entrevistado se burle del resto. Carucha reactivó su sub el 14/07 y ya abre contenido espontáneamente. Métrica: >=1 answer de carucha-entrevista-qN desde device carucha + material citable para el próximo push grupal (sábado 18/07).",
       "notified_by": [
         "2026-07-16-ent-preview",
         "2026-07-16-ent"
       ],
+      "result_notes": "PROMOVIDA: proposal_approved de andres (boton, 16/07 11:59 local, tras el preview de las 10:00) + chat de Andres 10:15. Carucha contesto las 4 preguntas el mismo jueves 16:15 local (device carucha): q1 texto sobre Cobra ('el Cobra es una excepcion... Mcclew sigue enredado... fondo de Guayaqui'), q2=genetica, q3=pague-doble, q4 texto contra Negro ('sensei magna cum laude del arte de llorar'). Reaccion love + approve tambien de carucha (señal secundaria). Dwell 299s scroll 100%. Material citado en la cronica del viernes 17/07 (pedido de Andres)."
+    },
+    {
+      "id": "2026-07-17-cronica-entrevista-carucha",
+      "title": "🧬 Ciencia & Mazo: la crónica de la entrevista de Carucha",
+      "page": "engage/2026-07-17-cronica-entrevista-carucha.html",
+      "created": "2026-07-16",
+      "status": "pending",
+      "hypothesis": "Pedida por Andres por chat (16/07): cronica de la entrevista del jueves con las declaraciones textuales de Carucha (4 respuestas reales), fact-check de la denuncia a Negro (multa de 70, la 2da mas cara del año), dictamen sobre la deuda de Naso (4 dias al viernes) y teaser del expediente VIP Kryptonita de Cobra. Push VIERNES 11:00 por orden explicita de Andres (excepcion unica al silencio de los viernes y al horario 14:00). Metrica: clicks del push + dwell + vip_unlock en el kryptonita.",
+      "notified_by": [
+        "2026-07-17-cronica-ent-preview",
+        "2026-07-17-cronica-ent"
+      ],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-17-kryptonita-cobra",
+      "title": "☢️ El Kryptonita de Cobra — Piña Directa #001 (experiencia VIP)",
+      "page": "engage/2026-07-17-kryptonita-cobra.html",
+      "created": "2026-07-16",
+      "status": "pending",
+      "hypothesis": "Pedida por Andres por chat (16/07): primera experiencia VIP tipo 'piña directa', desprendida de la cronica de la entrevista. Estadistica real y pura exagerada al infinito: Cobra gana 2/12 (17%) con Carucha presente vs 3/4 (75%) sin el; sus ultimas 3 coronas son exactamente las ultimas 3 ausencias de Carucha; margenes 1 y 16 con papa vs 70/107/21 sin papa; 2 ultimos puestos con Carucha en la mesa. Puerta VIP: valida device de localStorage contra pushSubs (status active) via runQuery; eventos vip_unlock/vip_locked miden la puerta. Linkeada SOLO desde la cronica del 17/07. Metrica: vip_unlock + reaccion + approve de andres.",
+      "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "pina-directa-gimnasio",
+      "title": "🥊 El Gimnasio de las Piñas (solicitud de Piña Directa propia, VIP)",
+      "page": "engage/pina-directa.html",
+      "created": "2026-07-16",
+      "status": "vault",
+      "hypothesis": "Pedida por Andres por chat (16/07): pagina permanente (sin fecha en el nombre) donde un jugador con push activa y device validado (misma puerta VIP contra pushSubs) puede SOLICITAR su propia Piña Directa. El boton emite evento engagement type=pina_request con id pina-req-<device> (idempotente por device). Protocolo de atencion del pedido: ver learnings.md seccion PIÑA DIRECTA. status=vault: pedido explicito del dueño, NO expira a los 7 dias; su ciclo de vida lo decide Andres.",
+      "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "pina-directa-serie",
+      "title": "🥊 Serie Piña Directa 2026 (11 piñas pre-forjadas, una por jugador, URLs secretas)",
+      "page": "engage/pina-*.html (11 archivos, ver pages)",
+      "pages": [
+        "engage/pina-pt-fd4cb05e.html",
+        "engage/pina-mac-19ac3eb2.html",
+        "engage/pina-mata-32b16d4d.html",
+        "engage/pina-gael-239245bf.html",
+        "engage/pina-nachi-eb23fea7.html",
+        "engage/pina-carucha-a0bdc735.html",
+        "engage/pina-gordo-5cec1f1c.html",
+        "engage/pina-cobra-307c49eb.html",
+        "engage/pina-naso-e6513433.html",
+        "engage/pina-negro-e5f44ee5.html",
+        "engage/pina-tano-9a332eeb.html"
+      ],
+      "created": "2026-07-16",
+      "status": "vault",
+      "hypothesis": "Pedida por Andres por chat (16/07): piña directa pre-forjada de CADA jugador con la estadistica verificada que mejor lo deja parado (recalculada de games, 17 fechas). URLs con sufijo hex no adivinable, JAMAS linkeadas desde paginas ni pushes grupales — solo se entregan por push personal al dueño cuando la solicita en el Gimnasio (o por decision de Andres). Los botones de approve de estas paginas apuntan al proposal pina-directa-serie. status=vault: no expiran a los 7 dias; una vez ENTREGADA una piña, esa entrega si se evalua con las señales normales.",
+      "notified_by": [],
       "result_notes": null
     }
   ]
