@@ -1,6 +1,21 @@
 {
-  "_updated_at": "2026-07-16T14:31:44.555Z",
+  "_updated_at": "2026-07-16T15:26:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-16-medallero-gordo",
+      "title": "🎩 Gordo, tu Medallero estrena salón",
+      "body": "La Biblioteca del UNO ya está live: las estrellas de los tres años en estantes de roble, con el hogar prendido. Firmada «By Gordo» en Estadísticas → Experiencias. Compartila con el grupo 🎴",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/medallero-biblioteca-383a3a69.html",
+      "devices": [
+        "gordo"
+      ],
+      "send_at": "2026-07-16T12:20:00-03:00",
+      "expires_at": "2026-07-16T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "claude-session medallero 2026-07-16 (pedido de Andrés: avisarle a Gordo del medallero nuevo — La Biblioteca del UNO — para que lo comparta con el resto del grupo)"
+    },
     {
       "id": "2026-07-16-ent-preview",
       "title": "🧬 Preview: entrevista a Carucha (sale 15:00)",
