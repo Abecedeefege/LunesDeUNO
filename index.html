@@ -1087,6 +1087,23 @@
     }
     .stats-tab-panel { display: none; }
     .stats-tab-panel.active { display: block; }
+
+    /* Pestaña Experiencias: tarjetas-link a experiencias del club */
+    .exp-card {
+      display: flex; align-items: center; gap: .8rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: .9rem 1rem;
+      text-decoration: none; color: var(--text);
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .exp-card:hover { transform: translateY(-2px); border-color: var(--uno-yellow); }
+    .exp-face {
+      width: 46px; height: 46px; border-radius: 50%; object-fit: cover;
+      border: 2px solid var(--uno-yellow); flex: 0 0 46px; background: var(--surface-2);
+    }
+    .exp-label { font-weight: 700; font-size: 1rem; }
+    .exp-label small { display: block; font-weight: 500; color: var(--text-muted); font-size: .72rem; margin-bottom: .1rem; }
+    .exp-arrow { margin-left: auto; color: var(--text-muted); font-size: 1.15rem; }
     .stats-hero {
       display: flex; align-items: center; gap: .8rem;
       padding: 1rem; background: var(--surface-2); border-radius: 12px;
@@ -1686,6 +1703,7 @@
       <button class="stats-tab-btn" data-tab="leaderboardSeason" onclick="switchStatsTab('leaderboardSeason')" data-i18n="stats_tab_leaderboard_season"></button>
       <button class="stats-tab-btn" data-tab="seasons" onclick="switchStatsTab('seasons')" data-i18n="stats_tab_seasons"></button>
       <button class="stats-tab-btn" data-tab="h2h" onclick="switchStatsTab('h2h')" data-i18n="stats_tab_h2h"></button>
+      <button class="stats-tab-btn" data-tab="experiencias" onclick="switchStatsTab('experiencias')" data-i18n="stats_tab_experiencias"></button>
     </div>
 
     <div id="statsTab_player" class="stats-tab-panel active">
@@ -1736,6 +1754,14 @@
       </div>
       <p style="color:var(--text-muted);font-size:.75rem;margin-top:.5rem;" data-i18n="stats_h2h_help"></p>
       <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('h2hMatrix', 'stats_tab_h2h', this)" data-i18n="stats_share_wa"></button>
+    </div>
+
+    <div id="statsTab_experiencias" class="stats-tab-panel">
+      <a class="exp-card" href="medallero-biblioteca-383a3a69.html">
+        <img class="exp-face" src="assets/faces/gordo.png" alt="Gordo" loading="lazy">
+        <span class="exp-label"><small>By Gordo:</small> Medallero</span>
+        <span class="exp-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
 
     <div style="margin-top:1rem; text-align:center;">
@@ -2016,6 +2042,7 @@ const STRINGS = {
     stats_season_selector_label: 'Temporada:',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
+    stats_tab_experiencias: 'Experiencias',
     stats_player_label: 'Jugador:',
     stats_sort_label: 'Ordenar por:',
     stats_h2h_help: 'Cada celda muestra victorias del jugador de la fila sobre el de la columna / partidas jugadas juntos.',
@@ -2203,6 +2230,7 @@ const STRINGS = {
     stats_season_selector_label: 'Season:',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
+    stats_tab_experiencias: 'Experiencias',
     stats_player_label: 'Player:',
     stats_sort_label: 'Sort by:',
     stats_h2h_help: 'Each cell shows row-player wins over column-player / games played together.',
