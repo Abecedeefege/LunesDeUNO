@@ -33,26 +33,31 @@ privado (JAMÁS en página ni push).
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Negro | 🍮/🧀 postre o picada | 06/07 (Chorolo, quedó último con 417) | IMPAGA. **10 días** al 16/07. | `deuda-negro-postre-2026-07-06` |
-| Naso | 🍮/🧀 postre o picada | 13/07 (Carucha, quedó último con 414) | IMPAGA. **3 días** al 16/07, sin preguntar aún. | `deuda-naso-postre-2026-07-13` |
+| Naso | 🍮/🧀 postre o picada | 13/07 (Carucha, quedó último con 414) | IMPAGA. **3 días** al 16/07, sin preguntar aún. La ÚNICA deuda viva. | `deuda-naso-postre-2026-07-13` |
 
-Saldadas / archivadas:
-- **Tano** — postre/picada desde 23/06. **PAGADA** (answer `pagada` de andres,
-  12/07 19:23:41 UY). Duración final: **19 días**. ⚠️ `index.html` todavía
-  muestra el div — diverge del ledger (que manda para contenido). Sin cambio.
+Saldadas / archivadas (Andrés confirmó por chat el 16/07 y se limpiaron los
+divs de index.html — home y ledger vuelven a estar en sync):
+- **Tano** — postre/picada desde 23/06. **PAGADA** (answer `pagada` de andres
+  12/07, confirmada por chat 16/07). Duración final: **19 días**. Pagó con
+  alfajores triple Portezuelo de Punta Ballena — gasto mínimo y al público no
+  le gustaron. Material de chusmerío: pagó, pero pagó MAL.
+- **Negro** — postre/picada desde 06/07 (Chorolo, último con 417). **PAGADA**
+  (Andrés por chat 16/07). Duración final: **~10 días**. Pagó con una
+  excelente picada: quesos franceses, de cabra, provolone y galletas. El
+  contraste con los alfajores de Tano es un ángulo servido.
+- **Gael** — postre por perder la T4. **PAGADA** (Andrés por chat 16/07):
+  llevó un Martín Fierro, gasto mínimo pero gustó. 🚩 CASO CERRADO por
+  decisión del dueño: `seasons/4` dice `loserPlayerId: mac`, pero Andrés
+  confirmó la deuda de Gael como real y pagada — la palabra de Andrés manda
+  sobre el dato crudo. No volver a cuestionarla en contenido.
 - **Mac** — sus dos deudas (postre 30/06, cena T4) desaparecieron de
   index.html en commits directos de otra sesión. Sin `answer` de pago — no se
   recontarán salvo que reaparezcan en el home.
 
-🚩 **DATO SIN VERIFICAR — POSIBLE ERROR EN EL HOME (sigue sin resolver, ~9
-días):** `index.html` sigue con "Gael debe postre por perder T4" (commit
-`cca7dde`, 08/07). Contra `seasons/4`: `winnerPlayerId: cobra`,
-**`loserPlayerId: mac`** — el perdedor de la T4 es Mac, no Gael, y paga
-**cena**, no postre. No se incorpora al ledger ni a contenido hasta que
-Andrés lo confirme/corrija. Ya lleva más de una semana sin resolverse:
-próxima experiencia con botones (récords del sábado 18/07 o chusmerío del
-domingo 19/07) debe preguntarlo directo con `engageAnswer` en vez de seguir
-esperando.
+📊 **Ranking de pagadores (para contenido futuro):** Negro pagó de lujo
+(picada francesa) > Gael cumplió digno (Martín Fierro, barato pero rico) >
+Tano pagó de mala gana (alfajores que no gustaron). Todo confirmado por
+Andrés, publicable.
 
 ## 🚀 SÍNTESIS: qué convierte (números reales)
 
@@ -66,8 +71,11 @@ esperando.
   `proposal_approved`/`proposal_rejected`: la proposal sigue `pending` (no
   decide sola una visita, solo el botón). Sin señal de si ya la reenvió por
   WhatsApp (no hay evento para eso).
-- Sin novedades de deudas: cero answers nuevos sobre Negro o Naso desde el
-  15/07.
+- **Deudas: día de liquidación (16/07, por chat de Andrés):** Tano, Negro y
+  Gael figuran PAGADAS y salieron del home. Queda solo Naso (3 días). Los
+  detalles de qué llevó cada uno (ver ledger) son material de primera para
+  el chusmerío del domingo — el conteo de deudas como running gag muta a
+  "quién pagó mejor".
 - Sin partidas nuevas desde el 13/07 — nada que recalcular en superlativos
   todavía.
 
@@ -95,9 +103,12 @@ esperando.
 - Proposals: **2026-07-13-entrevista-gordo** sigue `pending` (creada 14/07,
   vence 21/07 si no hay decisión; Andrés ya la abrió el 15/07 pero no aprobó
   ni rechazó). Resto sin cambios (10 promovidas, 1 dropeada).
-- Home (`index.html`): deuda de Tano sigue en el div pese a estar pagada;
-  Gael/T4 sin verificar sigue ahí (ya 9 días sin resolver — ver ledger de
-  deudas arriba). Sin cambios hoy — index.html no se toca.
+- Home (`index.html`): **limpiado hoy a pedido directo de Andrés por chat**
+  (única excepción válida a la regla "no tocar"): se quitaron los tres divs
+  de deuda (Tano, Negro, Gael) porque las tres están pagadas. Queda solo el
+  div vacío `data-i18n` que la app maneja sola. Home y ledger en sync por
+  primera vez desde el 08/07. Ojo: la deuda de Naso (13/07) nunca tuvo div
+  en el home — el conteo vive solo en el ledger y las experiencias.
 
 ## 🗓️ Semana en curso
 
@@ -109,29 +120,30 @@ esperando.
   independiente (regla nueva del 14/07).
 - 🔇 Miércoles 15/07: silencio. Proposal de la crónica promovida, cola
   purgada.
-- 🔇 **Jueves 16/07 (hoy): silencio.** Gestión: sin partidas nuevas, sin
-  decisiones de proposals, sin answers de deuda. Solo housekeeping: purga de
-  `2026-07-09-a` en la cola y refresco del ledger de deudas (Negro 10 días,
-  Naso 3 días).
+- 🔇 **Jueves 16/07 (hoy): silencio de pushes, pero día de noticias.** En la
+  corrida de la mañana: purga de `2026-07-09-a` y refresco del ledger. Más
+  tarde, Andrés liquidó por chat las deudas de Tano, Negro y Gael (pagadas,
+  con detalle de qué llevó cada uno) y pidió limpiar el home — hecho.
 - Próximo: viernes 17/07 también silencio. **Sábado 18/07** vuelve el slot de
   récords (corregido: NO es el 19/07 como decía la corrida anterior — el
   19/07 es domingo) — evaluar sub-formato nuevo (ya usados: clásico 04/07,
   horóscopo 11/07; NO repetir ninguno de los dos). Ángulo fuerte disponible:
   la caída de Cobra en la T5 (1º→7º por faltar) puede alimentar un especial
   de rachas/ausencias, o ir directo a "especial remontadas" (pendiente hace
-  semanas en el TODO). **Domingo 19/07** chusmerío — ambos slots son buena
-  oportunidad para preguntar con botones el error Gael/Mac de la T4 que sigue
-  sin resolver.
+  semanas en el TODO). **Domingo 19/07** chusmerío — el ángulo servido es
+  "día de liquidación": tres deudas pagadas en una semana, ranking de
+  pagadores (picada francesa de Negro vs alfajores fallidos de Tano), y Naso
+  como último moroso en pie.
 
 ## TODO / ángulos sin usar
 
-Especial "remontadas" (fuerte candidato para el sábado 18/07) · especial
-sedes · aniversarios (648 de Naso, multa 150 de Tano) · copy dirigido con
-nombre para reactivar a negro si sigue sin dwell propio · preguntar con
-botones el error Gael/T4 en la próxima experiencia (récords 18/07 o
-chusmerío 19/07) en vez de seguir esperando confirmación de Andrés ·
-preguntar a Negro/Naso el estado de sus deudas en la próxima
-previa/chusmerío con `engageAnswer` · replicar el flujo del club con
+Especial "remontadas" (fuerte candidato para el sábado 18/07) · "día de
+liquidación" con ranking de pagadores (candidato fuerte para el chusmerío
+del 19/07 — Negro de lujo, Gael digno, Tano de mala gana, Naso el único
+moroso) · especial sedes · aniversarios (648 de Naso, multa 150 de Tano) ·
+copy dirigido con nombre para reactivar a negro si sigue sin dwell propio ·
+preguntar a Naso el estado de su deuda en la próxima previa/chusmerío con
+`engageAnswer` · replicar el flujo del club con
 nachi/naso/tano (los 3 que faltan) — el caso Gordo demostró que funciona en
 horas · posible especial "el regreso de Cobra" para cuando vuelva a aparecer
 · H2H sin publicar todavía: Carucha 8–4 Cobra (sin cambios, no jugaron juntos
