@@ -38,7 +38,13 @@ REVISADO por Andrés el 16/07 a la noche):**
   abierta; al tocar "solicitar" valida `lunesdeuno_device_name` contra
   `pushSubs` (active) vía runQuery. OK → evento `pina_request` (id
   `pina-req-<device>`); sin nombre o sin push → mensaje "asociá tu nombre de
-  jugador a un device con push activas" + evento `pina_request_blocked`.
+  jugador a un device con push activas" + link a `../club.html` ("Activá tus
+  push en el Club") + evento `pina_request_blocked`. **EXCEPCIÓN AUTORIZADA
+  por Andrés (16/07 noche): este mensaje post-click del Gimnasio es el ÚNICO
+  lugar del sitio donde se puede linkear club.html** — sigue prohibido en
+  pushes y en cualquier otra página. Tras cada solicitud (o bloqueo), el
+  agente la confirma en la corrida siguiente: entrega por push si corresponde
+  o reporta a Andrés.
 - **PROTOCOLO DE SOLICITUD (cada corrida):** buscar eventos `pina_request`
   nuevos → si el device tiene sub activa y su piña está en el vault → encolar
   push personal a ESE device con su URL secreta (preview a andres 09:00 del
