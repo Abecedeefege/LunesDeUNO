@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>El Medallero — La Biblioteca de la Galera · Lunes de UNO</title>
+<meta name="description" content="La Biblioteca de la Galera: reading room de campeones de Lunes de UNO. 23 temporadas catalogadas en tres estantes. Prohibido gritar UNO.">
+<script>
+// Fuentes de Google cargadas por fetch (no <link>) para no bloquear el primer
+// render y degradar en silencio a serif de sistema si la red falla.
+(function loadGoogleFonts(){
+  try{
+    var controller = new AbortController();
+    var timeout = setTimeout(function(){ controller.abort(); }, 7000);
+    fetch('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700;900&family=Inter:wght@400;500;600;700;800&display=swap', { signal: controller.signal })
+      .then(function(r){ clearTimeout(timeout); if(!r.ok) throw new Error('font css'); return r.text(); })
+      .then(function(css){
+        var style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
+      })
+      .catch(function(){ /* silencioso: quedan las serif del sistema */ });
+  }catch(e){ /* silencioso */ }
+})();
+</script>
+<style>
+/* ============ RESET ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+img{max-width:100%;display:block;}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;}
+ul{list-style:none;}
+a{color:inherit;}
+
+/* ============ TOKENS — club victoriano ============ */
+:root{
+  --bg:#070b09;             /* casi negro con verde */
+  --racing:#0c231a;         /* verde inglés oscuro */
+  --racing2:#123328;
+  --oak:#241609;            /* roble oscuro */
+  --oak2:#3a2513;
+  --caoba:#4a2415;
+  --oxblood:#4a1512;        /* cuero oxblood */
+  --brass:#c9a54a;          /* latón */
+  --brass-hi:#ecd28f;
+  --gold:#d4af37;
+  --cream:#efe6d0;
+  --muted:#9a8f76;
+  --lampwarm:rgba(255,214,140,.9);
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --star-base:44px;         /* tamaño de referencia de estrella (generación 2025) */
+}
+@media (max-width:520px){:root{--star-base:36px;}}
+
+body{
+  background:
+    radial-gradient(ellipse 120% 70% at 50% -10%, rgba(18,51,40,.55), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 50% 115%, rgba(74,21,18,.25), transparent 60%),
+    var(--bg);
+  color:var(--cream);
+  font-family:var(--sans);
+  line-height:1.5;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+body.modal-open{overflow:hidden;}
+::selection{background:rgba(201,165,74,.35);color:#fff;}
+.container{max-width:1100px;margin:0 auto;padding:0 20px;}
+
+/* pausa global de animaciones CSS cuando la pestaña queda en segundo plano */
+.anim-paused *{animation-play-state:paused !important;}
+
+/* reduced motion: se anula TODO el movimiento (los loops de canvas se gatean en JS) */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;}
+}
+
+/* ============ NAV ============ */
+.nav-club{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;
+  background:rgba(7,11,9,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(201,165,74,.22);
+}
+.nav-link{
+  font-size:.78rem;font-weight:700;letter-spacing:.04em;text-decoration:none;
+  color:var(--brass-hi);padding:7px 13px;border-radius:999px;
+  border:1px solid rgba(201,165,74,.3);background:rgba(12,35,26,.5);
+  transition:background .2s ease, transform .2s ease;
+  white-space:nowrap;
+}
+.nav-link:hover,.nav-link:focus-visible{background:rgba(201,165,74,.16);transform:translateY(-1px);}
+
+/* ============ OVERLAYS DE LUZ ============ */
+/* luces bajas por defecto (club en penumbra); body.luces-altas levanta la sala */
+.dim-overlay{
+  position:fixed;inset:0;z-index:30;pointer-events:none;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 40%, transparent 30%, rgba(0,0,0,.55) 100%),
+    rgba(2,4,3,.28);
+  opacity:1;transition:opacity 1.1s ease;
+}
+body.luces-altas .dim-overlay{opacity:.12;}
+#flash-overlay{
+  position:fixed;inset:0;z-index:31;pointer-events:none;
+  background:linear-gradient(200deg, rgba(205,225,255,.9), rgba(205,225,255,.35) 60%, transparent);
+  opacity:0;transition:opacity 90ms ease-out;
+}
+
+/* ============ HERO ============ */
+#hero{
+  position:relative;
+  min-height:88svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:96px 20px 48px;
+  overflow:hidden;
+}
+.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:680px;}
+.crest{
+  position:relative;width:152px;height:152px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 32%, #17402f, #0a1d15 72%);
+  border:3px solid var(--brass);
+  box-shadow:0 0 0 6px rgba(12,35,26,.9), 0 0 0 7px rgba(201,165,74,.45),
+    0 18px 50px -12px rgba(0,0,0,.8), inset 0 0 30px rgba(0,0,0,.55);
+  -webkit-tap-highlight-color:transparent;
+}
+.crest img{width:96px;height:auto;filter:drop-shadow(0 6px 12px rgba(0,0,0,.7));}
+.crest::after{
+  content:'EST. 2024 · LVNES DE VNO';
+  position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);
+  font-family:var(--serif);font-size:.55rem;letter-spacing:.14em;color:#20140a;
+  background:linear-gradient(180deg,var(--brass-hi),var(--brass));
+  padding:3px 12px;border-radius:999px;white-space:nowrap;
+  box-shadow:0 3px 8px rgba(0,0,0,.6);
+}
+@keyframes bowHat{
+  0%{transform:translateY(0) rotate(0);}
+  32%{transform:translateY(-18px) rotate(-16deg);}
+  58%{transform:translateY(-9px) rotate(9deg);}
+  100%{transform:translateY(0) rotate(0);}
+}
+.crest.saluda img{animation:bowHat .95s cubic-bezier(.34,1.45,.4,1);}
+.hero-title{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(2.3rem,10vw,4.8rem);
+  line-height:1.02;letter-spacing:.01em;
+  background:linear-gradient(100deg,#8a6a1f 12%,var(--gold) 35%,#f6e7b8 50%,var(--gold) 65%,#8a6a1f 88%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shimmerSweep 5.5s ease-in-out infinite;
+  filter:drop-shadow(0 4px 22px rgba(0,0,0,.6));
+  padding:4px 8px;
+}
+@keyframes shimmerSweep{0%{background-position:130% 0;}50%{background-position:-30% 0;}100%{background-position:130% 0;}}
+.hero-sub2{
+  font-family:var(--serif);font-weight:700;font-style:italic;
+  font-size:clamp(1.05rem,4vw,1.5rem);color:var(--brass-hi);margin-top:-8px;
+}
+.subtitle{font-size:clamp(.95rem,3.2vw,1.12rem);font-weight:600;color:var(--cream);opacity:.92;}
+.stats-line{font-size:.9rem;color:var(--muted);font-weight:500;letter-spacing:.02em;}
+.stats-line b{color:var(--gold);font-weight:700;}
+.credit{font-size:.76rem;color:var(--muted);opacity:.8;}
+.scroll-cue{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:2;font-size:1.5rem;color:var(--brass);opacity:.75;animation:bounceCue 2s ease-in-out infinite;}
+@keyframes bounceCue{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,9px);}}
+
+/* ============ LA SALA (escena) ============ */
+#biblioteca{padding:20px 0 60px;}
+.section-title{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.5rem,5vw,2.2rem);text-align:center;margin-bottom:6px;color:var(--brass-hi);
+}
+.section-sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:30px;padding:0 16px;}
+
+.sala{
+  position:relative;max-width:1060px;margin:0 auto;
+  padding:0 14px 40px;
+  border-radius:18px;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg, rgba(7,11,9,.35), rgba(7,11,9,.15) 30%, transparent 60%),
+    repeating-linear-gradient(90deg, #1d1207 0 52px, #251808 52px 54px, #20140a 54px 106px, #170e05 106px 108px),
+    linear-gradient(180deg,#221507,#150d04);
+  border:3px solid #33220f;
+  outline:1px solid rgba(201,165,74,.28);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.9), inset 0 0 90px rgba(0,0,0,.75);
+}
+@media (max-width:600px){.sala{margin:0 10px;padding:0 8px 30px;}}
+
+/* reflejo cálido del hogar sobre toda la sala (flicker sutil) */
+.sala::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:6;
+  background:radial-gradient(ellipse 70% 42% at 50% 100%, rgba(255,140,50,.14), transparent 70%);
+  animation:fuegoFlicker 3.4s ease-in-out infinite;
+}
+@keyframes fuegoFlicker{
+  0%,100%{opacity:.55;}
+  18%{opacity:.9;}
+  34%{opacity:.62;}
+  52%{opacity:1;}
+  71%{opacity:.7;}
+  86%{opacity:.88;}
+}
+
+/* -------- fila de decoración: ventana / lámpara / reloj -------- */
+.decor-row{
+  position:relative;z-index:2;
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:10px;padding:0 14px;min-height:230px;
+}
+@media (max-width:600px){.decor-row{min-height:190px;padding:0 4px;}}
+
+/* VENTANA alta con lluvia y relámpagos */
+.ventana{
+  position:relative;width:clamp(96px,17vw,150px);height:clamp(150px,26vw,208px);
+  margin-top:16px;
+  border:7px solid #170e05;border-radius:90px 90px 8px 8px;
+  outline:2px solid rgba(201,165,74,.25);
+  background:linear-gradient(180deg,#0a1622 0%,#0e1c2c 55%,#0a141f 100%);
+  overflow:hidden;flex:0 0 auto;
+  box-shadow:inset 0 0 26px rgba(0,0,0,.8), 0 10px 26px -10px rgba(0,0,0,.7);
+}
+#lluvia-canvas{position:absolute;inset:0;width:100%;height:100%;}
+.ventana-cruz{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 2px), #170e05 calc(50% - 2px), #170e05 calc(50% + 2px), transparent calc(50% + 2px)),
+    linear-gradient(180deg, transparent calc(46% - 2px), #170e05 calc(46% - 2px), #170e05 calc(46% + 2px), transparent calc(46% + 2px));
+}
+.ventana-flash{
+  position:absolute;inset:0;background:linear-gradient(200deg,#dcebff,#8fb4e8 70%);
+  opacity:0;transition:opacity 90ms ease-out;pointer-events:none;
+}
+.luna{
+  position:absolute;top:16%;right:18%;width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #f4f0e0, #b9b4a0);
+  box-shadow:0 0 14px rgba(240,235,215,.5);opacity:.85;
+}
+
+/* LÁMPARA banker colgante con cadenita (interruptor de la sala) */
+.lampara-rig{position:relative;flex:1 1 auto;display:flex;flex-direction:column;align-items:center;min-width:120px;}
+.lampara-cable{width:3px;height:44px;background:linear-gradient(180deg,#0d0a05,#2e2210);border-radius:2px;}
+.lampara{
+  position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.lampara-pantalla{
+  width:clamp(96px,16vw,132px);height:44px;
+  border-radius:66px 66px 10px 10px;
+  background:
+    radial-gradient(ellipse 90% 130% at 50% -30%, rgba(255,255,255,.28), transparent 55%),
+    linear-gradient(180deg,#2a6b48 0%,#175136 45%,#0c2f1e 100%);
+  border-bottom:4px solid var(--brass);
+  box-shadow:0 6px 18px rgba(0,0,0,.6), inset 0 -6px 12px rgba(255,214,140,.35);
+}
+.lampara-bulbo{
+  width:56px;height:20px;margin-top:-6px;border-radius:50%;
+  background:radial-gradient(ellipse at 50% 30%, #fff4d2, rgba(255,214,140,.55) 55%, transparent 75%);
+  filter:blur(2px);
+  animation:bulboRespira 4s ease-in-out infinite;
+}
+@keyframes bulboRespira{0%,100%{opacity:.85;}50%{opacity:1;}}
+body:not(.luces-altas) .lampara-bulbo{opacity:1;}
+.lampara-cadenita{
+  position:absolute;right:8px;top:40px;display:flex;flex-direction:column;align-items:center;
+  transition:transform .18s ease;
+}
+.lampara:active .lampara-cadenita{transform:translateY(7px);}
+.lampara-cadenita i{
+  display:block;width:2px;height:34px;
+  background:repeating-linear-gradient(180deg,var(--brass) 0 3px,#5c4a1e 3px 5px);
+}
+.lampara-cadenita::after{
+  content:'';width:9px;height:9px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--brass-hi),#8a6a1f);
+  box-shadow:0 2px 4px rgba(0,0,0,.7);
+}
+/* haz de luz de la lámpara — el polvo dorado (canvas) flota adentro */
+.haz{
+  position:absolute;top:96px;left:50%;transform:translateX(-50%);
+  width:clamp(230px,44vw,360px);height:270px;
+  clip-path:polygon(50% 0, 6% 100%, 94% 100%);
+  background:linear-gradient(180deg, rgba(255,222,150,.30), rgba(255,222,150,.05) 70%, transparent);
+  mix-blend-mode:screen;pointer-events:none;
+  transition:opacity 1.1s ease;
+}
+body.luces-altas .haz{opacity:.45;}
+
+/* RELOJ de pie con péndulo */
+.reloj{
+  position:relative;width:clamp(66px,12vw,92px);height:clamp(170px,30vw,236px);
+  margin-top:6px;flex:0 0 auto;
+  border-radius:10px 10px 4px 4px;
+  background:linear-gradient(90deg,#1c1106,#33200e 30%,#3d2712 50%,#2c1b0b 75%,#170d04);
+  border:2px solid #0f0902;
+  outline:1px solid rgba(201,165,74,.25);
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.8), inset 0 0 18px rgba(0,0,0,.6);
+}
+.reloj-cara{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:58%;aspect-ratio:1;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, #efe4c8 0 62%, #d8c9a4 63% 100%);
+  border:3px solid var(--brass);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.4);
+}
+.reloj-cara::before{ /* agujas fijas en la hora sagrada: las 21:00 del lunes */
+  content:'';position:absolute;top:50%;left:50%;
+  width:2px;height:34%;background:#2a1c0c;transform-origin:50% 0;transform:rotate(180deg);
+}
+.reloj-cara::after{
+  content:'';position:absolute;top:50%;left:50%;
+  width:2px;height:26%;background:#2a1c0c;transform-origin:50% 0;transform:rotate(90deg);
+}
+.reloj-ventana{
+  position:absolute;left:50%;transform:translateX(-50%);
+  top:calc(58% - 10px);width:44%;height:38%;
+  border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,#0c0703,#050201);
+  border:2px solid rgba(201,165,74,.3);
+}
+.pendulo{
+  position:absolute;top:-6px;left:50%;
+  width:3px;height:78%;margin-left:-1.5px;
+  background:linear-gradient(180deg,#8a6a1f,var(--brass));
+  transform-origin:50% 0;
+  animation:pendulea 2.6s ease-in-out infinite alternate;
+}
+@keyframes pendulea{from{transform:rotate(7deg);}to{transform:rotate(-7deg);}}
+.pendulo::after{
+  content:'';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--brass-hi),#8a6a1f);
+  box-shadow:0 0 8px rgba(212,175,55,.5);
+}
+
+/* canvas de polvo dorado en el haz */
+#polvo-canvas{position:absolute;top:0;left:0;width:100%;height:470px;pointer-events:none;z-index:4;}
+
+/* -------- ESTANTES -------- */
+.estanteria{position:relative;z-index:2;display:flex;flex-direction:column;gap:34px;margin-top:14px;}
+.estante{
+  position:relative;
+  border-radius:8px;
+  background:linear-gradient(180deg,#171008 0%,#100a04 100%);
+  border:3px solid #382410;
+  outline:1px solid rgba(201,165,74,.2);
+  box-shadow:inset 0 14px 40px rgba(0,0,0,.75), 0 12px 30px -14px rgba(0,0,0,.7);
+  padding-top:34px;
+}
+.estante-label{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  font-family:var(--serif);font-weight:700;font-size:clamp(.7rem,2.6vw,.85rem);
+  letter-spacing:.1em;color:#20140a;text-align:center;white-space:nowrap;
+  background:linear-gradient(180deg,var(--brass-hi) 0%,var(--brass) 55%,#8a6a1f 100%);
+  padding:5px 18px;border-radius:4px;
+  border:1px solid #5c4a1e;
+  box-shadow:0 4px 10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.5);
+  max-width:94%;overflow:hidden;text-overflow:ellipsis;
+}
+@media (max-width:520px){
+  .estante-label{font-size:.6rem;letter-spacing:.05em;padding:5px 10px;}
+}
+.estante-nota{
+  text-align:center;font-size:.66rem;font-style:italic;color:var(--muted);
+  padding:2px 10px 8px;letter-spacing:.03em;
+}
+
+/* La grilla de ítems: todos los hijos (.slot) miden --row-h de alto y el
+   degradado repetido pinta una tabla de madera bajo CADA fila envuelta,
+   así en mobile el wrap genera estantes nuevos en vez de ítems flotando. */
+.estante-items{
+  --row-h:176px;
+  --plank-h:16px;
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;
+  align-content:flex-start;
+  column-gap:10px;row-gap:var(--plank-h);
+  padding:6px 16px var(--plank-h);
+  background-origin:content-box;
+  background-image:repeating-linear-gradient(180deg,
+    transparent 0,
+    transparent var(--row-h),
+    #0d0703 var(--row-h),
+    #5a3f22 calc(var(--row-h) + 3px),
+    #3a2917 calc(var(--row-h) + 6px),
+    #241708 calc(var(--row-h) + var(--plank-h) - 2px),
+    #0a0502 calc(var(--row-h) + var(--plank-h)));
+}
+@media (max-width:520px){.estante-items{--row-h:158px;column-gap:8px;padding:6px 8px var(--plank-h);}}
+.slot{
+  height:var(--row-h);
+  display:flex;flex-direction:column;justify-content:flex-end;align-items:center;
+  position:relative;
+}
+
+/* ============ REGLA DE LAS ESTRELLAS (requisito duro) ============
+   Una estrella = un título de temporada. Tres generaciones de material:
+   · 2024 → AÑEJA: bronce/latón envejecido con pátina — 0.9× la base
+            (igual de importante que el resto, solo más veterana).
+   · 2025 → MODERNA: oro pulido a paño, brillo limpio — 1.0× la base
+            (tamaño de referencia).
+   · 2026 → ULTRA MODERNA: cristal/cromo holográfico con sheen animado
+            y glow suave — 1.1× la base.
+   La base vive en --star-base (:root) y el factor en --sf por estante. */
+.estante[data-year="2024"]{--sf:.9;}
+.estante[data-year="2025"]{--sf:1;}
+.estante[data-year="2026"]{--sf:1.1;}
+svg.star{
+  width:calc(var(--star-base) * var(--sf,1));
+  height:calc(var(--star-base) * var(--sf,1));
+  display:block;flex:0 0 auto;
+  overflow:visible;
+}
+.star-2024 use{fill:url(#met24);stroke:#3a2c17;stroke-width:2.5;}
+.star-2024{filter:drop-shadow(0 2px 2px rgba(0,0,0,.65)) saturate(.8) brightness(.9);}
+.star-2025 use{fill:url(#met25);stroke:#8a6a1f;stroke-width:2;}
+.star-2025{filter:drop-shadow(0 2px 6px rgba(212,175,55,.4));}
+.star-2026 use{fill:url(#met26);stroke:rgba(255,255,255,.8);stroke-width:1.6;}
+.star-2026{
+  filter:drop-shadow(0 0 5px rgba(140,240,255,.7)) drop-shadow(0 0 14px rgba(190,140,255,.4));
+  animation:holoSheen 4.5s ease-in-out infinite;
+}
+/* sheen holográfico: el matiz del cromo gira suave, glow incluido */
+@keyframes holoSheen{
+  0%,100%{filter:drop-shadow(0 0 5px rgba(140,240,255,.7)) drop-shadow(0 0 14px rgba(190,140,255,.4)) hue-rotate(0deg) brightness(1);}
+  50%{filter:drop-shadow(0 0 8px rgba(140,240,255,.9)) drop-shadow(0 0 20px rgba(190,140,255,.55)) hue-rotate(-50deg) brightness(1.15);}
+}
+
+/* -------- peanas (cluster por jugador) -------- */
+.peana{
+  gap:5px;padding:0 2px 4px;
+  border-radius:6px;
+  transition:transform .22s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.peana:hover,.peana:focus-visible{transform:translateY(-5px);}
+.peana-stars{display:flex;align-items:flex-end;justify-content:center;}
+.peana-stars .star + .star{margin-left:calc(var(--star-base) * var(--sf,1) * -0.3);}
+.peana .face-wrap{--fsize:42px;}
+.peana-placa{
+  position:relative;z-index:1; /* por delante del cordón rojo de la vitrina */
+  font-family:var(--serif);font-size:.62rem;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:#e8cf8a;text-align:center;
+  background:linear-gradient(180deg,#6b5426,#40300f 60%,#2a1e08);
+  border:1px solid rgba(201,165,74,.4);
+  border-radius:3px;padding:3px 8px;min-width:58px;
+  text-shadow:0 -1px 1px rgba(0,0,0,.8);
+  box-shadow:0 3px 6px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.peana-placa b{color:#fff2c8;font-weight:800;}
+
+/* vitrina propia del campeón anual: cristal, coronita y cordón rojo */
+.peana.anual{
+  border:1px solid rgba(201,165,74,.55);
+  border-radius:8px 8px 4px 4px;
+  background:linear-gradient(165deg, rgba(255,255,255,.09), rgba(255,255,255,.015) 55%);
+  box-shadow:inset 0 0 22px rgba(255,240,190,.09), 0 0 22px -6px rgba(212,175,55,.35);
+  padding:0 8px 4px;
+}
+.peana.anual::before{ /* brillo de vidrio */
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(115deg, transparent 42%, rgba(255,255,255,.10) 50%, transparent 58%);
+}
+.corona{
+  position:absolute;top:4px;left:50%;transform:translateX(-50%);
+  font-size:1.05rem;filter:drop-shadow(0 2px 6px rgba(212,175,55,.6));
+  animation:coronaFlota 3.2s ease-in-out infinite;
+}
+@keyframes coronaFlota{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-4px);}}
+.placa-anual{
+  position:relative;z-index:1;
+  font-size:.5rem;font-weight:800;letter-spacing:.14em;color:#20140a;
+  background:linear-gradient(180deg,var(--brass-hi),var(--brass));
+  border-radius:2px;padding:2px 6px;margin-top:2px;white-space:nowrap;
+}
+.cordon{ /* queda detrás de las placas (z-index 0 vs 1): se ve drapear a los costados */
+  position:absolute;bottom:30px;left:-6px;right:-6px;height:16px;pointer-events:none;z-index:0;
+  border-bottom:3px solid #a3122e;
+  border-radius:0 0 50% 50%;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.6));
+}
+.cordon::before,.cordon::after{
+  content:'';position:absolute;top:8px;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--brass-hi),#8a6a1f);
+}
+.cordon::before{left:-3px;}
+.cordon::after{right:-3px;}
+
+/* -------- libros -------- */
+.slot-libro{-webkit-tap-highlight-color:transparent;}
+.libro{
+  width:clamp(24px,4vw,30px);height:var(--bh,130px);
+  border-radius:3px 6px 2px 2px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+  box-shadow:inset -5px 0 9px rgba(0,0,0,.55), inset 2px 0 3px rgba(255,255,255,.09), 0 2px 5px rgba(0,0,0,.5);
+  transition:transform .28s ease;
+}
+.slot-libro:hover .libro,.slot-libro:focus-visible .libro{transform:translateY(-11px) rotate(-3.5deg);}
+.libro::before,.libro::after{ /* nervios dorados del lomo */
+  content:'';position:absolute;left:3px;right:3px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.55),transparent);
+}
+.libro::before{top:9px;}
+.libro::after{bottom:9px;}
+.libro-titulo{
+  writing-mode:vertical-rl;
+  font-family:var(--serif);font-size:.54rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:#dcb765;
+  max-height:calc(100% - 26px);overflow:hidden;white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.8);
+}
+.b-green{background:linear-gradient(90deg,#12281c,#1e3a2a 45%,#142c1f);}
+.b-oxblood{background:linear-gradient(90deg,#33100d,#4a1512 45%,#380f0c);}
+.b-navy{background:linear-gradient(90deg,#101a2c,#1a2438 45%,#131d2e);}
+.b-brown{background:linear-gradient(90deg,#291807,#3a2312 45%,#2c1a09);}
+/* el Expediente Manu: lomo oxblood lacrado, único libro clickeable */
+.libro-manu .libro{
+  background:linear-gradient(90deg,#3f130e,#571c15 45%,#41130d);
+  outline:1px solid rgba(212,175,55,.4);
+  cursor:pointer;
+}
+.libro-manu .libro-titulo{color:#f0cf7c;}
+.libro-sello{
+  position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:12px;height:12px;border-radius:50% 48% 52% 50%;
+  background:radial-gradient(circle at 40% 32%,#c33a3a,#6e1010 70%);
+  box-shadow:0 1px 3px rgba(0,0,0,.8);
+}
+.libro-manu.sacado .libro{transform:translateY(-38px) rotate(-9deg);}
+
+/* -------- sala de lectura (los sin condecoraciones) -------- */
+.sala-lectura{
+  position:relative;z-index:2;margin-top:34px;
+  border-radius:8px;
+  background:linear-gradient(180deg,#151008 0%,#0e0a04 100%);
+  border:3px solid #382410;outline:1px solid rgba(201,165,74,.18);
+  box-shadow:inset 0 12px 34px rgba(0,0,0,.7);
+  padding:30px 14px 18px;
+}
+.sala-lectura .estante-label{background:linear-gradient(180deg,#b9b4a0,#8d876f);}
+.lectura-grid{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:4px;}
+.sillon{
+  flex:0 1 240px;text-align:center;padding:16px 14px 14px;border-radius:10px;
+  background:linear-gradient(165deg, rgba(255,255,255,.045), rgba(255,255,255,.01));
+  border:1px solid rgba(255,255,255,.09);
+}
+.sillon .face-wrap{--fsize:54px;margin:0 auto 8px;filter:grayscale(1) brightness(.75);}
+.sillon-name{font-family:var(--serif);font-weight:700;font-size:.95rem;color:var(--muted);margin-bottom:6px;}
+.sillon-plate{
+  font-size:.74rem;line-height:1.5;color:#a8a088;
+  background:linear-gradient(160deg,#241d10,#181208);
+  border-radius:6px;padding:8px 10px;
+  text-shadow:-1px -1px 1px rgba(0,0,0,.9), 1px 1px 0 rgba(255,255,255,.08);
+  box-shadow:inset 2px 2px 4px rgba(0,0,0,.6);
+}
+.lectura-nota{
+  text-align:center;font-size:.72rem;font-style:italic;color:var(--muted);
+  margin-top:12px;padding:0 10px;
+}
+
+/* -------- hogar a leña -------- */
+.hogar-zona{position:relative;z-index:2;margin:40px auto 0;max-width:430px;}
+.manto{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding-bottom:6px;
+}
+.manto-galera{width:56px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.8));margin-bottom:-2px;}
+.manto-tabla{
+  width:100%;height:14px;border-radius:3px;
+  background:linear-gradient(180deg,#5a3f22,#33200e 60%,#1a0f05);
+  box-shadow:0 4px 10px rgba(0,0,0,.7);
+}
+.manto-placa{
+  position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);
+  font-family:var(--serif);font-size:.5rem;letter-spacing:.12em;color:#20140a;
+  background:linear-gradient(180deg,var(--brass-hi),var(--brass));
+  padding:2px 10px;border-radius:2px;white-space:nowrap;z-index:2;
+}
+.hogar{
+  position:relative;height:170px;
+  border-radius:6px 6px 0 0;
+  background:
+    repeating-linear-gradient(0deg, #2c1a10 0 18px, #1d1109 18px 20px),
+    #241509;
+  border:3px solid #382410;border-bottom:none;
+  box-shadow:inset 0 0 30px rgba(0,0,0,.8);
+  overflow:hidden;
+}
+.hogar-arco{
+  position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:72%;height:78%;
+  border-radius:120px 120px 0 0;
+  background:radial-gradient(ellipse 90% 70% at 50% 100%, #1a0800 0%, #050100 80%);
+  border:6px solid #170d05;border-bottom:none;
+  overflow:hidden;
+}
+.tronco{position:absolute;bottom:8px;height:14px;border-radius:7px;background:linear-gradient(180deg,#4a3018,#2a1a0c);box-shadow:inset 0 2px 3px rgba(255,255,255,.12);}
+.tronco.t1{left:22%;width:56%;transform:rotate(-4deg);}
+.tronco.t2{left:28%;width:46%;transform:rotate(5deg);bottom:16px;}
+.fuego{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:120px;height:96px;mix-blend-mode:screen;}
+.llama{
+  position:absolute;bottom:0;border-radius:50% 50% 22% 22% / 68% 68% 32% 32%;
+  filter:blur(5px);transform-origin:50% 100%;
+}
+.llama-1{left:14px;width:88px;height:82px;background:radial-gradient(ellipse at 50% 85%, #ff9a2a 0%, #e0480c 55%, transparent 75%);animation:llamaDanza 1.7s ease-in-out infinite alternate;}
+.llama-2{left:30px;width:58px;height:64px;background:radial-gradient(ellipse at 50% 85%, #ffd24a 0%, #ff7a1a 60%, transparent 78%);animation:llamaDanza 1.15s ease-in-out infinite alternate-reverse;}
+.llama-3{left:44px;width:30px;height:44px;background:radial-gradient(ellipse at 50% 88%, #fff2b0 0%, #ffb43a 65%, transparent 80%);animation:llamaDanza .8s ease-in-out infinite alternate;}
+@keyframes llamaDanza{
+  0%{transform:scaleY(1) scaleX(1) skewX(0);}
+  40%{transform:scaleY(1.12) scaleX(.94) skewX(-3deg);}
+  100%{transform:scaleY(.94) scaleX(1.05) skewX(3.5deg);}
+}
+#brasas-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.hogar-glow{
+  position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);
+  width:150%;height:190px;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse 55% 60% at 50% 100%, rgba(255,140,50,.28), transparent 70%);
+  animation:fuegoFlicker 2.8s ease-in-out infinite;
+}
+.alfombra{
+  margin:0 auto;width:88%;height:26px;
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 50%, #4a1512 0%, #33100d 60%, #240a08 100%);
+  border:2px solid rgba(201,165,74,.25);
+  box-shadow:0 6px 18px rgba(0,0,0,.6);
+}
+
+/* ============ FOOTER ============ */
+footer{padding:54px 20px 64px;text-align:center;color:var(--muted);position:relative;z-index:2;}
+footer .f-main{font-weight:700;color:var(--cream);margin-bottom:6px;}
+footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);
+  background:#132a1f;color:var(--brass-hi);font-weight:700;font-size:.88rem;
+  padding:10px 20px;border-radius:999px;border:1px solid rgba(201,165,74,.4);
+  box-shadow:0 10px 30px rgba(0,0,0,.6);z-index:120;opacity:0;pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  max-width:92vw;text-align:center;
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+
+/* ============ MODAL EX LIBRIS ============ */
+#exlibris-modal{
+  position:fixed;inset:0;z-index:100;display:none;
+  align-items:center;justify-content:center;padding:18px;
+  background:rgba(3,6,4,.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+#exlibris-modal.open{display:flex;}
+.exlibris{
+  position:relative;width:100%;max-width:430px;max-height:90svh;overflow-y:auto;
+  background:linear-gradient(170deg,#10251b,#0a1710);
+  border:1px solid rgba(201,165,74,.45);border-radius:14px;
+  padding:14px;
+  box-shadow:0 40px 90px -20px rgba(0,0,0,.85);
+  transform:scale(.94);opacity:0;transition:transform .3s cubic-bezier(.22,1,.36,1), opacity .26s ease;
+}
+#exlibris-modal.open .exlibris{transform:scale(1);opacity:1;}
+.ex-borde{ /* borde ornamental doble, tipo certificado */
+  border:2px solid rgba(201,165,74,.55);
+  outline:1px solid rgba(201,165,74,.25);
+  outline-offset:4px;
+  border-radius:8px;
+  padding:26px 20px 22px;text-align:center;position:relative;
+}
+.ex-borde::before{
+  content:'❦';position:absolute;top:-2px;left:50%;transform:translate(-50%,-55%);
+  background:#10251b;padding:0 10px;color:var(--brass);font-size:1rem;
+}
+.ex-close{
+  position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.07);color:var(--cream);font-size:1.05rem;
+  display:flex;align-items:center;justify-content:center;z-index:3;
+}
+.ex-close:hover{background:rgba(255,255,255,.14);}
+.ex-eyebrow{
+  font-size:.6rem;font-weight:800;letter-spacing:.22em;color:var(--brass);
+  margin-bottom:14px;
+}
+.ex-face .face-wrap{--fsize:110px;margin:0 auto 12px;border-color:var(--brass);}
+.ex-name{font-family:var(--serif);font-weight:900;font-size:1.65rem;color:var(--cream);}
+.ex-alias{display:block;font-family:var(--sans);font-style:italic;font-weight:500;font-size:.72rem;color:var(--muted);margin-top:2px;}
+.ex-annual{
+  display:inline-block;margin-top:8px;font-size:.68rem;font-weight:800;letter-spacing:.08em;
+  color:#20140a;background:linear-gradient(180deg,var(--brass-hi),var(--brass));
+  border-radius:999px;padding:4px 12px;
+}
+.ex-total{font-size:.88rem;color:var(--muted);margin:10px 0 12px;}
+.ex-total b{color:var(--gold);font-family:var(--serif);font-size:1.05rem;}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
+.ex-chips .chip-t{
+  font-size:.68rem;font-weight:700;background:rgba(201,165,74,.1);
+  border:1px solid rgba(201,165,74,.32);color:var(--brass-hi);
+  border-radius:6px;padding:4px 8px;
+}
+.ex-plate{
+  font-size:.8rem;line-height:1.55;color:#c9bd9e;
+  background:linear-gradient(160deg,#241d10,#171208);
+  border-radius:8px;padding:12px 14px;margin-bottom:8px;
+  text-shadow:-1px -1px 1px rgba(0,0,0,.9), 1px 1px 0 rgba(255,255,255,.08);
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,.6);
+}
+.ex-lacre{ /* sello de lacre rojo con el monograma del club */
+  position:absolute;bottom:-6px;right:-4px;width:62px;height:62px;
+  border-radius:47% 53% 50% 50% / 52% 48% 55% 45%;
+  background:radial-gradient(circle at 38% 30%, #b03030 0%, #7a1a1a 45%, #4a0d0d 100%);
+  box-shadow:0 6px 14px rgba(0,0,0,.7), inset 0 2px 4px rgba(255,255,255,.22), inset 0 -4px 8px rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  transform:rotate(-12deg);pointer-events:none;
+}
+.ex-lacre span{
+  font-family:var(--serif);font-weight:900;font-size:1rem;color:#e8b4a8;
+  border:2px solid rgba(232,180,168,.55);border-radius:50%;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+/* sello CASO CERRADO (expediente Manu) */
+.sello-caso{
+  position:absolute;top:44px;right:-8px;z-index:2;
+  font-family:var(--serif);font-size:.7rem;font-weight:700;letter-spacing:.06em;
+  color:#c0392b;border:3px double #c0392b;padding:7px 11px;
+  transform:rotate(-11deg);text-transform:uppercase;text-align:center;
+  mix-blend-mode:screen;pointer-events:none;
+  clip-path:polygon(2% 8%,96% 0%,100% 88%,6% 100%,0% 40%);
+  animation:stampIn .22s cubic-bezier(.36,1.8,.4,1);
+}
+@keyframes stampIn{0%{transform:scale(2.2) rotate(-11deg);opacity:0;}60%{transform:scale(.85) rotate(-11deg);}100%{transform:scale(1) rotate(-11deg);opacity:1;}}
+
+/* ============ CARAS (patrón con fallback) ============ */
+.face-wrap{
+  position:relative;border-radius:50%;overflow:hidden;
+  width:var(--fsize,58px);height:var(--fsize,58px);
+  border:2px solid var(--pcolor,var(--brass));
+  background:#0e1c14;
+  box-shadow:0 0 0 2px rgba(201,165,74,.5), 0 5px 12px rgba(0,0,0,.6);
+  flex:0 0 auto;
+}
+.face-wrap img{width:100%;height:100%;object-fit:cover;}
+.face-fallback{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  background:var(--pcolor,#333);color:#fff;font-weight:800;
+  font-size:calc(var(--fsize,58px) * .42);font-family:var(--serif);
+}
+/* anillo de campeón anual en el modal */
+.ring-annual-wrap{position:relative;display:inline-block;}
+.ring-annual-wrap::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 0deg,#8a6a1f,var(--gold),#f6e7b8,var(--brass),#8a6a1f);
+  animation:ringSpin 7s linear infinite;
+}
+.ring-annual-wrap>.face-wrap{position:relative;z-index:1;}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
+
+/* ============ CONFETTI DE GALERAS ============ */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:110;width:100%;height:100%;}
+
+/* seguridad pantallas mínimas */
+@media (max-width:360px){
+  .peana .face-wrap{--fsize:36px;}
+  .peana-placa{min-width:48px;font-size:.56rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- defs SVG compartidos: la estrella de 5 puntas y sus tres materiales -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="star5" d="M50 2 L61.8 33.8 L95.7 35.2 L69 56.2 L78.2 88.8 L50 70 L21.8 88.8 L31 56.2 L4.3 35.2 L38.2 33.8 Z"/>
+    <linearGradient id="met24" x1="0" y1="0" x2=".3" y2="1">
+      <stop offset="0" stop-color="#b08d57"/>
+      <stop offset=".4" stop-color="#7c5a33"/>
+      <stop offset=".72" stop-color="#5c4526"/>
+      <stop offset="1" stop-color="#6e7d5a"/>
+    </linearGradient>
+    <linearGradient id="met25" x1="0" y1="0" x2=".3" y2="1">
+      <stop offset="0" stop-color="#fff6d6"/>
+      <stop offset=".38" stop-color="#ffd700"/>
+      <stop offset=".72" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#8a6a1f"/>
+    </linearGradient>
+    <linearGradient id="met26" x1="0" y1="0" x2=".4" y2="1">
+      <stop offset="0" stop-color="#e8fbff"/>
+      <stop offset=".28" stop-color="#8be9fd"/>
+      <stop offset=".55" stop-color="#b48bff"/>
+      <stop offset=".8" stop-color="#ff9ff3"/>
+      <stop offset="1" stop-color="#7afcff"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<canvas id="confetti-canvas" aria-hidden="true"></canvas>
+<div class="dim-overlay" aria-hidden="true"></div>
+<div id="flash-overlay" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ NAV ============ -->
+<nav class="nav-club" aria-label="Salones del Medallero">
+  <a class="nav-link" href="medallero-383a3a69.html">← Salón Eterno</a>
+  <a class="nav-link" href="medallero-saloon-383a3a69.html">🤠 El Saloon →</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header id="hero">
+  <div class="hero-inner">
+    <button class="crest" id="crest" aria-label="La galera del club — tocá para recibir el saludo">
+      <img src="assets/tophat-logo.png" alt="" id="crest-hat">
+    </button>
+    <h1 class="hero-title">EL MEDALLERO</h1>
+    <p class="hero-sub2">La Biblioteca de la Galera</p>
+    <p class="subtitle">Reading room de campeones. Prohibido gritar UNO.</p>
+    <p class="stats-line" id="stats-line"></p>
+    <p class="credit">Catálogo a cargo del Comité de la Galera · Se ruega silencio</p>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">⌄</div>
+</header>
+
+<!-- ============ LA BIBLIOTECA ============ -->
+<section id="biblioteca">
+  <h2 class="section-title">Los Tres Estantes</h2>
+  <p class="section-sub">Una estrella por temporada, catalogada con guantes blancos. El material delata la época.</p>
+
+  <div class="sala" id="sala">
+    <canvas id="polvo-canvas" aria-hidden="true"></canvas>
+
+    <div class="decor-row">
+      <div class="ventana" aria-hidden="true">
+        <canvas id="lluvia-canvas"></canvas>
+        <div class="luna"></div>
+        <div class="ventana-cruz"></div>
+        <div class="ventana-flash" id="ventana-flash"></div>
+      </div>
+
+      <div class="lampara-rig">
+        <div class="lampara-cable" aria-hidden="true"></div>
+        <button class="lampara" id="lampara" aria-pressed="false" aria-label="Lámpara del club: alternar luces bajas y altas">
+          <span class="lampara-pantalla" aria-hidden="true"></span>
+          <span class="lampara-bulbo" aria-hidden="true"></span>
+          <span class="lampara-cadenita" aria-hidden="true"><i></i></span>
+        </button>
+        <div class="haz" id="haz" aria-hidden="true"></div>
+      </div>
+
+      <div class="reloj" aria-hidden="true">
+        <div class="reloj-cara"></div>
+        <div class="reloj-ventana"><div class="pendulo"></div></div>
+      </div>
+    </div>
+
+    <div class="estanteria" id="estanteria"></div>
+
+    <div class="sala-lectura">
+      <div class="estante-label">SALA DE LECTURA — SOCIOS SIN CONDECORACIONES</div>
+      <div class="lectura-grid" id="lectura-grid"></div>
+      <p class="lectura-nota" id="lectura-nota"></p>
+    </div>
+
+    <div class="hogar-zona">
+      <div class="manto">
+        <img class="manto-galera" src="assets/tophat-logo.png" alt="La galera del club presidiendo el hogar">
+        <div class="manto-tabla" aria-hidden="true"></div>
+        <div class="manto-placa">HOGAR DONADO POR LA COMISIÓN DE MULTAS</div>
+      </div>
+      <div class="hogar" aria-hidden="true">
+        <div class="hogar-arco">
+          <div class="tronco t1"></div>
+          <div class="tronco t2"></div>
+          <div class="fuego">
+            <div class="llama llama-1"></div>
+            <div class="llama llama-2"></div>
+            <div class="llama llama-3"></div>
+          </div>
+          <canvas id="brasas-canvas"></canvas>
+        </div>
+      </div>
+      <div class="hogar-glow" aria-hidden="true"></div>
+      <div class="alfombra" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p class="f-main">🎴 lunes de uno — La Biblioteca de la Galera</p>
+  <p class="f-mini">Catalogación: el Comité de la Galera. Se ruega no doblar las esquinas de las páginas. 2024–∞</p>
+</footer>
+
+<!-- ============ MODAL EX LIBRIS ============ -->
+<div id="exlibris-modal" aria-hidden="true">
+  <div class="exlibris" role="dialog" aria-modal="true" aria-labelledby="ex-name">
+    <button class="ex-close" id="ex-close" aria-label="Cerrar">✕</button>
+    <div class="ex-borde">
+      <p class="ex-eyebrow">EX LIBRIS · LA BIBLIOTECA DE LA GALERA</p>
+      <div id="ex-sello-slot"></div>
+      <div class="ex-face" id="ex-face"></div>
+      <h3 class="ex-name" id="ex-name"></h3>
+      <div id="ex-annual-slot"></div>
+      <p class="ex-total" id="ex-total"></p>
+      <div class="ex-chips" id="ex-chips"></div>
+      <p class="ex-plate" id="ex-plate"></p>
+      <div class="ex-lacre" aria-hidden="true"><span>LU</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= DATA CANÓNICA ================= */
+const ROSTER = {
+  pt:      { name: 'PT',      color: '#ED1C24' },
+  mac:     { name: 'Mac',     color: '#FFDE00' },
+  mata:    { name: 'Mata',    color: '#00A651' },
+  gael:    { name: 'Gael',    color: '#0072BC' },
+  nachi:   { name: 'Nachi',   color: '#FF6B35' },
+  carucha: { name: 'Carucha', color: '#A855F7' },
+  negro:   { name: 'Negro',   color: '#EC4899' },
+  naso:    { name: 'Naso',    color: '#14B8A6' },
+  tano:    { name: 'Tano',    color: '#F97316' },
+  gordo:   { name: 'Gordo',   color: '#6366F1' },
+  cobra:   { name: 'Cobra',   color: '#84CC16' }
+};
+const CHAMPIONS = {
+  2024: ['pt','gael','naso','gordo','naso','tano','mac','mata','naso','pt'],
+  2025: ['tano','gael','gordo','gael','pt','carucha','carucha','gael','cobra'],
+  2026: ['gordo','pt','carucha','cobra']
+};
+const ANNUAL = { 2024: 'naso', 2025: 'cobra' };
+
+/* Placas EX LIBRIS: la data del Salón Eterno, servida con flema británica. */
+const PLATES = {
+  pt: "Cuatro títulos repartidos en tres años, con la puntualidad de un mayordomo. En 2026 lidera la anual con UNA sola victoria: economía de esfuerzo digna de un lord.",
+  gael: "Cuatro títulos firmados bajo el seudónimo «Manu». El club sostuvo el expediente abierto durante dos años, con té de por medio, hasta la confesión. Caso cerrado, caballeros.",
+  naso: "Tricampeón de 2024 y primer Campeón Anual. Pieza de bronce fundacional: se lo respeta, se lo desempolva los lunes, y no se le exige que repita la hazaña.",
+  gordo: "Un título por año, en las tres eras. Bibliotecario de esta sala. La dinastía se administra sola, con guantes blancos y cero apuro.",
+  carucha: "Bicampeón consecutivo de 2025, espalda con espalda. Ganar en casa es de dudosa elegancia, dictaminó el comité. Efectivo, no obstante.",
+  tano: "Campeón en 2024 y en 2025. En 2026 canjeó los trofeos por multas: 150 en una sola velada. El club le recomendó lecturas sobre control de impulsos.",
+  cobra: "👑 Campeón Anual 2025. Sangre fría, memoria de elefante, cero faltas en su legajo. Cierra los años como quien cierra un libro: T9 2025 y T4 2026.",
+  mac: "Un título en 2024 y, desde entonces, un prolongado año sabático. Cinco últimos puestos en 2026. El club celebra su generosidad financiando la picada.",
+  mata: "Un título en 2024, obtenido en su propia sede. La casa ganó. Una vez. El comité tomó nota del incidente y jamás volvió a repetirse."
+};
+
+const SALA_TEXTS = {
+  nachi: "Dos fechas seguidas rozando la gloria en mayo. El club le reservó el sillón más cómodo: la espera promete ser larga.",
+  negro: "Vitrina impecable, cero estrellas y un postre impago. El club no olvida ninguna de las dos cosas."
+};
+const LECTURA_NOTA = "El comité desea aclarar que sentarse a la mesa todos los lunes también es un mérito. Uno menor, desde luego, pero mérito al fin.";
+
+/* Época y material de cada estante (la regla de tamaños vive en el CSS). */
+const ERA_META = {
+  2024: { label:'MMXXIV · COLECCIÓN FUNDACIONAL', nota:'bronce fundido con pátina honesta' },
+  2025: { label:'MMXXV · LA EDAD DORADA', nota:'oro pulido a paño de gamuza' },
+  2026: { label:'MMXXVI · ALA CONTEMPORÁNEA', nota:'cristal holográfico · colección en curso' }
+};
+
+/* Lomos de cuero de cada estante. El «Expediente Manu» es el único
+   clickeable: se desliza fuera del estante y abre el EX LIBRIS de Gael. */
+const BOOKS = {
+  2024: [
+    { t:'Actas del Lunes · Vol. I', c:'b-green', h:150 },
+    { t:'Reglamento del Club · 7ª ed.', c:'b-oxblood', h:136 },
+    { t:'Anuario MMXXIV', c:'b-brown', h:124 },
+    { t:'Elogio de la Picada', c:'b-navy', h:132 }
+  ],
+  2025: [
+    { t:'Expediente Manu', manu:true, h:146 },
+    { t:'El Arte de Robar +4', c:'b-green', h:140 },
+    { t:'El 648: una Tragedia', c:'b-oxblood', h:128 },
+    { t:'Jurisprudencia del Contra-UNO', c:'b-navy', h:134 }
+  ],
+  2026: [
+    { t:'Multas · Tomo CL', c:'b-oxblood', h:142 },
+    { t:'Protocolo del Grito UNO', c:'b-green', h:128 },
+    { t:'Cartas al Comité', c:'b-brown', h:134 }
+  ]
+};
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= HELPERS ================= */
+function faceWrapHTML(slug, opts){
+  opts = opts || {};
+  const p = ROSTER[slug];
+  const sizeStyle = opts.size ? `--fsize:${opts.size}px;` : '';
+  const ringOpen = opts.ring ? '<div class="ring-annual-wrap">' : '';
+  const ringClose = opts.ring ? '</div>' : '';
+  return `${ringOpen}<div class="face-wrap" style="${sizeStyle}--pcolor:${p.color}">`
+    + `<img src="assets/faces/${slug}.png" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`
+    + `<div class="face-fallback" style="--pcolor:${p.color}">${(p.name||'?')[0]}</div>`
+    + `</div>${ringClose}`;
+}
+
+function starSVG(year, season){
+  return `<svg class="star star-${year}" data-year="${year}" viewBox="0 0 100 100" role="img" aria-label="T${season} ${year}">`
+    + `<title>T${season} ${year}</title><use href="#star5"></use></svg>`;
+}
+
+/* ================= COMPUTO DE DATOS ================= */
+function computeData(){
+  const years = Object.keys(CHAMPIONS).map(Number).sort((a,b)=>a-b);
+  const flat = [];
+  years.forEach(year=>{
+    (CHAMPIONS[year]||[]).forEach((slug,i)=>{
+      flat.push({ slug, year, season:i+1, order:flat.length });
+    });
+  });
+  const bySlug = {};
+  flat.forEach(t=>{
+    if(!bySlug[t.slug]){
+      bySlug[t.slug] = { slug:t.slug, total:0, titles:[], firstOrder:t.order };
+    }
+    bySlug[t.slug].total++;
+    bySlug[t.slug].titles.push(t);
+  });
+  return { years, flat, bySlug };
+}
+let DATA = computeData();
+
+/* clusters por jugador dentro de un año, en orden de primera aparición */
+function clustersFor(year){
+  const seen = {}; const order = [];
+  (CHAMPIONS[year]||[]).forEach((slug,i)=>{
+    if(!seen[slug]){ seen[slug] = { slug, seasons:[] }; order.push(seen[slug]); }
+    seen[slug].seasons.push(i+1);
+  });
+  return order;
+}
+
+/* ================= RENDER: STATS ================= */
+function renderStatsLine(){
+  const champs = Object.keys(DATA.bySlug).length;
+  document.getElementById('stats-line').innerHTML =
+    `<b>${DATA.flat.length}</b> temporadas · <b>${champs}</b> caballeros condecorados · una sola mesa`;
+}
+
+/* ================= RENDER: ESTANTES ================= */
+function peanaHTML(cl, year){
+  const p = ROSTER[cl.slug];
+  const isAnnual = ANNUAL[year] === cl.slug;
+  const stars = cl.seasons.map(s=>starSVG(year, s)).join('');
+  const n = cl.seasons.length;
+  const label = `${p.name}, ${n} título${n===1?'':'s'} en ${year}${isAnnual?', campeón anual':''}`;
+  const inner = `<span class="peana-stars">${stars}</span>`
+    + faceWrapHTML(cl.slug, { size:42 })
+    + `<span class="peana-placa">${p.name}${n>1?` <b>×${n}</b>`:''}</span>`;
+  if(isAnnual){
+    return `<button class="slot peana anual" data-open-champ="${cl.slug}" data-year="${year}" aria-label="${label}">`
+      + `<span class="corona" aria-hidden="true">👑</span>${inner}`
+      + `<span class="placa-anual">CAMPEÓN ANUAL</span>`
+      + `<span class="cordon" aria-hidden="true"></span></button>`;
+  }
+  return `<button class="slot peana" data-open-champ="${cl.slug}" data-year="${year}" aria-label="${label}">${inner}</button>`;
+}
+
+function libroHTML(b){
+  if(b.manu){
+    return `<button class="slot slot-libro libro-manu" data-book="manu" aria-label="Expediente Manu — tirá del lomo">`
+      + `<span class="libro" style="--bh:${b.h}px"><span class="libro-titulo">${b.t}</span>`
+      + `<span class="libro-sello" aria-hidden="true"></span></span></button>`;
+  }
+  return `<span class="slot slot-libro" aria-hidden="true">`
+    + `<span class="libro ${b.c}" style="--bh:${b.h}px"><span class="libro-titulo">${b.t}</span></span></span>`;
+}
+
+/* intercala: un libro cada dos peanas, sobrantes al final del estante */
+function interleave(clusters, books, year){
+  const items = [];
+  let bi = 0;
+  clusters.forEach((cl, i)=>{
+    if(i % 2 === 0 && bi < books.length){ items.push(libroHTML(books[bi++])); }
+    items.push(peanaHTML(cl, year));
+  });
+  while(bi < books.length){ items.push(libroHTML(books[bi++])); }
+  return items.join('');
+}
+
+function renderEstantes(){
+  const wrap = document.getElementById('estanteria');
+  wrap.innerHTML = '';
+  DATA.years.forEach(year=>{
+    const meta = ERA_META[year] || { label:`${year}`, nota:'colección en curso' };
+    const est = document.createElement('div');
+    est.className = 'estante';
+    est.dataset.year = year;
+    est.innerHTML = `
+      <div class="estante-label">${meta.label}</div>
+      <div class="estante-items">${interleave(clustersFor(year), BOOKS[year]||[], year)}</div>
+      <div class="estante-nota">${meta.nota}</div>
+    `;
+    wrap.appendChild(est);
+  });
+}
+
+/* ================= RENDER: SALA DE LECTURA ================= */
+function renderLectura(){
+  const grid = document.getElementById('lectura-grid');
+  grid.innerHTML = '';
+  Object.keys(SALA_TEXTS).forEach(slug=>{
+    const box = document.createElement('div');
+    box.className = 'sillon';
+    box.innerHTML = `
+      ${faceWrapHTML(slug)}
+      <div class="sillon-name">${ROSTER[slug].name} <span aria-hidden="true">📖</span></div>
+      <p class="sillon-plate">${SALA_TEXTS[slug]}</p>
+    `;
+    grid.appendChild(box);
+  });
+  document.getElementById('lectura-nota').textContent = LECTURA_NOTA;
+}
+
+/* ================= RENDER MASTER ================= */
+function renderAll(){
+  renderStatsLine();
+  renderEstantes();
+  renderLectura();
+}
+
+/* ================= TOAST ================= */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2400);
+}
+
+/* ================= MODAL EX LIBRIS ================= */
+const modal = document.getElementById('exlibris-modal');
+let lastFocus = null;
+let manuBookBtn = null;
+
+function openExLibris(slug){
+  const r = DATA.bySlug[slug];
+  if(!r) return;
+  lastFocus = document.activeElement;
+  const isAnnual = Object.values(ANNUAL).includes(slug);
+  const annualYear = Object.keys(ANNUAL).find(y=>ANNUAL[y]===slug);
+  document.getElementById('ex-face').innerHTML = faceWrapHTML(slug, { size:110, ring:isAnnual });
+  const aliasLine = slug === 'gael' ? '<span class="ex-alias">a.k.a. «Manu» · 2024–2025 · expediente resuelto</span>' : '';
+  document.getElementById('ex-name').innerHTML = ROSTER[slug].name + aliasLine;
+  document.getElementById('ex-annual-slot').innerHTML = isAnnual
+    ? `<span class="ex-annual">👑 CAMPEÓN ANUAL ${annualYear}</span>` : '';
+  document.getElementById('ex-total').innerHTML =
+    `<b>${r.total}</b> título${r.total===1?'':'s'} catalogado${r.total===1?'':'s'} en la Biblioteca`;
+  document.getElementById('ex-chips').innerHTML =
+    r.titles.map(t=>`<span class="chip-t">T${t.season} ${t.year}</span>`).join('');
+  document.getElementById('ex-plate').textContent = PLATES[slug] || '';
+  document.getElementById('ex-sello-slot').innerHTML =
+    slug === 'gael' ? '<div class="sello-caso">CASO CERRADO</div>' : '';
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  document.body.classList.add('modal-open');
+  document.getElementById('ex-close').focus();
+}
+
+function closeExLibris(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+  document.body.classList.remove('modal-open');
+  // el Expediente Manu vuelve solo a su lugar del estante
+  if(manuBookBtn){ manuBookBtn.classList.remove('sacado'); manuBookBtn = null; }
+  if(lastFocus && document.contains(lastFocus)) lastFocus.focus();
+}
+
+document.getElementById('ex-close').addEventListener('click', closeExLibris);
+modal.addEventListener('click', e=>{ if(e.target === modal) closeExLibris(); });
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && modal.classList.contains('open')) closeExLibris();
+});
+
+/* delegación: peanas/placas abren el EX LIBRIS; el Expediente Manu tiene
+   su propia ceremonia (el libro se desliza fuera antes de abrirse). */
+document.addEventListener('click', e=>{
+  const manu = e.target.closest('[data-book="manu"]');
+  if(manu){
+    if(manu.classList.contains('sacado')) return;
+    manuBookBtn = manu;
+    manu.classList.add('sacado');
+    showToast('El expediente sale del estante…');
+    setTimeout(()=> openExLibris('gael'), reducedMotion ? 0 : 460);
+    return;
+  }
+  const trigger = e.target.closest('[data-open-champ]');
+  if(trigger) openExLibris(trigger.dataset.openChamp);
+});
+
+/* ================= LÁMPARA: LUCES BAJAS / ALTAS ================= */
+(function initLampara(){
+  const btn = document.getElementById('lampara');
+  btn.addEventListener('click', ()=>{
+    const altas = document.body.classList.toggle('luces-altas');
+    btn.setAttribute('aria-pressed', String(altas));
+    showToast(altas
+      ? 'Luces altas. La sala lo desaprueba en silencio.'
+      : 'Luces bajas. Mucho mejor para conspirar.');
+  });
+})();
+
+/* ================= GALERA: REVERENCIA + LLUVIA DE GALERITAS ================= */
+(function initCrest(){
+  const crest = document.getElementById('crest');
+  let taps = 0, tapTimer = null;
+  crest.addEventListener('click', ()=>{
+    crest.classList.remove('saluda');
+    void crest.offsetWidth; // reinicia la animación de reverencia
+    crest.classList.add('saluda');
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(()=>{ taps = 0; }, 1600);
+    if(taps >= 5){
+      taps = 0;
+      rainHats();
+      showToast('🎩 Llueven galeras. Compostura, caballeros.');
+    } else {
+      showToast('El club lo saluda.');
+    }
+  });
+})();
+
+/* ================= MOTOR DE CONFETTI (galeritas 🎩) ================= */
+const confettiCanvas = document.getElementById('confetti-canvas');
+const cctx = confettiCanvas.getContext('2d');
+let confettiParticles = [];
+let confettiRunning = false;
+function resizeConfetti(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeConfetti);
+resizeConfetti();
+
+function rainHats(){
+  if(reducedMotion) return;
+  resizeConfetti();
+  for(let i=0;i<46;i++){
+    confettiParticles.push({
+      x: Math.random()*confettiCanvas.width,
+      y: -30 - Math.random()*confettiCanvas.height*0.5,
+      vx: (Math.random()-0.5)*1.4,
+      vy: 2.2 + Math.random()*3,
+      size: 14 + Math.random()*16,
+      rot: (Math.random()-0.5)*0.6,
+      vr: (Math.random()-0.5)*0.08,
+      life: 0,
+      maxLife: 260
+    });
+  }
+  if(!confettiRunning){
+    confettiRunning = true;
+    requestAnimationFrame(tickConfetti);
+  }
+}
+function tickConfetti(){
+  if(document.hidden){ requestAnimationFrame(tickConfetti); return; }
+  cctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  confettiParticles = confettiParticles.filter(p=> p.life < p.maxLife && p.y < confettiCanvas.height + 50);
+  confettiParticles.forEach(p=>{
+    p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+    p.vx += Math.sin(p.life*0.05)*0.02; // vaivén elegante, como cae una galera
+    cctx.save();
+    cctx.translate(p.x, p.y);
+    cctx.rotate(p.rot);
+    cctx.globalAlpha = Math.max(0, 1 - p.life/p.maxLife);
+    cctx.font = p.size+'px sans-serif';
+    cctx.textAlign = 'center'; cctx.textBaseline = 'middle';
+    cctx.fillText('🎩', 0, 0);
+    cctx.restore();
+  });
+  if(confettiParticles.length > 0){
+    requestAnimationFrame(tickConfetti);
+  } else {
+    confettiRunning = false;
+    cctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+  }
+}
+
+/* ================= LLUVIA EN LA VENTANA + RELÁMPAGOS ================= */
+(function initLluvia(){
+  const canvas = document.getElementById('lluvia-canvas');
+  if(!canvas || reducedMotion) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, drops = [];
+  function resize(){
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+    drops = Array.from({ length: 42 }, ()=>({
+      x: Math.random()*w, y: Math.random()*h,
+      len: 7 + Math.random()*11,
+      v: 3.2 + Math.random()*3.4,
+      drift: 0.5 + Math.random()*0.7,
+      a: 0.25 + Math.random()*0.4
+    }));
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    if(!document.hidden && w > 0){
+      ctx.clearRect(0,0,w,h);
+      ctx.lineWidth = 1.1;
+      ctx.lineCap = 'round';
+      drops.forEach(d=>{
+        d.y += d.v; d.x += d.drift;
+        if(d.y > h + 12){ d.y = -12; d.x = Math.random()*w; }
+        if(d.x > w + 4) d.x = -4;
+        ctx.strokeStyle = `rgba(175,205,235,${d.a})`;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x - d.drift*2, d.y - d.len);
+        ctx.stroke();
+      });
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* relámpago ocasional: doble destello en la ventana + luz breve en la sala */
+(function initRelampago(){
+  if(reducedMotion) return;
+  const vf = document.getElementById('ventana-flash');
+  const rf = document.getElementById('flash-overlay');
+  function bolt(){
+    vf.style.opacity = '.9'; rf.style.opacity = '.16';
+    setTimeout(()=>{ vf.style.opacity = '0'; rf.style.opacity = '0'; }, 110);
+    setTimeout(()=>{ vf.style.opacity = '.55'; rf.style.opacity = '.09'; }, 230);
+    setTimeout(()=>{ vf.style.opacity = '0'; rf.style.opacity = '0'; }, 350);
+  }
+  (function loop(){
+    setTimeout(()=>{
+      if(!document.hidden) bolt();
+      loop();
+    }, 8000 + Math.random()*10000);
+  })();
+})();
+
+/* ================= POLVO DORADO EN EL HAZ ================= */
+(function initPolvo(){
+  const canvas = document.getElementById('polvo-canvas');
+  const haz = document.getElementById('haz');
+  if(!canvas || !haz || reducedMotion) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, cone = null, motas = [];
+  function coneAt(y){ // semiancho del haz a la altura y (canvas coords)
+    if(!cone) return 0;
+    const t = Math.min(1, Math.max(0, (y - cone.apexY) / (cone.baseY - cone.apexY)));
+    return 8 + t * cone.halfBase;
+  }
+  function resize(){
+    const salaRect = document.getElementById('sala').getBoundingClientRect();
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+    const hz = haz.getBoundingClientRect();
+    cone = {
+      apexX: hz.left + hz.width/2 - salaRect.left,
+      apexY: hz.top - salaRect.top,
+      baseY: Math.min(h - 10, hz.bottom - salaRect.top),
+      halfBase: hz.width * 0.42
+    };
+    motas = Array.from({ length: 46 }, ()=>{
+      const y = cone.apexY + 20 + Math.random()*(cone.baseY - cone.apexY - 20);
+      return {
+        x: cone.apexX + (Math.random()*2-1)*coneAt(y)*0.9,
+        y,
+        r: 0.6 + Math.random()*1.6,
+        vx: (Math.random()-0.5)*0.22,
+        vy: (Math.random()-0.5)*0.12,
+        tw: Math.random()*Math.PI*2
+      };
+    });
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    if(!document.hidden && cone){
+      ctx.clearRect(0,0,w,h);
+      motas.forEach(m=>{
+        m.x += m.vx; m.y += m.vy; m.tw += 0.025;
+        const half = coneAt(m.y);
+        if(m.y < cone.apexY + 12 || m.y > cone.baseY || Math.abs(m.x - cone.apexX) > half){
+          m.y = cone.apexY + 20 + Math.random()*(cone.baseY - cone.apexY - 20);
+          m.x = cone.apexX + (Math.random()*2-1)*coneAt(m.y)*0.9;
+        }
+        const alpha = 0.28 + 0.32*Math.sin(m.tw);
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(236,210,143,${Math.max(0.05, alpha)})`;
+        ctx.arc(m.x, m.y, m.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= BRASAS DEL HOGAR ================= */
+(function initBrasas(){
+  const canvas = document.getElementById('brasas-canvas');
+  if(!canvas || reducedMotion) return;
+  const ctx = canvas.getContext('2d');
+  let w, h, chispas = [];
+  function resize(){
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    if(!document.hidden && w > 0){
+      ctx.clearRect(0,0,w,h);
+      if(chispas.length < 34 && Math.random() < 0.3){
+        chispas.push({
+          x: w/2 + (Math.random()-0.5)*w*0.34,
+          y: h - 8,
+          r: 0.8 + Math.random()*1.8,
+          vy: -(0.5 + Math.random()*1.1),
+          sway: Math.random()*Math.PI*2,
+          life: 0,
+          maxLife: 70 + Math.random()*70
+        });
+      }
+      chispas = chispas.filter(c=> c.life < c.maxLife && c.y > -6);
+      chispas.forEach(c=>{
+        c.life++; c.sway += 0.08;
+        c.y += c.vy;
+        c.x += Math.sin(c.sway)*0.4;
+        const k = 1 - c.life/c.maxLife;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${255},${Math.round(120+110*k)},${Math.round(40*k)},${(0.7*k).toFixed(3)})`;
+        ctx.arc(c.x, c.y, c.r*Math.max(.3,k), 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ================= PAUSA GLOBAL (pestaña oculta) ================= */
+document.addEventListener('visibilitychange', ()=>{
+  document.body.classList.toggle('anim-paused', document.hidden);
+});
+
+/* ================= DATOS VIVOS (Firestore, opcional y silencioso) ================= */
+async function fetchLiveSeasons(){
+  try{
+    const controller = new AbortController();
+    const timeout = setTimeout(()=> controller.abort(), 6000);
+    const res = await fetch('https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents/seasons?pageSize=100&key=AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM', { signal: controller.signal });
+    clearTimeout(timeout);
+    if(!res.ok) return;
+    const data = await res.json();
+    const docs = data.documents || [];
+    const byYear = {};
+    docs.forEach(doc=>{
+      const f = doc.fields || {};
+      const winner = f.winnerPlayerId && f.winnerPlayerId.stringValue;
+      const endedAt = (f.endedAt && (f.endedAt.timestampValue || f.endedAt.stringValue)) || null;
+      const seasonNumber = f.seasonNumber && f.seasonNumber.integerValue != null ? parseInt(f.seasonNumber.integerValue,10) : null;
+      if(!winner || !endedAt || !seasonNumber || !ROSTER[winner]) return;
+      const year = new Date(endedAt).getFullYear();
+      if(!year || isNaN(year)) return;
+      if(!byYear[year]) byYear[year] = [];
+      byYear[year][seasonNumber-1] = winner;
+    });
+    let changed = false;
+    Object.keys(byYear).forEach(yearStr=>{
+      const y = Number(yearStr);
+      const arr = byYear[yearStr];
+      const merged = arr.map((v,i)=> v || (CHAMPIONS[y] && CHAMPIONS[y][i]) || null).filter(Boolean);
+      if(!CHAMPIONS[y] || merged.length > CHAMPIONS[y].length){
+        CHAMPIONS[y] = merged;
+        changed = true;
+      }
+    });
+    if(changed){
+      DATA = computeData();
+      renderAll();
+    }
+  }catch(e){
+    /* silencioso: la data estática ya está renderizada */
+  }
+}
+
+/* ================= INIT ================= */
+renderAll();
+if('requestIdleCallback' in window){
+  requestIdleCallback(()=> fetchLiveSeasons());
+} else {
+  setTimeout(fetchLiveSeasons, 400);
+}
+
+})();
+</script>
+</body>
+</html>
