@@ -78,6 +78,11 @@ Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
   slug/url/ts) y la tarjeta «By <Nombre>: Piña Directa» aparece sola en
   Estadísticas → Experiencias — evento `pina_experiencia`. Ojo: al agregarla,
   SU url deja de ser secreta (decisión del jugador dueño, by design).
+  ⚠️ Los eventos `pina_experiencia` de carucha y mac del 17/07 fueron CLICKS
+  ACCIDENTALES de Andrés: pidió borrarlas y los docs `experiencias/pina-carucha`
+  y `pina-mac` se eliminaron ese mismo día. Regla: la tarjeta solo vale si la
+  agrega EL JUGADOR dueño de la piña; si aparece una que el dueño no agregó,
+  consultar a Andrés antes de tocar nada.
 
 **🚫 LÍMITES DUROS DE LA RUTINA (Andrés, 16/07 noche, vinculante y permanente):**
 - La rutina diaria tiene libertad TOTAL para crear experiencias increíbles,
