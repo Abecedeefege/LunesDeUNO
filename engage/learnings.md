@@ -1,5 +1,17 @@
 # Learnings del agente — Lunes de UNO
 
+## 🪪 IDENTIDAD CLAVE (Andrés, 17/07 por chat, vinculante)
+
+**Andrés ES Mata** — misma persona: el device `andres` (admin/decisiones) y el
+device `mata` son suyos y ocupan UN solo lugar del club. Su piña es la de mata.
+En contenido publicado se lo nombra Mata (jugador); "andres" es solo nombre de
+device. **Regla de seguridad (17/07):** el club y el Gimnasio solo aceptan
+apodos de los 11 jugadores (alias `andres`→`mata`); el cupo se cuenta por
+PERSONAS (8/11 hoy), no por devices. El registro de prueba "pepe" (device
+`689137cb…`, era Andrés testeando) fue desactivado en Firestore el 17/07 con
+`invalid_reason` explícito — única escritura a pushSubs, autorizada por el
+contexto del pedido.
+
 ## ⏱️ CADENCIA VIGENTE: 4 pushes grupales/semana a las 14:00 + 1 personal los jueves 15:00
 
 **Sábado récords · Domingo chusmerío · Lunes la previa (con "padres e hijos") ·
@@ -44,15 +56,14 @@ Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
   gael→`pina-gael-239245bf` · nachi→`pina-nachi-eb23fea7` ·
   carucha→`pina-carucha-a0bdc735` · gordo→`pina-gordo-5cec1f1c` ·
   cobra→`pina-cobra-307c49eb` · naso→`pina-naso-e6513433` ·
-  negro→`pina-negro-e5f44ee5` · tano→`pina-tano-9a332eeb`. Entregadas: ninguna.
-- **⚠️ PENDIENTE PARA ANDRÉS — 2 solicitudes del Gimnasio (16/07 noche, ver
-  §Corrida de HOY):** 2× `pina_request_blocked` de devices sin nombre
-  (`sin-nombre`, ids `d0d54f5c…` y `59799ffc…`) — no se puede resolver solo:
-  faltan asociar nombre+push activa vía club.html; y 1× `pina_request` del
-  propio device **andres** (`pina-req-andres`, 16/07 23:25 UTC) — tiene sub
-  activa pero **no existe piña forjada para "andres"** (no es jugador de la
-  mesa) — protocolo no aplica automáticamente, requiere decisión de Andrés
-  (¿era un test del flujo, o quiere una piña propia como organizador?).
+  negro→`pina-negro-e5f44ee5` · tano→`pina-tano-9a332eeb`.
+  **Entregadas: mata (17/07 12:30, push `2026-07-17-pina-mata` a devices
+  andres+mata — resolvió `pina-req-andres` y `pina-req-pepe`, ambos eran
+  Andrés=Mata).** Los 2 `pina_request_blocked` de `sin-nombre` del 16/07
+  ocurrieron durante la exploración nocturna de Andrés — presumiblemente sus
+  tests; sin acción posible ni pendiente. El Gimnasio ahora emite
+  `pina-req-<jugador canónico>` (alias resuelto) y bloquea apodos que no son
+  de la mesa.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-17, sin cambios desde el 16/07)
 
@@ -78,11 +89,12 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
 - Sin partidas nuevas desde el 13/07 (games: 18 docs, 17 fechas válidas +
   1 sin winnerPlayerId descartada); próxima fecha esperada lunes 20/07.
 
-## 📊 Estado del sistema (2026-07-17, viernes, corrida 06:06 local)
+## 📊 Estado del sistema (2026-07-17, viernes, actualizado 08:55 local en chat)
 
-- Subs activas: 9 personas / 10 devices (cobra ×2): andres, pt, mata, negro,
-  cobra, mac, gael, gordo, carucha. `mc` disabled. Faltan nachi, naso, tano.
-  Sin cambios desde el 16/07; sin eventos `push_unsubscribe`.
+- **Socios: 8 PERSONAS / 11 lugares** (conteo nuevo por persona, andres=mata):
+  mata(×2 devices: andres+mata), pt, negro, cobra(×2), mac, gael, gordo,
+  carucha. Faltan nachi, naso, tano (3 lugares libres). `mc` y `pepe`
+  disabled. Sin eventos `push_unsubscribe`.
 - `games`: 18 docs (17 fechas válidas + 1 finished sin winner, descartada).
   Cutoff de todo lo afirmado hoy: recálculo del 17/07, sin partidas nuevas.
 - Eventos nuevos desde la corrida anterior (16/07 ~19:02 en adelante):
@@ -113,11 +125,13 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
   (viernes 11:00, ya aprobada por Andrés), Kryptonita de Cobra #001, el
   Gimnasio y las 11 piñas del vault — todo construido y encolado.
 - 📰 **Vie 17/07 (hoy):** preview a andres 09:00 y push general
-  `2026-07-17-cronica-ent` 11:00, ambos ya en cola y verificados vigentes en
-  esta corrida. Fuera de eso, silencio — corrida de hoy fue solo gestión:
-  promovió la proposal de la crónica, revisó `pina_request`(s) nuevos (2
-  bloqueados + 1 de andres, ambos sin resolución automática posible, ver
-  arriba), confirmó que no hace falta compactar ni purgar la cola.
+  `2026-07-17-cronica-ent` 11:00 (en cola, vigentes). A las ~08:40 Andrés
+  entró por chat: reveló andres=mata, pidió el cupo por personas con tablero
+  de 11 en club.html, la regla de apodos válidos (implementada en club.html y
+  el Gimnasio; pepe desactivado), y su piña — entregada hoy 12:30
+  (`2026-07-17-pina-mata`, personal, no rompe el silencio grupal). Además la
+  corrida de las 06:06 promovió la proposal de la crónica y confirmó que no
+  hacía falta compactar ni purgar.
 - 🏆 **Sáb 18/07 (récords):** ¡OJO! la crónica del viernes YA quema las citas
   de Carucha — NO repetirlas como gancho. Ángulo recomendado: especial
   remontadas (pendiente del TODO) o la caída de Cobra 1º→7º. Sub-formatos ya
@@ -128,13 +142,13 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
 
 ## TODO / ángulos sin usar
 
-Resolver con Andrés los 2 `pina_request_blocked` (asociar nombre+push vía
-club.html) y el `pina_request` propio de andres (¿test o piña personal?) ·
-especial remontadas (candidato sáb 18/07) · día de liquidación (candidato dom
-19/07) · especial sedes · aniversarios (648 de Naso, multa 150 de Tano) ·
-replicar flujo del club con nachi/naso/tano (sin sub, sus piñas esperan en el
-vault) · H2H inéditos sin publicar: Gordo 11-1 Mac (citado solo en piña
-secreta), Nachi padre de Carucha 6-2 ("el abuelo") · señal pendiente: decisión
-de Andrés sobre entrevista-gordo (vence 21/07) y kryptonita-cobra (vence
-23/07) · si el lunes 20/07 vienen Carucha Y Cobra, la previa tiene el ángulo
-del año servido (el reencuentro padre-hijo tras el expediente kryptonita).
+Mañana: verificar que `2026-07-17-pina-mata` salió y evaluar señales de la
+primera piña entregada (reaction/dwell de mata) · especial remontadas
+(candidato sáb 18/07) · día de liquidación (candidato dom 19/07) · especial
+sedes · aniversarios (648 de Naso, multa 150 de Tano) · replicar flujo del
+club con nachi/naso/tano (3 lugares libres; sus piñas esperan en el vault) ·
+H2H inéditos sin publicar: Gordo 11-1 Mac (citado solo en piña secreta), Nachi
+padre de Carucha 6-2 ("el abuelo") · señal pendiente: decisión de Andrés sobre
+entrevista-gordo (vence 21/07) y kryptonita-cobra (vence 23/07) · si el lunes
+20/07 vienen Carucha Y Cobra, la previa tiene el ángulo del año servido (el
+reencuentro padre-hijo tras el expediente kryptonita).

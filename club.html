@@ -74,8 +74,9 @@
     </div>
     <div class="card">
       <div style="font-size:.85rem;color:#b9b9c4;margin-bottom:.8rem;">
-        Socio: <b id="whoami" style="color:#FFDE00;"></b> · lugares del club: <b id="cupo">–</b>/11
+        Socio: <b id="whoami" style="color:#FFDE00;"></b> · socios del club: <b id="cupo">–</b>/11
       </div>
+      <div id="roster" style="margin-bottom:.9rem;line-height:1.9;"></div>
       <div id="joinBox">
         <button class="primary" onclick="enablePush()">Activar los avisos en este dispositivo</button>
       </div>
@@ -101,6 +102,12 @@ const LS_CLUB_OK     = 'lunesdeuno_club_ok';
 const MAX_ACTIVE_SUBS = 11;
 // Validación client-side alcanza: el riesgo es bajo y el canal es de amigos.
 const CODE_OK = 'lapicadaesley';
+// Solo los 11 de la mesa pueden registrarse (regla de Andrés, 17/07).
+// 'andres' es la misma persona que 'mata': ocupa UN solo lugar del club.
+const PLAYERS = ['pt','mac','mata','gael','nachi','carucha','negro','naso','tano','gordo','cobra'];
+const ALIASES = { andres: 'mata' };
+function canonical(name) { const n = normalize(name); return ALIASES[n] || n; }
+function isPlayerName(name) { return PLAYERS.indexOf(canonical(name)) !== -1; }
 
 function setStatus(msg, cls) {
   const el = document.getElementById('status');
@@ -124,33 +131,64 @@ function unlock() {
   const gs = document.getElementById('gateStatus');
   if (code !== CODE_OK) { gs.textContent = 'Ese código no abre esta puerta.'; return; }
   if (!name) { gs.textContent = 'Falta tu apodo — sin nombre no hay club.'; return; }
+  if (!isPlayerName(name)) { gs.textContent = 'Ese apodo no juega en esta mesa. Usá tu apodo real de la app.'; return; }
   localStorage.setItem(LS_CLUB_OK, '1');
   localStorage.setItem(LS_DEVICE_NAME, name);
   showPanel();
 }
 
-async function activeSubCount(excludeId) {
+// El cupo se cuenta por PERSONAS de la mesa, no por dispositivos: dos devices
+// del mismo jugador (o su alias) ocupan un solo lugar. Apodos que no son de
+// ningún jugador no ocupan lugar (y ya no pueden registrarse).
+async function activePeople(excludeName) {
   const r = await fetch(FS_BASE + '/pushSubs?key=' + FS_KEY + '&pageSize=100', { cache: 'no-store' });
   if (!r.ok) throw new Error('Firestore HTTP ' + r.status);
   const data = await r.json();
-  return (data.documents || []).filter(function (doc) {
+  const ex = excludeName ? canonical(excludeName) : null;
+  const seen = {};
+  (data.documents || []).forEach(function (doc) {
     const f = doc.fields || {};
-    const id = doc.name.split('/').pop();
-    return f.status && f.status.stringValue === 'active' && id !== excludeId;
-  }).length;
+    if (!f.status || f.status.stringValue !== 'active') return;
+    const who = canonical(f.device ? f.device.stringValue : '');
+    if (PLAYERS.indexOf(who) === -1) return;
+    if (who === ex) return;
+    seen[who] = true;
+  });
+  return Object.keys(seen);
 }
 
 async function refreshCupo() {
   try {
-    const n = await activeSubCount(null);
-    document.getElementById('cupo').textContent = n;
+    const people = await activePeople(null);
+    document.getElementById('cupo').textContent = people.length;
+    const roster = document.getElementById('roster');
+    if (roster) {
+      roster.innerHTML = PLAYERS.map(function (p) {
+        const dentro = people.indexOf(p) !== -1;
+        return '<span style="display:inline-block;margin:3px 4px 0 0;padding:4px 10px;border-radius:999px;font-size:.76rem;' +
+          (dentro
+            ? 'background:rgba(0,166,81,.12);border:1px solid rgba(0,166,81,.5);color:#d9d9e2;">🎩 ' + p
+            : 'background:transparent;border:1px dashed #2a2a35;color:#55555f;">' + p) +
+          '</span>';
+      }).join('');
+    }
   } catch (e) { document.getElementById('cupo').textContent = '?'; }
 }
 
 function showPanel() {
+  const stored = localStorage.getItem(LS_DEVICE_NAME);
+  if (!isPlayerName(stored)) {
+    // Apodo guardado que no es de ningún jugador (regla del 17/07): de vuelta a la puerta.
+    localStorage.removeItem(LS_CLUB_OK);
+    document.getElementById('gate').style.display = 'block';
+    document.getElementById('panel').style.display = 'none';
+    document.getElementById('gateStatus').textContent =
+      'Tu apodo guardado («' + (stored || '') + '») no juega en esta mesa. Entrá de nuevo con tu apodo real.';
+    return;
+  }
   document.getElementById('gate').style.display = 'none';
   document.getElementById('panel').style.display = 'block';
-  document.getElementById('whoami').textContent = localStorage.getItem(LS_DEVICE_NAME) || '—';
+  document.getElementById('whoami').textContent = stored || '—';
   refreshCupo();
   detectMemberState();
   // Si el permiso ya está bloqueado, avisar ANTES de que toquen el botón.
@@ -239,10 +277,16 @@ async function enablePush() {
     const reg = await navigator.serviceWorker.register('sw.js');
     await navigator.serviceWorker.ready;
 
-    // Tope de socios: 11 dispositivos activos (los jugadores de la mesa).
-    const others = await activeSubCount(deviceId());
-    if (others >= MAX_ACTIVE_SUBS) {
-      setStatus('El club está lleno (11/11). Que alguien libere su lugar primero.', 'err');
+    // Tope de socios: 11 PERSONAS (los jugadores de la mesa). Un segundo
+    // dispositivo de un socio que ya está adentro no ocupa lugar nuevo.
+    const myName = localStorage.getItem(LS_DEVICE_NAME);
+    if (!isPlayerName(myName)) {
+      setStatus('Tu apodo («' + (myName || '') + '») no juega en esta mesa — recargá y entrá con tu apodo real.', 'err');
+      return;
+    }
+    const others = await activePeople(myName);
+    if (others.length >= MAX_ACTIVE_SUBS) {
+      setStatus('El club está lleno (11/11 personas). Que alguien libere su lugar primero.', 'err');
       return;
     }
 
@@ -281,7 +325,7 @@ async function enablePush() {
   const apodo = normalize(params.get('apodo') || '');
   if (inv === CODE_OK) {
     localStorage.setItem(LS_CLUB_OK, '1');
-    if (apodo) localStorage.setItem(LS_DEVICE_NAME, apodo);
+    if (apodo && isPlayerName(apodo)) localStorage.setItem(LS_DEVICE_NAME, apodo);
     if (!localStorage.getItem(LS_DEVICE_NAME)) {
       // código válido pero sin apodo: dejarlo pre-cargado y pedir solo el nombre
       document.getElementById('code').value = params.get('invita');

@@ -1,6 +1,22 @@
 {
-  "_updated_at": "2026-07-16T19:02:00.758Z",
+  "_updated_at": "2026-07-17T11:55:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-17-pina-mata",
+      "title": "🥊 Tu Piña Directa está forjada",
+      "body": "EL INTOCABLE: 6-0 sobre Negro, prontuario en blanco en 10 fechas y padre de Naso y Tano 6-1. El póster es tuyo — abrilo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-mata-32b16d4d.html",
+      "devices": [
+        "andres",
+        "mata"
+      ],
+      "send_at": "2026-07-17T12:30:00-03:00",
+      "expires_at": "2026-07-17T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-17 (primera entrega de la Serie Piña Directa: pina-req-andres + pina-req-pepe = Mata, Andres confirmo por chat que andres y mata son la misma persona; push personal a sus 2 devices, no rompe el silencio grupal del viernes)"
+    },
     {
       "id": "2026-07-17-cronica-ent-preview",
       "title": "🧬 Preview: la crónica de Carucha (sale 11:00)",

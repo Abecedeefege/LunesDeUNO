@@ -214,8 +214,10 @@
       "created": "2026-07-16",
       "status": "vault",
       "hypothesis": "Pedida por Andres por chat (16/07): piña directa pre-forjada de CADA jugador con la estadistica verificada que mejor lo deja parado (recalculada de games, 17 fechas). URLs con sufijo hex no adivinable, JAMAS linkeadas desde paginas ni pushes grupales — solo se entregan por push personal al dueño cuando la solicita en el Gimnasio (o por decision de Andres). Los botones de approve de estas paginas apuntan al proposal pina-directa-serie. status=vault: no expiran a los 7 dias; una vez ENTREGADA una piña, esa entrega si se evalua con las señales normales.",
-      "notified_by": [],
-      "result_notes": null
+      "notified_by": [
+        "2026-07-17-pina-mata"
+      ],
+      "result_notes": "Approve confirmatorio de andres por boton (17/07 00:00:44Z). Primera entrega: la piña de MATA (pina-mata-32b16d4d), solicitada en el Gimnasio (pina-req-andres 16/07 + pina-req-pepe 17/07 — Andres confirmo por chat 17/07 que andres y mata son la misma persona), push personal encolado para el 17/07 12:30 a sus devices andres+mata."
     }
   ]
 }

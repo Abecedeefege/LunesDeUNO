@@ -108,8 +108,13 @@
         '👉 <a href="../club.html" style="color:#FFDE00;font-weight:800">Activá tus push en el Club</a> y volvé a pedirla.</span>';
       if (window.engageTrack) engageTrack('pina_request_blocked',{});
     }
+    // Solo los 11 de la mesa tienen expediente (regla del 17/07); 'andres' es Mata.
+    var PLAYERS=['pt','mac','mata','gael','nachi','carucha','negro','naso','tano','gordo','cobra'];
+    var ALIASES={andres:'mata'};
     var dev=null; try{dev=localStorage.getItem('lunesdeuno_device_name');}catch(e){}
     if(!dev){ requisito('este navegador todavía no tiene un nombre de jugador asociado.'); return; }
+    var who=ALIASES[dev]||dev;
+    if(PLAYERS.indexOf(who)===-1){ requisito('el apodo de este navegador («'+dev+'») no es de ningún jugador de la mesa.'); return; }
     btn.disabled=true; btn.textContent='⏳ Verificando tus push…';
     fetch(FS+':runQuery?key='+KEY,{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({structuredQuery:{from:[{collectionId:'pushSubs'}],
@@ -118,7 +123,8 @@
       .then(function(rows){
         var ok=(rows||[]).some(function(x){return x.document&&x.document.fields&&x.document.fields.status&&x.document.fields.status.stringValue==='active';});
         if(ok){
-          if (window.engageTrack) engageTrack('pina_request',{id:'pina-req-'+dev});
+          // El id usa el jugador canónico (alias resuelto): una piña por jugador.
+          if (window.engageTrack) engageTrack('pina_request',{id:'pina-req-'+who});
           btn.textContent='✓ PIÑA SOLICITADA';
           note.innerHTML='<span style="color:#00A651">🔥 <b>El horno ya está prendido, '+dev+'.</b> El laboratorio está revisando tu expediente — tu Piña Directa te llega por notificación cuando esté forjada.</span>';
         } else {
