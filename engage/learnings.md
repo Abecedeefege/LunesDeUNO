@@ -71,6 +71,32 @@ Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
   tests; sin acción posible ni pendiente. El Gimnasio ahora emite
   `pina-req-<jugador canónico>` (alias resuelto) y bloquea apodos que no son
   de la mesa.
+- **Cada piña trae (pedido de Andrés 16/07 noche):** (a) «📲 Compartir la
+  piña»: renderiza el póster a imagen con canvas propio (sin librerías) y usa
+  Web Share (fallback: descarga el PNG) — evento `pina_share`; (b) «⭐ Agregar
+  la piña como experiencia»: upsertea `experiencias/pina-<slug>` (title/by/
+  slug/url/ts) y la tarjeta «By <Nombre>: Piña Directa» aparece sola en
+  Estadísticas → Experiencias — evento `pina_experiencia`. Ojo: al agregarla,
+  SU url deja de ser secreta (decisión del jugador dueño, by design).
+
+**🚫 LÍMITES DUROS DE LA RUTINA (Andrés, 16/07 noche, vinculante y permanente):**
+- La rutina diaria tiene libertad TOTAL para crear experiencias increíbles,
+  pero **JAMÁS edita código ni el funcionamiento del anotador/la app**:
+  index.html, propuestas.html, tv*.html, sw.js, engage.js, club.html, tools/
+  quedan intocables SIN EXCEPCIONES futuras (las excepciones anteriores fueron
+  órdenes directas de Andrés en sesiones de chat, no de la rutina).
+- **Datos de Firestore de la app: solo lectura.** games/players/seasons/
+  Propuestas/propuestasVisuales/pushSubs no se escriben nunca. `engagement` se
+  lee y compacta como siempre. La colección **`experiencias` la escriben LOS
+  JUGADORES** (botón de sus piñas) — la rutina no la escribe ni la borra.
+- **Los pushes llevan SIEMPRE a páginas nuevas, no accesibles desde el sitio.**
+  El ÚNICO lugar del sitio donde una experiencia puede aparecer es
+  Estadísticas → Experiencias, y solo vía la colección `experiencias`
+  (mecanismo de lectura instalado en index.html el 16/07 por orden directa de
+  Andrés — cambio único e irrepetible; agregar experiencias = escribir un dato,
+  nunca tocar código). Nota: `tools/pina_express.js` y su workflow existen por
+  orden directa de Andrés por chat (17/07) — la rutina diaria tampoco los
+  edita, solo audita su ledger.
 
 ## 💸 DEUDAS (ledger vigente al 2026-07-17, sin cambios desde el 16/07)
 

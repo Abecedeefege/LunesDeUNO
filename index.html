@@ -7210,5 +7210,45 @@ window.addEventListener('pagehide', _flushOnHide);
   else { hat.addEventListener('load', start); setTimeout(start, 900); }
 })();
 </script>
+<script>
+/* Experiencias dinámicas: tarjetas agregadas por los jugadores (colección
+   Firestore `experiencias`). Solo LEE y agrega tarjetas a la pestaña
+   Estadísticas → Experiencias; no toca nada más de la app. */
+(function () {
+  var cont = document.getElementById('statsTab_experiencias');
+  if (!cont) return;
+  fetch('https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents/experiencias?key=AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM&pageSize=100')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var wa = cont.querySelector('.exp-wa-card');
+      (d.documents || []).forEach(function (doc) {
+        var f = doc.fields || {};
+        function s(k) { return (f[k] && f[k].stringValue) || ''; }
+        var id = doc.name.split('/').pop();
+        if (!s('url') || cont.querySelector('a[data-exp-id="' + id + '"]')) return;
+        var a = document.createElement('a');
+        a.className = 'exp-card';
+        a.href = s('url');
+        a.setAttribute('data-exp-id', id);
+        var img = document.createElement('img');
+        img.className = 'exp-face';
+        img.src = 'assets/faces/' + (s('slug') || 'gordo') + '.png';
+        img.alt = s('by'); img.loading = 'lazy';
+        var label = document.createElement('span');
+        label.className = 'exp-label';
+        var small = document.createElement('small');
+        small.textContent = 'By ' + s('by') + ':';
+        label.appendChild(small);
+        label.appendChild(document.createTextNode(' ' + s('title')));
+        var arrow = document.createElement('span');
+        arrow.className = 'exp-arrow'; arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '→';
+        a.appendChild(img); a.appendChild(label); a.appendChild(arrow);
+        cont.insertBefore(a, wa);
+      });
+    })
+    .catch(function () {});
+})();
+</script>
 </body>
 </html>

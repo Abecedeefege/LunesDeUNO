@@ -30,6 +30,12 @@
   .copy b{color:var(--text)}
   .sello{margin-top:16px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
   .sello b{color:var(--acc)}
+  .acciones{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+  .acciones button{width:100%;border:none;border-radius:12px;padding:15px;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit}
+  #shareBtn{background:#25D366;color:#06281a}
+  #expBtn{background:var(--card);color:var(--text);border:2px solid var(--acc)}
+  #shareBtn:disabled,#expBtn:disabled{opacity:.75;cursor:default}
+  .accion-hint{font-size:.78rem;color:var(--dim);line-height:1.5;text-align:center;min-height:1em}
   .react,.engage-actions{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .react button,.engage-actions button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
   .react button:hover,.engage-actions button:hover{border-color:var(--acc)}
@@ -42,11 +48,11 @@
 
   <div class="wrap">
 
-    <div class="poster">
+    <div class="poster" id="poster">
       <div class="vipbar"><span class="l">⭐ Piña Directa · VIP</span><span class="r">Serie 2026 · 1 de 11</span></div>
       <div class="body">
         <div class="serie">El Gimnasio de las Piñas presenta</div>
-        <img class="face" src="../assets/faces/gael.png" alt="Gael">
+        <img class="face" id="faceImg" src="../assets/faces/gael.png" alt="Gael">
         <div class="pname">Gael</div>
         <h1>🥊 LA MASACRE DEL 28 DE ABRIL</h1>
         <div class="bignum">+98</div>
@@ -59,6 +65,13 @@
         <div class="copy">Gael no gana seguido — gana <b>ÉPICO</b>. El 28 de abril entró a la casa de Gordo, clavó 155 y le sacó <b>98 puntos</b> al segundo. Los demás ganan fechas; Gael deja cráteres. Pregúntenle a los 7 que esa noche volvieron caminando despacito.</div>
         <div class="sello">Forjada con los registros oficiales de las 17 fechas de 2026 · <b>datos 100% reales</b></div>
       </div>
+    </div>
+
+    <div class="acciones">
+      <button id="shareBtn" onclick="compartirPina(this)">📲 Compartir la piña (imagen)</button>
+      <div class="accion-hint" id="shareHint"></div>
+      <button id="expBtn" onclick="agregarExperiencia(this)">⭐ Agregar la piña como experiencia</button>
+      <div class="accion-hint" id="expHint"></div>
     </div>
 
     <div class="react">¿Pegó la piña?
@@ -78,5 +91,153 @@
     <div class="foot">🎴 LUNES DE UNO · PIÑA DIRECTA DE GAEL · 2026</div>
   </div>
 
+<script>
+var PINA = {"slug": "gael", "name": "Gael", "color": "#0072BC", "glow": "rgba(0,114,188,0.28)", "titulo": "LA MASACRE DEL 28 DE ABRIL", "big": "+98", "bigdesc": "ganó por 98 puntos: top-3 de palizas del año", "chips": ["🏆 155 en la casa de Gordo, mesa de 8", "🧬 Padre de Mac 7-4 y de Naso 8-3", "💥 Solo Nachi (+108) y Cobra (+107) pegaron más fuerte en 2026"], "copy": "Gael no gana seguido — gana ÉPICO. El 28 de abril entró a la casa de Gordo, clavó 155 y le sacó 98 puntos al segundo. Los demás ganan fechas; Gael deja cráteres. Pregúntenle a los 7 que esa noche volvieron caminando despacito.", "file": "pina-gael-239245bf.html"};
+
+// ---------- póster → imagen (canvas propio, sin librerías) ----------
+function drawPina(){
+  return new Promise(function(res,rej){
+    var img=new Image();
+    img.onload=function(){ res(render(img)); };
+    img.onerror=function(){ res(render(null)); };
+    img.src='../assets/faces/'+PINA.slug+'.png';
+  });
+}
+function render(faceImg){
+  var W=1080, c=document.createElement('canvas'); c.width=W; c.height=2200;
+  var x=c.getContext('2d');
+  function wrap(text,size,weight,maxw){
+    x.font=weight+' '+size+'px -apple-system,Segoe UI,Roboto,sans-serif';
+    var words=text.split(' '),lines=[],cur='';
+    words.forEach(function(w){
+      var t=cur?cur+' '+w:w;
+      if(x.measureText(t).width>maxw && cur){lines.push(cur);cur=w;} else cur=t;
+    });
+    if(cur)lines.push(cur);
+    return lines;
+  }
+  function rr(px,py,pw,ph,r){x.beginPath();x.moveTo(px+r,py);x.arcTo(px+pw,py,px+pw,py+ph,r);x.arcTo(px+pw,py+ph,px,py+ph,r);x.arcTo(px,py+ph,px,py,r);x.arcTo(px,py,px+pw,py,r);x.closePath();}
+  var acc=PINA.color;
+  // fondo + glow
+  x.fillStyle='#111016'; x.fillRect(0,0,W,2200);
+  var g=x.createRadialGradient(540,0,50,540,0,760);
+  g.addColorStop(0,PINA.glow); g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g; x.fillRect(0,0,W,800);
+  // barra superior
+  x.textBaseline='middle';
+  x.font='800 27px -apple-system,Segoe UI,Roboto,sans-serif';
+  x.fillStyle=acc; x.textAlign='left'; x.fillText('⭐ P I Ñ A   D I R E C T A  ·  V I P',64,84);
+  x.fillStyle='#9a9aa8'; x.textAlign='right'; x.fillText('S E R I E   2 0 2 6',W-64,84);
+  x.strokeStyle=acc; x.globalAlpha=.55; x.lineWidth=2;
+  x.beginPath(); x.moveTo(40,128); x.lineTo(W-40,128); x.stroke(); x.globalAlpha=1;
+  x.textAlign='center';
+  x.font='600 27px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle='#9a9aa8';
+  x.fillText('E L   G I M N A S I O   D E   L A S   P I Ñ A S   P R E S E N T A',540,190);
+  // cara
+  var cy=350, r=120;
+  if(faceImg){
+    x.save(); x.beginPath(); x.arc(540,cy,r,0,7); x.clip();
+    x.drawImage(faceImg,540-r,cy-r,r*2,r*2); x.restore();
+  } else { x.fillStyle='#222'; x.beginPath(); x.arc(540,cy,r,0,7); x.fill(); }
+  x.strokeStyle=acc; x.lineWidth=10; x.shadowColor=acc; x.shadowBlur=30;
+  x.beginPath(); x.arc(540,cy,r+5,0,7); x.stroke(); x.shadowBlur=0;
+  // nombre + título
+  var y=cy+r+64;
+  x.font='800 34px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle='#9a9aa8';
+  x.fillText(PINA.name.toUpperCase().split('').join(' '),540,y); y+=64;
+  var tl=wrap('🥊 '+PINA.titulo,60,'900',920);
+  x.fillStyle=acc; x.shadowColor=acc; x.shadowBlur=22;
+  tl.forEach(function(l){ x.font='900 60px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText(l,540,y); y+=72; });
+  x.shadowBlur=0;
+  // número grande
+  y+=70;
+  x.font='900 150px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle='#eaeaf0';
+  x.fillText(PINA.big,540,y); y+=110;
+  wrap(PINA.bigdesc,33,'400',860).forEach(function(l){
+    x.font='400 33px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle='#9a9aa8';
+    x.fillText(l,540,y); y+=46; });
+  // chips
+  y+=24;
+  PINA.chips.forEach(function(ch){
+    var lines=wrap(ch,32,'600',830), h=lines.length*44+34;
+    x.fillStyle='rgba(255,255,255,.045)'; rr(70,y,940,h,16); x.fill();
+    x.strokeStyle='#2a2a35'; x.lineWidth=2; rr(70,y,940,h,16); x.stroke();
+    x.fillStyle=acc; x.fillRect(70,y+8,7,h-16);
+    x.textAlign='left'; x.fillStyle='#eaeaf0';
+    var ly=y+h/2-(lines.length-1)*22;
+    lines.forEach(function(l){ x.font='600 32px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText(l,108,ly); ly+=44; });
+    x.textAlign='center'; y+=h+14;
+  });
+  // copy
+  y+=14;
+  var cl=wrap(PINA.copy,33,'400',850), ch2=cl.length*48+44;
+  x.fillStyle='#17171f'; rr(70,y,940,ch2,18); x.fill();
+  x.strokeStyle='#2a2a35'; x.lineWidth=2; rr(70,y,940,ch2,18); x.stroke();
+  x.textAlign='left'; x.fillStyle='#b9b9c4';
+  var cy2=y+46;
+  cl.forEach(function(l){ x.font='400 33px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillText(l,104,cy2); cy2+=48; });
+  x.textAlign='center'; y+=ch2+52;
+  // sello + marca
+  x.font='600 24px -apple-system,Segoe UI,Roboto,sans-serif'; x.fillStyle='#9a9aa8';
+  x.fillText('FORJADA CON LOS REGISTROS OFICIALES DE LAS 17 FECHAS DE 2026',540,y); y+=38;
+  x.fillStyle=acc; x.font='800 24px -apple-system,Segoe UI,Roboto,sans-serif';
+  x.fillText('DATOS 100% REALES',540,y); y+=56;
+  x.fillStyle='#9a9aa8'; x.font='600 26px -apple-system,Segoe UI,Roboto,sans-serif';
+  x.fillText('🎴 L U N E S   D E   U N O',540,y); y+=50;
+  // borde y recorte final
+  var H=y+18;
+  x.strokeStyle=acc; x.lineWidth=6; rr(14,14,W-28,H-28,26); x.stroke();
+  var out=document.createElement('canvas'); out.width=W; out.height=H;
+  out.getContext('2d').drawImage(c,0,0,W,H,0,0,W,H);
+  return out;
+}
+function compartirPina(btn){
+  var hint=document.getElementById('shareHint');
+  btn.disabled=true; var old=btn.textContent; btn.textContent='⏳ Armando la imagen…';
+  drawPina().then(function(canvas){
+    canvas.toBlob(function(blob){
+      btn.disabled=false; btn.textContent=old;
+      if(!blob){ hint.textContent='⚠️ No se pudo generar la imagen.'; return; }
+      var file=new File([blob],'pina-'+PINA.slug+'.png',{type:'image/png'});
+      if (window.engageTrack) engageTrack('pina_share',{slug:PINA.slug});
+      if(navigator.canShare && navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'Piña Directa de '+PINA.name,
+          text:'🥊 La Piña Directa de '+PINA.name+' — Lunes de UNO'}).catch(function(){});
+      } else {
+        var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+        a.download='pina-'+PINA.slug+'.png'; document.body.appendChild(a); a.click(); a.remove();
+        hint.textContent='📥 Imagen descargada — mandala por WhatsApp.';
+      }
+    },'image/png');
+  });
+}
+
+// ---------- publicar en Estadísticas → Experiencias ----------
+function agregarExperiencia(btn){
+  var FS='https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
+  var KEY='AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
+  var hint=document.getElementById('expHint');
+  btn.disabled=true; btn.textContent='⏳ Publicando…';
+  var fields={
+    title:{stringValue:'Piña Directa'},
+    by:{stringValue:PINA.name},
+    slug:{stringValue:PINA.slug},
+    url:{stringValue:'engage/'+PINA.file},
+    ts:{stringValue:new Date().toISOString()}
+  };
+  fetch(FS+'/experiencias/pina-'+PINA.slug+'?key='+KEY,{
+    method:'PATCH',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({fields:fields})
+  }).then(function(r){
+    if(!r.ok) throw new Error(r.status);
+    btn.textContent='✓ Agregada a Experiencias';
+    hint.textContent='⭐ Ya está visible en Estadísticas → Experiencias como «By '+PINA.name+'».';
+    if (window.engageTrack) engageTrack('pina_experiencia',{slug:PINA.slug});
+  }).catch(function(){
+    btn.disabled=false; btn.textContent='⭐ Agregar la piña como experiencia';
+    hint.textContent='⚠️ No se pudo publicar (¿sin conexión?). Reintentá.';
+  });
+}
+</script>
 <script src="engage.js"></script>
 </body></html>
