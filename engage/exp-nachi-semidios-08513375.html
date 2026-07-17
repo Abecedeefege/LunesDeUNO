@@ -51,6 +51,10 @@
   .veredicto .vv{font-size:1.35rem;font-weight:900;color:var(--oro);margin-top:6px;text-shadow:0 0 14px rgba(232,195,90,.5)}
   .veredicto p{font-size:.82rem;color:var(--dim);line-height:1.55;margin-top:8px}
   .veredicto p b{color:var(--text)}
+  .addexp{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .addexp button{width:100%;background:#0d0d12;border:2px solid var(--oro);border-radius:10px;color:var(--text);padding:13px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit}
+  .addexp button:disabled{opacity:.7}
+  .addexp-hint{display:block;margin-top:8px;font-size:.75rem;color:var(--green);text-align:center;min-height:1em}
   .share,.ofertas,.react{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .share button{width:100%;background:#25D366;color:#06281a;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit}
   .share-hint{display:block;margin-top:8px;font-size:.75rem;color:var(--green);text-align:center;min-height:1em}
@@ -146,6 +150,11 @@
       <span class="share-hint"></span>
     </div>
 
+    <div class="addexp">
+      <button onclick="agregarExperiencia(this)">⭐ Agregar a la sección Experiencias</button>
+      <span class="addexp-hint"></span>
+    </div>
+
     <div class="ofertas">
       <div class="oft">🧪 El laboratorio te ofrece</div>
       <button onclick="solicitarExp(this,'fobia-carucha')">🐍 Solicitar estudio de fobia a Carucha: posible miedito ante tu presencia (6-2 el personal)</button>
@@ -171,6 +180,20 @@
     if(navigator.share){ navigator.share({title:document.title,url:location.href}).catch(function(){}); }
     else { navigator.clipboard.writeText(location.href).then(function(){ document.querySelector('.share-hint').textContent='✓ Link copiado — pegalo en WhatsApp'; }); }
     if(window.engageTrack) engageTrack('exp_share',{exp:PAGE_ID});
+  }
+  var EXP_TITLE='Estudio Genético: ¿Semidiós?', EXP_BY='Nachi', EXP_URL='engage/exp-nachi-semidios-08513375.html';
+  function agregarExperiencia(btn){
+    var FS='https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
+    var KEY='AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
+    btn.disabled=true; var old=btn.textContent; btn.textContent='⏳ Publicando…';
+    fetch(FS+'/experiencias/'+PAGE_ID+'?key='+KEY,{method:'PATCH',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{title:{stringValue:EXP_TITLE},by:{stringValue:EXP_BY},slug:{stringValue:OWNER_SLUG},url:{stringValue:EXP_URL},ts:{stringValue:new Date().toISOString()}}})})
+    .then(function(r){ if(!r.ok) throw 0;
+      btn.textContent='✓ Agregada a Experiencias';
+      document.querySelector('.addexp-hint').textContent='⭐ Ya está visible en Estadísticas → Experiencias como «By '+EXP_BY+'».';
+      if(window.engageTrack) engageTrack('exp_experiencia',{exp:PAGE_ID});
+    }).catch(function(){ btn.disabled=false; btn.textContent=old;
+      document.querySelector('.addexp-hint').textContent='⚠️ No se pudo publicar (¿sin conexión?). Reintentá.'; });
   }
   function solicitarExp(btn,idea){
     if(window.engageTrack) engageTrack('experience_request',{pina:OWNER_SLUG,idea:idea,desc:btn.textContent.trim()});
