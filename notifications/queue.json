@@ -23,11 +23,10 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-cronica-entrevista-carucha.html",
       "send_at": "2026-07-17T11:00:00-03:00",
       "expires_at": "2026-07-17T23:00:00-03:00",
-      "status": "draft",
+      "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00)",
-      "hold_reason": "Orden de Andres por chat (16/07 noche): la notificacion de la entrevista NO sale hasta que el la apruebe. Solo Andres convierte draft->pending."
+      "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00) | APROBADO por Andres por chat el 16/07 ~19:15 local, manteniendo el horario de las 11:00"
     },
     {
       "id": "2026-07-16-medallero-gordo",

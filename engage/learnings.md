@@ -110,12 +110,11 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
   "Kryptonita de Cobra" desprendida de la crónica (piña directa #001, con la
   stat 17%/75%), (3) el Gimnasio de solicitudes, (4) las 11 piñas del vault.
   TODO construido y encolado en esta sesión.
-- 📰 **Vie 17/07:** preview a andres 09:00 (pending). El push general
-  `2026-07-17-cronica-ent` (11:00) quedó **EN DRAFT por orden de Andrés
-  (16/07 noche): NO sale hasta que él lo apruebe por chat** — solo Andrés lo
-  convierte draft→pending; si el día pasa sin OK, no sale y se limpia. Fuera
-  de eso, silencio; la corrida del viernes solo gestiona (`pina_request`
-  nuevos, decisiones, reconciliación).
+- 📰 **Vie 17/07:** preview a andres 09:00 y push general
+  `2026-07-17-cronica-ent` a las 11:00 — **APROBADO por Andrés por chat el
+  16/07 a la noche (draft→pending), manteniendo el horario de las 11:00**.
+  Fuera de eso, silencio; la corrida del viernes solo gestiona
+  (`pina_request` nuevos, decisiones, reconciliación de que salió).
 - 🏆 **Sáb 18/07 (récords):** ¡OJO! la crónica del viernes YA quema las citas
   de Carucha — NO repetirlas como gancho. Ángulo recomendado: especial
   remontadas (pendiente del TODO) o la caída de Cobra 1º→7º. Sub-formatos ya
