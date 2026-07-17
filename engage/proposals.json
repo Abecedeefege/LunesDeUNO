@@ -218,6 +218,24 @@
         "2026-07-17-pina-mata"
       ],
       "result_notes": "Approve confirmatorio de andres por boton (17/07 00:00:44Z). Primera entrega: la piña de MATA (pina-mata-32b16d4d), solicitada en el Gimnasio (pina-req-andres 16/07 + pina-req-pepe 17/07 — Andres confirmo por chat 17/07 que andres y mata son la misma persona), push personal encolado para el 17/07 12:30 a sus devices andres+mata."
+    },
+    {
+      "id": "experiencias-solicitables-serie",
+      "title": "🧪 Experiencias solicitables pre-forjadas (serie 1: 3 de Nachi + 3 de Mata)",
+      "page": "engage/exp-*.html (6 archivos, ver pages)",
+      "pages": [
+        "engage/exp-nachi-fobia-2d2a0ace.html",
+        "engage/exp-nachi-semidios-08513375.html",
+        "engage/exp-nachi-adulterio-402acf6a.html",
+        "engage/exp-mata-paternidad-b0e9c73c.html",
+        "engage/exp-mata-santidad-7bed2675.html",
+        "engage/exp-mata-casicasi-868fed14.html"
+      ],
+      "created": "2026-07-17",
+      "status": "vault",
+      "hypothesis": "Pedidas por Andres por chat (17/07): las 6 experiencias que responden a los botones 'Solicitar' de las piñas de Nachi y Mata, pre-forjadas para entrega inmediata cuando el jugador las pida (ruteo idea->pagina en learnings). Cada una con identidad visual propia (clinica de fobias, Olimpo, revista del corazon, tribunal, bula vaticana, museo del subcampeonato), datos 100% verificados contra games, y sus propios loops (compartir + hasta 3 ofertas nuevas). status=vault: no expiran; al ENTREGARSE una, esa entrega se evalua con las señales normales.",
+      "notified_by": [],
+      "result_notes": null
     }
   ]
 }

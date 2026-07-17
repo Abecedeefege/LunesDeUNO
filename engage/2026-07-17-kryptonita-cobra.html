@@ -64,6 +64,12 @@
   .quiero p{font-size:.82rem;color:var(--dim);margin-top:6px;line-height:1.5}
   .quiero a{display:block;margin-top:12px;background:var(--yellow);color:#1a1400;text-decoration:none;border-radius:10px;padding:13px;font-weight:900;font-size:.95rem}
 
+  .ofertas{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .ofertas .oft{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--kry);margin-bottom:4px;font-weight:800}
+  .ofertas button{display:block;width:100%;text-align:left;background:#0d0d12;border:1px solid var(--border);border-left:4px solid var(--kry);border-radius:10px;color:var(--text);padding:11px 12px;margin-top:8px;font-size:.83rem;line-height:1.45;cursor:pointer;font-family:inherit}
+  .ofertas button:hover{border-color:var(--kry)}
+  .ofertas button:disabled{opacity:.55}
+  .ofertas .of-hint{display:block;margin-top:8px;font-size:.78rem;color:var(--green);min-height:1em}
   .react,.engage-actions{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .react button,.engage-actions button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
   .react button:hover,.engage-actions button:hover{border-color:var(--kry)}
@@ -163,6 +169,14 @@
         <a href="pina-directa.html">🥊 Ir al Gimnasio de las Piñas</a>
       </div>
 
+      <div class="ofertas">
+        <div class="oft">🧪 El laboratorio te ofrece</div>
+        <button onclick="solicitarExp(this,'expediente-inverso')">🐍 Solicitar el expediente inverso: el día que Cobra venció al Padre presente (21/04, por 1 punto)</button>
+        <button onclick="solicitarExp(this,'censo-familiar')">👨‍👧‍👦 Solicitar censo familiar completo de la mesa: todas las paternidades vigentes</button>
+        <button onclick="solicitarExp(this,'reencuentro')">🔮 Solicitar estudio del reencuentro: ¿qué pasa si el lunes 20/07 vienen los dos?</button>
+        <span class="of-hint"></span>
+      </div>
+
       <div class="react">¿Qué tal la primera Piña Directa?
         <button onclick="engageReact('2026-07-17-kryptonita-cobra','love',this)">😍</button>
         <button onclick="engageReact('2026-07-17-kryptonita-cobra','like',this)">🙂</button>
@@ -182,5 +196,12 @@
     <div class="foot">🎴 LUNES DE UNO · PIÑA DIRECTA #001 · 17/07/2026</div>
   </div>
 
+<script>
+  function solicitarExp(btn,idea){
+    if (window.engageTrack) engageTrack('experience_request',{pina:'cobra',idea:idea,desc:btn.textContent.trim()});
+    btn.disabled=true; btn.style.borderColor='#00A651';
+    document.querySelector('.ofertas .of-hint').textContent='🔬 Me pongo a trabajar y la mando en el próximo push.';
+  }
+</script>
 <script src="engage.js"></script>
 </body></html>

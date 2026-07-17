@@ -84,6 +84,43 @@ Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
   agrega EL JUGADOR dueño de la piña; si aparece una que el dueño no agregó,
   consultar a Andrés antes de tocar nada.
 
+**🎯 MISIÓN DEL PROYECTO (Andrés, 17/07 por chat, vinculante):** que los
+jugadores INTERACTÚEN más con la app: que entren, generen experiencias y las
+compartan. La rutina tiene libertad para crear LOOPS: cada experiencia debe
+invitar a agendar la siguiente y/o compartir al grupo. Herramientas del loop:
+(a) botón «📲 Compartir» en toda experiencia; (b) bloque «🧪 El laboratorio te
+ofrece» con HASTA 3 botones «Solicitar…» SIEMPRE que haya stats extremas o una
+experiencia que valga la pena — cada botón con key propia, texto basado en
+datos reales, click → evento `experience_request` {pina, idea, desc, device} +
+mensaje «Me pongo a trabajar y la mando en el próximo push».
+
+**📮 ATENCIÓN DE `experience_request` (regla fija):** en cada corrida, leer los
+eventos nuevos. Si la idea tiene página PRE-FORJADA en el vault → encolar push
+personal al device solicitante para las **11:00** del día siguiente (o del
+mismo día si la corrida es antes de las 10:00). Si NO tiene página → la rutina
+la CONSTRUYE en esa corrida (misma calidad, datos recalculados, con sus propios
+loops) y la encola igual a las 11:00. Preview a andres 09:00 como siempre.
+MAPA idea→página pre-forjada (vault, URLs secretas):
+`fobia-carucha`→exp-nachi-fobia-2d2a0ace · `semidios`→exp-nachi-semidios-08513375 ·
+`adulterio`→exp-nachi-adulterio-402acf6a · `paternidad-negro`→exp-mata-paternidad-b0e9c73c ·
+`santidad`→exp-mata-santidad-7bed2675 · `casi-casi`→exp-mata-casicasi-868fed14
+(todas en `engage/`). El resto de las keys ofrecidas (una lista por jugador en
+sus piñas + kryptonita: abandono, promedio, expediente-naso, gigantismo,
+hijo-negro, mano-perfecta, masacre, paternidad-doble, proxima-paliza,
+profecia-lunes, censo-familiar, milagro-lunes, pension-negro, censo,
+patente-kryptonita, santidad-carucha, robo-1407, tutela-mac, santidad-gordo,
+todo-o-nada, tricampeonato, paliza-2306, parricidio, presencia,
+venganza-postre, 120-dias, paliza-1603, picada-gloriosa, var-2104, balistica,
+record-1407, expediente-inverso, reencuentro) se construyen on-demand.
+
+**✅ CORRECCIONES DE DATOS (17/07, orden de Andrés — regla reforzada: NUNCA
+inventar; exagerar siempre lo REAL):** la piña de Nachi decía «7 mano a mano
+dominados: récord absoluto» — FALSO: con criterio amplio (todas las duplas con
+ventaja) PT domina 9, Nachi 7, Gordo/Mata 7. Corregida a «7 dominados y solo 2
+perdidos: más hijos que padres» (lo dominan solo PT 5-3 y Mata 5-3). La piña de
+PT se subió a «padre de 9 rivales — nadie domina más duplas» (verificado, es el
+máximo). Todo superlativo exige verificación exhaustiva con criterio explícito.
+
 **🚫 LÍMITES DUROS DE LA RUTINA (Andrés, 16/07 noche, vinculante y permanente):**
 - La rutina diaria tiene libertad TOTAL para crear experiencias increíbles,
   pero **JAMÁS edita código ni el funcionamiento del anotador/la app**:

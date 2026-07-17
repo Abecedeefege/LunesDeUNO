@@ -36,6 +36,12 @@
   #expBtn{background:var(--card);color:var(--text);border:2px solid var(--acc)}
   #shareBtn:disabled,#expBtn:disabled{opacity:.75;cursor:default}
   .accion-hint{font-size:.78rem;color:var(--dim);line-height:1.5;text-align:center;min-height:1em}
+  .ofertas{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .ofertas .oft{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:4px;font-weight:800}
+  .ofertas button{display:block;width:100%;text-align:left;background:#0d0d12;border:1px solid var(--border);border-left:4px solid var(--acc);border-radius:10px;color:var(--text);padding:11px 12px;margin-top:8px;font-size:.83rem;line-height:1.45;cursor:pointer;font-family:inherit}
+  .ofertas button:hover{border-color:var(--acc)}
+  .ofertas button:disabled{opacity:.55}
+  .ofertas .of-hint{display:block;margin-top:8px;font-size:.78rem;color:var(--green);min-height:1em}
   .react,.engage-actions{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .react button,.engage-actions button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
   .react button:hover,.engage-actions button:hover{border-color:var(--acc)}
@@ -58,11 +64,11 @@
         <div class="bignum">3,50</div>
         <div class="bigdesc">el mejor promedio de puesto de TODA la mesa (14 fechas)</div>
         <div class="chips">
-          <div class="chip">🧬 Padre reconocido de 6 rivales: Naso 10-2 · Mac 9-3 · Tano 7-2</div>
+          <div class="chip">🧬 Padre reconocido de 9 rivales — nadie domina más duplas: Naso 10-2 · Mac 9-3 · Tano 7-2</div>
           <div class="chip">🧼 0 últimos puestos en 14 fechas</div>
           <div class="chip">🏆 Corona del 30/06 en África (por 15 a Mata)</div>
         </div>
-        <div class="copy">Mientras el resto grita, corta y llora multas, PT termina arriba: <b>nadie en 2026 tiene mejor promedio de posición</b>. Seis rivales lo llaman papá — a Naso le gana 10 de 12 — y en 14 noches jamás pagó un postre. El que no hace ruido es el que te está ganando.</div>
+        <div class="copy">Mientras el resto grita, corta y llora multas, PT termina arriba: <b>nadie en 2026 tiene mejor promedio de posición</b>. Nueve rivales lo llaman papá — a Naso le gana 10 de 12 — y en 14 noches jamás pagó un postre. El que no hace ruido es el que te está ganando.</div>
         <div class="sello">Forjada con los registros oficiales de las 17 fechas de 2026 · <b>datos 100% reales</b></div>
       </div>
     </div>
@@ -72,6 +78,14 @@
       <div class="accion-hint" id="shareHint"></div>
       <button id="expBtn" onclick="agregarExperiencia(this)">⭐ Agregar la piña como experiencia</button>
       <div class="accion-hint" id="expHint"></div>
+    </div>
+
+    <div class="ofertas">
+      <div class="oft">🧪 El laboratorio te ofrece</div>
+      <button onclick="solicitarExp(this,'abandono')">👨‍⚖️ Solicitar juicio por abandono: 9 hijos reconocidos y ninguna pensión (9 mano a mano dominados)</button>
+      <button onclick="solicitarExp(this,'promedio')">🎯 Solicitar informe del francotirador silencioso: el mejor promedio de la mesa (3,50)</button>
+      <button onclick="solicitarExp(this,'expediente-naso')">🧬 Solicitar el expediente Naso: 10-2 el personal</button>
+      <span class="of-hint"></span>
     </div>
 
     <div class="react">¿Pegó la piña?
@@ -92,7 +106,7 @@
   </div>
 
 <script>
-var PINA = {"slug": "pt", "name": "PT", "color": "#ED1C24", "glow": "rgba(237,28,36,0.28)", "titulo": "EL PADRE SILENCIOSO", "big": "3,50", "bigdesc": "el mejor promedio de puesto de TODA la mesa (14 fechas)", "chips": ["🧬 Padre reconocido de 6 rivales: Naso 10-2 · Mac 9-3 · Tano 7-2", "🧼 0 últimos puestos en 14 fechas", "🏆 Corona del 30/06 en África (por 15 a Mata)"], "copy": "Mientras el resto grita, corta y llora multas, PT termina arriba: nadie en 2026 tiene mejor promedio de posición. Seis rivales lo llaman papá — a Naso le gana 10 de 12 — y en 14 noches jamás pagó un postre. El que no hace ruido es el que te está ganando.", "file": "pina-pt-fd4cb05e.html"};
+var PINA = {"slug": "pt", "name": "PT", "color": "#ED1C24", "glow": "rgba(237,28,36,0.28)", "titulo": "EL PADRE SILENCIOSO", "big": "3,50", "bigdesc": "el mejor promedio de puesto de TODA la mesa (14 fechas)", "chips": ["🧬 Padre reconocido de 9 rivales — nadie domina más duplas: Naso 10-2 · Mac 9-3 · Tano 7-2", "🧼 0 últimos puestos en 14 fechas", "🏆 Corona del 30/06 en África (por 15 a Mata)"], "copy": "Mientras el resto grita, corta y llora multas, PT termina arriba: nadie en 2026 tiene mejor promedio de posición. Nueve rivales lo llaman papá — a Naso le gana 10 de 12 — y en 14 noches jamás pagó un postre. El que no hace ruido es el que te está ganando.", "file": "pina-pt-fd4cb05e.html"};
 
 // ---------- póster → imagen (canvas propio, sin librerías) ----------
 function drawPina(){
@@ -237,6 +251,11 @@ function agregarExperiencia(btn){
     btn.disabled=false; btn.textContent='⭐ Agregar la piña como experiencia';
     hint.textContent='⚠️ No se pudo publicar (¿sin conexión?). Reintentá.';
   });
+}
+function solicitarExp(btn,idea){
+  if (window.engageTrack) engageTrack('experience_request',{pina:PINA.slug,idea:idea,desc:btn.textContent.trim()});
+  btn.disabled=true; btn.style.borderColor='#00A651';
+  document.querySelector('.ofertas .of-hint').textContent='🔬 Me pongo a trabajar y la mando en el próximo push.';
 }
 </script>
 <script src="engage.js"></script>
