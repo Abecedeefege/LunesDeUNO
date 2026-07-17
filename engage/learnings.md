@@ -21,49 +21,44 @@ sub-formato (feed quemado; horóscopo y confesiones usados la semana pasada).
 lunes (máx 4 preguntas: 2 texto + 2 opción), preview andres 10:00, envío 15:00.
 Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
 
-**⭐ EXPERIENCIAS VIP + 🥊 PIÑA DIRECTA (Andrés, 16/07 por chat, vinculante;
-REVISADO por Andrés el 16/07 a la noche):**
+**⭐ EXPERIENCIAS VIP + 🥊 PIÑA DIRECTA (Andrés, 16/07 por chat, vinculante):**
 - **SIN puertas/login**: las experiencias VIP se VEN abiertas (VIP es marca,
   no barrera). La activación de push se exige ÚNICAMENTE para forjar/reclamar
   una Piña Directa, y el mensaje de requisito aparece SOLO al solicitar.
-- **🏷️ REGLA FIJA "BY <ENTREVISTADO>" (Andrés, 16/07 noche):** toda
-  experiencia desprendida de una entrevista lleva SIEMPRE, automáticamente, el
-  nombre del entrevistado en el chip superior ("⭐ Experiencia VIP · By
-  Carucha"). Aplica a todas las entrevistas futuras sin que Andrés lo pida.
+- **🏷️ REGLA FIJA "BY <ENTREVISTADO>":** toda experiencia desprendida de una
+  entrevista lleva SIEMPRE el nombre del entrevistado en el chip superior.
 - **Piña Directa** = la estadística real que mejor deja parado a UN jugador,
-  exagerada al infinito, en formato póster de boxeo. La #001 (Kryptonita) es la
-  excepción fundacional: pega A Cobra (pedido de Andrés, derivada de la
-  entrevista de Carucha).
-- **El Gimnasio** (`engage/pina-directa.html`, sin fecha, vault): página
-  abierta; al tocar "solicitar" valida `lunesdeuno_device_name` contra
-  `pushSubs` (active) vía runQuery. OK → evento `pina_request` (id
-  `pina-req-<device>`); sin nombre o sin push → mensaje "asociá tu nombre de
-  jugador a un device con push activas" + link a `../club.html` ("Activá tus
-  push en el Club") + evento `pina_request_blocked`. **EXCEPCIÓN AUTORIZADA
-  por Andrés (16/07 noche): este mensaje post-click del Gimnasio es el ÚNICO
-  lugar del sitio donde se puede linkear club.html** — sigue prohibido en
-  pushes y en cualquier otra página. Tras cada solicitud (o bloqueo), el
-  agente la confirma en la corrida siguiente: entrega por push si corresponde
-  o reporta a Andrés.
-- **PROTOCOLO DE SOLICITUD (cada corrida):** buscar eventos `pina_request`
-  nuevos → si el device tiene sub activa y su piña está en el vault → encolar
-  push personal a ESE device con su URL secreta (preview a andres 09:00 del
-  mismo día salvo orden distinta). Marcar en learnings quién ya la recibió.
-- **VAULT (status en proposals.json):** pedido explícito del dueño, NO expira a
-  los 7 días. Las 11 piñas pre-forjadas (URLs secretas, sufijo hex, JAMÁS
-  linkearlas desde páginas/pushes grupales — mismo régimen que club.html):
+  exagerada al infinito, en formato póster de boxeo. La #001 (Kryptonita) pega
+  A Cobra (pedido de Andrés, derivada de la entrevista de Carucha) — página
+  construida, aún sin push propio (linkeada solo desde la crónica del 17/07).
+- **El Gimnasio** (`engage/pina-directa.html`, vault): valida
+  `lunesdeuno_device_name` contra `pushSubs` (active). OK → `pina_request`;
+  sin nombre/push → `pina_request_blocked` + mensaje con link a `club.html`
+  (única excepción de linkeo autorizada por Andrés).
+- **PROTOCOLO DE SOLICITUD (cada corrida):** buscar `pina_request` nuevos → si
+  el device tiene sub activa y su piña está en el vault → encolar push
+  personal con su URL secreta (preview andres 09:00 salvo orden distinta).
+- **VAULT:** 11 piñas pre-forjadas, URLs secretas (sufijo hex), NO expiran a
+  los 7 días, JAMÁS linkeadas desde páginas/pushes grupales:
   pt→`pina-pt-fd4cb05e` · mac→`pina-mac-19ac3eb2` · mata→`pina-mata-32b16d4d` ·
   gael→`pina-gael-239245bf` · nachi→`pina-nachi-eb23fea7` ·
   carucha→`pina-carucha-a0bdc735` · gordo→`pina-gordo-5cec1f1c` ·
   cobra→`pina-cobra-307c49eb` · naso→`pina-naso-e6513433` ·
-  negro→`pina-negro-e5f44ee5` · tano→`pina-tano-9a332eeb` (todas en `engage/`).
-  Entregadas hasta hoy: ninguna.
+  negro→`pina-negro-e5f44ee5` · tano→`pina-tano-9a332eeb`. Entregadas: ninguna.
+- **⚠️ PENDIENTE PARA ANDRÉS — 2 solicitudes del Gimnasio (16/07 noche, ver
+  §Corrida de HOY):** 2× `pina_request_blocked` de devices sin nombre
+  (`sin-nombre`, ids `d0d54f5c…` y `59799ffc…`) — no se puede resolver solo:
+  faltan asociar nombre+push activa vía club.html; y 1× `pina_request` del
+  propio device **andres** (`pina-req-andres`, 16/07 23:25 UTC) — tiene sub
+  activa pero **no existe piña forjada para "andres"** (no es jugador de la
+  mesa) — protocolo no aplica automáticamente, requiere decisión de Andrés
+  (¿era un test del flujo, o quiere una piña propia como organizador?).
 
-## 💸 DEUDAS (ledger vigente al 2026-07-16)
+## 💸 DEUDAS (ledger vigente al 2026-07-17, sin cambios desde el 16/07)
 
 | Deudor | Debe | Desde | Estado | id de pregunta |
 |---|---|---|---|---|
-| Naso | 🍮/🧀 postre o picada | 13/07 (Carucha, último con 414) | IMPAGA, única viva. 4 días al viernes 17/07. Dictamen de Carucha en la entrevista: «que pague doble». | `deuda-naso-postre-2026-07-13` |
+| Naso | 🍮/🧀 postre o picada | 13/07 (Carucha, último con 414) | IMPAGA, única viva. 4 días al viernes 17/07. Dictamen de Carucha: «que pague doble». | `deuda-naso-postre-2026-07-13` |
 
 Saldadas (confirmadas por Andrés 16/07, home limpio y en sync): **Tano** 19
 días, pagó MAL (alfajores que no gustaron) · **Negro** ~10 días, pagó DE LUJO
@@ -80,41 +75,49 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
 - La Crónica del martes sostiene dwell días después (821s/501s de Andrés el
   15/07). El formato tabloide + datos es el caballo del sistema.
 - Deudas como running gag mutó a "quién pagó mejor" — material del domingo.
-- Sin partidas nuevas desde el 13/07; próxima fecha esperada lunes 20/07.
+- Sin partidas nuevas desde el 13/07 (games: 18 docs, 17 fechas válidas +
+  1 sin winnerPlayerId descartada); próxima fecha esperada lunes 20/07.
 
-## 📊 Estado del sistema (2026-07-16, jueves — 2ª sesión del día, pedido directo)
+## 📊 Estado del sistema (2026-07-17, viernes, corrida 06:06 local)
 
 - Subs activas: 9 personas / 10 devices (cobra ×2): andres, pt, mata, negro,
   cobra, mac, gael, gordo, carucha. `mc` disabled. Faltan nachi, naso, tano.
-- `games`: 19 docs (17 fechas válidas + no terminadas). Cutoff de todo lo
-  afirmado hoy: recálculo completo del 16/07 (17 fechas).
-- Eventos: la tanda nueva del 16/07 es la entrevista de Carucha completa (ver
-  síntesis) + el flujo de Andrés (preview 11:58, love, approve 11:59 local).
-  Próxima compactación de viejos ~17-18/07 (cutoff 14 días).
-- Queue: 2 pendientes nuevos (preview 09:00 + crónica 11:00 del 17/07). Resto
-  `sent` <7 días. Proposals: entrevista-carucha PROMOVIDA (approve de andres
-  por botón); entrevista-gordo sigue pending (vence 21/07); nuevos: crónica
-  17/07 (pending), kryptonita (pending), gimnasio + serie piñas (vault).
-- Stat verificada estrella (pedida por Andrés): **Cobra gana 2/12 (17%) con
-  Carucha presente y 3/4 (75%) sin él**; sus últimas 3 coronas = las últimas 3
-  ausencias de Carucha; márgenes con papá 16 y 1, sin papá 70/107/21; 2 últimos
-  puestos con Carucha en mesa. Todo recalculado de games el 16/07.
+  Sin cambios desde el 16/07; sin eventos `push_unsubscribe`.
+- `games`: 18 docs (17 fechas válidas + 1 finished sin winner, descartada).
+  Cutoff de todo lo afirmado hoy: recálculo del 17/07, sin partidas nuevas.
+- Eventos nuevos desde la corrida anterior (16/07 ~19:02 en adelante):
+  confirmación de las 4 respuestas de Carucha (ya en síntesis previa) +
+  approve de andres a `2026-07-17-cronica-entrevista-carucha` (21:23:42Z) +
+  approve de andres a `pina-directa-serie` (ya vault, solo confirmatorio) +
+  ~20 `vip_unlock`/`page_visit`/`dwell` de andres explorando el Gimnasio y las
+  piñas anoche + 2 `pina_request_blocked` + 1 `pina_request` de andres (ver
+  arriba, pendiente de su decisión). Nada por debajo del cutoff de 14 días
+  (más viejo = 03/07) — sin compactación necesaria hoy.
+- Queue: 2 pendientes (`2026-07-17-cronica-ent-preview` 09:00 y
+  `2026-07-17-cronica-ent` 11:00) — reconciliados: datos de Naso/Kryptonita
+  siguen vigentes (sin partidas nuevas, sin answer de deuda), se mantienen sin
+  cambios. Resto de la cola `sent` <7 días, nada para purgar aún (cutoff 7
+  días = 10/07, todo lo `sent` es posterior).
+- Proposals: `2026-07-17-cronica-entrevista-carucha` PROMOVIDA hoy (approve de
+  andres del 16/07 detectado en esta corrida). `2026-07-17-kryptonita-cobra`
+  sigue pending (sin decisión, creada 16/07, no vence hasta 23/07).
+  `2026-07-13-entrevista-gordo` sigue pending (vence 21/07). Vault sin cambios
+  de estado (gimnasio + serie de piñas).
 
 ## 🗓️ Semana en curso
 
 - ✅ Sáb 11/07 horóscopo · ✅ Dom 12/07 confesiones · ✅ Lun 13/07 previa ·
   ✅ Mar 14/07 crónica (todas promovidas) · 🔇 Mié 15/07 silencio.
-- 🧬 **Jue 16/07:** estreno del slot del jueves con Carucha — aprobado,
-  respondido entero, promovido. A la tarde Andrés pidió por chat (esta sesión):
-  (1) crónica de la entrevista con push VIERNES 11:00, (2) experiencia VIP
-  "Kryptonita de Cobra" desprendida de la crónica (piña directa #001, con la
-  stat 17%/75%), (3) el Gimnasio de solicitudes, (4) las 11 piñas del vault.
-  TODO construido y encolado en esta sesión.
-- 📰 **Vie 17/07:** preview a andres 09:00 y push general
-  `2026-07-17-cronica-ent` a las 11:00 — **APROBADO por Andrés por chat el
-  16/07 a la noche (draft→pending), manteniendo el horario de las 11:00**.
-  Fuera de eso, silencio; la corrida del viernes solo gestiona
-  (`pina_request` nuevos, decisiones, reconciliación de que salió).
+- ✅ **Jue 16/07:** entrevista a Carucha — aprobada, respondida entera,
+  promovida. Derivó en la tanda especial de la noche: crónica de la entrevista
+  (viernes 11:00, ya aprobada por Andrés), Kryptonita de Cobra #001, el
+  Gimnasio y las 11 piñas del vault — todo construido y encolado.
+- 📰 **Vie 17/07 (hoy):** preview a andres 09:00 y push general
+  `2026-07-17-cronica-ent` 11:00, ambos ya en cola y verificados vigentes en
+  esta corrida. Fuera de eso, silencio — corrida de hoy fue solo gestión:
+  promovió la proposal de la crónica, revisó `pina_request`(s) nuevos (2
+  bloqueados + 1 de andres, ambos sin resolución automática posible, ver
+  arriba), confirmó que no hace falta compactar ni purgar la cola.
 - 🏆 **Sáb 18/07 (récords):** ¡OJO! la crónica del viernes YA quema las citas
   de Carucha — NO repetirlas como gancho. Ángulo recomendado: especial
   remontadas (pendiente del TODO) o la caída de Cobra 1º→7º. Sub-formatos ya
@@ -125,12 +128,13 @@ recontarán. Ranking de pagadores publicable: Negro > Gael > Tano.
 
 ## TODO / ángulos sin usar
 
-Vigilar `pina_request` desde el viernes (protocolo arriba) · especial
-remontadas (candidato sáb 18/07) · día de liquidación (candidato dom 19/07) ·
-especial sedes · aniversarios (648 de Naso, multa 150 de Tano) · replicar flujo
-del club con nachi/naso/tano (sin sub, sus piñas esperan en el vault — entrega
-vía Andrés/WhatsApp si las piden) · H2H inéditos sin publicar: Gordo 11-1 Mac
-(citado solo en piña secreta), Nachi padre de Carucha 6-2 ("el abuelo") · señal
-pendiente: decisión de Andrés sobre entrevista-gordo (vence 21/07) · si el
-lunes 20/07 vienen Carucha Y Cobra, la previa tiene el ángulo del año servido
-(el reencuentro padre-hijo tras el expediente kryptonita).
+Resolver con Andrés los 2 `pina_request_blocked` (asociar nombre+push vía
+club.html) y el `pina_request` propio de andres (¿test o piña personal?) ·
+especial remontadas (candidato sáb 18/07) · día de liquidación (candidato dom
+19/07) · especial sedes · aniversarios (648 de Naso, multa 150 de Tano) ·
+replicar flujo del club con nachi/naso/tano (sin sub, sus piñas esperan en el
+vault) · H2H inéditos sin publicar: Gordo 11-1 Mac (citado solo en piña
+secreta), Nachi padre de Carucha 6-2 ("el abuelo") · señal pendiente: decisión
+de Andrés sobre entrevista-gordo (vence 21/07) y kryptonita-cobra (vence
+23/07) · si el lunes 20/07 vienen Carucha Y Cobra, la previa tiene el ángulo
+del año servido (el reencuentro padre-hijo tras el expediente kryptonita).

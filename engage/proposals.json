@@ -166,13 +166,13 @@
       "title": "🧬 Ciencia & Mazo: la crónica de la entrevista de Carucha",
       "page": "engage/2026-07-17-cronica-entrevista-carucha.html",
       "created": "2026-07-16",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Pedida por Andres por chat (16/07): cronica de la entrevista del jueves con las declaraciones textuales de Carucha (4 respuestas reales), fact-check de la denuncia a Negro (multa de 70, la 2da mas cara del año), dictamen sobre la deuda de Naso (4 dias al viernes) y teaser del expediente VIP Kryptonita de Cobra. Push VIERNES 11:00 por orden explicita de Andres (excepcion unica al silencio de los viernes y al horario 14:00). Metrica: clicks del push + dwell + vip_unlock en el kryptonita.",
       "notified_by": [
         "2026-07-17-cronica-ent-preview",
         "2026-07-17-cronica-ent"
       ],
-      "result_notes": null
+      "result_notes": "Aprobada por andres (boton proposal_approved 16/07 21:23:42Z = 18:23 local, tras el preview de las 09:00 del dia anterior via chat) + reaccion love. Promovida: la pagina queda. Envio general 11:00 del 17/07 aun pendiente de despacho al momento de esta corrida (06:06 local)."
     },
     {
       "id": "2026-07-17-kryptonita-cobra",
