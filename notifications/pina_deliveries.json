@@ -1,0 +1,11 @@
+{
+  "_comment": "Ledger de la Serie Piña Directa: una entrega por jugador. Lo escribe tools/pina_express.js (workflow pina-express); el agente diario solo lo audita.",
+  "deliveries": {
+    "mata": {
+      "nid": "2026-07-17-pina-mata",
+      "requested_at": "2026-07-16T23:25:02.846Z",
+      "queued_at": "2026-07-17T11:55:00.000Z",
+      "note": "Entrega manual del agente (chat 17/07, push 12:30 a devices andres+mata) — previa al sistema express. Resuelve pina-req-andres y pina-req-pepe (Andres=Mata)."
+    }
+  }
+}

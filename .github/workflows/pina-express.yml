@@ -1,0 +1,53 @@
+name: pina-express
+
+on:
+  schedule:
+    # Cada 5 min: detectar solicitudes de Piña Directa y entregarlas al toque
+    # (regla de Andrés 17/07: "lo antes posible, ~5 min después de solicitar").
+    # El cron de Actions es best-effort: en la práctica suele demorar 5-10 min.
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+# Mismo grupo que push-dispatch: los dos escriben notifications/, serializar
+# evita carreras de git entre el express y el dispatcher de respaldo.
+concurrency:
+  group: push-dispatch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  express:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Detectar solicitudes y encolar
+        id: scan
+        run: node tools/pina_express.js   # sin dependencias: corre antes del npm install
+      - name: Install web-push
+        if: steps.scan.outputs.queued == 'true'
+        working-directory: tools
+        run: npm install --no-audit --no-fund
+      - name: Despachar ya
+        if: steps.scan.outputs.queued == 'true'
+        run: node tools/send_push.js
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      - name: Commit queue/log/ledger
+        if: steps.scan.outputs.queued == 'true'
+        run: |
+          if [ -n "$(git status --porcelain notifications)" ]; then
+            git config user.name "pina-express"
+            git config user.email "actions@users.noreply.github.com"
+            git add notifications
+            git commit -m "pina-express: entrega $(date -u +%FT%TZ)"
+            for i in 1 2 3; do
+              git push origin main && break || git pull --rebase origin main
+            done
+          else
+            echo "Sin cambios."
+          fi

@@ -47,9 +47,16 @@ Estreno 16/07 con Carucha: FUNCIONÓ ENTERO (ver semana en curso).
   `lunesdeuno_device_name` contra `pushSubs` (active). OK → `pina_request`;
   sin nombre/push → `pina_request_blocked` + mensaje con link a `club.html`
   (única excepción de linkeo autorizada por Andrés).
-- **PROTOCOLO DE SOLICITUD (cada corrida):** buscar `pina_request` nuevos → si
-  el device tiene sub activa y su piña está en el vault → encolar push
-  personal con su URL secreta (preview andres 09:00 salvo orden distinta).
+- **⚡ ENTREGA EXPRESS AUTOMÁTICA (Andrés, 17/07 por chat — reemplaza el
+  protocolo manual):** workflow `pina-express` (cron cada 5 min) + script
+  `tools/pina_express.js`: detectan `pina_request`, encolan y despachan solos.
+  **Horno de 5 min obligatorio** (pedido explícito: "que no sea inmediato,
+  para que parezca que trabaja") — la solicitud se entrega recién con ≥5 min
+  de antigüedad, llega entre el minuto 5 y el 10. SIN preview a andres (la
+  orden "lo antes posible" la reemplaza). Ledger:
+  `notifications/pina_deliveries.json` — una piña por jugador; lo escribe el
+  workflow, el agente diario solo lo AUDITA (verificar entregas/fallos cada
+  corrida; no encolar piñas a mano nunca más).
 - **VAULT:** 11 piñas pre-forjadas, URLs secretas (sufijo hex), NO expiran a
   los 7 días, JAMÁS linkeadas desde páginas/pushes grupales:
   pt→`pina-pt-fd4cb05e` · mac→`pina-mac-19ac3eb2` · mata→`pina-mata-32b16d4d` ·
