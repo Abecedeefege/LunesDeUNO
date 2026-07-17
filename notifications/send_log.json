@@ -678,6 +678,13 @@
       "device": "carucha",
       "ts": "2026-07-16T19:02:00.757Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-17-cronica-ent-preview",
+      "device": "andres",
+      "ts": "2026-07-17T12:04:42.538Z",
+      "status_code": 201
     }
   ]
 }
