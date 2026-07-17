@@ -92,7 +92,11 @@ invitar a agendar la siguiente y/o compartir al grupo. Herramientas del loop:
 ofrece» con HASTA 3 botones «Solicitar…» SIEMPRE que haya stats extremas o una
 experiencia que valga la pena — cada botón con key propia, texto basado en
 datos reales, click → evento `experience_request` {pina, idea, desc, device} +
-mensaje «Me pongo a trabajar y la mando en el próximo push».
+mensaje «Me pongo a trabajar y la mando en el próximo push»; (c) botón
+«⭐ Agregar a la sección Experiencias» en TODA experiencia (regla de Andrés
+17/07): upsertea `experiencias/<page_id>` (title/by/slug/url/ts) y la tarjeta
+«By <Jugador>» aparece sola en Estadísticas → Experiencias. La decisión de
+publicarla es del jugador — la rutina jamás escribe esa colección.
 
 **📮 ATENCIÓN DE `experience_request` (regla fija):** en cada corrida, leer los
 eventos nuevos. Si la idea tiene página PRE-FORJADA en el vault → encolar push
