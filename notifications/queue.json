@@ -1,6 +1,21 @@
 {
-  "_updated_at": "2026-07-18T17:52:26.261Z",
+  "_updated_at": "2026-07-18T19:53:19.491Z",
   "notifications": [
+    {
+      "id": "2026-07-18-pina-gordo-express",
+      "title": "🥊 Tu Piña Directa está forjada",
+      "body": "EL ROMPE RÉCORDS: 127, el mejor puntaje del año — nadie había bajado de 132. El póster es tuyo — abrilo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-gordo-5cec1f1c.html",
+      "devices": [
+        "gordo"
+      ],
+      "send_at": "2026-07-18T16:53:17-03:00",
+      "expires_at": "2026-07-18T22:53:17-03:00",
+      "status": "sent",
+      "sent_at": "2026-07-18T19:53:19.490Z",
+      "fail_reason": null,
+      "created_by": "pina-express (entrega automática ~5 min tras la solicitud en el Gimnasio; regla de Andrés 17/07, sin preview)"
+    },
     {
       "id": "2026-07-18-krypto-preview",
       "title": "☢️ Caso cerrado: la Kryptonita de Cobra",

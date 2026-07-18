@@ -888,6 +888,13 @@
       "device": "pt",
       "ts": "2026-07-18T17:52:26.260Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-pina-gordo-express",
+      "device": "gordo",
+      "ts": "2026-07-18T19:53:19.490Z",
+      "status_code": 201
     }
   ]
 }
