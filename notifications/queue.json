@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-18T13:01:58.967Z",
+  "_updated_at": "2026-07-18T17:52:26.261Z",
   "notifications": [
     {
       "id": "2026-07-18-krypto-preview",
@@ -47,8 +47,8 @@
       ],
       "send_at": "2026-07-18T14:00:00-03:00",
       "expires_at": "2026-07-18T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T17:52:25.982Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (slot del sábado reemplazado por orden de Andres por chat: Kryptonita de Cobra como 'investigación finalizada' a TODOS MENOS COBRA — exclusion explicita pedida por Andres; badge de la pagina cambiado a 'Experiencia de investigación')"
     },
@@ -62,8 +62,8 @@
       ],
       "send_at": "2026-07-18T14:00:00-03:00",
       "expires_at": "2026-07-18T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T17:52:26.038Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de Mac entregada encubierta como 'dato tirado/caído', sin revelar que es su piña; 2do push del dia para mac junto con el kryptonita)"
     },
@@ -77,8 +77,8 @@
       ],
       "send_at": "2026-07-18T14:00:00-03:00",
       "expires_at": "2026-07-18T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T17:52:26.203Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de Cobra encubierta como 'dato caído' — Cobra NO recibe el push del Kryptonita, solo este; su piña lo deja bien parado, no es el expediente)"
     },
@@ -92,8 +92,8 @@
       ],
       "send_at": "2026-07-18T14:00:00-03:00",
       "expires_at": "2026-07-18T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T17:52:26.261Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de PT entregada encubierta como 'dato caído', sin revelar que es su piña; 2do push del dia para pt junto con el kryptonita)"
     },

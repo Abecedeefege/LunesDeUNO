@@ -804,6 +804,90 @@
       "device": "andres",
       "ts": "2026-07-18T13:01:58.966Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "negro",
+      "ts": "2026-07-18T17:52:25.317Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "andres",
+      "ts": "2026-07-18T17:52:25.422Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "mac",
+      "ts": "2026-07-18T17:52:25.598Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "pt",
+      "ts": "2026-07-18T17:52:25.659Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "gordo",
+      "ts": "2026-07-18T17:52:25.717Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "carucha",
+      "ts": "2026-07-18T17:52:25.823Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "gael",
+      "ts": "2026-07-18T17:52:25.882Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto",
+      "device": "andres",
+      "ts": "2026-07-18T17:52:25.981Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-mac",
+      "device": "mac",
+      "ts": "2026-07-18T17:52:26.038Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-cobra",
+      "device": "cobra",
+      "ts": "2026-07-18T17:52:26.144Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-cobra",
+      "device": "cobra",
+      "ts": "2026-07-18T17:52:26.203Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-pt",
+      "device": "pt",
+      "ts": "2026-07-18T17:52:26.260Z",
+      "status_code": 201
     }
   ]
 }
