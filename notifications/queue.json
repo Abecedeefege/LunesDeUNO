@@ -11,10 +11,11 @@
       ],
       "send_at": "2026-07-18T09:00:00-03:00",
       "expires_at": "2026-07-18T13:30:00-03:00",
-      "status": "pending",
+      "status": "cancelled",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-18 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
+      "created_by": "engagement-agent 2026-07-18 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)",
+      "cancel_reason": "Cancelado por Andres por chat 18/07 08:48: el contenido no calza con la definicion de 'remontada' (terminar 1ero/ganar, no 2do o 3ero). Reemplazado por Kryptonita 'investigacion finalizada' + piñas disfrazadas a Mac/Cobra/PT."
     },
     {
       "id": "2026-07-18-a",
@@ -23,10 +24,11 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-18-remontadas.html",
       "send_at": "2026-07-18T14:00:00-03:00",
       "expires_at": "2026-07-18T23:00:00-03:00",
-      "status": "pending",
+      "status": "cancelled",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-18 (récords del sábado, sub-formato especial remontadas para no repetir el clásico del 04/07 ni el horóscopo del 11/07; incluye boletín de actualización: récord de presencia perfecta de Cobra caído, sequías de Mac/Mata actualizadas)"
+      "created_by": "engagement-agent 2026-07-18 (récords del sábado, sub-formato especial remontadas para no repetir el clásico del 04/07 ni el horóscopo del 11/07; incluye boletín de actualización: récord de presencia perfecta de Cobra caído, sequías de Mac/Mata actualizadas)",
+      "cancel_reason": "Cancelado por Andres por chat 18/07 08:48: el contenido no calza con la definicion de 'remontada' (terminar 1ero/ganar, no 2do o 3ero). Reemplazado por Kryptonita 'investigacion finalizada' + piñas disfrazadas a Mac/Cobra/PT."
     },
     {
       "id": "2026-07-17-pina-mata",

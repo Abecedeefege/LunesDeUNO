@@ -242,13 +242,10 @@
       "title": "🎢 Especial: las remontadas que nadie contó",
       "page": "engage/2026-07-18-remontadas.html",
       "created": "2026-07-18",
-      "status": "pending",
+      "status": "dropped",
       "hypothesis": "Sub-formato del slot de récords del sábado para no repetir el clásico (04/07) ni el horóscopo (11/07). Cuatro remontadas 100% verificadas de games y nunca antes citadas: PT (9º→2º) y Mac (10º→3º) la misma noche del 648 de Naso (25/05), Negro (8º/8→3º en MATABA 09/06), y Tano (8º/10→2º el 13/07, tapado por el robo de Gordo en la crónica). Cierra con boletín de actualización: el récord de presencia perfecta de Cobra (pregonado el 04/07) cayó el 13/07, y las sequías de Mac (14 fechas) y Mata (10 fechas) siguen activas. Cierre fijo 'récords que se pueden romper el lunes'. Métrica: reacción + answer suscripción + approve.",
-      "notified_by": [
-        "2026-07-18-a-preview",
-        "2026-07-18-a"
-      ],
-      "result_notes": null
+      "notified_by": [],
+      "result_notes": "Rechazada por Andres por chat (18/07 08:48), antes de salir el preview: el criterio de 'remontada' del sistema estaba mal calibrado — terminar 2do o 3ero no es remontada, solo cuenta ganar/1er puesto. Ninguna de las 4 historias terminaba en victoria. git rm de la pagina, items de queue cancelados. Lección permanente anotada en learnings.md: no usar 'remontada' para nada que no termine en el primer puesto."
     }
   ]
 }

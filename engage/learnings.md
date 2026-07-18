@@ -36,6 +36,13 @@
   rutina. Los pushes llevan a páginas nuevas no accesibles desde el sitio;
   el único lugar visible es Estadísticas → Experiencias vía la colección
   `experiencias`.
+- **📐 DEFINICIÓN DE "REMONTADA" (Andrés, 18/07 por chat, vinculante):** una
+  remontada es SOLO cuando alguien viene de atrás/de abajo y termina en
+  1er puesto (gana). Terminar 2do o 3ero NO es remontada — a nadie le
+  importa ni lo recuerda. El especial `2026-07-18-remontadas` fue rechazado
+  por esto (las 4 historias terminaban en 2do/3ero) y removido antes de
+  salir. Para el archivo de "salón de fama": usar el criterio real — worst
+  rank durante la fecha vs. GANÓ la fecha, no vs. final_rank cualquiera.
 
 ## 💸 DEUDAS (ledger vigente al 18/07)
 
