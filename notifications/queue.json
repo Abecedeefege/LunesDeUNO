@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-18T09:45:00-03:00",
+  "_updated_at": "2026-07-18T13:01:58.967Z",
   "notifications": [
     {
       "id": "2026-07-18-krypto-preview",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-18T10:00:00-03:00",
       "expires_at": "2026-07-18T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T13:01:58.709Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (PREVIEW con copy VERBATIM del envío general de las 14:00 — Andres pidio verlo en vivo tal cual lo ven los usuarios; salio 10:00 en vez de 09:00 porque el copy se reescribio por chat a las 09:40)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-18T10:00:00-03:00",
       "expires_at": "2026-07-18T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-18T13:01:58.966Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-18 (PREVIEW con copy VERBATIM del push disfrazado de las 14:00 a Mac/Cobra/PT — Andres pidio recibirlo el tambien para verlo en vivo; su URL apunta a su propia piña de mata)"
     },

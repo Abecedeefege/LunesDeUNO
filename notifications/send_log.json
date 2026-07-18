@@ -776,6 +776,34 @@
       "device": "andres",
       "ts": "2026-07-17T15:54:07.636Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto-preview",
+      "device": "andres",
+      "ts": "2026-07-18T13:01:58.601Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-krypto-preview",
+      "device": "andres",
+      "ts": "2026-07-18T13:01:58.709Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-preview",
+      "device": "andres",
+      "ts": "2026-07-18T13:01:58.825Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-18-dato-preview",
+      "device": "andres",
+      "ts": "2026-07-18T13:01:58.966Z",
+      "status_code": 201
     }
   ]
 }
