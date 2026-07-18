@@ -179,10 +179,10 @@
       "title": "☢️ El Kryptonita de Cobra — Piña Directa #001 (experiencia VIP)",
       "page": "engage/2026-07-17-kryptonita-cobra.html",
       "created": "2026-07-16",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Pedida por Andres por chat (16/07): primera experiencia VIP tipo 'piña directa', desprendida de la cronica de la entrevista. Estadistica real y pura exagerada al infinito: Cobra gana 2/12 (17%) con Carucha presente vs 3/4 (75%) sin el; sus ultimas 3 coronas son exactamente las ultimas 3 ausencias de Carucha; margenes 1 y 16 con papa vs 70/107/21 sin papa; 2 ultimos puestos con Carucha en la mesa. Puerta VIP: valida device de localStorage contra pushSubs (status active) via runQuery; eventos vip_unlock/vip_locked miden la puerta. Linkeada SOLO desde la cronica del 17/07. Metrica: vip_unlock + reaccion + approve de andres.",
       "notified_by": [],
-      "result_notes": null
+      "result_notes": "PROMOVIDA (detectado en la corrida 18/07): approve de andres por boton (17/07 14:16:23 UY, device fdbd81dd=andres) + reaccion love + dwell repetido (81-521s en varias visitas). Un approve anterior del 17/07 11:32 fue de device 'sin-nombre' (no decide, señal secundaria). La pagina queda."
     },
     {
       "id": "pina-directa-gimnasio",
@@ -235,6 +235,19 @@
       "status": "vault",
       "hypothesis": "Pedidas por Andres por chat (17/07): las 6 experiencias que responden a los botones 'Solicitar' de las piñas de Nachi y Mata, pre-forjadas para entrega inmediata cuando el jugador las pida (ruteo idea->pagina en learnings). Cada una con identidad visual propia (clinica de fobias, Olimpo, revista del corazon, tribunal, bula vaticana, museo del subcampeonato), datos 100% verificados contra games, y sus propios loops (compartir + hasta 3 ofertas nuevas). status=vault: no expiran; al ENTREGARSE una, esa entrega se evalua con las señales normales.",
       "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-18-remontadas",
+      "title": "🎢 Especial: las remontadas que nadie contó",
+      "page": "engage/2026-07-18-remontadas.html",
+      "created": "2026-07-18",
+      "status": "pending",
+      "hypothesis": "Sub-formato del slot de récords del sábado para no repetir el clásico (04/07) ni el horóscopo (11/07). Cuatro remontadas 100% verificadas de games y nunca antes citadas: PT (9º→2º) y Mac (10º→3º) la misma noche del 648 de Naso (25/05), Negro (8º/8→3º en MATABA 09/06), y Tano (8º/10→2º el 13/07, tapado por el robo de Gordo en la crónica). Cierra con boletín de actualización: el récord de presencia perfecta de Cobra (pregonado el 04/07) cayó el 13/07, y las sequías de Mac (14 fechas) y Mata (10 fechas) siguen activas. Cierre fijo 'récords que se pueden romper el lunes'. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-18-a-preview",
+        "2026-07-18-a"
+      ],
       "result_notes": null
     }
   ]

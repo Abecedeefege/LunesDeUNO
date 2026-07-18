@@ -1,6 +1,33 @@
 {
-  "_updated_at": "2026-07-17T15:54:07.637Z",
+  "_updated_at": "2026-07-18T09:14:00-03:00",
   "notifications": [
+    {
+      "id": "2026-07-18-a-preview",
+      "title": "🎢 Preview: especial remontadas (sale 14:00)",
+      "body": "PT y Mac remontaron la noche del 648 de Naso, Negro salió último de MATABA. El envío general sale 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-18-remontadas.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-18T09:00:00-03:00",
+      "expires_at": "2026-07-18T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
+    },
+    {
+      "id": "2026-07-18-a",
+      "title": "🎢 4 remontadas que nadie contó",
+      "body": "PT y Mac subieron al podio la noche del 648 de Naso. Negro salió último en MATABA. Y el récord perfecto de Cobra ya cayó.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-18-remontadas.html",
+      "send_at": "2026-07-18T14:00:00-03:00",
+      "expires_at": "2026-07-18T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (récords del sábado, sub-formato especial remontadas para no repetir el clásico del 04/07 ni el horóscopo del 11/07; incluye boletín de actualización: récord de presencia perfecta de Cobra caído, sequías de Mac/Mata actualizadas)"
+    },
     {
       "id": "2026-07-17-pina-mata",
       "title": "🥊 Tu Piña Directa está forjada",
@@ -286,78 +313,6 @@
       "sent_at": "2026-07-11T17:50:53.858Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
-    },
-    {
-      "id": "2026-07-10-a",
-      "title": "🎙️ Solo para vos: el tape de Cobra",
-      "body": "Las 5 respuestas sin editar + lo que dejó picando: se va 2 semanas y una «regla con mucho barro». Hay 2 decisiones esperándote.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-10T20:30:00-03:00",
-      "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-10T23:33:35.470Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-10 (pedido directo de Andrés por chat: entrevista de Cobra solo para él; adelantado a envío inmediato a pedido de Andrés, página ya deployada)"
-    },
-    {
-      "id": "2026-07-10-b",
-      "title": "📱 Estrenamos: El Feed de la mesa",
-      "body": "Stories, likes, la tabla al rojo, los relojes de deuda en vivo (Tano 17, Negro 4) y la encuesta: ¿quién gana el 13/07?",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-el-feed.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-10T20:30:00-03:00",
-      "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-10T23:33:35.571Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-10 (pedido directo de Andrés por chat: newsfeed interactivo exclusivo, envío inmediato, página verificada 200 en Pages)"
-    },
-    {
-      "id": "2026-07-10-c",
-      "title": "📱 Estrenamos: El Feed de la mesa",
-      "body": "Stories, likes, la tabla al rojo, los relojes de deuda en vivo (Tano 17, Negro 4) y la encuesta: ¿quién gana el 13/07?",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-el-feed.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-10T20:45:00-03:00",
-      "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-10T23:46:27.752Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-10 (reintento del 2026-07-10-b: aceptado 201 pero no se mostró en el device — hipótesis: dos pushes con 100ms de diferencia, el dispositivo mostró solo el primero. Este va solo.)"
-    },
-    {
-      "id": "2026-07-10-d",
-      "title": "🎙️ El tape de Cobra, remasterizado",
-      "body": "Rearmado más lindo: casete girando, las 5 pistas del ganador del Chorolo (por 21 a Nachi) y tus decisiones pendientes.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-10T20:52:00-03:00",
-      "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-10T23:53:00.885Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: rediseño del tape + reenvío para revisarlo; versión nueva verificada en Pages antes de encolar)"
-    },
-    {
-      "id": "2026-07-10-e",
-      "title": "🎙️ Se filtró el tape de Cobra",
-      "body": "La cinta completa del campeón, sin editar: las 5 respuestas, el viaje de dos semanas y la «regla con mucho barro».",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-10-cobra-sin-editar.html",
-      "send_at": "2026-07-10T21:25:00-03:00",
-      "expires_at": "2026-07-10T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-11T00:26:58.311Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-10 (pedido de Andrés: el tape remasterizado a TODOS los activos, encuadre de filtración; página ya deployada y aprobada de facto por Andrés)"
     }
   ]
 }
