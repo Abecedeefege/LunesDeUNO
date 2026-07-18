@@ -1,6 +1,102 @@
 {
-  "_updated_at": "2026-07-18T09:14:00-03:00",
+  "_updated_at": "2026-07-18T09:45:00-03:00",
   "notifications": [
+    {
+      "id": "2026-07-18-krypto-preview",
+      "title": "☢️ Caso cerrado: la Kryptonita de Cobra",
+      "body": "Cruzamos 17 fechas para encontrar el patrón que lo explica todo. Tiene nombre y apellido — no te lo spoileamos acá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-kryptonita-cobra.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-18T10:00:00-03:00",
+      "expires_at": "2026-07-18T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (PREVIEW con copy VERBATIM del envío general de las 14:00 — Andres pidio verlo en vivo tal cual lo ven los usuarios; salio 10:00 en vez de 09:00 porque el copy se reescribio por chat a las 09:40)"
+    },
+    {
+      "id": "2026-07-18-dato-preview",
+      "title": "📎 Se cayó un dato con tu nombre",
+      "body": "Lo encontramos revisando el archivo — nadie más lo vio. Es tuyo. Andá a buscarlo antes de que se pierda de nuevo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-mata-32b16d4d.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-18T10:00:00-03:00",
+      "expires_at": "2026-07-18T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (PREVIEW con copy VERBATIM del push disfrazado de las 14:00 a Mac/Cobra/PT — Andres pidio recibirlo el tambien para verlo en vivo; su URL apunta a su propia piña de mata)"
+    },
+    {
+      "id": "2026-07-18-krypto",
+      "title": "☢️ Caso cerrado: la Kryptonita de Cobra",
+      "body": "Cruzamos 17 fechas para encontrar el patrón que lo explica todo. Tiene nombre y apellido — no te lo spoileamos acá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-17-kryptonita-cobra.html",
+      "devices": [
+        "pt",
+        "negro",
+        "gael",
+        "andres",
+        "gordo",
+        "mac",
+        "carucha"
+      ],
+      "send_at": "2026-07-18T14:00:00-03:00",
+      "expires_at": "2026-07-18T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (slot del sábado reemplazado por orden de Andres por chat: Kryptonita de Cobra como 'investigación finalizada' a TODOS MENOS COBRA — exclusion explicita pedida por Andres; badge de la pagina cambiado a 'Experiencia de investigación')"
+    },
+    {
+      "id": "2026-07-18-dato-mac",
+      "title": "📎 Se cayó un dato con tu nombre",
+      "body": "Lo encontramos revisando el archivo — nadie más lo vio. Es tuyo. Andá a buscarlo antes de que se pierda de nuevo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-mac-19ac3eb2.html",
+      "devices": [
+        "mac"
+      ],
+      "send_at": "2026-07-18T14:00:00-03:00",
+      "expires_at": "2026-07-18T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de Mac entregada encubierta como 'dato tirado/caído', sin revelar que es su piña; 2do push del dia para mac junto con el kryptonita)"
+    },
+    {
+      "id": "2026-07-18-dato-cobra",
+      "title": "📎 Se cayó un dato con tu nombre",
+      "body": "Lo encontramos revisando el archivo — nadie más lo vio. Es tuyo. Andá a buscarlo antes de que se pierda de nuevo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-cobra-307c49eb.html",
+      "devices": [
+        "cobra"
+      ],
+      "send_at": "2026-07-18T14:00:00-03:00",
+      "expires_at": "2026-07-18T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de Cobra encubierta como 'dato caído' — Cobra NO recibe el push del Kryptonita, solo este; su piña lo deja bien parado, no es el expediente)"
+    },
+    {
+      "id": "2026-07-18-dato-pt",
+      "title": "📎 Se cayó un dato con tu nombre",
+      "body": "Lo encontramos revisando el archivo — nadie más lo vio. Es tuyo. Andá a buscarlo antes de que se pierda de nuevo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-pt-fd4cb05e.html",
+      "devices": [
+        "pt"
+      ],
+      "send_at": "2026-07-18T14:00:00-03:00",
+      "expires_at": "2026-07-18T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-18 (experimento de Andres por chat: piña directa de PT entregada encubierta como 'dato caído', sin revelar que es su piña; 2do push del dia para pt junto con el kryptonita)"
+    },
     {
       "id": "2026-07-18-a-preview",
       "title": "🎢 Preview: especial remontadas (sale 14:00)",

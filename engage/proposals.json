@@ -181,8 +181,11 @@
       "created": "2026-07-16",
       "status": "promoted",
       "hypothesis": "Pedida por Andres por chat (16/07): primera experiencia VIP tipo 'piña directa', desprendida de la cronica de la entrevista. Estadistica real y pura exagerada al infinito: Cobra gana 2/12 (17%) con Carucha presente vs 3/4 (75%) sin el; sus ultimas 3 coronas son exactamente las ultimas 3 ausencias de Carucha; margenes 1 y 16 con papa vs 70/107/21 sin papa; 2 ultimos puestos con Carucha en la mesa. Puerta VIP: valida device de localStorage contra pushSubs (status active) via runQuery; eventos vip_unlock/vip_locked miden la puerta. Linkeada SOLO desde la cronica del 17/07. Metrica: vip_unlock + reaccion + approve de andres.",
-      "notified_by": [],
-      "result_notes": "PROMOVIDA (detectado en la corrida 18/07): approve de andres por boton (17/07 14:16:23 UY, device fdbd81dd=andres) + reaccion love + dwell repetido (81-521s en varias visitas). Un approve anterior del 17/07 11:32 fue de device 'sin-nombre' (no decide, señal secundaria). La pagina queda."
+      "notified_by": [
+        "2026-07-18-krypto-preview",
+        "2026-07-18-krypto"
+      ],
+      "result_notes": "PROMOVIDA (detectado en la corrida 18/07): approve de andres por boton (17/07 14:16:23 UY, device fdbd81dd=andres) + reaccion love + dwell repetido (81-521s en varias visitas). Un approve anterior del 17/07 11:32 fue de device 'sin-nombre' (no decide, señal secundaria). La pagina queda. 18/07: badge cambiado a 'Experiencia de investigación' (orden de Andres) y enviada como slot del sabado a todos menos Cobra."
     },
     {
       "id": "pina-directa-gimnasio",

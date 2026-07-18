@@ -100,8 +100,17 @@ francesa) · Gael (Martín Fierro). Ranking de pagadores: Negro > Gael > Tano.
   Carucha (promovida) · 📰 Vie 17/07 crónica de la entrevista + Kryptonita +
   Gimnasio + vault de 11 piñas + primera entrega (mata) — todo fuera de
   cadencia, pedido directo de Andrés.
-- 🎢 **Sáb 18/07 (hoy)**: especial remontadas encolado (preview 09:00,
-  general 14:00). Kryptonita promovida.
+- ☢️ **Sáb 18/07 (hoy)**: especial remontadas CANCELADO por Andrés (criterio
+  de remontada mal calibrado, ver regla arriba). Reemplazo dictado por él
+  por chat: (1) Kryptonita de Cobra como "investigación finalizada" a las
+  14:00 a TODOS MENOS COBRA (badge de la página cambiado a "Experiencia de
+  investigación"); (2) experimento "dato caído": piñas directas de Mac,
+  Cobra y PT entregadas encubiertas («📎 Se cayó un dato con tu nombre»,
+  sin revelar qué es) a las 14:00 — Cobra recibe SU piña pero no el
+  Kryptonita. Previews VERBATIM a andres 10:00 (pidió verlos en vivo; el
+  suyo apunta a su piña de mata). Copy reescrito 2 veces a pedido: más
+  marketinero/misterioso, título final «Se cayó un dato con tu nombre».
+  Medir mañana: ¿el disfraz genera más clicks que el push descriptivo?
 - 🍿 **Dom 19/07**: pendiente decidir sub-formato (usados: clásico 05/07,
   confesiones 12/07). Ángulo servido: "día de liquidación" — ranking de
   pagadores + Naso único moroso (6 días al domingo) + dictamen "doble".
