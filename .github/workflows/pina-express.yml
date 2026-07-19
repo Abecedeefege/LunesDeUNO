@@ -28,17 +28,19 @@ jobs:
       - name: Detectar solicitudes y encolar
         id: scan
         run: node tools/pina_express.js   # sin dependencias: corre antes del npm install
+      # Desde el 19/07 (pedido de Andrés: "los envíos siempre con la mayor
+      # urgencia") este workflow TAMBIÉN despacha la cola en cada pasada,
+      # haya o no piña nueva: los items pending vencidos salen como mucho
+      # ~5-15 min después de su send_at, sin depender del cron de respaldo
+      # de push-dispatch (*/30, con drift grande).
       - name: Install web-push
-        if: steps.scan.outputs.queued == 'true'
         working-directory: tools
         run: npm install --no-audit --no-fund
       - name: Despachar ya
-        if: steps.scan.outputs.queued == 'true'
         run: node tools/send_push.js
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
       - name: Commit queue/log/ledger
-        if: steps.scan.outputs.queued == 'true'
         run: |
           if [ -n "$(git status --porcelain notifications)" ]; then
             git config user.name "pina-express"
