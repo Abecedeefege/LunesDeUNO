@@ -1,6 +1,55 @@
 {
-  "_updated_at": "2026-07-19T06:06:00.000Z",
+  "_updated_at": "2026-07-19T13:00:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-19-solicitadas",
+      "title": "🗂️ Las solicitadas por otros",
+      "body": "Gordo pidió 2 (santidad y tutela sobre Mac). Adentro: todo lo que sale hoy para tu revisión, incluida la liquidación de las 9.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-19T09:58:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (corrida extra a pedido de Andres por chat: escritorio diario 'Las solicitadas por otros' — desde mañana sale todas las mañanas 08:45; hoy inmediato porque el preview de las 09:00 quedo colgado por drift del cron de respaldo; pagina verificada 200 en Pages antes de encolar)"
+    },
+    {
+      "id": "2026-07-19-gimnasio",
+      "title": "🥊 Tu Piña Directa sigue sin forjar",
+      "body": "Mata, Gordo, Cobra y PT ya tienen la suya. La tuya está lista en el vault: entrá al Gimnasio y pedila.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/pina-directa.html",
+      "devices": [
+        "mac",
+        "negro"
+      ],
+      "send_at": "2026-07-19T14:05:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordatorio del Gimnasio a Mac y Negro — los unicos suscriptos activos sin piña forjada — junto con el envio de la tarde, 14:05 para no pisar el general de las 14:00)"
+    },
+    {
+      "id": "2026-07-19-laboratorio",
+      "title": "🧪 El Laboratorio abrió su catálogo",
+      "body": "Hay 3 líneas de investigación con tu nombre esperando: elegí una y te la fabricamos. Sin costo, sin anestesia.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/laboratorio.html",
+      "devices": [
+        "pt",
+        "carucha",
+        "andres"
+      ],
+      "send_at": "2026-07-19T14:05:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "draft",
+      "hold_reason": "Esperando OK de Andres al ejemplo (chat 19/07): pidio ver un ejemplo de lo que se mandaria a pt/carucha/mata antes de enviar. Solo el usuario convierte draft->pending.",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordar a pt/carucha/mata que pueden solicitar experiencias del laboratorio; mata=device andres; EN BORRADOR hasta su OK)"
+    },
     {
       "id": "2026-07-19-a-preview",
       "title": "🧾 Preview: día de liquidación (sale 14:00)",
