@@ -249,6 +249,30 @@
       "hypothesis": "Sub-formato del slot de récords del sábado para no repetir el clásico (04/07) ni el horóscopo (11/07). Cuatro remontadas 100% verificadas de games y nunca antes citadas: PT (9º→2º) y Mac (10º→3º) la misma noche del 648 de Naso (25/05), Negro (8º/8→3º en MATABA 09/06), y Tano (8º/10→2º el 13/07, tapado por el robo de Gordo en la crónica). Cierra con boletín de actualización: el récord de presencia perfecta de Cobra (pregonado el 04/07) cayó el 13/07, y las sequías de Mac (14 fechas) y Mata (10 fechas) siguen activas. Cierre fijo 'récords que se pueden romper el lunes'. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [],
       "result_notes": "Rechazada por Andres por chat (18/07 08:48), antes de salir el preview: el criterio de 'remontada' del sistema estaba mal calibrado — terminar 2do o 3ero no es remontada, solo cuenta ganar/1er puesto. Ninguna de las 4 historias terminaba en victoria. git rm de la pagina, items de queue cancelados. Lección permanente anotada en learnings.md: no usar 'remontada' para nada que no termine en el primer puesto."
+    },
+    {
+      "id": "2026-07-19-exp-gordo-santidad",
+      "title": "😇 Certificado de Santidad Unística: San Gordo",
+      "page": "engage/exp-gordo-santidad-f574ee8e.html",
+      "created": "2026-07-19",
+      "status": "pending",
+      "hypothesis": "Fulfillment de experience_request idea=santidad-gordo (device gordo, 18/07 20:02, desde su propia piña pina-gordo-5cec1f1c). Sin pre-forja previa (la serie experiencias-solicitables-serie solo cubría nachi/mata): construida on-demand con el mismo formato de certificado que exp-mata-santidad, con datos propios de Gordo verificados de games (15 fechas, 0 multas, 0 cortes, 0 últimos, 3 victorias — supera a Mata porque además gana). Métrica: reacción + approve de andres.",
+      "notified_by": [
+        "2026-07-19-santidad-gordo"
+      ],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-19-exp-gordo-tutela-mac",
+      "title": "⚖️ Juicio de Tutela Total: Gordo vs Mac (11-1)",
+      "page": "engage/exp-gordo-tutela-mac-2b601123.html",
+      "created": "2026-07-19",
+      "status": "pending",
+      "hypothesis": "Fulfillment de experience_request idea=tutela-mac (device gordo, 18/07 20:02, desde su propia piña pina-gordo-5cec1f1c). Sin pre-forja previa: construida on-demand con el mismo formato judicial que exp-mata-paternidad, con el H2H real Gordo-Mac (11-1 en 12 fechas, +1207 puntos acumulados, la dominancia mas aplastante de la mesa) recalculado fecha por fecha de games. Métrica: reacción + approve de andres.",
+      "notified_by": [
+        "2026-07-19-tutela-mac"
+      ],
+      "result_notes": null
     }
   ]
 }

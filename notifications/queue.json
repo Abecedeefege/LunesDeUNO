@@ -1,6 +1,79 @@
 {
-  "_updated_at": "2026-07-18T19:53:19.491Z",
+  "_updated_at": "2026-07-19T06:06:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-19-a-preview",
+      "title": "🧾 Preview: día de liquidación (sale 14:00)",
+      "body": "Naso 6 días moroso, Carucha pide que pague doble, y el libro de multas completo. El envío general sale 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-19-liquidacion.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-19T09:00:00-03:00",
+      "expires_at": "2026-07-19T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
+    },
+    {
+      "id": "2026-07-19-a",
+      "title": "🧾 Naso, 6 días y Carucha pide el doble",
+      "body": "La Casa de Liquidaciones abrió los libros: deuda de Naso, ranking de multas (Tano 150) y quién paga peor. Mañana se juega.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-19-liquidacion.html",
+      "send_at": "2026-07-19T14:00:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (chusmerío del domingo, sub-formato 'día de liquidación' — deuda de Naso + libro de multas + ranking de pagadores — para no repetir el clásico del 05/07 ni confesiones del 12/07)"
+    },
+    {
+      "id": "2026-07-19-paternidad-negro",
+      "title": "👨‍⚖️ Tu juicio de paternidad está listo",
+      "body": "Lo pediste vos: Negro jamás te ganó, 6-0 en 6 fechas. El expediente completo es tuyo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/exp-mata-paternidad-b0e9c73c.html",
+      "devices": [
+        "andres",
+        "mata"
+      ],
+      "send_at": "2026-07-19T11:00:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (experience_request idea=paternidad-negro, device andres/mata, 18/07 13:03 desde su piña; página ya pre-forjada en la serie experiencias-solicitables-serie; entrega 11:00 del día siguiente)"
+    },
+    {
+      "id": "2026-07-19-santidad-gordo",
+      "title": "😇 Tu certificado de santidad está listo",
+      "body": "Lo pediste vos: 15 fechas, cero multas, cero cortes, cero últimos. Y encima ganaste 3. El certificado es tuyo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/exp-gordo-santidad-f574ee8e.html",
+      "devices": [
+        "gordo"
+      ],
+      "send_at": "2026-07-19T11:00:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (experience_request idea=santidad-gordo, device gordo, 18/07 20:02 desde su propia piña; construida on-demand con datos verificados de games; sin pre-forja previa)"
+    },
+    {
+      "id": "2026-07-19-tutela-mac",
+      "title": "⚖️ Tu juicio de tutela contra Mac está listo",
+      "body": "Lo pediste vos: 11-1 en 12 fechas, +1207 puntos acumulados. El expediente completo es tuyo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/exp-gordo-tutela-mac-2b601123.html",
+      "devices": [
+        "gordo"
+      ],
+      "send_at": "2026-07-19T11:10:00-03:00",
+      "expires_at": "2026-07-19T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-19 (experience_request idea=tutela-mac, device gordo, 18/07 20:02 desde su propia piña; construida on-demand con datos verificados de games; sin pre-forja previa; espaciada 10 min de santidad-gordo para no pisar el mismo push)"
+    },
     {
       "id": "2026-07-18-pina-gordo-express",
       "title": "🥊 Tu Piña Directa está forjada",
@@ -414,18 +487,6 @@
       "sent_at": "2026-07-12T17:56:09.672Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-12 (chusmerío del domingo, sub-formato confesiones del mazo para no repetir el clásico del 05/07 ni el feed rechazado del 10/07)"
-    },
-    {
-      "id": "2026-07-11-a",
-      "title": "🔮 ¿Qué carta sos vos?",
-      "body": "Cobra: Comodín +4. Mac: Roba Dos eterno. Vos: entrá y mirá qué te tocó — con los números reales de cada uno.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-11-horoscopo.html",
-      "send_at": "2026-07-11T14:00:00-03:00",
-      "expires_at": "2026-07-11T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-11T17:50:53.858Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-11 (récords del sábado, sub-formato horóscopo unístico para no repetir el clásico del 04/07)"
     }
   ]
 }

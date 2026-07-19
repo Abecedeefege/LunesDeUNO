@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🧾 Día de liquidación</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d12; color: #eaeaf0; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2.5rem;
+  }
+  a.back { display: inline-block; color: #9a9aa8; text-decoration: none; font-size: .85rem; margin-bottom: 1rem; }
+  a.back:hover { color: #eaeaf0; }
+  .receipt {
+    background: repeating-linear-gradient(180deg, #f4f1e8 0 2px, #eceadf 2px 4px);
+    color: #1a1a1a; border-radius: 4px; padding: 1.3rem 1.1rem 1.5rem;
+    font-family: 'Courier New', Courier, monospace; position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+  .receipt::before, .receipt::after {
+    content: ""; position: absolute; left: 0; right: 0; height: 10px;
+    background: linear-gradient(45deg, transparent 33.33%, #0d0d12 33.33%, #0d0d12 66.66%, transparent 66.66%),
+                linear-gradient(-45deg, transparent 33.33%, #0d0d12 33.33%, #0d0d12 66.66%, transparent 66.66%);
+    background-size: 12px 20px; background-position: 0 0;
+  }
+  .receipt::before { top: -1px; }
+  .receipt::after { bottom: -1px; transform: rotate(180deg); }
+  .r-head { text-align: center; border-bottom: 1px dashed #999; padding-bottom: .6rem; margin-bottom: .7rem; }
+  .r-head .store { font-weight: 900; font-size: 1.15rem; letter-spacing: .5px; }
+  .r-head .sub { font-size: .68rem; color: #555; margin-top: .2rem; letter-spacing: 1px; }
+  .r-meta { font-size: .68rem; color: #555; display: flex; justify-content: space-between; margin-bottom: .8rem; }
+  .r-section-title {
+    font-weight: 900; font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase;
+    margin: 1rem 0 .4rem; border-bottom: 1px dashed #999; padding-bottom: .3rem;
+  }
+  .r-line { display: flex; justify-content: space-between; font-size: .82rem; padding: .18rem 0; }
+  .r-line .qty { color: #555; }
+  .r-line .amt { font-weight: 700; }
+  .r-line.total { border-top: 1px dashed #999; margin-top: .3rem; padding-top: .4rem; font-weight: 900; font-size: .95rem; }
+  .r-note { font-size: .76rem; color: #444; line-height: 1.5; margin: .4rem 0 .2rem; }
+  .stamp-row { text-align: center; margin: .8rem 0 .3rem; }
+  .stamp {
+    display: inline-block; border: 2px solid #b0221c; color: #b0221c; font-weight: 900;
+    font-size: .8rem; letter-spacing: 2px; padding: .25rem .7rem; border-radius: 4px;
+    transform: rotate(-4deg); text-transform: uppercase;
+  }
+  .stamp.paid { border-color: #1f7a3f; color: #1f7a3f; transform: rotate(3deg); }
+  .bigday { display:block; text-align:center; font-size: 2.3rem; font-weight: 900; color: #b0221c; font-family: -apple-system, sans-serif; margin-top:.3rem; }
+  .bigday-label { display:block; text-align:center; font-size: .62rem; letter-spacing: 2px; color: #555; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 12px; padding: 1rem; margin-top: 1rem; }
+  .card h2 { color: #FFDE00; font-size: .95rem; margin-bottom: .5rem; }
+  .card p { font-size: .86rem; line-height: 1.55; color: #cfcfd8; }
+  .face { width: 22px; height: 22px; border-radius: 50%; vertical-align: -6px; margin-right: .25rem; border: 1.5px solid #2a2a35; }
+  .score { display: flex; align-items: center; justify-content: center; gap: .6rem; font-size: 1.4rem; font-weight: 900; margin: .5rem 0; }
+  .score .vs { font-size: .75rem; color: #6b6b78; font-weight: 700; }
+  .caption { text-align: center; font-size: .65rem; letter-spacing: 1px; color: #6b6b78; margin-bottom: .3rem; }
+  .qs { margin-top: .7rem; font-size: .85rem; color: #b9b9c4; }
+  button {
+    margin: .35rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #1c1c24; color: #eaeaf0; font-size: .9rem; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+  }
+  .react button { font-size: 1.25rem; padding: .4rem .7rem; }
+  .react-hint, .q-hint, .engage-hint { display: block; font-size: .75rem; color: #8f8f9c; margin-top: .35rem; }
+  .cierre { text-align: center; font-size: .78rem; color: #6b6b78; margin: 1.2rem 0 .3rem; letter-spacing: .5px; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="receipt">
+    <div class="r-head">
+      <div class="store">🧾 CASA DE LIQUIDACIONES</div>
+      <div class="sub">LUNES DE UNO · CUENTAS CLARAS</div>
+    </div>
+    <div class="r-meta"><span>DOMINGO 19.07.2026</span><span>TICKET #017</span></div>
+
+    <div class="r-section-title">Deuda abierta</div>
+    <div class="r-line"><span>Postre o picada — <b>Naso</b></span></div>
+    <div class="r-line qty"><span>desde el 13 de julio (perdió con 414)</span></div>
+    <span class="bigday" data-since="2026-07-13">–</span>
+    <span class="bigday-label">DÍAS Y CONTANDO</span>
+    <div class="stamp-row"><span class="stamp">IMPAGA</span></div>
+    <div class="r-note">Dictamen de Carucha, sin apelación: <b>"que pague doble."</b> El mazo tomó nota.</div>
+
+    <div class="r-section-title">Libro de multas 2026</div>
+    <div class="r-line"><span>Tano</span><span class="amt">150</span></div>
+    <div class="r-line"><span>Naso</span><span class="amt">72</span></div>
+    <div class="r-line"><span>Negro</span><span class="amt">70</span></div>
+    <div class="r-line"><span>Mac</span><span class="amt">40</span></div>
+    <div class="r-line"><span>Gael</span><span class="amt">20</span></div>
+    <div class="r-line"><span>Nachi</span><span class="amt">10</span></div>
+    <div class="r-line"><span>PT</span><span class="amt">10</span></div>
+    <div class="r-line total"><span>TOTAL EN FICHAS</span><span class="amt">372</span></div>
+
+    <div class="r-section-title">Pagos saldados (histórico)</div>
+    <div class="r-line"><span>Tano — 19 días</span></div>
+    <div class="r-note">Pagó, pero mal: alfajores. El mazo lo anota con desgano.</div>
+    <div class="stamp-row"><span class="stamp paid">PAGADO</span></div>
+    <div class="r-line" style="margin-top:.5rem"><span>Negro — ~10 días</span></div>
+    <div class="r-note">Pagó de lujo: picada francesa. Sube en el ranking.</div>
+    <div class="stamp-row"><span class="stamp paid">PAGADO</span></div>
+    <div class="r-line" style="margin-top:.5rem"><span>Gael — Martín Fierro</span></div>
+    <div class="r-note">Pagó con clase. Nadie esperaba literatura gauchesca.</div>
+    <div class="stamp-row"><span class="stamp paid">PAGADO</span></div>
+    <div class="r-note" style="margin-top:.6rem">Ranking de pagadores, de mejor a peor: <b>Negro &gt; Gael &gt; Tano</b>.
+    Naso todavía no tiene entrada en este libro — la única forma de entrar es pagando.</div>
+  </div>
+
+  <div class="card">
+    <h2>La cuenta que nadie le mostró a Naso</h2>
+    <p><img class="face" src="../assets/faces/pt.png" alt=""><b>PT</b> y
+    <img class="face" src="../assets/faces/naso.png" alt=""><b>Naso</b> compartieron
+    12 fechas en 2026. El resultado mano a mano no tiene vuelta:</p>
+    <div class="score"><span>PT</span><span class="vs">10 — 2</span><span>Naso</span></div>
+    <div class="caption">FECHAS COMPARTIDAS EN 2026 · QUIÉN TERMINÓ ARRIBA</div>
+    <p>Diez de doce. Y eso que PT ganó una sola fecha en todo el año. No hace
+    falta ser campeón para tener a alguien de rodillas.</p>
+  </div>
+
+  <div class="card react">
+    <h2>¿Qué tal la liquidación?</h2>
+    <button onclick="engageReact('2026-07-19-liquidacion','love',this)">😍</button>
+    <button onclick="engageReact('2026-07-19-liquidacion','like',this)">🙂</button>
+    <button onclick="engageReact('2026-07-19-liquidacion','meh',this)">😐</button>
+    <button onclick="engageReact('2026-07-19-liquidacion','no',this)">🙅</button>
+    <span class="react-hint"></span>
+  </div>
+
+  <div class="card">
+    <div class="qs">¿Novedades de la deuda de Naso?
+      <div>
+        <button onclick="engageAnswer('deuda-naso-postre-2026-07-13','pagada',this)">Ya pagó ✅</button>
+        <button onclick="engageAnswer('deuda-naso-postre-2026-07-13','sigue',this)">Sigue debiendo 🧀⏳</button>
+        <span class="q-hint"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>¿Querés que esto llegue todas las semanas?</h2>
+    <button onclick="engageAnswer('2026-07-19-liquidacion-suscripcion','si',this)">Sí, obvio</button>
+    <button onclick="engageAnswer('2026-07-19-liquidacion-suscripcion','no',this)">No hace falta</button>
+    <span class="q-hint"></span>
+  </div>
+
+  <div class="card">
+    ¿Esta sección merece existir?
+    <div>
+      <button onclick="engageApprove('2026-07-19-liquidacion',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-19-liquidacion',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+  </div>
+
+  <div class="cierre">🎴 mañana se juega</div>
+
+<script>
+  document.querySelectorAll('[data-since]').forEach(function (el) {
+    var since = new Date(el.getAttribute('data-since') + 'T00:00:00-03:00');
+    el.textContent = Math.max(0, Math.floor((Date.now() - since) / 86400000));
+  });
+</script>
+<script src="engage.js"></script>
+</body>
+</html>
