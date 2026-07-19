@@ -116,12 +116,12 @@
       "devices": [
         "gordo"
       ],
-      "send_at": "2026-07-19T11:10:00-03:00",
+      "send_at": "2026-07-19T11:00:00-03:00",
       "expires_at": "2026-07-19T23:00:00-03:00",
       "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-19 (experience_request idea=tutela-mac, device gordo, 18/07 20:02 desde su propia piña; construida on-demand con datos verificados de games; sin pre-forja previa; espaciada 10 min de santidad-gordo para no pisar el mismo push)"
+      "created_by": "engagement-agent 2026-07-19 (experience_request idea=tutela-mac, device gordo, 18/07 20:02 desde su propia piña; construida on-demand con datos verificados de games; sin pre-forja previa; 11:00 junto con santidad-gordo por orden de Andres por chat 19/07: 'que salga todo junto')"
     },
     {
       "id": "2026-07-18-pina-gordo-express",
