@@ -895,6 +895,34 @@
       "device": "gordo",
       "ts": "2026-07-18T19:53:19.490Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-solicitadas",
+      "device": "andres",
+      "ts": "2026-07-19T13:01:07.055Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-solicitadas",
+      "device": "andres",
+      "ts": "2026-07-19T13:01:07.147Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a-preview",
+      "device": "andres",
+      "ts": "2026-07-19T13:01:07.227Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a-preview",
+      "device": "andres",
+      "ts": "2026-07-19T13:01:07.320Z",
+      "status_code": 201
     }
   ]
 }
