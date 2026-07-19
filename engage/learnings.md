@@ -132,10 +132,26 @@ Carucha/Cobra 0.
   el express registre a pt en el ledger. NO purgar a ciegas.
 - **Corrida extra del 19/07 (mediodía, pedido de Andrés por chat)**:
   (1) recordatorio del Gimnasio a Mac y Negro 14:05 (únicos suscriptos sin
-  piña forjada); (2) landing `laboratorio.html` creada — push de invitación
-  a pt/carucha/andres quedó en DRAFT esperando su OK al ejemplo;
-  (3) escritorio "solicitadas" creado y pusheado de inmediato con todas las
-  URLs del día + el preview de las 09:00 que había quedado colgado del cron.
+  piña forjada); (2) landing `laboratorio.html` creada y luego APROBADA:
+  sale 14:10 (después de la liquidación) a pt/carucha/andres; (3) escritorio
+  "solicitadas" creado y pusheado de inmediato con todas las URLs del día +
+  el preview de las 09:00 que había quedado colgado del cron; (4) las 2
+  entregas de Gordo unificadas a las 11:00 ("que salga todo junto").
+- **🧪 Laboratorio personalizado (Andrés, 19/07, vinculante)**: la landing
+  `laboratorio.html` muestra SOLO las líneas del jugador que la abre
+  (device de localStorage, alias andres→mata; device desconocido ve mensaje
+  genérico). Catálogo completo para los 11 jugadores con stats verificadas;
+  al entregar una experiencia, moverla a "Ya fabricadas" en su sección.
+- **⭐ Subsección "Experiencias VIP" (Andrés, 19/07, vinculante)**: el
+  Gimnasio (🥊) y el Laboratorio (🧪) viven en Estadísticas → Experiencias
+  como iconos SIN cara/jugador en la subsección "Experiencias VIP". Se
+  renderizan desde la colección `experiencias` con docs `vip:"true"` +
+  `icon` (docs `vip-gimnasio` y `vip-laboratorio`, escritos por la rutina
+  POR ORDEN EXPLÍCITA de Andrés — excepción puntual a la regla "solo los
+  jugadores escriben experiencias"). Para esto se editó index.html por
+  ÚNICA vez con orden explícita de él (CSS .exp-vip-* + soporte de docs
+  vip en el loader dinámico); la regla "index.html NO TOCAR" sigue vigente
+  para todo lo demás.
 
 ## 🗓️ Semana en curso
 

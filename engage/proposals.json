@@ -280,7 +280,7 @@
       "page": "engage/laboratorio.html",
       "created": "2026-07-19",
       "status": "vault",
-      "hypothesis": "Pedida por Andres por chat (19/07): landing permanente (sin fecha) donde los jugadores pueden solicitar experiencias del laboratorio. Secciones por jugador (PT, Carucha, Mata en la serie 1) con 3 ofertas cada uno, todas con stats verificadas de games (PT: Mac 10-2 / Naso 10-2 / lider anual con 1 corona / Cobra 7-6; Carucha: Kryptonita 75%-17% / Cobra 8-4, Mac 10-1, Naso 8-2 / prontuario limpio en 13; Mata: sus 3 ideas ya conocidas). Botones emiten experience_request con pina=owner + idea. status=vault: pedido explicito del dueño, no expira; el push de invitacion a pt/carucha/andres queda en DRAFT hasta OK de Andres.",
+      "hypothesis": "Pedida por Andres por chat (19/07): landing permanente (sin fecha) donde los jugadores pueden solicitar experiencias del laboratorio. PERSONALIZADA (regla de Andres 19/07): muestra solo la seccion del jugador que la abre (device localStorage, andres→mata); catalogo completo para los 11 jugadores, 3 ofertas cada uno con stats verificadas de games, y bloque 'ya fabricadas' con links a las entregadas (mata: paternidad; gordo: santidad + tutela). Botones emiten experience_request con pina=owner + idea. Listada en Estadisticas → Experiencias como icono 🧪 en la subseccion 'Experiencias VIP' (doc vip-laboratorio). status=vault: pedido explicito del dueño, no expira. Push de invitacion aprobado: 14:10 del 19/07 a pt/carucha/andres, despues de la liquidacion.",
       "notified_by": [],
       "result_notes": null
     },

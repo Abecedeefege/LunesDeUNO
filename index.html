@@ -1114,6 +1114,19 @@
     }
     .exp-wa-card:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(18,140,70,.5); }
     .exp-wa-card svg { width: 24px; height: 24px; flex: none; fill: #fff; }
+    .exp-vip-head {
+      margin: .9rem 0 .45rem; font-size: .72rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-muted); font-weight: 700;
+    }
+    .exp-vip-row { display: flex; gap: .6rem; }
+    .exp-vip-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--surface); border: 2px solid var(--uno-yellow);
+      font-size: 1.5rem; text-decoration: none;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .exp-vip-icon:hover { transform: translateY(-2px); }
     .stats-hero {
       display: flex; align-items: center; gap: .8rem;
       padding: 1rem; background: var(--surface-2); border-radius: 12px;
@@ -7221,11 +7234,13 @@ window.addEventListener('pagehide', _flushOnHide);
     .then(function (r) { return r.json(); })
     .then(function (d) {
       var wa = cont.querySelector('.exp-wa-card');
+      var vips = [];
       (d.documents || []).forEach(function (doc) {
         var f = doc.fields || {};
         function s(k) { return (f[k] && f[k].stringValue) || ''; }
         var id = doc.name.split('/').pop();
         if (!s('url') || cont.querySelector('a[data-exp-id="' + id + '"]')) return;
+        if (s('vip') === 'true') { vips.push({ id: id, url: s('url'), icon: s('icon') || '⭐', title: s('title') }); return; }
         var a = document.createElement('a');
         a.className = 'exp-card';
         a.href = s('url');
@@ -7246,6 +7261,25 @@ window.addEventListener('pagehide', _flushOnHide);
         a.appendChild(img); a.appendChild(label); a.appendChild(arrow);
         cont.insertBefore(a, wa);
       });
+      if (vips.length && !cont.querySelector('.exp-vip-row')) {
+        var head = document.createElement('div');
+        head.className = 'exp-vip-head';
+        head.textContent = 'Experiencias VIP';
+        var row = document.createElement('div');
+        row.className = 'exp-vip-row';
+        vips.forEach(function (v) {
+          var a = document.createElement('a');
+          a.className = 'exp-vip-icon';
+          a.href = v.url;
+          a.setAttribute('data-exp-id', v.id);
+          a.setAttribute('title', v.title);
+          a.setAttribute('aria-label', v.title);
+          a.textContent = v.icon;
+          row.appendChild(a);
+        });
+        cont.insertBefore(head, wa);
+        cont.insertBefore(row, wa);
+      }
     })
     .catch(function () {});
 })();

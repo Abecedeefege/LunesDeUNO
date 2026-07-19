@@ -22,6 +22,8 @@
   .sub{font-size:.86rem;color:var(--dim);line-height:1.55;margin-top:10px;text-align:left}
   .sub b{color:var(--text)}
   .protocolo{margin-top:10px;font-size:.72rem;color:var(--dim);border:1px dashed rgba(125,249,255,.3);border-radius:10px;padding:10px;text-align:left;line-height:1.5}
+  .seccion{display:none}
+  .seccion.visible{display:block}
   h2{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lab);margin:26px 0 10px;border-bottom:1px dashed rgba(125,249,255,.3);padding-bottom:6px;display:flex;align-items:center;gap:8px}
   h2 img{width:34px;height:34px;border-radius:50%;border:2px solid var(--lab);object-fit:cover;background:#222}
   .cliente{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
@@ -31,7 +33,10 @@
   .cliente button:hover{border-color:var(--lab)}
   .cliente button:disabled{opacity:.55}
   .of-hint{display:block;margin-top:8px;font-size:.78rem;color:var(--green);min-height:1em}
-  .entregado{font-size:.72rem;color:var(--green);margin-top:8px}
+  .entregadas{margin-top:10px;font-size:.76rem;color:var(--dim)}
+  .entregadas .et{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:800;margin-bottom:4px}
+  .entregadas a{display:block;color:var(--yellow);text-decoration:none;padding:6px 0;font-size:.8rem;font-weight:600}
+  #generic{display:none;margin-top:26px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:.86rem;color:var(--dim);line-height:1.6;text-align:center}
   .react{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .react button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
   .react button:hover{border-color:var(--lab)}
@@ -50,44 +55,150 @@
         <div class="beaker">⚗️</div>
         <h1>El Laboratorio<br>de Experiencias</h1>
         <p class="sub">Acá se fabrican los expedientes, certificados, juicios y peritajes de la
-        mesa — <b>todo con datos reales recalculados del historial oficial</b>. Elegí una de las
-        líneas de investigación de abajo y el laboratorio te la entrega por notificación,
-        normalmente al día siguiente.</p>
+        mesa — <b>todo con datos reales recalculados del historial oficial</b>. Estas son las
+        líneas de investigación abiertas con tu nombre. Elegí una y el laboratorio te la
+        entrega por notificación, normalmente al día siguiente.</p>
         <div class="protocolo">🔬 <b>Protocolo:</b> tocás un botón → el pedido queda registrado a
         tu nombre → el laboratorio fabrica la pieza con tus números verificados → te llega el
         link por push. Sin límite de pedidos, sin costo, sin anestesia.</div>
       </div>
     </div>
 
-    <h2><img src="../assets/faces/pt.png" alt="PT"> Líneas disponibles para PT</h2>
-    <div class="cliente">
-      <p class="intro">El laboratorio detecta en tus muestras un fenómeno único: <b>puntero de
-      la tabla anual con UNA sola corona</b>. Hay material de sobra:</p>
-      <button onclick="solicitarExp(this,'pt','paternidad-doble-pt')">⚖️ Juicio de paternidad doble: Mac y Naso, 10-2 cada uno — dos hijos reconocidos en 12 fechas</button>
-      <button onclick="solicitarExp(this,'pt','lider-silencioso-pt')">👑 Expediente del líder silencioso: 1º de la anual con una sola victoria en el año</button>
-      <button onclick="solicitarExp(this,'pt','verdugo-cobra-pt')">🕵️ Peritaje del verdugo: 7-6 mano a mano sobre Cobra, el 5 veces campeón</button>
-      <span class="of-hint"></span>
+    <div class="seccion" id="sec-pt">
+      <h2><img src="../assets/faces/pt.png" alt="PT"> Tus líneas, PT</h2>
+      <div class="cliente">
+        <p class="intro">El laboratorio detecta en tus muestras un fenómeno único: <b>puntero de
+        la tabla anual con UNA sola corona</b>. Hay material de sobra:</p>
+        <button onclick="solicitarExp(this,'pt','paternidad-doble-pt')">⚖️ Juicio de paternidad doble: Mac y Naso, 10-2 cada uno — dos hijos reconocidos en 12 fechas</button>
+        <button onclick="solicitarExp(this,'pt','lider-silencioso-pt')">👑 Expediente del líder silencioso: 1º de la anual con una sola victoria en el año</button>
+        <button onclick="solicitarExp(this,'pt','verdugo-cobra-pt')">🕵️ Peritaje del verdugo: 7-6 mano a mano sobre Cobra, el 5 veces campeón</button>
+        <span class="of-hint"></span>
+      </div>
     </div>
 
-    <h2><img src="../assets/faces/carucha.png" alt="Carucha"> Líneas disponibles para Carucha</h2>
-    <div class="cliente">
-      <p class="intro">Tus muestras dieron positivo en <b>dominancia genética múltiple</b> y
-      prontuario impecable. El laboratorio ofrece:</p>
-      <button onclick="solicitarExp(this,'carucha','kryptonita-carucha')">☢️ Certificado de Kryptonita: Cobra gana el 75% de las fechas sin vos… y el 17% con vos</button>
-      <button onclick="solicitarExp(this,'carucha','dinastia-carucha')">👨‍👦 Test de dinastía: padre de Cobra 8-4, de Mac 10-1 y de Naso 8-2</button>
-      <button onclick="solicitarExp(this,'carucha','santidad-carucha')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 13 fechas</button>
-      <span class="of-hint"></span>
+    <div class="seccion" id="sec-carucha">
+      <h2><img src="../assets/faces/carucha.png" alt="Carucha"> Tus líneas, Carucha</h2>
+      <div class="cliente">
+        <p class="intro">Tus muestras dieron positivo en <b>dominancia genética múltiple</b> y
+        prontuario impecable. El laboratorio ofrece:</p>
+        <button onclick="solicitarExp(this,'carucha','kryptonita-carucha')">☢️ Certificado de Kryptonita: Cobra gana el 75% de las fechas sin vos… y el 17% con vos</button>
+        <button onclick="solicitarExp(this,'carucha','dinastia-carucha')">👨‍👦 Test de dinastía: padre de Cobra 8-4, de Mac 10-1 y de Naso 8-2</button>
+        <button onclick="solicitarExp(this,'carucha','santidad-carucha')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 13 fechas</button>
+        <span class="of-hint"></span>
+      </div>
     </div>
 
-    <h2><img src="../assets/faces/mata.png" alt="Mata"> Líneas disponibles para Mata</h2>
-    <div class="cliente">
-      <p class="intro">Cliente frecuente del laboratorio. Tu <b>juicio de paternidad exprés
-      contra Negro (6-0)</b> ya fue fabricado y entregado. Quedan abiertas:</p>
-      <button onclick="solicitarExp(this,'mata','santidad')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 10 fechas</button>
-      <button onclick="solicitarExp(this,'mata','casi-casi')">🥈 Peritaje del casi-casi: 3 subcampeonatos y la corona que no llega</button>
-      <button onclick="solicitarExp(this,'mata','milagro-lunes')">🙏 El milagro del lunes: la ciencia calcula tu primera corona el 20/07</button>
-      <span class="of-hint"></span>
+    <div class="seccion" id="sec-mata">
+      <h2><img src="../assets/faces/mata.png" alt="Mata"> Tus líneas, Mata</h2>
+      <div class="cliente">
+        <p class="intro">Cliente frecuente del laboratorio. Quedan abiertas:</p>
+        <button onclick="solicitarExp(this,'mata','santidad')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 10 fechas</button>
+        <button onclick="solicitarExp(this,'mata','casi-casi')">🥈 Peritaje del casi-casi: 3 subcampeonatos y la corona que no llega</button>
+        <button onclick="solicitarExp(this,'mata','milagro-lunes')">🙏 El milagro del lunes: la ciencia calcula tu primera corona el 20/07</button>
+        <span class="of-hint"></span>
+        <div class="entregadas">
+          <div class="et">✓ Ya fabricadas para vos</div>
+          <a href="exp-mata-paternidad-b0e9c73c.html">👨‍⚖️ Juicio de Paternidad Exprés vs Negro (6-0) →</a>
+        </div>
+      </div>
     </div>
+
+    <div class="seccion" id="sec-gordo">
+      <h2><img src="../assets/faces/gordo.png" alt="Gordo"> Tus líneas, Gordo</h2>
+      <div class="cliente">
+        <p class="intro">Cliente frecuente del laboratorio. Quedan abiertas:</p>
+        <button onclick="solicitarExp(this,'gordo','racha-record-gordo')">🔥 Peritaje de la racha récord: qué significaría ganar el 20/07 por tercera vez seguida</button>
+        <button onclick="solicitarExp(this,'gordo','gordo-vs-cobra')">⚔️ El duelo por la corona: Gordo (3 victorias limpias) vs Cobra (5 victorias, 2 cortes)</button>
+        <button onclick="solicitarExp(this,'gordo','presencia-gordo')">📿 Prontuario de presencia: 15 de 17 fechas, solo 2 faltas en el año</button>
+        <span class="of-hint"></span>
+        <div class="entregadas">
+          <div class="et">✓ Ya fabricadas para vos</div>
+          <a href="exp-gordo-santidad-f574ee8e.html">😇 Certificado de Santidad (15 fechas limpias) →</a>
+          <a href="exp-gordo-tutela-mac-2b601123.html">⚖️ Juicio de Tutela Total vs Mac (11-1) →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-cobra">
+      <h2><img src="../assets/faces/cobra.png" alt="Cobra"> Tus líneas, Cobra</h2>
+      <div class="cliente">
+        <p class="intro">Las muestras del <b>5 veces campeón</b> dan para rato:</p>
+        <button onclick="solicitarExp(this,'cobra','coleccionista-cobra')">👑 Expediente del coleccionista: 5 coronas en 2026, nadie tiene más</button>
+        <button onclick="solicitarExp(this,'cobra','presencia-cobra')">🎯 Peritaje de presencia: 16 de 17 fechas, la mayor asistencia de la mesa</button>
+        <button onclick="solicitarExp(this,'cobra','descargo-kryptonita')">🛡️ El descargo del Kryptonita: la versión de la defensa, con tus números</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-mac">
+      <h2><img src="../assets/faces/mac.png" alt="Mac"> Tus líneas, Mac</h2>
+      <div class="cliente">
+        <p class="intro">El laboratorio también trabaja para la defensa:</p>
+        <button onclick="solicitarExp(this,'mac','nochesgrandes-mac')">🌃 El gigante de las noches grandes: podio (3º de 11) en la mesa más multitudinaria del año</button>
+        <button onclick="solicitarExp(this,'mac','defensa-mac')">🛡️ Expediente de la defensa: los números que te salvan</button>
+        <button onclick="solicitarExp(this,'mac','profecia-mac')">🌅 La profecía de la primera corona: la ciencia calcula cuándo llega</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-negro">
+      <h2><img src="../assets/faces/negro.png" alt="Negro"> Tus líneas, Negro</h2>
+      <div class="cliente">
+        <p class="intro">Las muestras del <b>mejor pagador del año</b> ofrecen:</p>
+        <button onclick="solicitarExp(this,'negro','pagador-lujo-negro')">🍾 El pagador de lujo: la picada francesa que fijó el estándar de la mesa</button>
+        <button onclick="solicitarExp(this,'negro','corona-negro')">👑 La corona del 16/03: tu día de gloria, reconstruido mano a mano</button>
+        <button onclick="solicitarExp(this,'negro','revancha-tano-negro')">⚔️ Plan de revancha: vas 2-7 con Tano — el laboratorio traza el camino</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-naso">
+      <h2><img src="../assets/faces/naso.png" alt="Naso"> Tus líneas, Naso</h2>
+      <div class="cliente">
+        <p class="intro">El laboratorio guarda tu mejor noche en la caja fuerte:</p>
+        <button onclick="solicitarExp(this,'naso','parricidio-naso')">🏆 El parricidio del 5 de mayo: campeón en la casa de Carucha, venciendo al propio Carucha</button>
+        <button onclick="solicitarExp(this,'naso','remontada-real-naso')">🎢 La remontada real: último en la mano 1 y campeón esa misma noche</button>
+        <button onclick="solicitarExp(this,'naso','descargo-naso')">🧾 El descargo del moroso: tu versión oficial de la deuda del 13/07</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-tano">
+      <h2><img src="../assets/faces/tano.png" alt="Tano"> Tus líneas, Tano</h2>
+      <div class="cliente">
+        <p class="intro">Material clasificado del francotirador:</p>
+        <button onclick="solicitarExp(this,'tano','francotirador-tano')">🎯 El francotirador: tu 133, a SEIS puntos del récord histórico del año</button>
+        <button onclick="solicitarExp(this,'tano','dominio-tano-negro')">⚔️ Expediente de dominio: 7-2 sobre Negro en 9 fechas compartidas</button>
+        <button onclick="solicitarExp(this,'tano','documental-multa-tano')">🎬 El documental de la multa de 150: el récord del año, contado desde adentro</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-gael">
+      <h2><img src="../assets/faces/gael.png" alt="Gael"> Tus líneas, Gael</h2>
+      <div class="cliente">
+        <p class="intro">Las muestras del pagador ilustrado ofrecen:</p>
+        <button onclick="solicitarExp(this,'gael','masacre-gael')">💥 La masacre del 28 de abril: ganaste por 98 puntos, top-3 de palizas del año</button>
+        <button onclick="solicitarExp(this,'gael','padre-naso-gael')">👨‍👦 Test de paternidad: 8-3 sobre Naso en 11 fechas</button>
+        <button onclick="solicitarExp(this,'gael','pagador-gael')">📚 El pagador ilustrado: el Martín Fierro como jurisprudencia de deudas</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div class="seccion" id="sec-nachi">
+      <h2><img src="../assets/faces/nachi.png" alt="Nachi"> Tus líneas, Nachi</h2>
+      <div class="cliente">
+        <p class="intro">Las muestras del <b>abuelo del campeón</b> ofrecen:</p>
+        <button onclick="solicitarExp(this,'nachi','abuelo-nachi')">👴 El Abuelo: padre de Carucha 6-2… que es padre de Cobra. Genealogía completa</button>
+        <button onclick="solicitarExp(this,'nachi','doblete-nachi')">⚡ El doblete de mayo: coronas del 18/05 y 25/05, dos lunes seguidos</button>
+        <button onclick="solicitarExp(this,'nachi','dinastia-nachi')">🧬 Test de dinastía: 6-2 a Naso, 6-2 a Negro y 7-3 a Tano</button>
+        <span class="of-hint"></span>
+      </div>
+    </div>
+
+    <div id="generic">🔬 El laboratorio personaliza sus líneas por cliente.<br><br>
+    Abrí esta página desde el teléfono donde recibís las notificaciones del club para ver las
+    líneas de investigación abiertas con tu nombre.</div>
 
     <div class="react">¿Qué tal el catálogo del laboratorio?
       <button onclick="engageReact('laboratorio','love',this)">😍</button>
@@ -101,6 +212,13 @@
   </div>
 
 <script>
+  (function(){
+    var dev=''; try{dev=(localStorage.getItem('lunesdeuno_device_name')||'').toLowerCase();}catch(e){}
+    var who = (dev==='andres') ? 'mata' : dev;
+    var sec = document.getElementById('sec-'+who);
+    if(sec){ sec.classList.add('visible'); }
+    else { document.getElementById('generic').style.display='block'; }
+  })();
   function solicitarExp(btn, owner, idea){
     if(window.engageTrack) engageTrack('experience_request',{pina:owner,idea:idea,desc:btn.textContent.trim()});
     btn.disabled=true; btn.style.borderColor='#00A651';
