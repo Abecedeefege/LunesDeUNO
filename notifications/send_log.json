@@ -923,6 +923,34 @@
       "device": "andres",
       "ts": "2026-07-19T13:01:07.320Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-paternidad-negro",
+      "device": "andres",
+      "ts": "2026-07-19T14:09:15.389Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-paternidad-negro",
+      "device": "andres",
+      "ts": "2026-07-19T14:09:15.491Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-santidad-gordo",
+      "device": "gordo",
+      "ts": "2026-07-19T14:09:15.675Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-tutela-mac",
+      "device": "gordo",
+      "ts": "2026-07-19T14:09:15.725Z",
+      "status_code": 201
     }
   ]
 }
