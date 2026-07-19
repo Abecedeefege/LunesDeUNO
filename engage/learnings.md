@@ -18,6 +18,16 @@
   mandan directo, mismo criterio que pina-express.
 - **Sala de prensa del martes**: al ganador, su device solo, ~10:00, linkeada
   desde la crónica, nunca push independiente a todos.
+- **🗂️ Escritorio diario "Las solicitadas por otros" (Andrés, 19/07 por
+  chat, vinculante)**: TODAS las mañanas, push a device andres con la landing
+  `engage/solicitadas-27b2d470.html` (URL secreta + gate device andres/mata,
+  SOLO visible por él, jamás linkeada desde contenido público). La corrida
+  matutina la REGENERA con: (1) experiencias solicitadas por otros jugadores
+  con links y estado, (2) sección "para revisar" con URLs y copys de TODO lo
+  que sale ese día. Timing: send_at 08:45 — el cron de respaldo de
+  push-dispatch (\*/30 11-23 UTC) deriva varios minutos; el 19/07 el preview
+  de las 09:00 no salió porque el cron corrió 08:51 local y el slot
+  siguiente se salteó. Con 08:45 el slot de ~08:5x lo agarra.
 - **⭐ Experiencias VIP + 🥊 Piña Directa**: sin puertas/login para VER (VIP es
   marca); la puerta solo aplica a FORJAR/reclamar una piña en el Gimnasio
   (`engage/pina-directa.html`, valida device contra pushSubs active).
@@ -113,6 +123,19 @@ Carucha/Cobra 0.
 - Sub-formatos usados: récords → clásico (04/07), horóscopo (11/07),
   remontadas (18/07, cancelado y reemplazado). Chusmerío → clásico (05/07),
   confesiones (12/07), **liquidación (19/07, nuevo hoy)**.
+
+- **⚠️ Piña de PT — riesgo de duplicado latente**: pina-req-pt (18/07) no
+  tiene entrada en `pina_deliveries.json` (ya la recibió vía «dato caído»);
+  hoy el express lo saltea porque el item `2026-07-18-dato-pt` en queue.json
+  contiene su URL. Cuando ese item se purgue (>7 días, ~25/07), el express
+  la re-entregaría. Al purgar: conservar ese item, o pedirle a Andrés que
+  el express registre a pt en el ledger. NO purgar a ciegas.
+- **Corrida extra del 19/07 (mediodía, pedido de Andrés por chat)**:
+  (1) recordatorio del Gimnasio a Mac y Negro 14:05 (únicos suscriptos sin
+  piña forjada); (2) landing `laboratorio.html` creada — push de invitación
+  a pt/carucha/andres quedó en DRAFT esperando su OK al ejemplo;
+  (3) escritorio "solicitadas" creado y pusheado de inmediato con todas las
+  URLs del día + el preview de las 09:00 que había quedado colgado del cron.
 
 ## 🗓️ Semana en curso
 

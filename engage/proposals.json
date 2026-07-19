@@ -273,6 +273,26 @@
         "2026-07-19-tutela-mac"
       ],
       "result_notes": null
+    },
+    {
+      "id": "laboratorio-landing",
+      "title": "🧪 El Laboratorio de Experiencias (landing de solicitudes)",
+      "page": "engage/laboratorio.html",
+      "created": "2026-07-19",
+      "status": "vault",
+      "hypothesis": "Pedida por Andres por chat (19/07): landing permanente (sin fecha) donde los jugadores pueden solicitar experiencias del laboratorio. Secciones por jugador (PT, Carucha, Mata en la serie 1) con 3 ofertas cada uno, todas con stats verificadas de games (PT: Mac 10-2 / Naso 10-2 / lider anual con 1 corona / Cobra 7-6; Carucha: Kryptonita 75%-17% / Cobra 8-4, Mac 10-1, Naso 8-2 / prontuario limpio en 13; Mata: sus 3 ideas ya conocidas). Botones emiten experience_request con pina=owner + idea. status=vault: pedido explicito del dueño, no expira; el push de invitacion a pt/carucha/andres queda en DRAFT hasta OK de Andres.",
+      "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "solicitadas-escritorio",
+      "title": "🗂️ Las solicitadas por otros (escritorio diario de la dirección)",
+      "page": "engage/solicitadas-27b2d470.html",
+      "created": "2026-07-19",
+      "status": "vault",
+      "hypothesis": "Pedida por Andres por chat (19/07): pagina SOLO para el (URL con hex secreto + gate por device name andres/mata en localStorage; jamas linkeada desde contenido publico) que lista las experiencias solicitadas por otros jugadores con sus links, mas la seccion 'para revisar' con todo lo que sale ese dia (URLs y copys). Se REGENERA cada mañana y se le pushea a las ~09:00 a su device como 'Las solicitadas por otros' — regla vinculante nueva registrada en learnings. status=vault: infraestructura personal del dueño, no expira.",
+      "notified_by": [],
+      "result_notes": null
     }
   ]
 }
