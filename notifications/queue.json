@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-19T14:09:15.726Z",
+  "_updated_at": "2026-07-19T17:43:02.164Z",
   "notifications": [
     {
       "id": "2026-07-19-solicitadas",
@@ -27,8 +27,8 @@
       ],
       "send_at": "2026-07-19T14:05:00-03:00",
       "expires_at": "2026-07-19T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-19T17:43:00.977Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordatorio del Gimnasio a Mac y Negro — los unicos suscriptos activos sin piña forjada — junto con el envio de la tarde, 14:05 para no pisar el general de las 14:00)"
     },
@@ -44,8 +44,8 @@
       ],
       "send_at": "2026-07-19T14:10:00-03:00",
       "expires_at": "2026-07-19T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-19T17:43:01.560Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordar a pt/carucha/mata que pueden solicitar experiencias del laboratorio; mata=device andres; APROBADO por Andres por chat 19/07: sale al final de la liquidacion → 14:10, despues del general 14:00 y el gimnasio 14:05; landing personalizada por device verificada en Pages)"
     },
@@ -71,8 +71,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-19-liquidacion.html",
       "send_at": "2026-07-19T14:00:00-03:00",
       "expires_at": "2026-07-19T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-19T17:43:02.163Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-19 (chusmerío del domingo, sub-formato 'día de liquidación' — deuda de Naso + libro de multas + ranking de pagadores — para no repetir el clásico del 05/07 ni confesiones del 12/07)"
     },

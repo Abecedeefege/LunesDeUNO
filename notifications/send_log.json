@@ -951,6 +951,118 @@
       "device": "gordo",
       "ts": "2026-07-19T14:09:15.725Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-gimnasio",
+      "device": "negro",
+      "ts": "2026-07-19T17:43:00.767Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-gimnasio",
+      "device": "mac",
+      "ts": "2026-07-19T17:43:00.977Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-laboratorio",
+      "device": "andres",
+      "ts": "2026-07-19T17:43:01.306Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-laboratorio",
+      "device": "pt",
+      "ts": "2026-07-19T17:43:01.372Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-laboratorio",
+      "device": "carucha",
+      "ts": "2026-07-19T17:43:01.434Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-laboratorio",
+      "device": "andres",
+      "ts": "2026-07-19T17:43:01.560Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "negro",
+      "ts": "2026-07-19T17:43:01.620Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "cobra",
+      "ts": "2026-07-19T17:43:01.674Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "andres",
+      "ts": "2026-07-19T17:43:01.718Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "mac",
+      "ts": "2026-07-19T17:43:01.782Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "pt",
+      "ts": "2026-07-19T17:43:01.846Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "gordo",
+      "ts": "2026-07-19T17:43:01.910Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "carucha",
+      "ts": "2026-07-19T17:43:01.965Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "gael",
+      "ts": "2026-07-19T17:43:02.029Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "andres",
+      "ts": "2026-07-19T17:43:02.100Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-19-a",
+      "device": "cobra",
+      "ts": "2026-07-19T17:43:02.163Z",
+      "status_code": 201
     }
   ]
 }
