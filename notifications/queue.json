@@ -42,13 +42,12 @@
         "carucha",
         "andres"
       ],
-      "send_at": "2026-07-19T14:05:00-03:00",
+      "send_at": "2026-07-19T14:10:00-03:00",
       "expires_at": "2026-07-19T23:00:00-03:00",
-      "status": "draft",
-      "hold_reason": "Esperando OK de Andres al ejemplo (chat 19/07): pidio ver un ejemplo de lo que se mandaria a pt/carucha/mata antes de enviar. Solo el usuario convierte draft->pending.",
+      "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordar a pt/carucha/mata que pueden solicitar experiencias del laboratorio; mata=device andres; EN BORRADOR hasta su OK)"
+      "created_by": "engagement-agent 2026-07-19 (pedido de Andres por chat: recordar a pt/carucha/mata que pueden solicitar experiencias del laboratorio; mata=device andres; APROBADO por Andres por chat 19/07: sale al final de la liquidacion → 14:10, despues del general 14:00 y el gimnasio 14:05; landing personalizada por device verificada en Pages)"
     },
     {
       "id": "2026-07-19-a-preview",
