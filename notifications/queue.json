@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T13:02:06.715Z",
+  "_updated_at": "2026-07-20T18:34:08.187Z",
   "notifications": [
     {
       "id": "2026-07-20-desk-v2",
@@ -588,8 +588,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-la-previa.html",
       "send_at": "2026-07-20T14:00:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T18:34:08.187Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (la previa del lunes, T5 fecha 3, edición semana 3 — headline nuevo: el mano a mano Cobra-Gordo quedó empatado 7-7)"
     },
