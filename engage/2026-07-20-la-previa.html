@@ -608,6 +608,17 @@
       </div>
     </article>
 
+    <!-- ===== feedback libre ===== -->
+    <div style="margin:1.1rem .9rem 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
+      <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Nos querés decir algo?</div>
+      <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contanos lo que sea — esto lo lee directo el agente.</div>
+      <textarea id="fbtxt-2026-07-20-la-previa" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-20-la-previa');engageFeedback('2026-07-20-la-previa',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:#a8a8a8;"></span>
+      </div>
+    </div>
+
     <!-- ===== sugerencias ===== -->
     <section class="sugg">
       <h4>Sugerencias para vos</h4>

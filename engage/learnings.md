@@ -2,6 +2,24 @@
 
 ## 🪪 REGLAS VINCULANTES (permanentes, no re-decidir)
 
+- **💬 Feedback libre en TODA página (Andrés, 20/07, vinculante)**: último
+  elemento de contenido antes del `<script src="engage.js">`, en TODA
+  experiencia nueva a partir de ahora — textarea + botón "Enviar" que llama
+  a `engageFeedback(slug, texto, el)` (función nueva en `engage.js`, ver
+  §4 de `.claude/commands/engagement.md` para el bloque HTML exacto a
+  copiar). Cada corrida lee los `answer` con `question` que empiece en
+  `"feedback-"` como señal de primer nivel (dato a corregir, pedido de
+  experiencia, opinión) — nunca se descartan en silencio.
+- **🧪 Laboratorio con catálogo diario (Andrés, 20/07, vinculante)**:
+  `engage/laboratorio.html` se regenera TODAS las mañanas con frases
+  nuevas por jugador, organizadas en 3 módulos fijos (mismo orden/íconos
+  siempre): 📜 Poesía (3 frases: poemas cortos, roast de dominancia H2H o
+  brag de una stat propia) · 🔬 Análisis (2 frases: informe extenso y
+  exagerado, propio o comparativo) · ✨ Extra (2 frases libres, apuntando a
+  lo que más enganche). Ver detalle completo y prefijos de `idea`
+  (`poesia-*`/`analisis-*`/`extra-*`) en §3.6 de
+  `.claude/commands/engagement.md`. No repetir literalmente la frase del
+  día anterior para el mismo jugador.
 - **Andrés ES Mata**: devices `andres` y `mata` son la misma persona/mismo
   lugar del club. En contenido publicado se lo nombra Mata. Cupo del club se
   cuenta por PERSONAS (8/11 hoy: mata×2, pt, negro, cobra×2, mac, gael,
@@ -148,6 +166,16 @@ Carucha/Cobra 0.
   clásico (05/07), confesiones (12/07), liquidación (19/07). Previa →
   clásico (06/07, 13/07); edición de hoy (20/07) mantiene el formato con
   headline nuevo (empate H2H en vez de dominio).
+- **Corrida extra del 20/07 (mañana, pedido de Andrés por chat, DOS
+  cambios estructurales)**: (1) agregado `engageFeedback` a `engage.js`
+  (función nueva, no se tocó ninguna existente) + bloque de feedback libre
+  añadido a la previa de hoy y documentado como obligatorio en TODA página
+  futura (ver regla vinculante arriba); se re-encoló un push a andres
+  avisando el cambio. (2) `laboratorio.html` reescrito de catálogo plano
+  (3 botones fijos por jugador) a 3 módulos con íconos (📜🔬✨), 7 líneas
+  por jugador (11 jugadores × 7 = 78 botones), todas con datos
+  recalculados hoy de `games`; regla vinculante nueva exige regenerarlo
+  cada mañana con frases no repetidas.
 
 ## 🗓️ Semana en curso
 

@@ -226,6 +226,19 @@
     honestHint(el);
   };
 
+  // Feedback libre por escrito (pedido de Andrés 20/07): a diferencia de
+  // engageAnswer, cada envío es un documento NUEVO (id con timestamp) para
+  // no pisar comentarios previos del mismo device en la misma página.
+  window.engageFeedback = function (slug, text, el) {
+    var val = (text || '').trim();
+    if (!val) return;
+    var id = 'feedback-' + slug + '-' + deviceId().slice(0, 8) + '-' + Date.now().toString(36);
+    enqueue('answer', { id: id, question: 'feedback-' + slug, answer: val.slice(0, 480) });
+    var hint = el && el.parentElement && el.parentElement.querySelector('.fb-hint');
+    if (hint) hint.textContent = 'gracias, lo leemos ✓';
+    flush();
+  };
+
   // ---------- control de fatiga (auto-inyectado al pie) ----------
   // Sin link de suscripción: la activación es solo vía la página secreta /club.
   function injectFooterControls() {

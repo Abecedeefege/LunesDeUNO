@@ -27,13 +27,20 @@
   h2{font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--lab);margin:26px 0 10px;border-bottom:1px dashed rgba(125,249,255,.3);padding-bottom:6px;display:flex;align-items:center;gap:8px}
   h2 img{width:34px;height:34px;border-radius:50%;border:2px solid var(--lab);object-fit:cover;background:#222}
   .cliente{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
-  .cliente .intro{font-size:.84rem;color:var(--dim);line-height:1.55;margin-bottom:6px}
+  .cliente .intro{font-size:.84rem;color:var(--dim);line-height:1.55;margin-bottom:10px}
   .cliente .intro b{color:var(--text)}
+  .modulo{margin-top:14px}
+  .modulo:first-of-type{margin-top:0}
+  .mod-label{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--yellow);
+    display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .mod-label .n{font-weight:600;color:var(--dim);text-transform:none;letter-spacing:0;font-size:.68rem}
   .cliente button{display:block;width:100%;text-align:left;background:#0d0d12;border:1px solid var(--border);border-left:4px solid var(--lab);border-radius:10px;color:var(--text);padding:11px 12px;margin-top:8px;font-size:.83rem;line-height:1.45;cursor:pointer;font-family:inherit}
   .cliente button:hover{border-color:var(--lab)}
   .cliente button:disabled{opacity:.55}
+  .modulo.analisis button{border-left-color:#7dd3fc}
+  .modulo.extra button{border-left-color:#c9a2ff}
   .of-hint{display:block;margin-top:8px;font-size:.78rem;color:var(--green);min-height:1em}
-  .entregadas{margin-top:10px;font-size:.76rem;color:var(--dim)}
+  .entregadas{margin-top:16px;font-size:.76rem;color:var(--dim);border-top:1px dashed var(--border);padding-top:12px}
   .entregadas .et{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:800;margin-bottom:4px}
   .entregadas a{display:block;color:var(--yellow);text-decoration:none;padding:6px 0;font-size:.8rem;font-weight:600}
   #generic{display:none;margin-top:26px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:.86rem;color:var(--dim);line-height:1.6;text-align:center}
@@ -54,10 +61,10 @@
       <div class="h-body">
         <div class="beaker">⚗️</div>
         <h1>El Laboratorio<br>de Experiencias</h1>
-        <p class="sub">Acá se fabrican los expedientes, certificados, juicios y peritajes de la
-        mesa — <b>todo con datos reales recalculados del historial oficial</b>. Estas son las
-        líneas de investigación abiertas con tu nombre. Elegí una y el laboratorio te la
-        entrega por notificación, normalmente al día siguiente.</p>
+        <p class="sub">Acá se fabrican los expedientes, poemas, análisis y peritajes de la mesa —
+        <b>todo con datos reales recalculados del historial oficial</b>. El catálogo se renueva
+        cada mañana. Elegí una línea y el laboratorio te la entrega por notificación, normalmente
+        al día siguiente.</p>
         <div class="protocolo">🔬 <b>Protocolo:</b> tocás un botón → el pedido queda registrado a
         tu nombre → el laboratorio fabrica la pieza con tus números verificados → te llega el
         link por push. Sin límite de pedidos, sin costo, sin anestesia.</div>
@@ -67,11 +74,24 @@
     <div class="seccion" id="sec-pt">
       <h2><img src="../assets/faces/pt.png" alt="PT"> Tus líneas, PT</h2>
       <div class="cliente">
-        <p class="intro">El laboratorio detecta en tus muestras un fenómeno único: <b>puntero de
-        la tabla anual con UNA sola corona</b>. Hay material de sobra:</p>
-        <button onclick="solicitarExp(this,'pt','paternidad-doble-pt')">⚖️ Juicio de paternidad doble: Mac y Naso, 10-2 cada uno — dos hijos reconocidos en 12 fechas</button>
-        <button onclick="solicitarExp(this,'pt','lider-silencioso-pt')">👑 Expediente del líder silencioso: 1º de la anual con una sola victoria en el año</button>
-        <button onclick="solicitarExp(this,'pt','verdugo-cobra-pt')">🕵️ Peritaje del verdugo: 7-6 mano a mano sobre Cobra, el 5 veces campeón</button>
+        <p class="intro">Catálogo del 20/07. El laboratorio detecta <b>puntero de la tabla anual
+        con UNA sola corona</b>. Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'pt','poesia-pt-1')">Un poema sobre tu 10-2 a Mac en 12 fechas — la paternidad silenciosa que nadie canta</button>
+          <button onclick="solicitarExp(this,'pt','poesia-pt-2')">Una oda a liderar la tabla anual con UNA sola corona — el francotirador que ganó sin ganar</button>
+          <button onclick="solicitarExp(this,'pt','poesia-pt-3')">Un soneto sobre tu 465 del 23/03 — hasta los líderes tienen mala noche</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'pt','analisis-pt-1')">Análisis forense de cómo se lidera la tabla con 1 sola victoria en 14 fechas</button>
+          <button onclick="solicitarExp(this,'pt','analisis-pt-2')">Comparativa PT vs Gordo (5-7, el que más te complica) — quién manda la mesa</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'pt','extra-pt-1')">El documental no autorizado: «PT, el líder que nunca grita»</button>
+          <button onclick="solicitarExp(this,'pt','extra-pt-2')">Horóscopo unístico: qué carta de UNO sos según tus números</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -79,11 +99,24 @@
     <div class="seccion" id="sec-carucha">
       <h2><img src="../assets/faces/carucha.png" alt="Carucha"> Tus líneas, Carucha</h2>
       <div class="cliente">
-        <p class="intro">Tus muestras dieron positivo en <b>dominancia genética múltiple</b> y
-        prontuario impecable. El laboratorio ofrece:</p>
-        <button onclick="solicitarExp(this,'carucha','kryptonita-carucha')">☢️ Certificado de Kryptonita: Cobra gana el 75% de las fechas sin vos… y el 17% con vos</button>
-        <button onclick="solicitarExp(this,'carucha','dinastia-carucha')">👨‍👦 Test de dinastía: padre de Cobra 8-4, de Mac 10-1 y de Naso 8-2</button>
-        <button onclick="solicitarExp(this,'carucha','santidad-carucha')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 13 fechas</button>
+        <p class="intro">Catálogo del 20/07. Prontuario impecable y dominancia genética múltiple.
+        Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'carucha','poesia-carucha-1')">Una oda a tu prontuario perfecto: 0 multas, 0 cortes, 0 últimos en 13 fechas</button>
+          <button onclick="solicitarExp(this,'carucha','poesia-carucha-2')">Un poema sobre dominar a Mac 10-1 — la paternidad más aplastante registrada</button>
+          <button onclick="solicitarExp(this,'carucha','poesia-carucha-3')">Un verso irónico sobre el Kryptonita: por qué Cobra gana 75% sin vos y 17% con vos</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'carucha','analisis-carucha-1')">Análisis forense de por qué sos el Kryptonita de Cobra — la ciencia del bloqueo</button>
+          <button onclick="solicitarExp(this,'carucha','analisis-carucha-2')">Comparativa Carucha vs Nachi (2-6, el único que te domina) — el genealogista contra el abuelo</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'carucha','extra-carucha-1')">Certificado de santidad ampliado: la Trinidad del prontuario limpio, versión Carucha</button>
+          <button onclick="solicitarExp(this,'carucha','extra-carucha-2')">El documental: «Carucha, el bloqueador silencioso»</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -91,10 +124,23 @@
     <div class="seccion" id="sec-mata">
       <h2><img src="../assets/faces/mata.png" alt="Mata"> Tus líneas, Mata</h2>
       <div class="cliente">
-        <p class="intro">Cliente frecuente del laboratorio. Quedan abiertas:</p>
-        <button onclick="solicitarExp(this,'mata','santidad')">😇 Certificado de santidad: 0 multas, 0 cortes, 0 últimos en 10 fechas</button>
-        <button onclick="solicitarExp(this,'mata','casi-casi')">🥈 Peritaje del casi-casi: 3 subcampeonatos y la corona que no llega</button>
-        <button onclick="solicitarExp(this,'mata','milagro-lunes')">🙏 El milagro del lunes: la ciencia calcula tu primera corona el 20/07</button>
+        <p class="intro">Catálogo del 20/07. Cliente frecuente del laboratorio. Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'mata','poesia-mata-1')">Una oda a tu 6-0 sobre Negro — la única serie perfecta de la mesa</button>
+          <button onclick="solicitarExp(this,'mata','poesia-mata-2')">Un poema sobre 0 multas, 0 cortes, 0 últimos en 10 fechas — la santidad sin corona</button>
+          <button onclick="solicitarExp(this,'mata','poesia-mata-3')">Un verso sobre 3 subcampeonatos sin ganar nunca — el casi-casi eterno</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'mata','analisis-mata-1')">Análisis extenso de por qué nunca ganaste (0 en 10 fechas) pese al prontuario perfecto</button>
+          <button onclick="solicitarExp(this,'mata','analisis-mata-2')">Comparativa Mata vs PT (3-6, el único que te complica en serio)</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'mata','milagro-lunes')">El milagro del lunes: la ciencia recalcula tu primera corona cada semana</button>
+          <button onclick="solicitarExp(this,'mata','extra-mata-2')">El expediente del casi-santo: por qué el prontuario perfecto no alcanza</button>
+        </div>
         <span class="of-hint"></span>
         <div class="entregadas">
           <div class="et">✓ Ya fabricadas para vos</div>
@@ -106,10 +152,23 @@
     <div class="seccion" id="sec-gordo">
       <h2><img src="../assets/faces/gordo.png" alt="Gordo"> Tus líneas, Gordo</h2>
       <div class="cliente">
-        <p class="intro">Cliente frecuente del laboratorio. Quedan abiertas:</p>
-        <button onclick="solicitarExp(this,'gordo','racha-record-gordo')">🔥 Peritaje de la racha récord: qué significaría ganar el 20/07 por tercera vez seguida</button>
-        <button onclick="solicitarExp(this,'gordo','gordo-vs-cobra')">⚔️ El duelo por la corona: Gordo (3 victorias limpias) vs Cobra (5 victorias, 2 cortes)</button>
-        <button onclick="solicitarExp(this,'gordo','presencia-gordo')">📿 Prontuario de presencia: 15 de 17 fechas, solo 2 faltas en el año</button>
+        <p class="intro">Catálogo del 20/07. Cliente frecuente del laboratorio. Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'gordo','poesia-gordo-1')">Una oda a tu 127 del 14/07 — el mejor puntaje del año, nadie había bajado de 132</button>
+          <button onclick="solicitarExp(this,'gordo','poesia-gordo-2')">Un poema sobre dominar a Mac 11-1 — la paternidad más aplastante de la mesa</button>
+          <button onclick="solicitarExp(this,'gordo','poesia-gordo-3')">Un verso irónico sobre que Nachi te domina 6-3 — hasta los santos tienen su cruz</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'gordo','analisis-gordo-1')">Análisis extenso de 15 fechas sin una multa, corte ni último puesto — la santidad en números</button>
+          <button onclick="solicitarExp(this,'gordo','analisis-gordo-2')">Comparativa Gordo vs Cobra (3 coronas limpias vs 5 con 2 cortes) — calidad contra cantidad</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'gordo','racha-record-gordo')">El peritaje de la racha: qué significaría encadenar otra corona hoy</button>
+          <button onclick="solicitarExp(this,'gordo','extra-gordo-2')">El documental: «Gordo, el santo que también gana»</button>
+        </div>
         <span class="of-hint"></span>
         <div class="entregadas">
           <div class="et">✓ Ya fabricadas para vos</div>
@@ -122,10 +181,24 @@
     <div class="seccion" id="sec-cobra">
       <h2><img src="../assets/faces/cobra.png" alt="Cobra"> Tus líneas, Cobra</h2>
       <div class="cliente">
-        <p class="intro">Las muestras del <b>5 veces campeón</b> dan para rato:</p>
-        <button onclick="solicitarExp(this,'cobra','coleccionista-cobra')">👑 Expediente del coleccionista: 5 coronas en 2026, nadie tiene más</button>
-        <button onclick="solicitarExp(this,'cobra','presencia-cobra')">🎯 Peritaje de presencia: 16 de 17 fechas, la mayor asistencia de la mesa</button>
-        <button onclick="solicitarExp(this,'cobra','descargo-kryptonita')">🛡️ El descargo del Kryptonita: la versión de la defensa, con tus números</button>
+        <p class="intro">Catálogo del 20/07. Las muestras del <b>5 veces campeón</b> dan para
+        rato. Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'cobra','poesia-cobra-1')">Una oda a tus 5 coronas de 2026 — nadie tiene más, y no es casualidad</button>
+          <button onclick="solicitarExp(this,'cobra','poesia-cobra-2')">Un poema sobre dominar a Mac 9-4 — otro más bajo tu ala</button>
+          <button onclick="solicitarExp(this,'cobra','poesia-cobra-3')">Un verso sobre el Kryptonita: por qué Carucha te frena 8-4 cuando nadie más puede</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'cobra','analisis-cobra-1')">Análisis extenso de tu presencia: 16 de 17 fechas, la mayor asistencia de la mesa</button>
+          <button onclick="solicitarExp(this,'cobra','analisis-cobra-2')">Comparativa Cobra vs Gordo (7-7, empate histórico) — quién manda de verdad</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'cobra','descargo-kryptonita')">El descargo del Kryptonita: tu versión de la historia, con tus números</button>
+          <button onclick="solicitarExp(this,'cobra','extra-cobra-2')">Horóscopo unístico: la carta del 5 veces campeón</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -133,10 +206,24 @@
     <div class="seccion" id="sec-mac">
       <h2><img src="../assets/faces/mac.png" alt="Mac"> Tus líneas, Mac</h2>
       <div class="cliente">
-        <p class="intro">El laboratorio también trabaja para la defensa:</p>
-        <button onclick="solicitarExp(this,'mac','nochesgrandes-mac')">🌃 El gigante de las noches grandes: podio (3º de 11) en la mesa más multitudinaria del año</button>
-        <button onclick="solicitarExp(this,'mac','defensa-mac')">🛡️ Expediente de la defensa: los números que te salvan</button>
-        <button onclick="solicitarExp(this,'mac','profecia-mac')">🌅 La profecía de la primera corona: la ciencia calcula cuándo llega</button>
+        <p class="intro">Catálogo del 20/07. El laboratorio también trabaja para la defensa.
+        Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'mac','poesia-mac-1')">Una oda trágica a 0 victorias en 14 fechas — el héroe que nunca llega</button>
+          <button onclick="solicitarExp(this,'mac','poesia-mac-2')">Un poema sobre el 608 del 30/06 en África — la peor noche del año, rimada</button>
+          <button onclick="solicitarExp(this,'mac','poesia-mac-3')">Un verso sobre que Gordo te domina 11-1 — la paternidad más dura de la mesa</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'mac','analisis-mac-1')">Análisis extenso de la sequía de 14 fechas sin coronarte — la estadística del sufrimiento</button>
+          <button onclick="solicitarExp(this,'mac','analisis-mac-2')">Comparativa Mac vs Negro (4-3, tu único dominio real) — el único lugar donde mandás</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'mac','profecia-mac')">La profecía de la primera corona: la ciencia calcula cuándo llega</button>
+          <button onclick="solicitarExp(this,'mac','extra-mac-2')">Certificado de resiliencia: seguís viniendo a pesar de todo</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -144,10 +231,24 @@
     <div class="seccion" id="sec-negro">
       <h2><img src="../assets/faces/negro.png" alt="Negro"> Tus líneas, Negro</h2>
       <div class="cliente">
-        <p class="intro">Las muestras del <b>mejor pagador del año</b> ofrecen:</p>
-        <button onclick="solicitarExp(this,'negro','pagador-lujo-negro')">🍾 El pagador de lujo: la picada francesa que fijó el estándar de la mesa</button>
-        <button onclick="solicitarExp(this,'negro','corona-negro')">👑 La corona del 16/03: tu día de gloria, reconstruido mano a mano</button>
-        <button onclick="solicitarExp(this,'negro','revancha-tano-negro')">⚔️ Plan de revancha: vas 2-7 con Tano — el laboratorio traza el camino</button>
+        <p class="intro">Catálogo del 20/07. Las muestras del <b>mejor pagador del año</b>.
+        Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'negro','poesia-negro-1')">Una oda a tu corona del 16/03 — el día que nadie te vio venir</button>
+          <button onclick="solicitarExp(this,'negro','poesia-negro-2')">Un poema sobre ser el mejor pagador del año — la picada francesa que fijó el estándar</button>
+          <button onclick="solicitarExp(this,'negro','poesia-negro-3')">Un verso trágico sobre Mata: 0-6, la única serie perfecta en tu contra</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'negro','analisis-negro-1')">Análisis extenso de por qué sos el mejor pagador del año — la ciencia de pagar bien</button>
+          <button onclick="solicitarExp(this,'negro','analisis-negro-2')">Comparativa Negro vs Tano (2-7, quien te domina) — el plan de revancha, con números</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'negro','revancha-tano-negro')">El plan de revancha contra Tano: la ciencia traza el camino</button>
+          <button onclick="solicitarExp(this,'negro','extra-negro-2')">Horóscopo unístico: qué carta sos según tu 0-6 con Mata</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -155,10 +256,24 @@
     <div class="seccion" id="sec-naso">
       <h2><img src="../assets/faces/naso.png" alt="Naso"> Tus líneas, Naso</h2>
       <div class="cliente">
-        <p class="intro">El laboratorio guarda tu mejor noche en la caja fuerte:</p>
-        <button onclick="solicitarExp(this,'naso','parricidio-naso')">🏆 El parricidio del 5 de mayo: campeón en la casa de Carucha, venciendo al propio Carucha</button>
-        <button onclick="solicitarExp(this,'naso','remontada-real-naso')">🎢 La remontada real: último en la mano 1 y campeón esa misma noche</button>
-        <button onclick="solicitarExp(this,'naso','descargo-naso')">🧾 El descargo del moroso: tu versión oficial de la deuda del 13/07</button>
+        <p class="intro">Catálogo del 20/07. El laboratorio guarda tu mejor (y peor) noche en la
+        caja fuerte. Elegí un módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'naso','poesia-naso-1')">Un poema sobre el 648 del 26/05 — la peor noche del año, en verso</button>
+          <button onclick="solicitarExp(this,'naso','poesia-naso-2')">Una oda a tu corona del 5/5 en casa de Carucha — venciste al anfitrión en su propia casa</button>
+          <button onclick="solicitarExp(this,'naso','poesia-naso-3')">Un soneto sobre la deuda que corre — el moroso más constante de la mesa</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'naso','analisis-naso-1')">Análisis extenso de tus 5 últimos puestos en 14 fechas — la anatomía del sufrimiento</button>
+          <button onclick="solicitarExp(this,'naso','analisis-naso-2')">Comparativa Naso vs PT (2-10, quien más te domina) — el francotirador que nunca falla</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'naso','descargo-naso')">El descargo oficial: tu versión de la deuda del 13/07, para la posteridad</button>
+          <button onclick="solicitarExp(this,'naso','extra-naso-2')">Horóscopo unístico: qué carta sos según 648 puntos de infortunio</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -166,10 +281,24 @@
     <div class="seccion" id="sec-tano">
       <h2><img src="../assets/faces/tano.png" alt="Tano"> Tus líneas, Tano</h2>
       <div class="cliente">
-        <p class="intro">Material clasificado del francotirador:</p>
-        <button onclick="solicitarExp(this,'tano','francotirador-tano')">🎯 El francotirador: tu 133, a SEIS puntos del récord histórico del año</button>
-        <button onclick="solicitarExp(this,'tano','dominio-tano-negro')">⚔️ Expediente de dominio: 7-2 sobre Negro en 9 fechas compartidas</button>
-        <button onclick="solicitarExp(this,'tano','documental-multa-tano')">🎬 El documental de la multa de 150: el récord del año, contado desde adentro</button>
+        <p class="intro">Catálogo del 20/07. Material clasificado del francotirador. Elegí un
+        módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'tano','poesia-tano-1')">Un poema sobre tu 133 del 14/07 — a 6 puntos del récord histórico, tan cerca</button>
+          <button onclick="solicitarExp(this,'tano','poesia-tano-2')">Una oda a dominar a Negro 7-2 — la única paternidad clara que tenés</button>
+          <button onclick="solicitarExp(this,'tano','poesia-tano-3')">Un verso sobre la multa de 150 — el récord del año, contado en rima</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'tano','analisis-tano-1')">Análisis extenso de la multa récord de 150 fichas — la ciencia de la indisciplina</button>
+          <button onclick="solicitarExp(this,'tano','analisis-tano-2')">Comparativa Tano vs Mata (1-6, el único que te tiene contra las cuerdas)</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'tano','extra-tano-1')">El documental: «Tano, a 6 puntos de la gloria»</button>
+          <button onclick="solicitarExp(this,'tano','extra-tano-2')">Certificado de casi-récord: la historia del que estuvo MÁS cerca de romperlo</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -177,10 +306,24 @@
     <div class="seccion" id="sec-gael">
       <h2><img src="../assets/faces/gael.png" alt="Gael"> Tus líneas, Gael</h2>
       <div class="cliente">
-        <p class="intro">Las muestras del pagador ilustrado ofrecen:</p>
-        <button onclick="solicitarExp(this,'gael','masacre-gael')">💥 La masacre del 28 de abril: ganaste por 98 puntos, top-3 de palizas del año</button>
-        <button onclick="solicitarExp(this,'gael','padre-naso-gael')">👨‍👦 Test de paternidad: 8-3 sobre Naso en 11 fechas</button>
-        <button onclick="solicitarExp(this,'gael','pagador-gael')">📚 El pagador ilustrado: el Martín Fierro como jurisprudencia de deudas</button>
+        <p class="intro">Catálogo del 20/07. Las muestras del pagador ilustrado. Elegí un
+        módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'gael','poesia-gael-1')">Un poema sobre la masacre del 28/4 — ganaste por 98 puntos, top-3 del año</button>
+          <button onclick="solicitarExp(this,'gael','poesia-gael-2')">Una oda a dominar a Naso 8-3 — la paternidad ilustrada</button>
+          <button onclick="solicitarExp(this,'gael','poesia-gael-3')">Un verso sobre que Gordo te domina 9-3 — hasta los pagadores tienen su verdugo</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'gael','analisis-gael-1')">Análisis extenso de la masacre del 28/4 — la paliza más completa, minuto a minuto</button>
+          <button onclick="solicitarExp(this,'gael','analisis-gael-2')">Comparativa Gael vs Nachi (1-7, quien te domina) — el genealogista también manda acá</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'gael','pagador-gael')">El pagador ilustrado: el Martín Fierro como jurisprudencia de deudas, versión extendida</button>
+          <button onclick="solicitarExp(this,'gael','extra-gael-2')">El documental: «Gael, el que paga con estilo»</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -188,10 +331,24 @@
     <div class="seccion" id="sec-nachi">
       <h2><img src="../assets/faces/nachi.png" alt="Nachi"> Tus líneas, Nachi</h2>
       <div class="cliente">
-        <p class="intro">Las muestras del <b>abuelo del campeón</b> ofrecen:</p>
-        <button onclick="solicitarExp(this,'nachi','abuelo-nachi')">👴 El Abuelo: padre de Carucha 6-2… que es padre de Cobra. Genealogía completa</button>
-        <button onclick="solicitarExp(this,'nachi','doblete-nachi')">⚡ El doblete de mayo: coronas del 18/05 y 25/05, dos lunes seguidos</button>
-        <button onclick="solicitarExp(this,'nachi','dinastia-nachi')">🧬 Test de dinastía: 6-2 a Naso, 6-2 a Negro y 7-3 a Tano</button>
+        <p class="intro">Catálogo del 20/07. Las muestras del <b>abuelo del campeón</b>. Elegí un
+        módulo:</p>
+        <div class="modulo poesia">
+          <div class="mod-label">📜 Poesía <span class="n">— versos cortos, con datos reales</span></div>
+          <button onclick="solicitarExp(this,'nachi','poesia-nachi-1')">Un poema sobre el doblete de mayo — coronas del 18 y 25/05, dos lunes seguidos</button>
+          <button onclick="solicitarExp(this,'nachi','poesia-nachi-2')">Una oda a dominar a Mac 8-1 — otro discípulo bajo el abuelo</button>
+          <button onclick="solicitarExp(this,'nachi','poesia-nachi-3')">Un verso sobre ser el único que domina a Gordo (6-3) — hasta los santos te temen</button>
+        </div>
+        <div class="modulo analisis">
+          <div class="mod-label">🔬 Análisis <span class="n">— informe extenso, tono forense</span></div>
+          <button onclick="solicitarExp(this,'nachi','analisis-nachi-1')">Análisis extenso de tu dinastía: 6-2 a Naso, 6-2 a Negro, 7-3 a Tano, 7-1 a Gael</button>
+          <button onclick="solicitarExp(this,'nachi','analisis-nachi-2')">Comparativa Nachi vs Mata (3-5, el único frente donde no mandás)</button>
+        </div>
+        <div class="modulo extra">
+          <div class="mod-label">✨ Extra <span class="n">— libre, lo que más enganche</span></div>
+          <button onclick="solicitarExp(this,'nachi','extra-nachi-1')">El árbol genealógico completo: el Abuelo y sus 4 nietos declarados</button>
+          <button onclick="solicitarExp(this,'nachi','extra-nachi-2')">El documental: «Nachi, el abuelo que nadie vio venir»</button>
+        </div>
         <span class="of-hint"></span>
       </div>
     </div>
@@ -208,7 +365,18 @@
       <span class="react-hint"></span>
     </div>
 
-    <div class="foot">🎴 LUNES DE UNO · DIVISIÓN DE EXPERIENCIAS A PEDIDO · 2026</div>
+    <!-- ===== feedback libre ===== -->
+    <div style="margin-top:1rem;padding:1rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem;">💬 ¿Nos querés decir algo?</div>
+      <div style="font-size:.74rem;color:var(--dim);margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una línea que no está en el catálogo, lo que sea.</div>
+      <textarea id="fbtxt-laboratorio" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-laboratorio');engageFeedback('laboratorio',t.value,this);t.value='';" style="background:var(--red);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:var(--dim);"></span>
+      </div>
+    </div>
+
+    <div class="foot">🎴 LUNES DE UNO · DIVISIÓN DE EXPERIENCIAS A PEDIDO · CATÁLOGO DEL 20/07/2026</div>
   </div>
 
 <script>
@@ -222,7 +390,7 @@
   function solicitarExp(btn, owner, idea){
     if(window.engageTrack) engageTrack('experience_request',{pina:owner,idea:idea,desc:btn.textContent.trim()});
     btn.disabled=true; btn.style.borderColor='#00A651';
-    var hint = btn.parentElement.querySelector('.of-hint');
+    var hint = btn.parentElement.parentElement.querySelector('.of-hint');
     if(hint) hint.textContent='🔬 Pedido registrado. El laboratorio se pone a trabajar y te la manda por push.';
   }
 </script>

@@ -100,11 +100,13 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
 ## 2. Procedimiento de cada corrida (en orden)
 
 1. **LEER contexto**: `engage/learnings.md` → eventos nuevos de `engagement`
-   (Firestore) → `notifications/send_log.json` + `notifications/queue.json` →
-   `engage/proposals.json` → `games` frescos → deudas (divs `naso-disclaimer`
-   de index.html + ledger de learnings) → día de la semana → suscripciones
-   (`pushSubs` con `status:"active"`; si no hay ninguna, igual generá el
-   contenido del día — la cola queda lista — y anotalo en el reporte).
+   (Firestore), **incluyendo los `answer` con `question` que empieza en
+   `"feedback-"`** (comentarios libres de jugadores, ver §4) → `notifications/
+   send_log.json` + `notifications/queue.json` → `engage/proposals.json` →
+   `games` frescos → deudas (divs `naso-disclaimer` de index.html + ledger de
+   learnings) → día de la semana → suscripciones (`pushSubs` con
+   `status:"active"`; si no hay ninguna, igual generá el contenido del día —
+   la cola queda lista — y anotalo en el reporte).
 2. **GESTIONAR proposals**: por cada proposal `pending`, buscá eventos
    `proposal_approved` / `proposal_rejected` **cuyo campo `device` sea
    `"andres"`** — solo las decisiones de ese device promueven o borran.
@@ -126,8 +128,11 @@ OJO: el campo `lastEdit` de los games trae telemetría del dispositivo —
    partida ya se cargó? ¿la deuda figura como pagada por un `answer`?). Un
    push desactualizado se corrige o se marca `status:"cancelled"` — nunca se
    deja salir información vieja.
-5. **CREAR + ENCOLAR según el día** (§3). Al terminar, `python3 -m json.tool`
-   sobre cada JSON tocado.
+5. **CREAR + ENCOLAR según el día** (§3). **Regenerar también
+   `engage/laboratorio.html`** todas las mañanas con frases nuevas por
+   jugador (§3.6) — esto es aparte del push del día, el Laboratorio no
+   lleva notificación propia salvo que Andrés pida invitar a alguien. Al
+   terminar, `python3 -m json.tool` sobre cada JSON tocado.
 6. **REESCRIBIR `engage/learnings.md`** (§6).
 7. **COMMIT + PUSH a main**: `git pull --rebase origin main` primero (el
    dispatcher y otro agente también commitean); mensaje
@@ -228,6 +233,49 @@ información del grupo para que las notificaciones sean más divertidas y
 enganchen más al grupo. No es difusión grupal: no rompe el silencio de
 mié/jue/vie. No repetir entrevistado semana a semana si hay alternativas.
 
+### 3.6 El Laboratorio de Experiencias — regeneración diaria (Andrés, 2026-07-20)
+
+`engage/laboratorio.html` (landing permanente, vault) es el catálogo de
+autoservicio: cada jugador ve, personalizado por su device, las líneas de
+investigación que puede pedir. **Cada corrida matutina regenera el catálogo
+de CADA jugador con frases nuevas** — no es contenido fijo. Por jugador, el
+catálogo se organiza en **3 módulos fijos** (mismo orden e íconos siempre,
+el contenido de adentro rota):
+
+- **📜 Poesía** — 3 frases semilla. Cada una pide un poema breve (4-8
+  versos) que se ría con cariño: o bien de una **dominancia H2H completa**
+  del jugador sobre otro (recalculada de `games`), o bien **jactándose de
+  una stat propia** que sea de lo mejor de la mesa (récord, racha,
+  prontuario limpio, etc). Alternar los dos ángulos entre las 3 frases.
+- **🔬 Análisis** — 2 frases semilla. Cada una pide un análisis extenso y
+  exageradamente serio (tono informe forense/científico) de UNA métrica
+  real: puede ser propia (ej. sequía, presencia, multas) o comparativa
+  contra otro jugador (ej. un H2H, un cara a cara de victorias).
+- **✨ Extra** — 2 frases semilla libres, a criterio del agente, apuntando
+  siempre a lo que genere MÁS interacción/risa/burla (horóscopo unístico,
+  documental falso, certificado insólito, descargo de la defensa, lo que
+  sirva). Es el módulo para experimentar formatos nuevos.
+
+**Reglas de generación:**
+1. Todo dato citado sale recalculado de `games` en la corrida (mismo
+   estándar que cualquier otro contenido — cero invención).
+2. **No repetir literalmente** una frase ya ofrecida el día anterior para
+   el mismo jugador — rotar el ángulo/stat usada (hay de sobra: H2H
+   distintos, extremos de puntaje, multas, presencia, rachas). Llevar el
+   registro de qué se ofreció en `engage/laboratorio.html` mismo (el commit
+   anterior) para no repetir.
+3. Prefijo del `idea` en `solicitarExp(this,'<jugador>','<idea>')` indica
+   el tipo pedido al construir la experiencia on-demand cuando llegue el
+   `experience_request`: `poesia-*` → construir un poema/verso corto como
+   pieza central; `analisis-*` → construir una pieza de análisis extenso
+   (tipo expediente/informe, más largo que el promedio); `extra-*` → sin
+   restricción de formato, el que mejor sirva al dato.
+4. Si un jugador ya tiene experiencias "Ya fabricadas" (entregadas), esa
+   sección se mantiene tal cual — no se toca, solo se regeneran los 3
+   módulos de arriba.
+5. El tono sigue las reglas duras del §8 (picante-cariñoso, nunca cruel,
+   sin datos sensibles fuera de la mesa).
+
 ## 4. Contrato de la página de experiencia (obligatorio, completo)
 
 HTML standalone, CSS inline, sin frameworks ni CDNs, mobile-first. Paleta de
@@ -273,9 +321,40 @@ la app: fondo `#0d0d12`, rojo UNO `#ED1C24`, amarillo `#FFDE00`, verde
     <span class="engage-hint"></span>
   </div>
 
+  <!-- 6) Feedback libre por escrito (OBLIGATORIO desde el 20/07, pedido de
+       Andrés — último elemento de contenido de TODA página, antes del
+       script). No es una pregunta de botones: es un textarea para que
+       cualquier jugador corrija un dato, pida una experiencia o comente lo
+       que quiera, en sus propias palabras. Usar el bloque de abajo TAL
+       CUAL (estilos inline para que funcione igual sin importar la
+       paleta/CSS propio de cada página); reemplazar SLUG por el id de la
+       página. engageFeedback ya existe en engage.js — no hace falta
+       tocarlo. -->
+  <div style="margin:1.1rem .9rem 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
+    <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Nos querés decir algo?</div>
+    <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contanos lo que sea — esto lo lee directo el agente.</div>
+    <textarea id="fbtxt-SLUG" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+    <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+      <button onclick="var t=document.getElementById('fbtxt-SLUG');engageFeedback('SLUG',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+      <span class="fb-hint" style="font-size:.72rem;color:#a8a8a8;"></span>
+    </div>
+  </div>
+
   <script src="engage.js"></script>
 </body></html>
 ```
+
+**Leer el feedback libre**: cada corrida, ANTES de generar contenido nuevo
+(§2 paso 1), buscar en los eventos de `engagement` los de
+`type:"answer"` con `question` empezando en `"feedback-"` — son comentarios
+en texto libre de jugadores (dato a corregir, experiencia pedida, opinión).
+Tratarlos como señal de primer nivel: si piden algo puntual y verificable,
+construirlo (mismo criterio que un `experience_request` sin pre-forja); si
+corrigen un dato, verificarlo contra `games` y ajustar donde corresponda;
+si es solo un comentario, anotarlo en el ledger de learnings.md bajo una
+sección `💬 FEEDBACK LIBRE` (qué dijeron, quién, cuándo, qué se hizo). No
+descartar silenciosamente ningún feedback-*: al menos debe quedar una línea
+en el reporte de la corrida.
 
 Registro en `engage/proposals.json` (agregar al array `proposals`):
 
