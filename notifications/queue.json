@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-19T17:43:02.164Z",
+  "_updated_at": "2026-07-20T11:55:26.961Z",
   "notifications": [
     {
       "id": "2026-07-19-solicitadas",
@@ -519,8 +519,8 @@
       ],
       "send_at": "2026-07-20T08:45:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T11:55:26.960Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45, regenerado con el estado de lo de ayer y lo que sale hoy)"
     },
