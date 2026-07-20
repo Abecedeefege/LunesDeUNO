@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-20T20:11:36.315Z",
   "notifications": [
     {
+      "id": "2026-07-20-tombola-carucha",
+      "title": "🎰 Ustè lo pidió, ustè lo tiene",
+      "body": "La lotería de asientos que pediste recién: un número al azar por jugador para ir ocupando los lugares. Con esto quedás lejos del perro de Mac 🎲",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/tombola-asientos.html",
+      "devices": [
+        "carucha"
+      ],
+      "send_at": "2026-07-20T17:49:00-03:00",
+      "expires_at": "2026-07-20T23:59:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-20 (Carucha pidio por la casilla de texto del laboratorio, 17:40 local, exactamente la loteria de asientos que ya estaba construida como La Tombola; Andres pidio mandarsela directo ASAP con tono 'uste lo pidio, uste lo tiene'; pagina verificada 200 en Pages; send_at = ahora para despacho inmediato)"
+    },
+    {
       "id": "2026-07-20-tombola",
       "title": "🎰 Lista tu Tómbola del Asiento",
       "body": "Lo pediste vos: un sorteo random que le da un número a cada jugador para elegir dónde sentarse. 3 modos. Probala antes de esta noche.",
