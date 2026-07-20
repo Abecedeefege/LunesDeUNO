@@ -131,10 +131,15 @@ Carucha/Cobra 0.
   afecta el push ya despachado, solo la trazabilidad.
 - **Proposals**: `2026-07-19-exp-gordo-santidad` → PROMOVIDA (approve de
   andres 19/07 13:06 + love). `2026-07-19-exp-gordo-tutela-mac` → sigue
-  pending, sin decisión, vence 26/07. `2026-07-13-entrevista-gordo` → sigue
-  pending, **vence mañana 21/07** sin señal nueva. `2026-07-19-liquidacion`
-  → pending (recién registrada), vence 26/07. `2026-07-20-la-previa` →
-  nueva, pending.
+  pending, sin decisión, vence 26/07. `2026-07-13-entrevista-gordo` →
+  **CERRADA por chat de Andrés (20/07)**: "ya se hizo, contestó algunas,
+  quedó en el pasado, olvidemos ese tema" — marcada `promoted` (la página
+  queda, sigue linkeada desde la sala de prensa de la crónica del 13/07),
+  sin más seguimiento. `2026-07-19-liquidacion` → sigue pending (recién
+  registrada ayer), vence 26/07, todavía sin decisión de andres.
+  `2026-07-20-la-previa` → **PROMOVIDA el mismo día**: Andrés la abrió y
+  aprobó por botón a las 08:32 local, antes incluso del preview de las
+  09:00 (reacción love + answer suscripción=sí).
 - **pushSubs activos (8 personas)**: pt, negro, gael, cobra (2 devices),
   andres (2 devices), gordo, mac, carucha. `mata` invalid (dead), `mc`
   disabled. Sin eventos `push_unsubscribe`.
@@ -164,9 +169,8 @@ Confirmar mañana quién ganó la F3 (Cobra retoma la ventaja / Gordo empata
 la racha) y si el H2H Cobra-Gordo se rompió · resultado del certificado de
 tutela-mac (falta la decisión de Andrés) · especial sedes · aniversarios
 (648 de Naso, multa 150 de Tano) · replicar flujo del club con
-nachi/naso/tano (3 lugares libres, piñas esperando en el vault) · decisión
-de Andrés pendiente sobre entrevista-gordo (vence 21/07, probable expiro
-automático) · si la F3 define la T5 hoy o se estira a la F4 del 27/07, hay
-material inmediato para la crónica del martes · considerar avisarle a
-Andrés (fuera de esta corrida, es su decisión) si quiere que se corrija el
-dato de "racha de 3" en el certificado de santidad ya promovido de Gordo.
+nachi/naso/tano (3 lugares libres, piñas esperando en el vault) · si la F3
+define la T5 hoy o se estira a la F4 del 27/07, hay material inmediato
+para la crónica del martes · considerar avisarle a Andrés (fuera de esta
+corrida, es su decisión) si quiere que se corrija el dato de "racha de 3"
+en el certificado de santidad ya promovido de Gordo.

@@ -140,13 +140,13 @@
       "title": "🎤 Sala de interrogatorios (entrevista a Gordo, el del robo de la última mano)",
       "page": "engage/2026-07-13-entrevista-gordo.html",
       "created": "2026-07-14",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Pedida por Andres por chat (14/07): la sala de prensa del martes para Gordo, que gano anoche pero no tiene push activa — se la mandamos a Andres para que se la reenvie por WhatsApp junto con el link del club (el link va por chat, nunca en la pagina publica). Estetica propia: expediente policial del robo de la ultima mano. 5 preguntas (gordo-entrevista-q1..q5): el robo con -10, la sequia de 126 dias, Naso moroso, el mensaje a Cobra ausente, y la anual a 151 de PT. Metrica: >=1 answer de gordo-entrevista-qN (de cualquier device, Gordo no tiene el suyo registrado aun).",
       "notified_by": [
         "2026-07-14-b",
         "2026-07-14-c"
       ],
-      "result_notes": null
+      "result_notes": "CERRADA por Andrés por chat (20/07): 'ya se hizo, contestó algunas [preguntas], quedó en el pasado, olvidemos ese tema'. No es un approve por botón ni un rechazo — es una instrucción directa de no seguir tratándola como decisión pendiente. Se marca 'promoted' (la página queda, ya está linkeada permanentemente desde la sala de prensa de engage/2026-07-13-cronica.html — un git rm rompería ese link) y sale de la lista de decisiones pendientes. No requiere más seguimiento."
     },
     {
       "id": "2026-07-16-entrevista-carucha",
@@ -302,13 +302,13 @@
       "title": "🔥 La Previa — edición semana 3 (T5 Fecha 3: Cobra-Gordo 7-7, tabla, deudas, padres/hijos)",
       "page": "engage/2026-07-20-la-previa.html",
       "created": "2026-07-20",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Tercera edición del formato La Previa (promovido 06/07, 2da edición 13/07) con datos frescos al 20/07 (17 fechas): Cobra y Gordo quedaron 1-1 en la T5 (F1 Cobra, F2 Gordo) y empatados 7-7 en el historial directo del año — primera vez que se reporta un empate en vez de un dominio, buen gancho de anticipación. Deuda de Naso cumple 7 días esta noche. 3 pares padres-e-hijos nuevos, no repetidos de ediciones anteriores (que usaron Cobra-Gordo 8-7, Tano-Negro 7-2, PT-Mata 6-2): Cobra-Gordo 7-7 (empate, headline), Nachi-Gael 7-1 (corrige un error de dirección que había quedado anotado en learnings — no 'Gael domina Nachi', es al revés), Nachi-Tano 7-3. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-20-a-preview",
         "2026-07-20-a"
       ],
-      "result_notes": null
+      "result_notes": "PROMOVIDA: approve de andres por botón (20/07 08:32:55 local, tras abrir la página directo antes incluso del preview de las 09:00) + reacción love + answer suscripción=si. Dwell registrado. La página queda."
     },
     {
       "id": "solicitadas-escritorio",
