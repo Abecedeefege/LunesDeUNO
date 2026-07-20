@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-20T18:34:08.187Z",
   "notifications": [
     {
+      "id": "2026-07-20-tombola",
+      "title": "🎰 Lista tu Tómbola del Asiento",
+      "body": "Lo pediste vos: un sorteo random que le da un número a cada jugador para elegir dónde sentarse. 3 modos. Probala antes de esta noche.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/tombola-asientos.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-20T16:40:00-03:00",
+      "expires_at": "2026-07-20T23:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-20 (fulfillment de un feedback escrito en el laboratorio pidiendo un generador random de asientos; Andres confirmo por chat y pidio recibirlo por push; pagina verificada 200 en Pages antes de encolar; send_at = ahora para despacho inmediato)"
+    },
+    {
       "id": "2026-07-20-desk-v2",
       "title": "🗂️ El escritorio, corregido",
       "body": "Ahora muestra SOLO lo que necesita tu OK (hoy: nada) y una tabla por jugador de cómo fue el último envío. Entrá.",
