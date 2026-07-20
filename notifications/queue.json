@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T12:20:00.000Z",
+  "_updated_at": "2026-07-20T12:21:09.834Z",
   "notifications": [
     {
       "id": "2026-07-20-soplon-andres",
@@ -561,8 +561,8 @@
       ],
       "send_at": "2026-07-20T09:00:00-03:00",
       "expires_at": "2026-07-20T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T12:21:09.647Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
     },
@@ -588,8 +588,8 @@
       ],
       "send_at": "2026-07-20T09:03:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T12:21:09.834Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (pedido de Andres por chat: agregar campo de feedback libre a las pushes y avisarle en la de hoy — corrida extra fuera de la matutina)"
     }
