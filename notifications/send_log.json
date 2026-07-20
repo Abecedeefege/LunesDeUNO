@@ -1105,6 +1105,34 @@
       "device": "andres",
       "ts": "2026-07-20T12:21:09.833Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-desk-v2",
+      "device": "andres",
+      "ts": "2026-07-20T13:02:06.324Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-desk-v2",
+      "device": "andres",
+      "ts": "2026-07-20T13:02:06.461Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-soplon-andres",
+      "device": "andres",
+      "ts": "2026-07-20T13:02:06.578Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-soplon-andres",
+      "device": "andres",
+      "ts": "2026-07-20T13:02:06.714Z",
+      "status_code": 201
     }
   ]
 }

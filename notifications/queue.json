@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T12:21:09.834Z",
+  "_updated_at": "2026-07-20T13:02:06.715Z",
   "notifications": [
     {
       "id": "2026-07-20-desk-v2",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-20T09:55:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T13:02:06.461Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (pedido de Andres por chat: reenviar el escritorio 'solicitadas' corregido — solo lo que necesita su atencion + tabla de metricas por jugador del ultimo envio)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-20T09:52:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T13:02:06.715Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (Andres pidio ver la experiencia del Soplon con su device; entrega personal + preview del push grupal de las 17:00; su dossier es el de Mata; incluye correcciones pedidas por chat: corte reframeado + buchoneada del moroso; datos verificados adversarialmente antes de publicar)"
     },
