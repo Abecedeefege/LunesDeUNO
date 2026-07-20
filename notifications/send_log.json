@@ -1203,6 +1203,20 @@
       "device": "gordo",
       "ts": "2026-07-20T18:34:08.186Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-tombola",
+      "device": "andres",
+      "ts": "2026-07-20T19:41:09.846Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-tombola",
+      "device": "andres",
+      "ts": "2026-07-20T19:41:09.973Z",
+      "status_code": 201
     }
   ]
 }

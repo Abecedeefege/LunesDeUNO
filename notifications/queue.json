@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T18:34:08.187Z",
+  "_updated_at": "2026-07-20T19:41:09.974Z",
   "notifications": [
     {
       "id": "2026-07-20-tombola",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-20T16:40:00-03:00",
       "expires_at": "2026-07-20T23:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T19:41:09.973Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (fulfillment de un feedback escrito en el laboratorio pidiendo un generador random de asientos; Andres confirmo por chat y pidio recibirlo por push; pagina verificada 200 en Pages antes de encolar; send_at = ahora para despacho inmediato)"
     },
