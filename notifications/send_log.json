@@ -1287,6 +1287,13 @@
       "device": "gael",
       "ts": "2026-07-20T20:11:36.296Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-20-tombola-carucha",
+      "device": "carucha",
+      "ts": "2026-07-20T20:50:08.973Z",
+      "status_code": 201
     }
   ]
 }
