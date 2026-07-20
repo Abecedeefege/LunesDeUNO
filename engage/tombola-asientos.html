@@ -90,6 +90,12 @@
   .react-hint,.q-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
   .q{margin-top:12px}.q .qt{font-size:.84rem;color:var(--txt);margin-bottom:6px}
   .q button{border-radius:999px;padding:8px 14px;font-size:.82rem;font-weight:700}
+  .addexp{margin-top:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .addexp .lead{font-size:.78rem;color:var(--dim);margin-bottom:10px;line-height:1.5}
+  .addexp .lead b{color:var(--txt)}
+  .addexp button{width:100%;background:#0d0d0a;border:2px solid var(--gold);border-radius:10px;color:var(--txt);padding:13px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit}
+  .addexp button:disabled{opacity:.7}
+  .addexp-hint{display:block;margin-top:8px;font-size:.75rem;color:var(--green);text-align:center;min-height:1em}
   .foot{margin-top:24px;text-align:center;font-size:.66rem;color:var(--dim);letter-spacing:.12em}
 </style>
 </head><body>
@@ -144,6 +150,13 @@
         <button onclick="shareResult()">📲 Compartir</button>
       </div>
       <span class="q-hint" id="shareHint" style="display:block;margin-top:8px;font-size:.75rem;color:var(--green)"></span>
+    </div>
+
+    <!-- ===== agregar a Experiencias (queda fija para todos los lunes) ===== -->
+    <div class="addexp">
+      <div class="lead">¿La vas a usar cada jornada? <b>Agregala a Experiencias</b> y queda fija en Estadísticas → Experiencias del sitio, para tenerla siempre a mano — todos los lunes, sin buscar el link.</div>
+      <button onclick="agregarExperiencia(this)">⭐ Agregar a la sección Experiencias</button>
+      <span class="addexp-hint"></span>
     </div>
 
     <div class="react">¿Sirve la Tómbola?
@@ -326,6 +339,26 @@
     else if(navigator.clipboard){ navigator.clipboard.writeText(txt); hint.textContent='✓ copiado, pegalo en el grupo'; }
     else { hint.textContent=txt; }
     if(window.engageTrack) engageTrack('tombola_share',{mode:lastResult.mode});
+  };
+
+  // ---- agregar a la sección Experiencias del sitio (queda fija, "By Carucha") ----
+  var EXP_PAGE_ID='tombola-asientos', EXP_OWNER='carucha', EXP_BY='Carucha',
+      EXP_TITLE='La Tómbola del Asiento', EXP_URL='engage/tombola-asientos.html';
+  window.agregarExperiencia=function(btn){
+    var FS='https://firestore.googleapis.com/v1/projects/lunesdeuno/databases/(default)/documents';
+    var KEY='AIzaSyDgmh5HjjYdIwkFgeo7iBfcfQ_b73Xa3yM';
+    btn.disabled=true; var old=btn.textContent; btn.textContent='⏳ Publicando…';
+    fetch(FS+'/experiencias/'+EXP_PAGE_ID+'?key='+KEY,{method:'PATCH',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({fields:{
+        title:{stringValue:EXP_TITLE}, by:{stringValue:EXP_BY}, slug:{stringValue:EXP_OWNER},
+        url:{stringValue:EXP_URL}, ts:{stringValue:new Date().toISOString()}
+      }})})
+    .then(function(r){ if(!r.ok) throw 0;
+      btn.textContent='✓ Agregada a Experiencias';
+      document.querySelector('.addexp-hint').textContent='⭐ Ya está en Estadísticas → Experiencias como «By '+EXP_BY+'». Usala todos los lunes.';
+      if(window.engageTrack) engageTrack('exp_experiencia',{exp:EXP_PAGE_ID});
+    }).catch(function(){ btn.disabled=false; btn.textContent=old;
+      document.querySelector('.addexp-hint').textContent='⚠️ No se pudo publicar (¿sin conexión?). Reintentá.'; });
   };
 
   renderChips(); updateCount();
