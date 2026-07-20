@@ -166,6 +166,20 @@ Carucha/Cobra 0.
   clásico (05/07), confesiones (12/07), liquidación (19/07). Previa →
   clásico (06/07, 13/07); edición de hoy (20/07) mantiene el formato con
   headline nuevo (empate H2H en vez de dominio).
+- **🕵️ El Soplón (Andrés, 20/07, 2º push del día)**: experiencia detective
+  personal (`engage/2026-07-20-el-soplon.html`, gate por device, andres→mata)
+  que acompaña la previa: un 2º push a TODOS los suscriptos a las 17:00 con
+  tono "pss, che, datos para hoy de noche". Da ayudas de asiento 100% de
+  datos: a quién EVITAR sentarse al lado (peor H2H), a quién BUSCAR (mejor
+  H2H), el "blanco" (Naso 3/5 y Negro 4/6 van al fondo en mesas de ~10), el
+  corte de -50 (repartir 7 exactas; 6 jugadores nunca lo lograron), y la
+  multa personal. Para Negro/Mac —que casi no le ganan a nadie— se dice con
+  honestidad en vez de inventar ventaja. **Verificado adversarialmente antes
+  de salir**: 5 agentes independientes (workflow) recomputaron H2H/fondo/
+  cortes/multas desde Firestore; la página pasó 40/40 chips H2H + prosa. (El
+  auditor marcó 6 "mismatches" que resultaron ser errores de transcripción en
+  mi checklist de verificación, NO en la página — lección: verificar la
+  PÁGINA directamente, no un archivo de claims re-tipeado a mano.)
 - **Corrida extra del 20/07 (mañana, pedido de Andrés por chat, DOS
   cambios estructurales)**: (1) agregado `engageFeedback` a `engage.js`
   (función nueva, no se tocó ninguna existente) + bloque de feedback libre

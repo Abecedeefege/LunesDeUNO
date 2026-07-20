@@ -1,0 +1,474 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>🕵️ El Soplón — datos para esta noche</title>
+<style>
+  :root{--bg:#0b0b0e;--paper:#e8e2d0;--ink:#1a1712;--card:#14140f;--border:#3a3428;
+    --red:#c0392b;--redUno:#ED1C24;--yellow:#FFDE00;--green:#00A651;--blue:#0072BC;
+    --amber:#d9a441;--dim:#8a8578;--txt:#efe9dc;--noir:#c9c2b0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    padding:0 0 60px;
+    background-image:radial-gradient(ellipse at 50% -10%, rgba(217,164,65,.10), transparent 55%);}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--txt)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+
+  /* carpeta / expediente */
+  .folder{margin-top:14px;border:1px solid var(--border);border-radius:6px;overflow:hidden;
+    background:linear-gradient(180deg,#161510,#0e0d0a);box-shadow:0 18px 50px rgba(0,0,0,.6)}
+  .tab{display:inline-block;background:var(--amber);color:#1a1712;font-weight:800;font-size:.6rem;
+    letter-spacing:.22em;text-transform:uppercase;padding:5px 14px;border-radius:6px 6px 0 0;margin:10px 0 0 14px}
+  .stamp{margin:10px 14px 0;display:flex;justify-content:space-between;align-items:center}
+  .stamp .cls{border:2px solid var(--red);color:var(--red);font-weight:900;font-size:.72rem;letter-spacing:.2em;
+    text-transform:uppercase;padding:3px 9px;border-radius:4px;transform:rotate(-4deg)}
+  .stamp .num{font-family:ui-monospace,Menlo,monospace;font-size:.62rem;color:var(--dim);letter-spacing:.1em}
+  .fbody{padding:16px 15px 18px;text-align:center}
+  .eye{font-size:2.4rem;filter:drop-shadow(0 0 10px rgba(217,164,65,.55))}
+  h1{font-size:1.5rem;line-height:1.15;margin-top:6px;color:var(--amber);
+    font-family:'Courier New',ui-monospace,monospace;letter-spacing:.02em}
+  .whisper{font-size:.9rem;color:var(--noir);line-height:1.55;margin-top:10px;font-style:italic}
+  .whisper b{color:var(--yellow);font-style:normal}
+  .meta{margin-top:12px;font-size:.68rem;color:var(--dim);border-top:1px dashed var(--border);padding-top:10px;line-height:1.5}
+
+  .agente{display:none}
+  .agente.visible{display:block}
+  h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin:24px 0 4px;
+    display:flex;align-items:center;gap:8px}
+  h2 img{width:36px;height:36px;border-radius:50%;border:2px solid var(--amber);object-fit:cover;background:#222}
+  .brief{font-size:.8rem;color:var(--dim);font-style:italic;margin-bottom:12px;line-height:1.5}
+
+  .clue{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--amber);
+    border-radius:8px;padding:12px 13px;margin-top:10px}
+  .clue .lead{font-size:.66rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;
+    display:flex;align-items:center;gap:6px}
+  .clue.avoid{border-left-color:var(--redUno)} .clue.avoid .lead{color:#ff8a80}
+  .clue.seek{border-left-color:var(--green)} .clue.seek .lead{color:#7ee6a8}
+  .clue.target{border-left-color:var(--blue)} .clue.target .lead{color:#7cc4ff}
+  .clue.cut{border-left-color:var(--yellow)} .clue.cut .lead{color:var(--yellow)}
+  .clue.fine{border-left-color:var(--amber)} .clue.fine .lead{color:var(--amber)}
+  .clue p{font-size:.85rem;line-height:1.5;color:var(--txt)}
+  .clue p b{color:var(--yellow)}
+  .clue .faces{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .clue .chip{display:inline-flex;align-items:center;gap:6px;background:#0d0d0a;border:1px solid var(--border);
+    border-radius:999px;padding:3px 10px 3px 3px;font-size:.8rem;font-weight:700}
+  .clue .chip img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+  .clue .chip .rec{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--dim)}
+  .clue.avoid .chip{border-color:rgba(237,28,36,.5)}
+  .clue.seek .chip{border-color:rgba(0,166,81,.5)}
+  .clue.target .chip{border-color:rgba(0,114,188,.5)}
+
+  .closer{margin-top:16px;background:linear-gradient(180deg,#1a0f0d,#0e0d0a);border:1px solid rgba(192,57,43,.5);
+    border-radius:8px;padding:13px;font-size:.86rem;line-height:1.55;text-align:center}
+  .closer b{color:var(--yellow)}
+
+  #generic{display:none;margin-top:24px;background:var(--card);border:1px solid var(--border);border-radius:8px;
+    padding:16px;font-size:.86rem;color:var(--dim);line-height:1.6;text-align:center}
+
+  .react{margin-top:22px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .react button{background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
+  .react button:hover{border-color:var(--amber)}
+  .react-hint,.q-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+  .q{margin-top:12px}
+  .q .qt{font-size:.84rem;color:var(--txt);margin-bottom:6px}
+  .q button{background:#0d0d0a;border:1px solid var(--border);border-radius:999px;color:var(--txt);padding:8px 14px;margin:0 6px 0 0;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit}
+  .q button:hover{border-color:var(--amber)}
+  .foot{margin-top:26px;text-align:center;font-size:.66rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <div class="folder">
+      <span class="tab">Expediente confidencial</span>
+      <div class="stamp"><span class="cls">Clasificado</span><span class="num">CASO T5-F3 · 20.07.26</span></div>
+      <div class="fbody">
+        <div class="eye">🕵️</div>
+        <h1>El Soplón</h1>
+        <p class="whisper">Pss… che. Te tengo unos datos <b>importantísimos</b> para esta noche.
+        Los saqué del archivo, están todos verificados y son solo para vos. Leelos y hacé como que
+        nunca hablamos.</p>
+        <div class="meta">🔎 Todo lo de abajo sale del historial oficial (17 fechas). La mesa de hoy
+        es la <b style="color:var(--amber)">Fecha 3 de la T5</b> — las últimas dos fueron de ~10
+        jugadores, así que preparate para una mesa grande. El último paga postre o picada.</div>
+      </div>
+    </div>
+
+    <!-- ==================== PT ==================== -->
+    <div class="agente" id="dos-pt">
+      <h2><img src="../assets/faces/pt.png" alt="PT"> Agente PT</h2>
+      <p class="brief">Puntero de la tabla anual. El francotirador. Casi no tenés enemigos en la
+      mesa — así que el brief es corto y letal.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Casi nadie te complica… salvo uno.</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/gordo.png" alt="">Gordo <span class="rec">5-7</span></span></div>
+        <p style="margin-top:8px">Es el único que te gana el mano a mano del año. Del resto, el que asusta sos vos.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Tus dos víctimas favoritas — les ganás <b>10 a 2</b> a cada uno:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">10-2</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">10-2</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10 como la de hoy, los que más terminan en el fondo son <b>Naso</b> (3 de 5)
+        y <b>Negro</b> (4 de 6). Quedá cerca: alguien tiene que salir último, y ya se ofrecieron.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El que corta el mazo justo para repartir <b>7 exactas</b> a cada uno se lleva −50.
+        Lo lograste <b>1 vez</b> en el año. Buscá el segundo: es el punto más barato de la noche.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p>Apenas <b>10 fichas</b> de multa en todo el año. Disciplina de puntero. No la tires hoy.</p>
+      </div>
+      <div class="closer">El último paga, y <b>Naso ya debe una desde hace 7 días</b>. Vos mandás la
+      tabla — no seas el segundo moroso. 🎴</div>
+    </div>
+
+    <!-- ==================== GORDO ==================== -->
+    <div class="agente" id="dos-gordo">
+      <h2><img src="../assets/faces/gordo.png" alt="Gordo"> Agente Gordo</h2>
+      <p class="brief">Venís de robarte la F2. Prontuario limpio y una racha para estirar. Estos
+      son tus datos.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Solo uno te tiene la ficha:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/nachi.png" alt="">Nachi <span class="rec">3-6</span></span></div>
+        <p style="margin-top:8px">Nachi te gana el mano a mano 6 a 3. Es tu único dolor de cabeza real.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Tu paternidad más aplastante y una de yapa:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">11-1</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">9-3</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) son los que más van al fondo.
+        Sentate cerca y dejá que ellos ocupen el último puesto.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El que reparte <b>7 exactas</b> cortando el mazo se lleva −50. Vos <b>nunca</b> lo
+        lograste en el año — hoy es tu −50 gratis. Con lo limpio que jugás, es puntos regalados.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>0 multas, 0 cortes en contra</b> en todo 2026. San Gordo del Mazo. No manches el santoral hoy.</p>
+      </div>
+      <div class="closer">Ganaste la F2. Ganás hoy y encadenás <b>dos seguidas</b> — algo que nadie
+      tiene este año. La corona de la T5 se pone a tiro. 🎴</div>
+    </div>
+
+    <!-- ==================== COBRA ==================== -->
+    <div class="agente" id="dos-cobra">
+      <h2><img src="../assets/faces/cobra.png" alt="Cobra"> Agente Cobra</h2>
+      <p class="brief">5 coronas, nadie tiene más. Pero hasta el campeón tiene su kryptonita. Acá
+      está el mapa.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Dos que te frenan cuando nadie más puede:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/carucha.png" alt="">Carucha <span class="rec">4-8</span></span><span class="chip"><img src="../assets/faces/pt.png" alt="">PT <span class="rec">6-7</span></span></div>
+        <p style="margin-top:8px">Carucha es tu kryptonita comprobada (te gana 8-4). PT te pasa por poco.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Dos que caen seguido bajo tu corona:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">9-4</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">8-5</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) son los del fondo. Y ojo:
+        con <b>Gordo</b> venís <b>7-7</b>, empate perfecto — hoy se rompe para uno de los dos.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>Sos de los pocos que ya lo domina: cortaste justo <b>2 veces</b> este año (récord compartido
+        con Tano). Repetí — es tu especialidad y son −50 cada vez.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>0 multas</b> en el año. El campeón no paga peajes. Mantené la línea.</p>
+      </div>
+      <div class="closer">Si Carucha se sienta lejos, la corona de hoy es tuya. Si se sienta al lado…
+      ya sabés lo que dice el expediente. 🎴</div>
+    </div>
+
+    <!-- ==================== CARUCHA ==================== -->
+    <div class="agente" id="dos-carucha">
+      <h2><img src="../assets/faces/carucha.png" alt="Carucha"> Agente Carucha</h2>
+      <p class="brief">Prontuario perfecto y la kryptonita oficial de Cobra. El archivo te quiere.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Los dos que te tienen la ficha:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/nachi.png" alt="">Nachi <span class="rec">2-6</span></span><span class="chip"><img src="../assets/faces/tano.png" alt="">Tano <span class="rec">3-6</span></span></div>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Dos hijos bien reconocidos:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">10-1</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">8-2</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) son los del fondo. Y un
+        recordatorio: si <b>Cobra</b> está en la mesa, tu presencia lo hunde — es tu kryptonita.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El corte justo (7 exactas a cada uno) vale −50. Vos <b>nunca</b> lo lograste en el año.
+        Con prontuario limpio y buen pulso, es el punto más barato que estás dejando pasar.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>0 multas, 0 cortes en contra, 0 últimos</b> en 13 fechas. Uno de los tres santos de
+        la mesa. Andá tranquilo.</p>
+      </div>
+      <div class="closer">El último paga. Con tu récord, el fondo es de otro — pero Naso ya debe una
+      desde hace 7 días. Que se sume el segundo. 🎴</div>
+    </div>
+
+    <!-- ==================== MATA ==================== -->
+    <div class="agente" id="dos-mata">
+      <h2><img src="../assets/faces/mata.png" alt="Mata"> Agente Mata</h2>
+      <p class="brief">Prontuario perfecto, tres subcampeonatos y la corona que no llega. Hoy puede
+      ser. Estos son tus datos.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Los dos que te ganan el mano a mano:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/pt.png" alt="">PT <span class="rec">3-6</span></span><span class="chip"><img src="../assets/faces/gordo.png" alt="">Gordo <span class="rec">4-5</span></span></div>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Tu serie perfecta y una casi-perfecta:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/negro.png" alt="">Negro <span class="rec">6-0</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">6-1</span></span></div>
+        <p style="margin-top:8px">A Negro <b>nunca</b> le perdiste: 6-0 en 6 fechas. Es tu presa natural.</p>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) son los que van al fondo — y
+        a los dos les ganás seguido. La mesa te acomoda: sentate cerca de ellos.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El corte justo vale −50 y vos <b>nunca</b> lo agarraste en el año. Para alguien que
+        pierde las coronas por poco, esos −50 podrían ser LA diferencia. Practicá el corte hoy.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>0 multas, 0 cortes en contra, 0 últimos</b> en 10 fechas. Santo. Lo único que te falta
+        es ganar una.</p>
+      </div>
+      <div class="closer">La ciencia dice que tu primera corona está cerca. Sentate cerca de Negro y
+      Naso, agarrá un corte, y capaz hoy es la noche. 🎴</div>
+    </div>
+
+    <!-- ==================== NACHI ==================== -->
+    <div class="agente" id="dos-nachi">
+      <h2><img src="../assets/faces/nachi.png" alt="Nachi"> Agente Nachi</h2>
+      <p class="brief">El abuelo del campeón. Domínás medio salón sin que nadie lo note. Acá está tu ventaja.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Los dos que te complican:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/pt.png" alt="">PT <span class="rec">3-5</span></span><span class="chip"><img src="../assets/faces/mata.png" alt="">Mata <span class="rec">3-5</span></span></div>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Dos discípulos que casi nunca te ganan:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">8-1</span></span><span class="chip"><img src="../assets/faces/gael.png" alt="">Gael <span class="rec">7-1</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) van al fondo — y a los dos
+        les ganás seguido (6-2 a cada uno). Además le tenés la ficha a <b>Gordo</b> (6-3): el único
+        que lo domina sos vos.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El corte justo (7 exactas) vale −50 y vos <b>nunca</b> lo lograste en el año. Sumado a tu
+        dominio, sería un lujo. Buscalo esta noche.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p>Apenas <b>10 fichas</b> de multa en el año. Casi limpio. Portate bien y a cobrar.</p>
+      </div>
+      <div class="closer">Tenés a media mesa de hijos. Rodeate de ellos, evitá a PT y Mata, y la corona
+      del abuelo es posible. 🎴</div>
+    </div>
+
+    <!-- ==================== GAEL ==================== -->
+    <div class="agente" id="dos-gael">
+      <h2><img src="../assets/faces/gael.png" alt="Gael"> Agente Gael</h2>
+      <p class="brief">El pagador ilustrado. Tenés víctimas claras y verdugos claros. Elegí bien tu asiento.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Los dos que te dominan feo:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/gordo.png" alt="">Gordo <span class="rec">3-9</span></span><span class="chip"><img src="../assets/faces/nachi.png" alt="">Nachi <span class="rec">1-7</span></span></div>
+        <p style="margin-top:8px">Nachi te gana 7-1. Es el que más te sufre en el año.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Dos que caen seguido cuando estás vos:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">8-3</span></span><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">7-4</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Naso</b> (3 de 5) y <b>Negro</b> (4 de 6) son los del fondo. A Naso ya
+        le ganás 8-3 — quedá cerca y aprovechá.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>El corte justo vale −50 y vos <b>nunca</b> lo lograste en el año. Es tu punto más barato
+        pendiente. Agarralo hoy.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>20 fichas</b> de multa en el año — de las bajas de la mesa. Seguí prolijo.</p>
+      </div>
+      <div class="closer">Evitá a Gordo y Nachi, rodeate de Naso y Mac, y capaz repetís una masacre
+      como la del 28 de abril (ganaste por 98). 🎴</div>
+    </div>
+
+    <!-- ==================== TANO ==================== -->
+    <div class="agente" id="dos-tano">
+      <h2><img src="../assets/faces/tano.png" alt="Tano"> Agente Tano</h2>
+      <p class="brief">Tu 133 quedó a 6 puntos del récord del año. Sabés jugar — pero la multa te delata. Acá van los datos.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Los dos que te tienen la ficha:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mata.png" alt="">Mata <span class="rec">1-6</span></span><span class="chip"><img src="../assets/faces/nachi.png" alt="">Nachi <span class="rec">3-7</span></span></div>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>Tu paternidad más clara y una de yapa:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/negro.png" alt="">Negro <span class="rec">7-2</span></span><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">6-3</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>En mesas de ~10, <b>Negro</b> (4 de 6) y <b>Naso</b> (3 de 5) van al fondo — y a Negro le
+        ganás 7-2. Sentate a su lado y dejalo hundirse.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>Sos de los pocos que lo domina: cortaste justo <b>2 veces</b> este año (récord compartido
+        con Cobra). Es tu mejor arma barata — repetí.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario — ALERTA ROJA</div>
+        <p>Llevás <b>150 fichas</b> de multa: el <b>récord del año</b>, lejos. Esos puntos te comieron
+        más de una noche. Hoy: menos verso, más cartas. Es la diferencia entre ganar y pagar.</p>
+      </div>
+      <div class="closer">Talento te sobra (ese 133 lo probó). Si cerrás la boca y agarrás un corte,
+      la corona de hoy entra en cálculo. 🎴</div>
+    </div>
+
+    <!-- ==================== MAC ==================== -->
+    <div class="agente" id="dos-mac">
+      <h2><img src="../assets/faces/mac.png" alt="Mac"> Agente Mac</h2>
+      <p class="brief">Te voy a ser honesto, agente: el archivo no te trae buenas noticias. Pero
+      información es poder, y con esto al menos no te hundís solo.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de</div>
+        <p>Tus dos verdugos absolutos:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/gordo.png" alt="">Gordo <span class="rec">1-11</span></span><span class="chip"><img src="../assets/faces/carucha.png" alt="">Carucha <span class="rec">1-10</span></span></div>
+        <p style="margin-top:8px">Les ganaste UNA vez a cada uno en 12 y 11 fechas. Poné distancia física, por las dudas.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>El ÚNICO al que le ganás el mano a mano en toda la mesa:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/negro.png" alt="">Negro <span class="rec">4-3</span></span></div>
+        <p style="margin-top:8px">Aprovechalo: es tu único terreno favorable. Pegate a Negro.</p>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El blanco de la noche</div>
+        <p>Buena para vos: en mesas de ~10, <b>Negro</b> (4 de 6) y <b>Naso</b> (3 de 5) van al fondo
+        MÁS seguido que vos. Quedá cerca de ellos y que el último puesto sea de otro por una vez.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>Acá SÍ tenés ventaja: cortaste justo <b>1 vez</b> este año, más que la mayoría. El corte
+        de 7 exactas son −50 gratis — y para vos, que peleás cada punto, es oro. Buscá otro.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>40 fichas</b> de multa en el año. No ayudan cuando ya venís justo. Cuidá cada una hoy.</p>
+      </div>
+      <div class="closer">0 coronas en 14 fechas, la ley de los grandes números dice que se te tiene
+      que dar. Pegate a Negro, agarrá un corte y quién te dice. 🎴</div>
+    </div>
+
+    <!-- ==================== NASO ==================== -->
+    <div class="agente" id="dos-naso">
+      <h2><img src="../assets/faces/naso.png" alt="Naso"> Agente Naso</h2>
+      <p class="brief">Che, entre nosotros: vos SOS el blanco del que le hablo a los demás. Pero por
+      eso mismo te paso el dato más valioso — para que esta noche no seas vos.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de (URGENTE)</div>
+        <p>Tus dos verdugos. Sentate lo más lejos posible:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/pt.png" alt="">PT <span class="rec">2-10</span></span><span class="chip"><img src="../assets/faces/carucha.png" alt="">Carucha <span class="rec">2-8</span></span></div>
+        <p style="margin-top:8px">PT te gana 10-2. Es tu peor pesadilla de mesa. Distancia máxima.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>El único al que le ganás seguido:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mac.png" alt="">Mac <span class="rec">7-5</span></span></div>
+        <p style="margin-top:8px">Y a Negro le vas parejo (4-4): otro que suele acompañarte en el fondo. Que sea él.</p>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El dato que te salva</div>
+        <p>En mesas de ~10 terminás en el fondo <b>3 de cada 5 veces</b>. Es tu patrón. Romperlo hoy
+        depende de una cosa: sentarte LEJOS de PT y Carucha. En serio.</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>Tu jugada secreta: el que corta el mazo justo para repartir <b>7 exactas</b> se lleva −50.
+        Vos <b>nunca</b> lo lograste. Son 50 puntos que te podrían sacar del último puesto GRATIS.
+        Practicá el corte hoy, es tu mejor apuesta.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>72 fichas</b> de multa (segundo peor de la mesa) y una <b>deuda de 7 días</b> corriendo.
+        Cada multa te acerca al fondo. Boca cerrada, corte justo, y a zafar.</p>
+      </div>
+      <div class="closer">La deuda ya la tenés — no la dupliques. Lejos de PT, cerca de Mac, un corte
+      y capaz esta noche el último es otro. 🎴</div>
+    </div>
+
+    <!-- ==================== NEGRO ==================== -->
+    <div class="agente" id="dos-negro">
+      <h2><img src="../assets/faces/negro.png" alt="Negro"> Agente Negro</h2>
+      <p class="brief">El mejor pagador del año — eso te lo reconoce todo el mundo. Pero el archivo
+      de mesa es duro con vos. Te paso el mapa para que hoy sea distinto.</p>
+      <div class="clue avoid"><div class="lead">🚫 Evitá sentarte al lado de (URGENTE)</div>
+        <p>Dos que te tienen dominado:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/mata.png" alt="">Mata <span class="rec">0-6</span></span><span class="chip"><img src="../assets/faces/tano.png" alt="">Tano <span class="rec">2-7</span></span></div>
+        <p style="margin-top:8px">A <b>Mata nunca le ganaste</b>: 0-6 en 6 fechas. Es tu pared. Lejos.</p>
+      </div>
+      <div class="clue seek"><div class="lead">✅ Buscá quedar cerca de</div>
+        <p>No hay a quién le ganes seguido — te voy a ser franco. Tus mejores mano a mano son
+        empates. Rodeate de estos, que al menos te van parejo:</p>
+        <div class="faces"><span class="chip"><img src="../assets/faces/gael.png" alt="">Gael <span class="rec">4-4</span></span><span class="chip"><img src="../assets/faces/naso.png" alt="">Naso <span class="rec">4-4</span></span></div>
+      </div>
+      <div class="clue target"><div class="lead">🎯 El dato que te salva</div>
+        <p>En mesas de ~10 terminás en el fondo <b>4 de cada 6 veces</b> — el más alto de la mesa. Es
+        tu patrón a romper. La clave: sentarte lejos de Mata y Tano, y cerca de Naso (que también
+        suele ir al fondo — que sea él).</p>
+      </div>
+      <div class="clue cut"><div class="lead">✂️ El corte de los -50</div>
+        <p>Buena noticia: ya cortaste justo <b>1 vez</b> este año — sabés cómo se hace. El corte de
+        7 exactas son −50 y a vos te sirven como a nadie para escaparle al fondo. Buscá el segundo.</p>
+      </div>
+      <div class="clue fine"><div class="lead">⚠️ Tu prontuario</div>
+        <p><b>70 fichas</b> de multa en el año. Pagás como un rey pero las multas te hunden en la mesa.
+        Hoy: menos fichas, más corte.</p>
+      </div>
+      <div class="closer">Pagador de lujo, eso nadie te lo saca. Ahora rompé el patrón: lejos de Mata,
+      un corte bien dado, y que el fondo sea de otro. 🎴</div>
+    </div>
+
+    <div id="generic">🕵️ El Soplón arma un expediente distinto para cada agente.<br><br>
+    Abrí esta página desde el teléfono donde recibís las notificaciones del club para ver tus datos
+    clasificados de esta noche.</div>
+
+    <div class="react">¿Te sirvió el dato del Soplón?
+      <button onclick="engageReact('2026-07-20-el-soplon','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-20-el-soplon','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-20-el-soplon','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-20-el-soplon','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="react q">
+      <div class="qt">¿Querés el dato del Soplón todos los lunes antes de jugar?</div>
+      <button onclick="engageAnswer('2026-07-20-el-soplon-suscripcion','si',this)">Sí, pasámelo</button>
+      <button onclick="engageAnswer('2026-07-20-el-soplon-suscripcion','no',this)">No hace falta</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="react q">
+      <div class="qt">¿Esta experiencia merece quedarse?</div>
+      <button onclick="engageApprove('2026-07-20-el-soplon',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-20-el-soplon',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <!-- ===== feedback libre ===== -->
+    <div style="margin-top:1rem;padding:1rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;">
+      <div style="font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem;">💬 ¿Qué querés?</div>
+      <div style="font-size:.74rem;color:var(--dim);margin-bottom:.6rem;line-height:1.4;">Pedime… lo que sea.</div>
+      <textarea id="fbtxt-2026-07-20-el-soplon" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-20-el-soplon');engageFeedback('2026-07-20-el-soplon',t.value,this);t.value='';" style="background:var(--redUno);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:var(--dim);"></span>
+      </div>
+    </div>
+
+    <div class="foot">🕵️ EL SOPLÓN · DATOS CLASIFICADOS · LUNES DE UNO · CASO T5-F3 · 20.07.2026</div>
+  </div>
+
+<script>
+  (function(){
+    var dev=''; try{dev=(localStorage.getItem('lunesdeuno_device_name')||'').toLowerCase();}catch(e){}
+    var who = (dev==='andres') ? 'mata' : dev;
+    var sec = document.getElementById('dos-'+who);
+    if(sec){ sec.classList.add('visible'); }
+    else { document.getElementById('generic').style.display='block'; }
+  })();
+</script>
+<script src="engage.js"></script>
+</body></html>
