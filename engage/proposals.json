@@ -311,6 +311,18 @@
       "result_notes": "PROMOVIDA: approve de andres por botón (20/07 08:32:55 local, tras abrir la página directo antes incluso del preview de las 09:00) + reacción love + answer suscripción=si. Dwell registrado. La página queda."
     },
     {
+      "id": "tombola-asientos",
+      "title": "🎰 La Tómbola del Asiento (sorteo random de asientos)",
+      "page": "engage/tombola-asientos.html",
+      "created": "2026-07-20",
+      "status": "vault",
+      "hypothesis": "Fulfillment de un feedback ESCRITO por la casilla de texto (device sin-nombre, 20/07 16:29, en el laboratorio; Andres confirmo por chat que lo pidio el y que se construya): generador random de numeros 1..N para que los jugadores elijan asiento al inicio de cada jornada, con MAS DE UN modo de reparto. Herramienta permanente (sin fecha, SIN gate — la usa cualquiera en la mesa): 3 modos, todos 100% random (Fisher-Yates con crypto.getRandomValues + fallback Math.random, testeado: 0 permutaciones invalidas en 5000, sesgo de posicion 5%): 🔢 Sorteo = un numero unico por jugador (orden de silla), 🪑 Mesa armada = ronda circular con vecinos, ⚔️ Dos bandos = split al azar. Selector de presentes (toggle) + agregar invitados. Animacion de tombola + compartir. Los otros 2 feedbacks del dia (experiencia de animo a los ultimos 2, y el 'quiero todo esto' de PT) Andres pidio IGNORARLOS. status=vault: infra recurrente pedida por el dueño. Primera prueba de fulfillment de un feedback de texto libre.",
+      "notified_by": [
+        "2026-07-20-tombola"
+      ],
+      "result_notes": null
+    },
+    {
       "id": "2026-07-20-el-soplon",
       "title": "🕵️ El Soplón — datos de asiento para la noche (2º push del lunes)",
       "page": "engage/2026-07-20-el-soplon.html",
