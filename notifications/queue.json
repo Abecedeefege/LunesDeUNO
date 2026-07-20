@@ -510,31 +510,46 @@
       "created_by": "engagement-agent 2026-07-13 (la previa del lunes, T5 fecha 2, edicion semana 2 del formato ya promovido el 06/07)"
     },
     {
-      "id": "2026-07-12-a-preview",
-      "title": "🎴 El mazo tiene algo que confesar",
-      "body": "El mazo vio todo: PT le gana a Cobra 7-6 mano a mano y Mata nunca perdió con Negro (5-0). Entrá:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-12-confesiones.html",
+      "id": "2026-07-20-desk",
+      "title": "🗂️ Las solicitadas por otros",
+      "body": "Sin pedidos nuevos hoy. Adentro: estado de lo de ayer (falta tu OK en 3 cosas) y la previa que sale a las 14.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
       "devices": [
         "andres"
       ],
-      "send_at": "2026-07-12T11:00:00-03:00",
-      "expires_at": "2026-07-12T13:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-12T14:40:00.935Z",
+      "send_at": "2026-07-20T08:45:00-03:00",
+      "expires_at": "2026-07-20T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-12 (PREVIEW solo para andres del push 2026-07-12-a, regla nueva fijada por Andres 12/07: cada push del dia le llega a el a las 09:00 — hoy sale ASAP porque la regla llego a las 10:49; expira 13:30 para no pisar el envio general de las 14:00)"
+      "created_by": "engagement-agent 2026-07-20 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45, regenerado con el estado de lo de ayer y lo que sale hoy)"
     },
     {
-      "id": "2026-07-12-a",
-      "title": "🎴 El mazo tiene algo que confesar",
-      "body": "El mazo vio todo: PT le gana a Cobra 7-6 mano a mano y Mata nunca perdió con Negro (5-0). Entrá:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-12-confesiones.html",
-      "send_at": "2026-07-12T14:00:00-03:00",
-      "expires_at": "2026-07-12T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-12T17:56:09.672Z",
+      "id": "2026-07-20-a-preview",
+      "title": "🔥 Preview: la previa (sale 14:00)",
+      "body": "Cobra-Gordo 7-7 tras la F2, Naso cumple 7 días de deuda, Nachi domina a Gael 7-1. El envío general sale 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-la-previa.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-20T09:00:00-03:00",
+      "expires_at": "2026-07-20T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-12 (chusmerío del domingo, sub-formato confesiones del mazo para no repetir el clásico del 05/07 ni el feed rechazado del 10/07)"
+      "created_by": "engagement-agent 2026-07-20 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
+    },
+    {
+      "id": "2026-07-20-a",
+      "title": "🔥 Cobra-Gordo 7-7, Naso paga hoy 7 días",
+      "body": "La previa de la T5 F3 ya está: tabla, deudas y quién rompe el empate esta noche. Padres e hijos incluido.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-la-previa.html",
+      "send_at": "2026-07-20T14:00:00-03:00",
+      "expires_at": "2026-07-20T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-20 (la previa del lunes, T5 fecha 3, edición semana 3 — headline nuevo: el mano a mano Cobra-Gordo quedó empatado 7-7)"
     }
   ]
 }

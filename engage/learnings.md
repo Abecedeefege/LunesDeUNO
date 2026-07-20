@@ -24,10 +24,8 @@
   SOLO visible por él, jamás linkeada desde contenido público). La corrida
   matutina la REGENERA con: (1) experiencias solicitadas por otros jugadores
   con links y estado, (2) sección "para revisar" con URLs y copys de TODO lo
-  que sale ese día. Timing: send_at 08:45 — el cron de respaldo de
-  push-dispatch (\*/30 11-23 UTC) deriva varios minutos; el 19/07 el preview
-  de las 09:00 no salió porque el cron corrió 08:51 local y el slot
-  siguiente se salteó. Con 08:45 el slot de ~08:5x lo agarra.
+  que sale ese día, (3) desde hoy 20/07 también "decisiones pendientes"
+  (proposals sin aprobar/rechazar, con vencimiento). Timing: send_at 08:45.
 - **⭐ Experiencias VIP + 🥊 Piña Directa**: sin puertas/login para VER (VIP es
   marca); la puerta solo aplica a FORJAR/reclamar una piña en el Gimnasio
   (`engage/pina-directa.html`, valida device contra pushSubs active).
@@ -37,39 +35,43 @@
   11 piñas pre-forjadas (URLs secretas, no expiran, jamás linkeadas desde
   páginas/pushes grupales) — mapa jugador→URL en `proposals.json` (id
   `pina-directa-serie`). `experience_request` con idea YA pre-forjada
-  (serie `experiencias-solicitables-serie`, hoy 6 páginas: 3 nachi + 3 mata)
-  → push personal al solicitante 11:00 del día siguiente. `experience_request`
-  con idea SIN pre-forja (caso nuevo, visto hoy 19/07 con Gordo pidiendo 2
-  ideas propias desde su propia piña) → se CONSTRUYE on-demand con el mismo
-  molde visual de una idea análoga ya existente (certificado→santidad,
-  juicio→paternidad/tutela), recalculando todo de `games`, y se entrega
-  igual al día siguiente sin preview; se registra como proposal individual
-  `pending` (no vault) porque no es pre-forja reutilizable. `club.html`
-  (invitación) jamás se linkea desde contenido público.
+  (serie `experiencias-solicitables-serie`) → push personal al solicitante
+  11:00 del día siguiente. `experience_request` sin pre-forja → se
+  CONSTRUYE on-demand con un molde visual análogo, recalculando todo de
+  `games`, y se entrega igual sin preview; se registra como proposal
+  individual `pending`. `club.html` (invitación) jamás se linkea desde
+  contenido público.
 - **🚫 Límites duros**: index.html/propuestas.html/tv*.html/sw.js/engage.js/
   club.html/tools/ intocables SIN excepciones futuras. games/players/
   seasons/Propuestas/propuestasVisuales/pushSubs: solo lectura.
   `experiencias` la escriben LOS JUGADORES (sus propios botones), nunca la
-  rutina. Los pushes llevan a páginas nuevas no accesibles desde el sitio;
-  el único lugar visible es Estadísticas → Experiencias vía la colección
-  `experiencias`.
-- **📐 DEFINICIÓN DE "REMONTADA" (Andrés, 18/07 por chat, vinculante):** una
+  rutina (excepción puntual: docs `vip-*` por orden explícita de Andrés).
+- **📐 DEFINICIÓN DE "REMONTADA" (Andrés, 18/07, vinculante):** una
   remontada es SOLO cuando alguien viene de atrás/de abajo y termina en
-  1er puesto (gana). Terminar 2do o 3ero NO es remontada — a nadie le
-  importa ni lo recuerda.
-- **📐 FÓRMULA DE "QUIÉN PAGA" (verificado 19/07 contra index.html):** el
-  ganador y el que paga postre/picada de UNA fecha se deciden por **puntaje
-  BASE (solo rondas)**, nunca por el total con multas/cortes — eso solo
-  impacta la tabla anual. `rounds`/`fines`/`cortes` en Firestore son arrays
-  **por RONDA** (`rounds[i].v[slot]`), no por slot — hay que sumar sobre
-  todas las rondas para cada slot. Confirmado recalculando 18/05 (Negro 422
-  de base, no 372 con corte) y 22/06 (Tano 425 de base, no 375).
+  1er puesto (gana). Terminar 2do o 3ero NO es remontada.
+- **📐 FÓRMULA DE "QUIÉN PAGA" (verificado 19/07):** el ganador y el que
+  paga postre/picada de UNA fecha se deciden por **puntaje BASE (solo
+  rondas)**, nunca por el total con multas/cortes. `rounds`/`fines`/`cortes`
+  son arrays **por RONDA** (`rounds[i].v[slot]`), hay que sumar sobre todas
+  las rondas para cada slot.
+- **📐 FÓRMULA DE FALTA EN LA TABLA ANUAL (verificado 20/07 recalculando de
+  cero contra el número publicado del 19/07 — coincide exacto):** el
+  ausente suma el **peor puntaje BASE** de esa fecha (solo rondas, SIN sumar
+  fines/cortes de nadie) — no el peor total. Usar total en vez de base para
+  la falta desvía la tabla ~100-150 pts por jugador.
+- **📐 H2H "padres e hijos" (verificado 20/07 contra 3 certificados ya
+  publicados — coincide exacto):** cuenta SOLO fechas donde ambos jugadores
+  fueron participantes reales de esa partida (no cuenta si uno de los dos
+  estaba de `absentees`). Recalculado así: Gordo-Mac 11-1/12 ✓, Gordo-Naso
+  9-3/12 ✓, Gordo-Gael 9-3/12 ✓, Gordo-Negro 7-2/9 ✓, Mata-Negro 6-0/6 ✓ —
+  los 5 coinciden exacto con los certificados ya publicados, confirma el
+  método.
 
-## 💸 DEUDAS (ledger vigente al 19/07)
+## 💸 DEUDAS (ledger vigente al 20/07)
 
 | Deudor | Debe | Desde | Estado |
 |---|---|---|---|
-| Naso | 🍮/🧀 postre o picada | 13/07 | IMPAGA, única viva. 6 días al domingo 19/07. Dictamen de Carucha: «que pague doble». |
+| Naso | 🍮/🧀 postre o picada | 13/07 | IMPAGA, única viva. 7 días a la noche del lunes 20/07. Dictamen de Carucha: «que pague doble». Confirmada "sigue" por answer de pt (19/07, señal secundaria, no decide pero no contradice el ledger). |
 
 Saldadas: Tano 19d (pagó mal, alfajores) · Negro ~10d (pagó de lujo, picada
 francesa) · Gael (Martín Fierro). Ranking de pagadores: Negro > Gael > Tano.
@@ -82,104 +84,89 @@ Carucha/Cobra 0.
 
 - La entrevista del jueves sigue siendo la fórmula más fuerte: Carucha
   respondió las 4 preguntas en minutos, dwell 299s, approve propio.
-- El Kryptonita (piña VIP de Cobra) promovido: además del approve real de
-  andres (17/07 14:16), se registró un SEGUNDO approve del mismo device el
-  18/07 17:57 (redundante, no cambia nada — la página ya estaba promovida).
-- La Piña Directa sigue moviendo dwell propio y generando pedidos en cadena:
-  esta semana Cobra (191s, share) y PT (dwell + share) abrieron y compartieron
-  su propia piña el mismo día que la recibieron. Gordo hizo lo mismo (dwell
-  61s) y encima pidió 2 experiencias propias nuevas — primera vez que alguien
-  pide algo SIN pre-forja existente (ver regla arriba).
-- El Gimnasio (`pina-directa.html`) ya recibió pedidos de gordo y pt esta
-  semana — señal de que el flujo de autoservicio funciona sin empujarlo.
+- El Kryptonita (piña VIP de Cobra) y la Serie Piña Directa siguen moviendo
+  dwell + pina_share + pedidos en cadena (Cobra, PT, Gordo abrieron y
+  compartieron su propia piña el mismo día que la recibieron).
+- El Laboratorio (`laboratorio.html`) y el Gimnasio (`pina-directa.html`)
+  ya reciben tráfico espontáneo sin empuje: pt volvió solo a laboratorio
+  21:34 del 19/07 (reacción love), fuera de cualquier push.
+- Construir experiencias on-demand sin pre-forja (santidad-gordo,
+  tutela-mac) funciona igual de bien que las pre-forjadas: santidad-gordo
+  ya PROMOVIDA (approve + love de andres en minutos); tutela-mac abierta
+  pero sin decisión aún — no es señal negativa, es la única de las 3 nuevas
+  de esta semana que Andrés no llegó a resolver todavía.
+- **Corrección de precisión (20/07):** el certificado de santidad de Gordo
+  (ya promovido, no se toca) afirma que ganar hoy sería su "primera racha
+  de 3 seguidas" — recalculado, es incorrecto (sería su 2da consecutiva, no
+  la 3ra). Se evitó repetir el error en la previa de hoy, que usa el dato
+  correcto. Ninguna corrección retroactiva a la página ya promovida — fuera
+  de alcance de esta corrida, queda anotado para si Andrés quiere ajustarla.
 
-## 📊 Estado del sistema (corrida 19/07, domingo 06:06 local)
+## 📊 Estado del sistema (corrida 20/07, lunes 06:06 local)
 
-- **games**: 17 fechas válidas (18 docs, 1 sin winner descartada, sin
-  cambios desde el 13/07). Próxima fecha esperada lunes 20/07 (T5 fecha 3).
-  Tabla anual recalculada de cero hoy con la fórmula correcta (ver regla de
-  "quién paga" arriba): 1º PT (5073) · 2º Gordo (5224) · 3º Cobra (5546) ·
-  4º Carucha (5711) · 5º Nachi (5985) · 6º Gael (6040) · 7º Mata (6079) ·
-  8º Tano (6240) · 9º Mac (6575) · 10º Naso (6680) · 11º Negro (6706).
-- **Compactación hoy**: 24 eventos de exploración del 04/07 (>14 días)
-  borrados de Firestore `engagement` — ya estaban reflejados en el
-  result_notes de la proposal `2026-07-04-records`, sin pérdida de señal.
-  En `queue.json`: purgado `2026-07-11-a` (sent, >7 días).
-- **Proposals**: 2 nuevas `pending` hoy — `2026-07-19-exp-gordo-santidad` y
-  `2026-07-19-exp-gordo-tutela-mac` (fulfillment de 2 experience_request de
-  Gordo del 18/07 20:02, sin pre-forja, construidas on-demand). Vencen
-  26/07 si Andrés no las aprueba/rechaza. `2026-07-13-entrevista-gordo`
-  sigue `pending` sin señal nueva, vence 21/07.
-- **Auditoría Piña Directa / experience_request**: pedido `paternidad-negro`
-  (andres/mata, 18/07 13:03) ya tenía pre-forja en la serie → encolado hoy
-  11:00 (`2026-07-19-paternidad-negro`). Pedidos `santidad-gordo` y
-  `tutela-mac` (gordo, 18/07 20:02) SIN pre-forja → construidas hoy 2
-  páginas nuevas (`exp-gordo-santidad-f574ee8e.html`,
-  `exp-gordo-tutela-mac-2b601123.html`) con datos 100% recalculados de
-  games, encoladas 11:00 y 11:10 respectivamente.
+- **games**: 17 fechas válidas, sin cambios desde el 13/07 (T5 fecha 3 se
+  juega esta noche). Tabla anual recalculada de cero por segunda vez
+  consecutiva (metodología ahora verificada con detalle, ver reglas
+  arriba): 1º PT (5073) · 2º Gordo (5224) · 3º Cobra (5546) · 4º Carucha
+  (5711) · 5º Nachi (5985) · 6º Gael (6040) · 7º Mata (6079) · 8º Tano
+  (6240) · 9º Mac (6575) · 10º Naso (6680) · 11º Negro (6706). Victorias
+  2026: Cobra 5 · Gordo 3 · Carucha 2 · Nachi 2 · PT/Gael/Naso/Tano/Negro 1
+  · Mac/Mata 0. T5: F1 Cobra (07/07), F2 Gordo (07/14) — 1 a 1, se define
+  hoy o el 27/07.
+- **H2H recalculado completo hoy** (ver regla de metodología arriba):
+  Cobra-Gordo pasó a estar **7-7** (empatados, antes reportado 8-7 Cobra
+  con una metodología distinta — el número de hoy es el verificado).
+  Nachi domina a Gael **7-1** (el learnings anterior tenía esto AL REVÉS:
+  decía "Gael domina Nachi 7-1" — error corregido hoy). Nachi domina a
+  Tano 7-3, a Naso 6-2, a Negro 6-2, a Carucha 6-2 (estos 4 ya estaban bien
+  en el learnings anterior, confirmados).
+- **Compactación hoy**: 6 eventos del 05/07 (>14 días) borrados de
+  Firestore `engagement` — ya reflejados en el result_notes de la proposal
+  `2026-07-05-chusmerio`, sin pérdida de señal. En `queue.json`: purgados
+  `2026-07-12-a-preview` y `2026-07-12-a` (sent, >7 días).
+- **Gap encontrado y corregido**: la proposal `2026-07-19-liquidacion`
+  (chusmerío de ayer) nunca se había registrado en `proposals.json` pese a
+  haber salido con preview+general. Registrada hoy como `pending` con el
+  historial real (approve secundario de pt, sin decisión de andres); no
+  afecta el push ya despachado, solo la trazabilidad.
+- **Proposals**: `2026-07-19-exp-gordo-santidad` → PROMOVIDA (approve de
+  andres 19/07 13:06 + love). `2026-07-19-exp-gordo-tutela-mac` → sigue
+  pending, sin decisión, vence 26/07. `2026-07-13-entrevista-gordo` → sigue
+  pending, **vence mañana 21/07** sin señal nueva. `2026-07-19-liquidacion`
+  → pending (recién registrada), vence 26/07. `2026-07-20-la-previa` →
+  nueva, pending.
 - **pushSubs activos (8 personas)**: pt, negro, gael, cobra (2 devices),
   andres (2 devices), gordo, mac, carucha. `mata` invalid (dead), `mc`
   disabled. Sin eventos `push_unsubscribe`.
 - Sub-formatos usados: récords → clásico (04/07), horóscopo (11/07),
-  remontadas (18/07, cancelado y reemplazado). Chusmerío → clásico (05/07),
-  confesiones (12/07), **liquidación (19/07, nuevo hoy)**.
-
-- **⚠️ Piña de PT — riesgo de duplicado latente**: pina-req-pt (18/07) no
-  tiene entrada en `pina_deliveries.json` (ya la recibió vía «dato caído»);
-  hoy el express lo saltea porque el item `2026-07-18-dato-pt` en queue.json
-  contiene su URL. Cuando ese item se purgue (>7 días, ~25/07), el express
-  la re-entregaría. Al purgar: conservar ese item, o pedirle a Andrés que
-  el express registre a pt en el ledger. NO purgar a ciegas.
-- **Corrida extra del 19/07 (mediodía, pedido de Andrés por chat)**:
-  (1) recordatorio del Gimnasio a Mac y Negro 14:05 (únicos suscriptos sin
-  piña forjada); (2) landing `laboratorio.html` creada y luego APROBADA:
-  sale 14:10 (después de la liquidación) a pt/carucha/andres; (3) escritorio
-  "solicitadas" creado y pusheado de inmediato con todas las URLs del día +
-  el preview de las 09:00 que había quedado colgado del cron; (4) las 2
-  entregas de Gordo unificadas a las 11:00 ("que salga todo junto").
-- **🧪 Laboratorio personalizado (Andrés, 19/07, vinculante)**: la landing
-  `laboratorio.html` muestra SOLO las líneas del jugador que la abre
-  (device de localStorage, alias andres→mata; device desconocido ve mensaje
-  genérico). Catálogo completo para los 11 jugadores con stats verificadas;
-  al entregar una experiencia, moverla a "Ya fabricadas" en su sección.
-- **⭐ Subsección "Experiencias VIP" (Andrés, 19/07, vinculante)**: el
-  Gimnasio (🥊) y el Laboratorio (🧪) viven en Estadísticas → Experiencias
-  como iconos SIN cara/jugador en la subsección "Experiencias VIP". Se
-  renderizan desde la colección `experiencias` con docs `vip:"true"` +
-  `icon` (docs `vip-gimnasio` y `vip-laboratorio`, escritos por la rutina
-  POR ORDEN EXPLÍCITA de Andrés — excepción puntual a la regla "solo los
-  jugadores escriben experiencias"). Para esto se editó index.html por
-  ÚNICA vez con orden explícita de él (CSS .exp-vip-* + soporte de docs
-  vip en el loader dinámico); la regla "index.html NO TOCAR" sigue vigente
-  para todo lo demás.
+  Kryptonita/investigación (18/07, reemplazo especial). Chusmerío →
+  clásico (05/07), confesiones (12/07), liquidación (19/07). Previa →
+  clásico (06/07, 13/07); edición de hoy (20/07) mantiene el formato con
+  headline nuevo (empate H2H en vez de dominio).
 
 ## 🗓️ Semana en curso
 
-- ✅ Sáb 18/07: Kryptonita de Cobra a todos menos Cobra + piñas encubiertas
-  "dato caído" a Mac/Cobra/PT (experimento de Andrés, fuera de formato
-  récords estándar) + entrega de la piña de Gordo (pina-express).
-- 🧾 **Dom 19/07 (hoy)**: chusmerío sub-formato "día de liquidación"
-  (`2026-07-19-a`, preview 09:00, general 14:00) — deuda de Naso (6 días) +
-  libro de multas + ranking de pagadores + H2H PT-Naso (10-2). Además 3
-  entregas personales: paternidad-negro a andres/mata (11:00), santidad-gordo
-  y tutela-mac a gordo (11:00/11:10).
-- 🔥 **Lun 20/07**: la previa, T5 fecha 3. Si Gordo gana sería su primera
-  racha de 3 fechas seguidas (récord histórico, nadie lo logró aún — ya
-  quedó anotado en su certificado de santidad de hoy). Contadores de deuda
-  anclados a esa noche.
-- 📰 **Mar 21/07**: crónica si hay partida nueva. Vence la proposal
-  `2026-07-13-entrevista-gordo` si Andrés no decide antes.
+- 🧾 Dom 19/07: chusmerío "día de liquidación" — deuda de Naso (7 días
+  hoy) + libro de multas + ranking de pagadores + H2H PT-Naso. Además 3
+  entregas personales (paternidad-negro, santidad-gordo, tutela-mac) y el
+  primer envío del escritorio "solicitadas".
+- 🔥 **Lun 20/07 (hoy)**: la previa, T5 fecha 3. Preview 09:00 + general
+  14:00. Escritorio "solicitadas" 08:45 (regenerado, sin pedidos nuevos).
+  Headline: Cobra-Gordo 1-1 en la T5 y empatados 7-7 en el historial;
+  Naso paga 7 días; Nachi-Gael y Nachi-Tano como pares frescos.
+- 📰 **Mar 21/07**: crónica si hay partida nueva de anoche. Vence la
+  proposal `2026-07-13-entrevista-gordo` si Andrés no decide antes —
+  probablemente expira sola (7 días desde el 14/07 sin señal).
 
 ## TODO / ángulos sin usar
 
-Confirmar mañana si el especial "liquidación" convirtió (reacción/dwell/
-answer/approve) · resultado del certificado de santidad y el juicio de
-tutela de Gordo (primera vez que se construye on-demand sin pre-forja: medir
-si el approve/reacción es igual de fuerte que las piezas pre-forjadas) ·
-especial sedes · aniversarios (648 de Naso, multa 150 de Tano) · replicar
-flujo del club con nachi/naso/tano (3 lugares libres, piñas esperando en el
-vault) · H2H inéditos sin publicar: Gael domina Nachi 7-1, Nachi domina Tano
-7-3, Tano domina Negro 7-2, Nachi domina Naso/Negro/Carucha 6-2 cada uno ·
-decisión de Andrés pendiente sobre entrevista-gordo (vence 21/07) · si Gordo
-rompe la racha de 3 el 20/07, hay material inmediato para la crónica del
-martes.
+Confirmar mañana quién ganó la F3 (Cobra retoma la ventaja / Gordo empata
+la racha) y si el H2H Cobra-Gordo se rompió · resultado del certificado de
+tutela-mac (falta la decisión de Andrés) · especial sedes · aniversarios
+(648 de Naso, multa 150 de Tano) · replicar flujo del club con
+nachi/naso/tano (3 lugares libres, piñas esperando en el vault) · decisión
+de Andrés pendiente sobre entrevista-gordo (vence 21/07, probable expiro
+automático) · si la F3 define la T5 hoy o se estira a la F4 del 27/07, hay
+material inmediato para la crónica del martes · considerar avisarle a
+Andrés (fuera de esta corrida, es su decisión) si quiere que se corrija el
+dato de "racha de 3" en el certificado de santidad ya promovido de Gordo.

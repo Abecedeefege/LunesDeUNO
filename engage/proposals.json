@@ -255,12 +255,12 @@
       "title": "😇 Certificado de Santidad Unística: San Gordo",
       "page": "engage/exp-gordo-santidad-f574ee8e.html",
       "created": "2026-07-19",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Fulfillment de experience_request idea=santidad-gordo (device gordo, 18/07 20:02, desde su propia piña pina-gordo-5cec1f1c). Sin pre-forja previa (la serie experiencias-solicitables-serie solo cubría nachi/mata): construida on-demand con el mismo formato de certificado que exp-mata-santidad, con datos propios de Gordo verificados de games (15 fechas, 0 multas, 0 cortes, 0 últimos, 3 victorias — supera a Mata porque además gana). Métrica: reacción + approve de andres.",
       "notified_by": [
         "2026-07-19-santidad-gordo"
       ],
-      "result_notes": null
+      "result_notes": "PROMOVIDA (detectado en la corrida 20/07): approve de andres por botón (19/07 13:06:43 UY) + reacción love, dwell 45s. La página queda. NOTA DE PRECISIÓN: el texto de la página afirma que ganar el 20/07 sería 'primera racha de 3 seguidas' — recalculado en esta corrida, es incorrecto: Gordo solo viene de UNA victoria consecutiva (07/14, tras perder Cobra la F1 el 07/07), así que ganar hoy sería su 2da seguida, no la 3ra. No se corrige la página ya promovida (fuera de alcance de esta corrida) pero se evita repetir el error en contenido nuevo (ver 2026-07-20-la-previa)."
     },
     {
       "id": "2026-07-19-exp-gordo-tutela-mac",
@@ -282,6 +282,32 @@
       "status": "vault",
       "hypothesis": "Pedida por Andres por chat (19/07): landing permanente (sin fecha) donde los jugadores pueden solicitar experiencias del laboratorio. PERSONALIZADA (regla de Andres 19/07): muestra solo la seccion del jugador que la abre (device localStorage, andres→mata); catalogo completo para los 11 jugadores, 3 ofertas cada uno con stats verificadas de games, y bloque 'ya fabricadas' con links a las entregadas (mata: paternidad; gordo: santidad + tutela). Botones emiten experience_request con pina=owner + idea. Listada en Estadisticas → Experiencias como icono 🧪 en la subseccion 'Experiencias VIP' (doc vip-laboratorio). status=vault: pedido explicito del dueño, no expira. Push de invitacion aprobado: 14:10 del 19/07 a pt/carucha/andres, despues de la liquidacion.",
       "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-19-liquidacion",
+      "title": "🧾 Día de liquidación (chusmerío del domingo: deuda de Naso + libro de multas)",
+      "page": "engage/2026-07-19-liquidacion.html",
+      "created": "2026-07-19",
+      "status": "pending",
+      "hypothesis": "Chusmerío del domingo, sub-formato 'día de liquidación' para no repetir el clásico (05/07) ni confesiones (12/07): deuda de Naso con contador (6 días al 19/07), libro de multas 2026 (Tano 150 el más caro), ranking de pagadores, H2H PT-Naso. Cierra con 'mañana se juega'. Métrica: reacción + answer suscripción + approve. NOTA: esta proposal se registra recién en la corrida del 20/07 — quedó sin registrar el 19/07 pese a haber salido (preview 09:00 + general 14:00); no afecta el push ya despachado, solo la trazabilidad de la decisión de permanencia.",
+      "notified_by": [
+        "2026-07-19-a-preview",
+        "2026-07-19-a"
+      ],
+      "result_notes": "AÚN SIN DECISIÓN DE ANDRÉS. Señal secundaria: proposal_approved de device pt (19/07 17:55:30) + reacción love + answer suscripción=si + answer deuda-naso-postre-2026-07-13=sigue — no decide (solo andres decide permanencia). Vence 26/07 si Andrés no aprueba/rechaza antes."
+    },
+    {
+      "id": "2026-07-20-la-previa",
+      "title": "🔥 La Previa — edición semana 3 (T5 Fecha 3: Cobra-Gordo 7-7, tabla, deudas, padres/hijos)",
+      "page": "engage/2026-07-20-la-previa.html",
+      "created": "2026-07-20",
+      "status": "pending",
+      "hypothesis": "Tercera edición del formato La Previa (promovido 06/07, 2da edición 13/07) con datos frescos al 20/07 (17 fechas): Cobra y Gordo quedaron 1-1 en la T5 (F1 Cobra, F2 Gordo) y empatados 7-7 en el historial directo del año — primera vez que se reporta un empate en vez de un dominio, buen gancho de anticipación. Deuda de Naso cumple 7 días esta noche. 3 pares padres-e-hijos nuevos, no repetidos de ediciones anteriores (que usaron Cobra-Gordo 8-7, Tano-Negro 7-2, PT-Mata 6-2): Cobra-Gordo 7-7 (empate, headline), Nachi-Gael 7-1 (corrige un error de dirección que había quedado anotado en learnings — no 'Gael domina Nachi', es al revés), Nachi-Tano 7-3. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-20-a-preview",
+        "2026-07-20-a"
+      ],
       "result_notes": null
     },
     {
