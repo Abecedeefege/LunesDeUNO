@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T19:41:09.974Z",
+  "_updated_at": "2026-07-20T20:11:36.315Z",
   "notifications": [
     {
       "id": "2026-07-20-tombola",
@@ -53,8 +53,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-el-soplon.html",
       "send_at": "2026-07-20T17:00:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-20T20:11:36.296Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (pedido de Andres por chat: 2do push del dia a las 17:00 a todos los suscriptos, experiencia detective El Soplon con ayudas de asiento 100% basadas en datos para la fecha 3 de la T5 de esta noche; acompana al push de la previa de las 14:00; H2H/fondo/cortes/multas verificados contra games)"
     },
