@@ -331,8 +331,8 @@ la app: fondo `#0d0d12`, rojo UNO `#ED1C24`, amarillo `#FFDE00`, verde
        página. engageFeedback ya existe en engage.js — no hace falta
        tocarlo. -->
   <div style="margin:1.1rem .9rem 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
-    <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Nos querés decir algo?</div>
-    <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contanos lo que sea — esto lo lee directo el agente.</div>
+    <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
+    <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
     <textarea id="fbtxt-SLUG" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
     <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
       <button onclick="var t=document.getElementById('fbtxt-SLUG');engageFeedback('SLUG',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
