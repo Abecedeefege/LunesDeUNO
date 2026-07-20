@@ -38,6 +38,21 @@
   .nota{margin-top:20px;background:rgba(0,114,188,.06);border:1px solid rgba(0,114,188,.35);border-left:4px solid var(--blue);border-radius:10px;padding:12px;font-size:.78rem;line-height:1.55;color:var(--dim)}
   .nota b{color:#7cc4ff}
   .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+  .empty{background:rgba(0,166,81,.06);border:1px solid rgba(0,166,81,.35);border-left:4px solid var(--green);border-radius:10px;padding:14px;font-size:.85rem;line-height:1.6;color:var(--text)}
+  .empty b{color:var(--green)}
+  .summary{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .summary .box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px;flex:1;min-width:110px;text-align:center}
+  .summary .box .n{font-size:1.4rem;font-weight:800;color:var(--dir)}
+  .summary .box .l{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .mtable{width:100%;border-collapse:collapse;margin-top:12px;font-size:.8rem}
+  .mtable th{text-align:left;color:var(--dir);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 7px;border-bottom:1px solid var(--border);font-weight:800}
+  .mtable th.c,.mtable td.c{text-align:center}
+  .mtable td{padding:8px 7px;border-bottom:1px solid #22222c;vertical-align:middle;color:var(--dim)}
+  .mtable .pl{display:flex;align-items:center;gap:7px;font-weight:700;color:var(--text)}
+  .mtable .pl img{width:24px;height:24px;border-radius:50%;object-fit:cover;background:#222}
+  .mtable tr.you td{background:rgba(201,162,255,.07)}
+  .ok{color:var(--green);font-weight:700} .no{color:#6f6f7a}
+  .mnote{font-size:.72rem;color:var(--dim);margin-top:10px;line-height:1.55}
   #locked{display:none;text-align:center;padding:60px 20px;color:var(--dim);font-size:.9rem}
 </style>
 </head><body>
@@ -52,76 +67,43 @@
       <div class="h-top"><span class="l">🗂️ Escritorio de la dirección</span><span class="r">Solo tu device</span></div>
       <div class="h-body">
         <h1>Las solicitadas por otros</h1>
-        <p class="sub">Edición del <b>lunes 20/07</b>. Hoy no llegaron pedidos nuevos de otros
-        jugadores — la novedad del día es la previa de esta noche. Abajo, el estado de lo de
-        ayer y las decisiones que te faltan. Esta página se regenera cada mañana.</p>
+        <p class="sub">Edición del <b>lunes 20/07</b>. Acá va <b>solo lo que necesita tu OK</b> antes
+        de que yo lo mande. Si algo ya está aprobado o no requiere tu atención, no aparece. Abajo,
+        cómo fue el último envío por jugador. Se regenera cada mañana.</p>
       </div>
     </div>
 
-    <h2>🧪 Solicitadas por otros jugadores — estado</h2>
+    <h2>🔎 Esperan tu OK para salir</h2>
 
-    <div class="item">
-      <div class="who"><img src="../assets/faces/gordo.png" alt=""><b>Gordo</b><span class="when">pedida 18/07 20:02, entregada 19/07 11:00</span></div>
-      <p>😇 <b>Certificado de Santidad</b> — 15 fechas, 0 multas, 0 cortes, 0 últimos, 3 coronas.
-      La aprobaste ayer (13:06) con reacción 😍.<span class="tag out">PROMOVIDA — QUEDA</span></p>
-      <a href="exp-gordo-santidad-f574ee8e.html">Ver la página →</a>
+    <div class="empty">✅ <b>Nada esperando tu OK.</b> Todo lo del día ya está aprobado por vos esta
+    mañana: la <b>previa</b> (sale 14:00), <b>el Soplón</b> (sale 17:00), la <b>tutela de Gordo vs
+    Mac</b> y la <b>liquidación</b> del domingo. Cuando prepare un push que necesite tu visto antes
+    de salir, aparece acá con el copy y el link — para que lo sueltes o lo frenes.</div>
+
+    <h2>📊 Cómo fue el último envío grupal</h2>
+    <p class="sub" style="margin-top:2px">🧾 <b>La liquidación</b> — chusmerío del domingo, despachada
+    el 19/07 a las 14:00 a todos los suscriptos.</p>
+
+    <div class="summary">
+      <div class="box"><div class="n">8/8</div><div class="l">Entregado</div></div>
+      <div class="box"><div class="n">2/8</div><div class="l">Lo abrieron</div></div>
+      <div class="box"><div class="n">2</div><div class="l">Reacciones</div></div>
     </div>
 
-    <div class="item">
-      <div class="who"><img src="../assets/faces/gordo.png" alt=""><b>Gordo</b><span class="when">pedida 18/07 20:02, entregada 19/07 11:10</span></div>
-      <p>⚖️ <b>Juicio de Tutela Total vs Mac</b> — 11-1 en 12 fechas, +1207 puntos acumulados.
-      La abriste ayer pero todavía no decidiste.<span class="tag draft">FALTA TU DECISIÓN</span></p>
-      <a href="exp-gordo-tutela-mac-2b601123.html">Ver la página →</a>
-    </div>
-
-    <div class="item">
-      <div class="who"><img src="../assets/faces/pt.png" alt=""><b>PT</b><span class="when">18/07 19:10, en el Gimnasio</span></div>
-      <p>🥊 Pidió su <b>Piña Directa</b> en el Gimnasio — pero ya la tenía: le llegó el 18/07 con
-      el push «dato caído». Sigue sin duplicarse. Nota técnica: cuando el item viejo de la cola
-      se purgue (~25/07) el express podría re-entregarla si no se registra a PT en su
-      ledger.<span class="tag info">SIN ACCIÓN HOY</span></p>
-    </div>
-
-    <h2>👤 Tu propia solicitud</h2>
-
-    <div class="item">
-      <div class="who"><img src="../assets/faces/mata.png" alt=""><b>Mata (vos)</b><span class="when">pedida 18/07 13:03, entregada 19/07 11:00</span></div>
-      <p>👨‍⚖️ <b>Juicio de Paternidad Exprés vs Negro</b> — 6-0, la única serie perfecta de la
-      mesa. La abriste ayer, sin pedidos nuevos desde entonces.<span class="tag info">ENTREGADA</span></p>
-      <a href="exp-mata-paternidad-b0e9c73c.html">Ver la página →</a>
-    </div>
-
-    <h2>📤 Para revisar — sale hoy</h2>
-
-    <div class="item">
-      <p>🔥 <b>La Previa</b> — T5 Fecha 3. Cobra y Gordo llegan 1 a 1 en la temporada y 7-7 en el
-      historial directo; Naso cumple 7 días de deuda esta noche; Nachi domina a Gael 7-1 y a Tano
-      7-3. Ya la aprobaste vos mismo esta mañana.<span class="tag out">PROMOVIDA · GENERAL 14:00</span></p>
-      <div class="copybox"><b>Push:</b> «🔥 Cobra-Gordo 7-7, Naso paga 7 días» — La previa de la
-      T5 F3 ya está: tabla, deudas y quién puede romper el empate esta noche.</div>
-      <a href="2026-07-20-la-previa.html">Ver la página →</a>
-    </div>
-
-    <div class="item">
-      <p>👤 <b>Ningún jugador pidió experiencia nueva hoy.</b> Lo único en cola es la previa
-      (arriba) y este escritorio. Si alguien pide algo en el Gimnasio o el Laboratorio durante el
-      día, aparece acá recién en la corrida de mañana.<span class="tag info">SIN PEDIDOS</span></p>
-    </div>
-
-    <h2>⏳ Decisiones pendientes</h2>
-
-    <div class="item">
-      <p>⚖️ <b>Tutela de Gordo vs Mac</b> — abierta ayer, sin aprobar/rechazar todavía. Vence
-      26/07.<span class="tag draft">PENDIENTE</span></p>
-      <a href="exp-gordo-tutela-mac-2b601123.html">Ver la página →</a>
-    </div>
-
-    <div class="item">
-      <p>🧾 <b>Día de liquidación</b> (chusmerío del domingo 19/07) — salió con approve
-      secundario de PT, pero todavía falta el tuyo para promoverla o dejar que expire el
-      26/07.<span class="tag draft">PENDIENTE</span></p>
-      <a href="2026-07-19-liquidacion.html">Ver la página →</a>
-    </div>
+    <table class="mtable">
+      <tr><th>Jugador</th><th class="c">Entregado</th><th class="c">Abrió</th><th>Señal</th></tr>
+      <tr class="you"><td><div class="pl"><img src="../assets/faces/pt.png" alt="">PT</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="ok">Sí</span></td><td>😍 love · votó «sigue debiendo» · 50s</td></tr>
+      <tr class="you"><td><div class="pl"><img src="../assets/faces/mata.png" alt="">Mata <span style="font-weight:400;color:var(--dim)">(vos)</span></div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="ok">Sí</span></td><td>🙂 like · 110s (lo abriste hoy)</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/negro.png" alt="">Negro</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="no">—</span></td><td class="no">no lo abrió</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/cobra.png" alt="">Cobra</div></td><td class="c"><span class="ok">✅ 201 ×2</span></td><td class="c"><span class="no">—</span></td><td class="no">no lo abrió</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/mac.png" alt="">Mac</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="no">—</span></td><td class="no">no lo abrió</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/gordo.png" alt="">Gordo</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="no">—</span></td><td class="no">no lo abrió</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/carucha.png" alt="">Carucha</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="no">—</span></td><td class="no">abrió el del laboratorio, no éste</td></tr>
+      <tr><td><div class="pl"><img src="../assets/faces/gael.png" alt="">Gael</div></td><td class="c"><span class="ok">✅ 201</span></td><td class="c"><span class="no">—</span></td><td class="no">no lo abrió</td></tr>
+    </table>
+    <div class="mnote">📌 Entrega perfecta (8/8, ningún 410), pero la apertura es baja: solo PT y vos
+    lo abrieron. Patrón repetido — el grupo recibe pero abre poco; el que engancha siempre es PT.
+    <br>🚫 <b>Nachi, Naso y Tano</b> no figuran: no tienen suscripción activa, no les llega ningún push.</div>
 
     <div class="foot">🎴 LUNES DE UNO · ESCRITORIO DE LA DIRECCIÓN · SE REGENERA CADA MAÑANA</div>
   </div>

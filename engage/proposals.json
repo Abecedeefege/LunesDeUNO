@@ -267,12 +267,12 @@
       "title": "⚖️ Juicio de Tutela Total: Gordo vs Mac (11-1)",
       "page": "engage/exp-gordo-tutela-mac-2b601123.html",
       "created": "2026-07-19",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Fulfillment de experience_request idea=tutela-mac (device gordo, 18/07 20:02, desde su propia piña pina-gordo-5cec1f1c). Sin pre-forja previa: construida on-demand con el mismo formato judicial que exp-mata-paternidad, con el H2H real Gordo-Mac (11-1 en 12 fechas, +1207 puntos acumulados, la dominancia mas aplastante de la mesa) recalculado fecha por fecha de games. Métrica: reacción + approve de andres.",
       "notified_by": [
         "2026-07-19-tutela-mac"
       ],
-      "result_notes": null
+      "result_notes": "PROMOVIDA: approve de andres por botón (20/07 09:12 local, desde el escritorio solicitadas) + reacción love, dwell 24s. La página queda."
     },
     {
       "id": "laboratorio-landing",
@@ -295,7 +295,7 @@
         "2026-07-19-a-preview",
         "2026-07-19-a"
       ],
-      "result_notes": "AÚN SIN DECISIÓN DE ANDRÉS. Señal secundaria: proposal_approved de device pt (19/07 17:55:30) + reacción love + answer suscripción=si + answer deuda-naso-postre-2026-07-13=sigue — no decide (solo andres decide permanencia). Vence 26/07 si Andrés no aprueba/rechaza antes."
+      "result_notes": "PROMOVIDA: approve de andres por botón (20/07 09:16 local, desde el escritorio solicitadas) + reacción like, dwell 110s. Antes tenía approve secundario de pt (19/07 17:55) + love + answer suscripción=si + answer deuda-naso=sigue. La página queda."
     },
     {
       "id": "2026-07-20-la-previa",
@@ -309,6 +309,19 @@
         "2026-07-20-a"
       ],
       "result_notes": "PROMOVIDA: approve de andres por botón (20/07 08:32:55 local, tras abrir la página directo antes incluso del preview de las 09:00) + reacción love + answer suscripción=si. Dwell registrado. La página queda."
+    },
+    {
+      "id": "2026-07-20-el-soplon",
+      "title": "🕵️ El Soplón — datos de asiento para la noche (2º push del lunes)",
+      "page": "engage/2026-07-20-el-soplon.html",
+      "created": "2026-07-20",
+      "status": "promoted",
+      "hypothesis": "Pedida por Andres por chat (20/07): 2do push del lunes a las 17:00 a todos los suscriptos, acompañando la previa. Experiencia detective personal (gate por device, andres→mata) con ayudas de asiento 100% de datos verificados de games: peor/mejor H2H (a quién evitar/buscar al lado), fondo-tenders en mesas de ~10 (Naso 3/5, Negro 4/6), el corte de -50 (repartir 7 exactas; 6 jugadores nunca lo lograron), la multa personal, y una buchoneada del moroso (link a la liquidación). Para Negro/Mac —que casi no le ganan a nadie— se dice con honestidad en vez de inventar ventaja. Verificado adversarialmente por 5 agentes independientes contra Firestore (40/40 chips H2H + prosa) antes de publicar. Métrica: reacción + answer suscripción + approve + dwell.",
+      "notified_by": [
+        "2026-07-20-soplon-andres",
+        "2026-07-20-soplon"
+      ],
+      "result_notes": "PROMOVIDA el mismo día: approve de andres por botón (20/07 09:24 local, desde el escritorio antes del envío grupal) + reacción love + answer suscripción=si, dwell 136s. La página queda. Cambios pedidos por Andres tras verla: (1) corte reframeado de 'practicá el corte' a 'prestá atención cuando corta el de al lado' (Mata y Naso); (2) agregada la buchoneada del moroso (link a la liquidación) al pie."
     },
     {
       "id": "solicitadas-escritorio",

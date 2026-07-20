@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-20T12:21:09.834Z",
   "notifications": [
     {
+      "id": "2026-07-20-desk-v2",
+      "title": "🗂️ El escritorio, corregido",
+      "body": "Ahora muestra SOLO lo que necesita tu OK (hoy: nada) y una tabla por jugador de cómo fue el último envío. Entrá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-20T09:55:00-03:00",
+      "expires_at": "2026-07-20T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-20 (pedido de Andres por chat: reenviar el escritorio 'solicitadas' corregido — solo lo que necesita su atencion + tabla de metricas por jugador del ultimo envio)"
+    },
+    {
       "id": "2026-07-20-soplon-andres",
       "title": "🕵️ Pss… che, te tengo unos datos para hoy",
       "body": "El Soplón te armó el expediente de esta noche: a quién evitar, a quién buscar y el corte de los -50. Solo para vos.",
@@ -9,12 +24,12 @@
       "devices": [
         "andres"
       ],
-      "send_at": "2026-07-20T09:40:00-03:00",
+      "send_at": "2026-07-20T09:52:00-03:00",
       "expires_at": "2026-07-20T23:00:00-03:00",
       "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-20 (Andres pidio ver la experiencia del Soplon con su device; entrega personal + preview del push grupal de las 17:00; su dossier es el de Mata; datos verificados adversarialmente por 5 agentes independientes contra Firestore antes de publicar)"
+      "created_by": "engagement-agent 2026-07-20 (Andres pidio ver la experiencia del Soplon con su device; entrega personal + preview del push grupal de las 17:00; su dossier es el de Mata; incluye correcciones pedidas por chat: corte reframeado + buchoneada del moroso; datos verificados adversarialmente antes de publicar)"
     },
     {
       "id": "2026-07-20-soplon",

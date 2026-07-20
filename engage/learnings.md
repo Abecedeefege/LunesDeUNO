@@ -36,14 +36,19 @@
   mandan directo, mismo criterio que pina-express.
 - **Sala de prensa del martes**: al ganador, su device solo, ~10:00, linkeada
   desde la crónica, nunca push independiente a todos.
-- **🗂️ Escritorio diario "Las solicitadas por otros" (Andrés, 19/07 por
-  chat, vinculante)**: TODAS las mañanas, push a device andres con la landing
-  `engage/solicitadas-27b2d470.html` (URL secreta + gate device andres/mata,
-  SOLO visible por él, jamás linkeada desde contenido público). La corrida
-  matutina la REGENERA con: (1) experiencias solicitadas por otros jugadores
-  con links y estado, (2) sección "para revisar" con URLs y copys de TODO lo
-  que sale ese día, (3) desde hoy 20/07 también "decisiones pendientes"
-  (proposals sin aprobar/rechazar, con vencimiento). Timing: send_at 08:45.
+- **🗂️ Escritorio diario "Las solicitadas por otros" (Andrés, 19/07 +
+  refinado 20/07 por chat, vinculante)**: TODAS las mañanas, push a device
+  andres con la landing `engage/solicitadas-27b2d470.html` (URL secreta +
+  gate device andres/mata, SOLO visible por él, jamás linkeada desde
+  contenido público). Timing: send_at 08:45. **FORMATO NUEVO (20/07,
+  reemplaza al anterior)**: mostrar SOLO lo que necesita su atención —
+  concretamente los push que él tiene que revisar/aprobar ANTES de que yo los
+  mande (drafts/holds, con copy + link). Si algo ya está aprobado o no
+  requiere su atención, NO va (nada de FYI de entregas, "sin acción", ni
+  decisiones ya resueltas). Si no hay nada pendiente de su OK, estado vacío
+  honesto. Y al final SIEMPRE: una tabla breve por jugador del último envío
+  grupal con métricas reales (entregado 201/410, si lo abrió, reacción/dwell/
+  answer), recomputadas de send_log + engagement.
 - **⭐ Experiencias VIP + 🥊 Piña Directa**: sin puertas/login para VER (VIP es
   marca); la puerta solo aplica a FORJAR/reclamar una piña en el Gimnasio
   (`engage/pina-directa.html`, valida device contra pushSubs active).
