@@ -1,75 +1,149 @@
 <!DOCTYPE html><html lang="es-UY"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
-<title>🎰 La Tómbola del Asiento</title>
+<meta name="theme-color" content="#0d0d12">
+<link rel="icon" href="../assets/faces/carucha.png">
+<link rel="apple-touch-icon" href="../assets/faces/carucha.png">
+<title>🎰 La Tómbola del Asiento · by Carucha</title>
 <style>
   :root{--bg:#0d0d12;--card:#17171f;--border:#2a2a35;--red:#ED1C24;--yellow:#FFDE00;
-    --green:#00A651;--blue:#0072BC;--txt:#eaeaf0;--dim:#9a9aa8;--felt:#0b6b3a;--gold:#ffd24a}
+    --green:#00A651;--blue:#0072BC;--txt:#eaeaf0;--dim:#9a9aa8;--gold:#ffd24a;
+    --sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 70px}
-  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
-  .back:hover{color:var(--txt)}
-  .wrap{max-width:520px;margin:0 auto;padding:0 14px}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    overflow:hidden;overscroll-behavior:none}
 
-  .hero{margin-top:14px;border:1px solid rgba(255,210,74,.4);border-radius:16px;overflow:hidden;
-    background:radial-gradient(ellipse at 50% -10%, rgba(255,210,74,.14), transparent 55%),linear-gradient(180deg,#12100a,#0d0d12)}
-  .h-top{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,210,74,.3);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase}
-  .h-top .l{color:var(--gold);font-weight:800}.h-top .r{color:var(--dim)}
-  .h-body{padding:18px 14px;text-align:center}
-  .drum{font-size:2.6rem;filter:drop-shadow(0 0 12px rgba(255,210,74,.55))}
-  h1{font-size:1.7rem;line-height:1.12;margin-top:6px;color:var(--gold);text-shadow:0 0 18px rgba(255,210,74,.35)}
-  .sub{font-size:.84rem;color:var(--dim);line-height:1.55;margin-top:10px}
-  .sub b{color:var(--txt)}
+  .screen{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg)}
+  .screen.on{display:flex;animation:fadein .25s ease}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
 
-  .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:16px}
+  /* ===== branding header (Carucha = logo) ===== */
+  .brand{display:flex;align-items:center;gap:12px;padding:calc(10px + var(--sat)) 16px 10px;
+    border-bottom:1px solid rgba(255,210,74,.25);
+    background:radial-gradient(ellipse at 50% -40%, rgba(255,210,74,.16), transparent 70%)}
+  .brand .logo{position:relative;flex:none}
+  .brand .logo img{width:46px;height:46px;border-radius:50%;object-fit:cover;display:block;
+    border:2.5px solid var(--gold);box-shadow:0 0 14px rgba(255,210,74,.5);background:#222}
+  .brand .logo .dice{position:absolute;right:-6px;bottom:-6px;font-size:1rem;
+    filter:drop-shadow(0 0 6px rgba(255,210,74,.7))}
+  .brand h1{font-size:1.05rem;line-height:1.15;color:var(--gold);text-shadow:0 0 14px rgba(255,210,74,.3)}
+  .brand .by{font-size:.64rem;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+  .brand .by b{color:var(--txt);letter-spacing:.06em}
+  .brand .back{margin-left:auto;color:var(--dim);text-decoration:none;font-size:1.15rem;padding:6px}
+
+  /* ===== setup ===== */
+  .body-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 8px}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:12px}
   .lbl{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:7px;justify-content:space-between}
   .lbl .cnt{color:var(--dim);font-weight:600;letter-spacing:0;text-transform:none}
 
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{display:inline-flex;align-items:center;gap:6px;background:#0d0d0a;border:1px solid var(--border);border-radius:999px;padding:4px 11px 4px 4px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;opacity:.4;filter:grayscale(.7)}
-  .chip img{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#222}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:#0d0d0a;border:1px solid var(--border);border-radius:999px;padding:4px 11px 4px 4px;font-size:.84rem;font-weight:700;cursor:pointer;transition:all .15s;opacity:.4;filter:grayscale(.7)}
+  .chip img{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#222}
   .chip.on{opacity:1;filter:none;border-color:var(--green);background:rgba(0,166,81,.12)}
   .guestrow{display:flex;gap:8px;margin-top:10px}
-  .guestrow input{flex:1;background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);font:inherit;font-size:.82rem;padding:.5rem .7rem}
+  .guestrow input{flex:1;min-width:0;background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);font:inherit;font-size:16px;padding:.5rem .7rem}
   .guestrow button{background:var(--border);color:var(--txt);border:none;border-radius:8px;font-weight:700;font-size:.82rem;padding:0 14px;cursor:pointer}
 
   .modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-  .mode{background:#0d0d0a;border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+  .mode{background:#0d0d0a;border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s}
   .mode.on{border-color:var(--gold);background:rgba(255,210,74,.1)}
-  .mode .e{font-size:1.4rem}
-  .mode .t{font-size:.72rem;font-weight:700;margin-top:4px}
-  .mode .d{font-size:.6rem;color:var(--dim);margin-top:3px;line-height:1.3}
+  .mode .e{font-size:1.35rem}
+  .mode .t{font-size:.7rem;font-weight:700;margin-top:4px}
+  .mode .d{font-size:.58rem;color:var(--dim);margin-top:3px;line-height:1.3}
 
-  .sortbtn{width:100%;margin-top:16px;background:linear-gradient(180deg,#ED1C24,#a30f16);color:#fff;border:none;border-radius:14px;
-    font-size:1.15rem;font-weight:900;letter-spacing:.04em;padding:16px;cursor:pointer;box-shadow:0 8px 24px rgba(237,28,36,.35);transition:transform .1s}
+  .mechs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mech{background:#0d0d0a;border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s}
+  .mech.on{border-color:var(--gold);background:rgba(255,210,74,.1)}
+  .mech .e{font-size:1.5rem}
+  .mech .t{font-size:.72rem;font-weight:800;margin-top:4px}
+  .mech .d{font-size:.6rem;color:var(--dim);margin-top:3px;line-height:1.35}
+
+  .dock{flex:none;padding:10px 14px calc(12px + var(--sab));border-top:1px solid var(--border);background:linear-gradient(180deg,rgba(13,13,18,.6),var(--bg))}
+  .sortbtn{width:100%;background:linear-gradient(180deg,#ED1C24,#a30f16);color:#fff;border:none;border-radius:14px;
+    font-size:1.15rem;font-weight:900;letter-spacing:.04em;padding:16px;cursor:pointer;box-shadow:0 8px 24px rgba(237,28,36,.35);transition:transform .1s;font-family:inherit}
   .sortbtn:active{transform:scale(.98)}
-  .sortbtn:disabled{opacity:.5;cursor:not-allowed}
+  .warn{font-size:.78rem;color:#ff8a80;margin-top:8px;text-align:center;display:none}
+  .warn.show{display:block}
 
-  .result{margin-top:16px;display:none}
-  .result.show{display:block;animation:pop .4s cubic-bezier(.17,.89,.32,1.28)}
+  /* ===== pantalla de sorteo (bolillero / ruleta) ===== */
+  #scrDraw{align-items:center;justify-content:center;text-align:center;padding:20px;
+    background:radial-gradient(ellipse at 50% 0%, rgba(255,210,74,.1), transparent 60%),var(--bg)}
+  .draw-title{font-size:.72rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+
+  /* bolillero */
+  .drumwrap{position:relative;width:min(64vw,250px);aspect-ratio:1/1;margin:0 auto}
+  .drum{position:absolute;inset:0;border-radius:50%;border:5px solid var(--gold);
+    background:radial-gradient(circle at 35% 30%, #23232e, #0d0d12);
+    box-shadow:0 0 34px rgba(255,210,74,.35), inset 0 0 30px rgba(0,0,0,.7);overflow:hidden}
+  .drum.spin{animation:wobble .3s linear infinite}
+  @keyframes wobble{0%{transform:rotate(0) translateX(0)}25%{transform:rotate(4deg) translateX(2px)}
+    50%{transform:rotate(0) translateX(-2px)}75%{transform:rotate(-4deg) translateX(1px)}100%{transform:rotate(0)}}
+  .drum .ball{position:absolute;width:34px;height:34px;border-radius:50%;background:#fff;color:#111;
+    font-weight:900;font-size:.9rem;display:flex;align-items:center;justify-content:center;
+    box-shadow:inset -3px -4px 6px rgba(0,0,0,.3)}
+  .drum.spin .ball{animation:bounce .55s ease-in-out infinite alternate}
+  @keyframes bounce{from{transform:translate(0,0) rotate(0)}to{transform:translate(var(--dx),var(--dy)) rotate(160deg)}}
+  .chute{margin:26px auto 0;opacity:0;transform:translateY(-14px) scale(.6);transition:all .45s cubic-bezier(.17,.89,.32,1.4)}
+  .chute.out{opacity:1;transform:none}
+  .chute .bigface{width:96px;height:96px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);
+    box-shadow:0 0 26px rgba(255,210,74,.6);background:#222}
+  .chute .guestface{width:96px;height:96px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center;font-size:2.6rem;border:4px solid var(--gold)}
+  .chute .who{font-size:1.3rem;font-weight:900;color:var(--gold);margin-top:10px}
+  .chute .what{font-size:.8rem;color:var(--dim);margin-top:4px}
+
+  /* ruleta */
+  .wheelwrap{position:relative;width:min(84vw,330px);margin:0 auto}
+  .pointer{font-size:1.7rem;color:var(--gold);line-height:1;margin-bottom:-8px;position:relative;z-index:3;
+    filter:drop-shadow(0 2px 6px rgba(255,210,74,.7))}
+  .disc{position:relative;width:100%;aspect-ratio:1/1;border-radius:50%;border:5px solid var(--gold);
+    box-shadow:0 0 34px rgba(255,210,74,.3), inset 0 0 40px rgba(0,0,0,.55);
+    transform:rotate(var(--r,0deg));transition:none}
+  .disc.go{transition:transform 3.4s cubic-bezier(.12,.65,.06,1)}
+  .disc .node{position:absolute;left:50%;top:50%;width:46px;margin:-23px 0 0 -23px;z-index:2;
+    transform:rotate(calc(var(--r,0deg) * -1));transition:none}
+  .disc.go .node{transition:transform 3.4s cubic-bezier(.12,.65,.06,1)}
+  .disc .node img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#222;display:block;margin:0 auto}
+  .disc .node .gf{width:40px;height:40px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto;border:2px solid #fff}
+  .disc .node .nm{font-size:.56rem;font-weight:800;margin-top:2px;text-shadow:0 1px 3px #000;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .disc .hub{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle at 38% 32%, #2a2a35, #0d0d12);
+    border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;z-index:1}
+  .disc .hub img{width:66%;height:66%;border-radius:50%;object-fit:cover;transform:rotate(calc(var(--r,0deg) * -1));transition:none}
+  .disc.go .hub img{transition:transform 3.4s cubic-bezier(.12,.65,.06,1)}
+
+  /* ===== resultado ===== */
+  #scrResult .body-scroll{padding:0 14px calc(20px + var(--sab))}
+  .winner{margin:16px 0 14px;text-align:center;border:1px solid rgba(255,210,74,.4);border-radius:16px;padding:18px 14px;
+    background:radial-gradient(ellipse at 50% -10%, rgba(255,210,74,.16), transparent 60%),linear-gradient(180deg,#12100a,#0d0d12);
+    animation:pop .4s cubic-bezier(.17,.89,.32,1.28)}
   @keyframes pop{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:none}}
-  .rhead{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;text-align:center}
+  .winner img{width:84px;height:84px;border-radius:50%;object-fit:cover;border:4px solid var(--gold);
+    box-shadow:0 0 24px rgba(255,210,74,.55);background:#222}
+  .winner .gf{width:84px;height:84px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center;font-size:2.3rem;border:4px solid var(--gold)}
+  .winner h2{font-size:1.45rem;color:var(--gold);margin-top:8px;text-shadow:0 0 16px rgba(255,210,74,.35)}
+  .winner .sub{font-size:.78rem;color:var(--dim);margin-top:4px;line-height:1.5}
+  .rhead{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:4px 0 10px;text-align:center}
 
-  /* modo simple: grid numerado */
   .seats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .seat{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px 10px}
   .seat .num{font-size:1.5rem;font-weight:900;color:var(--gold);min-width:34px;text-align:center;font-variant-numeric:tabular-nums;text-shadow:0 0 10px rgba(255,210,74,.4)}
   .seat img{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#222}
+  .seat .gf{width:32px;height:32px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center}
   .seat .nm{font-size:.86rem;font-weight:700}
 
-  /* modo ronda: anillo */
   .ring{position:relative;width:100%;max-width:320px;margin:6px auto 0;aspect-ratio:1/1}
   .ring .table{position:absolute;inset:24%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#0e7d43,#074023);
     border:3px solid #063018;display:flex;align-items:center;justify-content:center;text-align:center;color:#bfe9cf;font-size:.7rem;font-weight:700;padding:8px}
   .ring .node{position:absolute;width:52px;margin-left:-26px;margin-top:-26px;text-align:center}
   .ring .node img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:#222}
+  .ring .node .gf{width:40px;height:40px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--gold)}
   .ring .node .nm{font-size:.6rem;margin-top:2px;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .ring .node .sn{position:absolute;top:-6px;right:2px;background:var(--gold);color:#1a1712;font-size:.58rem;font-weight:800;border-radius:999px;padding:0 5px;border:1.5px solid #0d0d12}
   .neighbors{margin-top:12px;font-size:.8rem;color:var(--dim);line-height:1.7}
   .neighbors b{color:var(--txt)}
 
-  /* modo bandos */
   .bandos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .bando{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px}
   .bando.a{border-color:rgba(0,114,188,.5)}.bando.b{border-color:rgba(237,28,36,.5)}
@@ -77,14 +151,13 @@
   .bando.a h4{color:#7cc4ff}.bando.b h4{color:#ff8a80}
   .bando .m{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:.84rem;font-weight:600}
   .bando .m img{width:26px;height:26px;border-radius:50%;object-fit:cover;background:#222}
+  .bando .m .gf{width:26px;height:26px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem}
 
   .actions2{display:flex;gap:8px;margin-top:14px}
-  .actions2 button{flex:1;background:var(--card);border:1px solid var(--border);color:var(--txt);border-radius:10px;font-weight:700;font-size:.84rem;padding:11px;cursor:pointer;font-family:inherit}
+  .actions2 button{flex:1;background:var(--card);border:1px solid var(--border);color:var(--txt);border-radius:10px;font-weight:700;font-size:.82rem;padding:11px 6px;cursor:pointer;font-family:inherit}
   .actions2 button:hover{border-color:var(--gold)}
-  .warn{font-size:.78rem;color:#ff8a80;margin-top:10px;display:none}
-  .warn.show{display:block}
 
-  .react{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .react{margin-top:18px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
   .react button{background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
   .react button:hover{border-color:var(--gold)}
   .react-hint,.q-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
@@ -96,96 +169,133 @@
   .addexp button{width:100%;background:#0d0d0a;border:2px solid var(--gold);border-radius:10px;color:var(--txt);padding:13px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit}
   .addexp button:disabled{opacity:.7}
   .addexp-hint{display:block;margin-top:8px;font-size:.75rem;color:var(--green);text-align:center;min-height:1em}
-  .foot{margin-top:24px;text-align:center;font-size:.66rem;color:var(--dim);letter-spacing:.12em}
+  .foot{margin-top:22px;text-align:center;font-size:.64rem;color:var(--dim);letter-spacing:.12em;line-height:1.8}
+  .foot img{width:22px;height:22px;border-radius:50%;object-fit:cover;vertical-align:middle;border:1.5px solid var(--gold);margin-right:4px}
 </style>
 </head><body>
 
-  <a class="back" href="../index.html">← Lunes de UNO</a>
+  <!-- ============ PANTALLA 1 · ARMAR LA MESA ============ -->
+  <div class="screen on" id="scrSetup">
+    <div class="brand">
+      <span class="logo"><img src="../assets/faces/carucha.png" alt="Carucha"><span class="dice">🎲</span></span>
+      <div>
+        <h1>La Tómbola del Asiento</h1>
+        <div class="by">by <b>Carucha</b> · sorteo oficial de la mesa</div>
+      </div>
+      <a class="back" href="../index.html" aria-label="Volver">✕</a>
+    </div>
 
-  <div class="wrap">
+    <div class="body-scroll">
+      <div class="panel">
+        <div class="lbl">1 · ¿Quiénes juegan hoy? <span class="cnt" id="cnt">11 en la mesa</span></div>
+        <div class="chips" id="chips"></div>
+        <div class="guestrow">
+          <input type="text" id="guestName" placeholder="¿Vino un invitado? Nombre…" maxlength="14">
+          <button onclick="addGuest()">＋ Sumar</button>
+        </div>
+      </div>
 
-    <div class="hero">
-      <div class="h-top"><span class="l">🎰 Sorteo oficial de la mesa</span><span class="r">100% random</span></div>
-      <div class="h-body">
-        <div class="drum">🎲</div>
-        <h1>La Tómbola<br>del Asiento</h1>
-        <p class="sub">Se acabaron las discusiones de dónde se sienta cada uno. Elegí quiénes juegan,
-        elegí el modo, y que la <b>máquina</b> decida. Sale un número al azar por jugador — sin trampa,
-        sin cábala, sin que Cobra elija primero siempre.</p>
+      <div class="panel">
+        <div class="lbl">2 · ¿Cómo repartimos?</div>
+        <div class="modes" id="modes">
+          <div class="mode on" data-mode="simple" onclick="pickMode('simple')">
+            <div class="e">🔢</div><div class="t">Sorteo</div><div class="d">un número a cada uno (tu orden de silla)</div>
+          </div>
+          <div class="mode" data-mode="ronda" onclick="pickMode('ronda')">
+            <div class="e">🪑</div><div class="t">Mesa armada</div><div class="d">la máquina te sienta y te da vecinos</div>
+          </div>
+          <div class="mode" data-mode="bandos" onclick="pickMode('bandos')">
+            <div class="e">⚔️</div><div class="t">Dos bandos</div><div class="d">parte la mesa en dos al azar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="lbl">3 · ¿Cómo sorteamos el inicio?</div>
+        <div class="mechs" id="mechs">
+          <div class="mech on" data-mech="bolillero" onclick="pickMech('bolillero')">
+            <div class="e">🎱</div><div class="t">El Bolillero</div>
+            <div class="d">el tambor gira y escupe la bolilla con la cara del que arranca</div>
+          </div>
+          <div class="mech" data-mech="ruleta" onclick="pickMech('ruleta')">
+            <div class="e">🎡</div><div class="t">La Ruleta</div>
+            <div class="d">la rueda con todas las caras gira y la flecha señala al primero</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="panel">
-      <div class="lbl">1 · ¿Quiénes juegan hoy? <span class="cnt" id="cnt">11 en la mesa</span></div>
-      <div class="chips" id="chips"></div>
-      <div class="guestrow">
-        <input type="text" id="guestName" placeholder="¿Vino un invitado? Nombre…" maxlength="14">
-        <button onclick="addGuest()">＋ Sumar</button>
+    <div class="dock">
+      <button class="sortbtn" id="sortbtn" onclick="sortear()">🎲 SORTEAR</button>
+      <div class="warn" id="warn">Necesitás al menos 2 jugadores en la mesa.</div>
+    </div>
+  </div>
+
+  <!-- ============ PANTALLA 2 · SORTEO EN VIVO ============ -->
+  <div class="screen" id="scrDraw">
+    <div>
+      <div class="draw-title" id="drawTitle">🎱 El bolillero está girando…</div>
+      <div id="drawStage"></div>
+    </div>
+  </div>
+
+  <!-- ============ PANTALLA 3 · RESULTADO ============ -->
+  <div class="screen" id="scrResult">
+    <div class="brand">
+      <span class="logo"><img src="../assets/faces/carucha.png" alt="Carucha"><span class="dice">🎲</span></span>
+      <div>
+        <h1>La Tómbola del Asiento</h1>
+        <div class="by">by <b>Carucha</b> · resultado del sorteo</div>
       </div>
+      <a class="back" href="../index.html" aria-label="Volver">✕</a>
     </div>
 
-    <div class="panel">
-      <div class="lbl">2 · ¿Cómo repartimos?</div>
-      <div class="modes" id="modes">
-        <div class="mode on" data-mode="simple" onclick="pickMode('simple')">
-          <div class="e">🔢</div><div class="t">Sorteo</div><div class="d">un número a cada uno (tu orden de silla)</div>
-        </div>
-        <div class="mode" data-mode="ronda" onclick="pickMode('ronda')">
-          <div class="e">🪑</div><div class="t">Mesa armada</div><div class="d">la máquina te sienta y te da vecinos</div>
-        </div>
-        <div class="mode" data-mode="bandos" onclick="pickMode('bandos')">
-          <div class="e">⚔️</div><div class="t">Dos bandos</div><div class="d">parte la mesa en dos al azar</div>
-        </div>
-      </div>
-    </div>
-
-    <button class="sortbtn" id="sortbtn" onclick="sortear()">🎲 SORTEAR</button>
-    <div class="warn" id="warn">Necesitás al menos 2 jugadores en la mesa.</div>
-
-    <div class="result" id="result">
+    <div class="body-scroll">
+      <div class="winner" id="winner"></div>
       <div class="rhead" id="rhead"></div>
       <div id="rbody"></div>
       <div class="actions2">
-        <button onclick="sortear()">🔄 Sortear de nuevo</button>
+        <button onclick="sortear()">🔄 De nuevo</button>
+        <button onclick="volverSetup()">🪑 Cambiar mesa</button>
         <button onclick="shareResult()">📲 Compartir</button>
       </div>
       <span class="q-hint" id="shareHint" style="display:block;margin-top:8px;font-size:.75rem;color:var(--green)"></span>
-    </div>
 
-    <!-- ===== agregar a Experiencias (queda fija para todos los lunes) ===== -->
-    <div class="addexp">
-      <div class="lead">¿La vas a usar cada jornada? <b>Agregala a Experiencias</b> y queda fija en Estadísticas → Experiencias del sitio, para tenerla siempre a mano — todos los lunes, sin buscar el link.</div>
-      <button onclick="agregarExperiencia(this)">⭐ Agregar a la sección Experiencias</button>
-      <span class="addexp-hint"></span>
-    </div>
-
-    <div class="react">¿Sirve la Tómbola?
-      <button onclick="engageReact('tombola-asientos','love',this)">😍</button>
-      <button onclick="engageReact('tombola-asientos','like',this)">🙂</button>
-      <button onclick="engageReact('tombola-asientos','meh',this)">😐</button>
-      <button onclick="engageReact('tombola-asientos','no',this)">🙅</button>
-      <span class="react-hint"></span>
-    </div>
-
-    <div class="react q">
-      <div class="qt">¿La dejamos fija para usar cada jornada?</div>
-      <button onclick="engageApprove('tombola-asientos',this)">✅ Que quede</button>
-      <button onclick="engageRejected('tombola-asientos',this)">✕ No hace falta</button>
-      <span class="engage-hint"></span>
-    </div>
-
-    <!-- ===== feedback libre ===== -->
-    <div style="margin-top:14px;padding:1rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;">
-      <div style="font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
-      <div style="font-size:.74rem;color:var(--dim);margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
-      <textarea id="fbtxt-tombola-asientos" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
-      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
-        <button onclick="var t=document.getElementById('fbtxt-tombola-asientos');engageFeedback('tombola-asientos',t.value,this);t.value='';" style="background:var(--red);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
-        <span class="fb-hint" style="font-size:.72rem;color:var(--dim);"></span>
+      <!-- ===== agregar a Experiencias (queda fija para todos los lunes) ===== -->
+      <div class="addexp">
+        <div class="lead">¿La vas a usar cada jornada? <b>Agregala a Experiencias</b> y queda fija en Estadísticas → Experiencias del sitio, para tenerla siempre a mano — todos los lunes, sin buscar el link.</div>
+        <button onclick="agregarExperiencia(this)">⭐ Agregar a la sección Experiencias</button>
+        <span class="addexp-hint"></span>
       </div>
-    </div>
 
-    <div class="foot">🎴 LUNES DE UNO · LA TÓMBOLA DEL ASIENTO · SORTEO 100% AL AZAR</div>
+      <div class="react">¿Sirve la Tómbola?
+        <button onclick="engageReact('tombola-asientos','love',this)">😍</button>
+        <button onclick="engageReact('tombola-asientos','like',this)">🙂</button>
+        <button onclick="engageReact('tombola-asientos','meh',this)">😐</button>
+        <button onclick="engageReact('tombola-asientos','no',this)">🙅</button>
+        <span class="react-hint"></span>
+      </div>
+
+      <div class="react q">
+        <div class="qt">¿La dejamos fija para usar cada jornada?</div>
+        <button onclick="engageApprove('tombola-asientos',this)">✅ Que quede</button>
+        <button onclick="engageRejected('tombola-asientos',this)">✕ No hace falta</button>
+        <span class="engage-hint"></span>
+      </div>
+
+      <!-- ===== feedback libre ===== -->
+      <div style="margin-top:14px;padding:1rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;">
+        <div style="font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
+        <div style="font-size:.74rem;color:var(--dim);margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
+        <textarea id="fbtxt-tombola-asientos" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d0a;border:1px solid var(--border);border-radius:8px;color:var(--txt);font:inherit;font-size:16px;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+          <button onclick="var t=document.getElementById('fbtxt-tombola-asientos');engageFeedback('tombola-asientos',t.value,this);t.value='';" style="background:var(--red);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+          <span class="fb-hint" style="font-size:.72rem;color:var(--dim);"></span>
+        </div>
+      </div>
+
+      <div class="foot"><img src="../assets/faces/carucha.png" alt=""> UNA EXPERIENCIA DE CARUCHA<br>🎴 LUNES DE UNO · SORTEO 100% AL AZAR</div>
+    </div>
   </div>
 
 <script>
@@ -198,7 +308,9 @@
   ];
   var guests = [];        // {id:'guest-N', nm:'...', guest:true}
   var mode = 'simple';
+  var mech = 'bolillero'; // bolillero | ruleta
   var lastResult = null;
+  var drawTimers = [];
 
   // ---- random robusto (crypto si está, si no Math.random) ----
   function rnd(){
@@ -218,21 +330,26 @@
 
   function allPlayers(){ return PLAYERS.concat(guests); }
   function present(){ return allPlayers().filter(function(p){return selected[p.id];}); }
-  function faceHtml(p){
-    if(p.guest) return '<span style="width:26px;height:26px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center;font-size:.8rem">🎭</span>';
-    return '<img src="../assets/faces/'+p.id+'.png" alt="">';
-  }
-  function faceBig(p,cls){
-    if(p.guest) return '<span style="width:32px;height:32px;border-radius:50%;background:#333;display:inline-flex;align-items:center;justify-content:center">🎭</span>';
+  function face(p,cls){
+    if(p.guest) return '<span class="gf">🎭</span>';
     return '<img src="../assets/faces/'+p.id+'.png" class="'+(cls||'')+'" alt="">';
   }
+
+  function showScreen(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.screen'),function(s){
+      s.classList.toggle('on', s.id===id);
+    });
+    var sc=document.querySelector('#'+id+' .body-scroll');
+    if(sc) sc.scrollTop=0;
+  }
+  function clearTimers(){ drawTimers.forEach(clearTimeout); drawTimers=[]; }
 
   function renderChips(){
     var c=document.getElementById('chips'); c.innerHTML='';
     allPlayers().forEach(function(p){
       var d=document.createElement('div');
       d.className='chip'+(selected[p.id]?' on':'');
-      d.innerHTML=faceHtml(p)+'<span>'+p.nm+'</span>';
+      d.innerHTML=face(p)+'<span>'+p.nm+'</span>';
       d.onclick=function(){ selected[p.id]=!selected[p.id]; renderChips(); updateCount(); };
       c.appendChild(d);
     });
@@ -254,52 +371,118 @@
       el.classList.toggle('on', el.getAttribute('data-mode')===m);
     });
   };
+  window.pickMech=function(m){
+    mech=m;
+    Array.prototype.forEach.call(document.querySelectorAll('.mech'),function(el){
+      el.classList.toggle('on', el.getAttribute('data-mech')===m);
+    });
+  };
+  window.volverSetup=function(){ clearTimers(); showScreen('scrSetup'); };
 
   // ---- SORTEAR ----
   window.sortear=function(){
     var ppl=present();
     var warn=document.getElementById('warn');
-    if(ppl.length<2){ warn.classList.add('show'); return; }
+    if(ppl.length<2){ warn.classList.add('show'); showScreen('scrSetup'); return; }
     warn.classList.remove('show');
+    clearTimers();
     var order=shuffle(ppl);
-    var btn=document.getElementById('sortbtn');
-    btn.disabled=true; btn.textContent='🎰 girando…';
-    // pequeña animación de suspenso
-    var ticks=0, maxT=10;
-    var iv=setInterval(function(){
-      ticks++;
-      renderResult(shuffle(ppl), mode, true);
-      if(ticks>=maxT){
-        clearInterval(iv);
-        renderResult(order, mode, false);
-        lastResult={order:order.map(function(p){return p.nm;}),mode:mode};
-        btn.disabled=false; btn.textContent='🎲 SORTEAR';
-        if(window.engageTrack) engageTrack('tombola_sorteo',{mode:mode,n:ppl.length});
-      }
-    },70);
+    showScreen('scrDraw');
+    if(mech==='ruleta') runRuleta(ppl, order);
+    else runBolillero(order);
+    if(window.engageTrack) engageTrack('tombola_sorteo',{mode:mode,mech:mech,n:ppl.length});
   };
 
-  function renderResult(order, m, spinning){
-    var res=document.getElementById('result');
+  // ---- OPCIÓN A · EL BOLILLERO ----
+  function runBolillero(order){
+    document.getElementById('drawTitle').textContent='🎱 El bolillero está girando…';
+    var stage=document.getElementById('drawStage');
+    var n=Math.min(order.length,10);
+    var html='<div class="drumwrap"><div class="drum spin" id="drum">';
+    for(var i=0;i<n;i++){
+      var x=12+rnd()*55, y=14+rnd()*55, dx=(rnd()*40-20).toFixed(0), dy=(rnd()*40-20).toFixed(0), dl=(rnd()*0.5).toFixed(2);
+      html+='<span class="ball" style="left:'+x+'%;top:'+y+'%;--dx:'+dx+'px;--dy:'+dy+'px;animation-delay:'+dl+'s">'+(i+1)+'</span>';
+    }
+    html+='</div></div>';
+    html+='<div class="chute" id="chute">'+
+      (order[0].guest?'<span class="guestface">🎭</span>':'<img class="bigface" src="../assets/faces/'+order[0].id+'.png" alt="">')+
+      '<div class="who">¡Sale '+order[0].nm+'!</div><div class="what">bolilla Nº 1 — arranca la mesa</div></div>';
+    stage.innerHTML=html;
+    drawTimers.push(setTimeout(function(){
+      var drum=document.getElementById('drum'); if(drum) drum.classList.remove('spin');
+      document.getElementById('drawTitle').textContent='🎱 ¡Salió la bolilla!';
+      var ch=document.getElementById('chute'); if(ch) ch.classList.add('out');
+    },2100));
+    drawTimers.push(setTimeout(function(){ showResult(order); },3700));
+  }
+
+  // ---- OPCIÓN B · LA RULETA ----
+  function runRuleta(ppl, order){
+    document.getElementById('drawTitle').textContent='🎡 La ruleta está girando…';
+    var stage=document.getElementById('drawStage');
+    var n=ppl.length, seg=360/n;
+    var cols=['#ED1C24','#FFDE00','#00A651','#0072BC'];
+    var stops=[];
+    for(var i=0;i<n;i++){
+      var c=cols[i%cols.length];
+      if(n%cols.length===1 && i===n-1 && n>1) c=cols[1]; // evita 2 colores iguales juntos al cerrar
+      stops.push(c+' '+(i*seg)+'deg '+((i+1)*seg)+'deg');
+    }
+    var html='<div class="wheelwrap"><div class="pointer">▼</div>'+
+      '<div class="disc" id="disc" style="background:conic-gradient(from -90deg,'+stops.join(',')+')">';
+    for(var j=0;j<n;j++){
+      var ang=(j*seg-90)*Math.PI/180;
+      var x=50+37*Math.cos(ang), y=50+37*Math.sin(ang);
+      html+='<div class="node" style="left:'+x+'%;top:'+y+'%;margin-left:-23px;margin-top:-23px">'+
+        (ppl[j].guest?'<span class="gf">🎭</span>':'<img src="../assets/faces/'+ppl[j].id+'.png" alt="">')+
+        '<div class="nm">'+ppl[j].nm+'</div></div>';
+    }
+    html+='<div class="hub"><img src="../assets/faces/carucha.png" alt=""></div></div></div>';
+    stage.innerHTML=html;
+    // el ganador (order[0]) tiene que terminar bajo la flecha
+    var w=ppl.indexOf(order[0]);
+    var jitter=(rnd()-0.5)*seg*0.5;
+    var final=360*4 - w*seg + jitter;
+    var disc=document.getElementById('disc');
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      disc.classList.add('go');
+      disc.style.setProperty('--r', final+'deg');
+    });});
+    drawTimers.push(setTimeout(function(){
+      document.getElementById('drawTitle').textContent='🎡 ¡La flecha habló!';
+    },3400));
+    drawTimers.push(setTimeout(function(){ showResult(order); },4400));
+  }
+
+  // ---- RESULTADO ----
+  function showResult(order){
+    var winner=order[0];
+    var wEl=document.getElementById('winner');
+    var sub;
+    if(mode==='simple') sub='Se lleva el <b>número 1</b>: elige silla primero y arranca la partida.';
+    else if(mode==='ronda') sub='Primer asiento de la mesa armada. El resto ya tiene lugar y vecinos.';
+    else sub='Encabeza el <b>Bando A</b>. Abajo está la mesa partida en dos.';
+    wEl.innerHTML=(winner.guest?'<span class="gf">🎭</span>':'<img src="../assets/faces/'+winner.id+'.png" alt="">')+
+      '<h2>🏁 Arranca '+winner.nm+'</h2><div class="sub">'+sub+'</div>';
+
     var head=document.getElementById('rhead');
     var body=document.getElementById('rbody');
-    res.classList.add('show');
-    if(m==='simple'){
-      head.textContent = spinning?'girando…':'🔢 Cada uno con su número — así se sientan';
+    if(mode==='simple'){
+      head.textContent='🔢 Cada uno con su número — así se sientan';
       var html='<div class="seats">';
       order.forEach(function(p,i){
-        html+='<div class="seat"><span class="num">'+(i+1)+'</span>'+faceBig(p)+'<span class="nm">'+p.nm+'</span></div>';
+        html+='<div class="seat"><span class="num">'+(i+1)+'</span>'+face(p)+'<span class="nm">'+p.nm+'</span></div>';
       });
       html+='</div><div class="neighbors" style="text-align:center;margin-top:10px">El número es tu <b>orden para elegir silla</b> (o directamente tu silla, como prefieran). El 1 elige primero.</div>';
       body.innerHTML=html;
-    } else if(m==='ronda'){
-      head.textContent = spinning?'girando…':'🪑 La máquina ya te sentó';
+    } else if(mode==='ronda'){
+      head.textContent='🪑 La máquina ya te sentó';
       var n=order.length;
       var ring='<div class="ring"><div class="table">🎴<br>MESA<br>LUNES</div>';
       for(var i=0;i<n;i++){
         var ang=(i/n)*2*Math.PI - Math.PI/2;
         var x=50+42*Math.cos(ang), y=50+42*Math.sin(ang);
-        ring+='<div class="node" style="left:'+x+'%;top:'+y+'%"><span class="sn">'+(i+1)+'</span>'+faceBig(order[i])+'<div class="nm">'+order[i].nm+'</div></div>';
+        ring+='<div class="node" style="left:'+x+'%;top:'+y+'%"><span class="sn">'+(i+1)+'</span>'+face(order[i])+'<div class="nm">'+order[i].nm+'</div></div>';
       }
       ring+='</div>';
       var nb='<div class="neighbors">';
@@ -308,28 +491,30 @@
         nb+='<b>'+order[j].nm+'</b> — entre '+L+' y '+R+'<br>';
       }
       nb+='</div>';
-      body.innerHTML=ring+(spinning?'':nb);
+      body.innerHTML=ring+nb;
     } else {
-      head.textContent = spinning?'girando…':'⚔️ Dos bandos, echados a la suerte';
+      head.textContent='⚔️ Dos bandos, echados a la suerte';
       var half=Math.ceil(order.length/2);
       var A=order.slice(0,half), B=order.slice(half);
       var h='<div class="bandos"><div class="bando a"><h4>🔵 Bando A</h4>';
-      A.forEach(function(p){h+='<div class="m">'+faceBig(p)+p.nm+'</div>';});
+      A.forEach(function(p){h+='<div class="m">'+face(p)+p.nm+'</div>';});
       h+='</div><div class="bando b"><h4>🔴 Bando B</h4>';
-      B.forEach(function(p){h+='<div class="m">'+faceBig(p)+p.nm+'</div>';});
+      B.forEach(function(p){h+='<div class="m">'+face(p)+p.nm+'</div>';});
       h+='</div></div><div class="neighbors" style="text-align:center;margin-top:10px">Sirve para dividir la mesa, armar equipos, o decidir qué mitad se sienta de cada lado.</div>';
       body.innerHTML=h;
     }
-    if(!spinning) res.scrollIntoView({behavior:'smooth',block:'nearest'});
+    lastResult={order:order.map(function(p){return p.nm;}),mode:mode};
+    document.getElementById('shareHint').textContent='';
+    showScreen('scrResult');
   }
 
   window.shareResult=function(){
     if(!lastResult){return;}
     var txt;
     if(lastResult.mode==='simple'){
-      txt='🎰 Sorteo de asientos (Lunes de UNO):\n'+lastResult.order.map(function(nm,i){return (i+1)+'· '+nm;}).join('\n');
+      txt='🎰 Sorteo de asientos (Lunes de UNO):\n🏁 Arranca '+lastResult.order[0]+'\n'+lastResult.order.map(function(nm,i){return (i+1)+'· '+nm;}).join('\n');
     } else if(lastResult.mode==='ronda'){
-      txt='🪑 Mesa sorteada (en orden): '+lastResult.order.join(' → ')+' → (vuelve al 1)';
+      txt='🪑 Mesa sorteada (en orden): '+lastResult.order.join(' → ')+' → (vuelve al 1). Arranca '+lastResult.order[0]+'.';
     } else {
       var half=Math.ceil(lastResult.order.length/2);
       txt='⚔️ Bandos sorteados:\n🔵 A: '+lastResult.order.slice(0,half).join(', ')+'\n🔴 B: '+lastResult.order.slice(half).join(', ');
