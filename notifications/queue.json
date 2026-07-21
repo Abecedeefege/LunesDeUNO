@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-21T14:30:14.543Z",
   "notifications": [
     {
+      "id": "2026-07-21-cronica-v4-andres",
+      "title": "📰 Crónica corregida (padres e hijos + tema)",
+      "body": "Arreglado el bloque de padres e hijos que se veía roto, y la canción para Nachi ahora sigue el tema original de Cristian Castro. Revisá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T11:45:00-03:00",
+      "expires_at": "2026-07-21T13:50:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (correcciones de Andres por chat: (1) bloque padres-e-hijos se veia roto -> reestructurado con score en badge; (2) confirmar que linkea a la entrevista -> ok; (3) la cancion adaptada mas fiel al tema original de Cristian Castro. Reenvio para revisar antes del general 14:00)"
+    },
+    {
       "id": "2026-07-21-cronica-v3-andres",
       "title": "📰 Crónica y entrevista corregidas",
       "body": "Arreglado: Carucha en masculino, y la crónica ahora linkea a la entrevista de solo lectura con el tema para Nachi adentro. Revisá.",

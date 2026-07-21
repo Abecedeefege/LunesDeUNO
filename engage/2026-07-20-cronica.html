@@ -60,10 +60,12 @@
   .brief img.face { width: 20px; height: 20px; border-radius: 50%; vertical-align: -5px; margin-right: .3rem; }
 
   .h2h-box { margin: 0 .9rem 1rem; background: #e9e4d4; border-radius: 8px; padding: .8rem .8rem; }
-  .h2h-box .tag { font-size: .6rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .5rem; }
-  .h2h-row { display: flex; align-items: center; gap: .5rem; font-size: .84rem; line-height: 1.4; margin-bottom: .4rem; }
-  .h2h-row img { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #FFDE00; }
-  .h2h-row b { color: #a3141c; }
+  .h2h-box .tag { font-size: .6rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .6rem; }
+  .h2h-row { display: flex; align-items: flex-start; gap: .6rem; font-size: .84rem; line-height: 1.45; margin-bottom: .6rem; }
+  .h2h-row:last-child { margin-bottom: 0; }
+  .h2h-row img { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #FFDE00; flex: none; margin-top: .1rem; }
+  .h2h-row .txt { flex: 1; color: #34343c; }
+  .h2h-row .score { display: inline-block; font-weight: 800; color: #fff; background: #a3141c; border-radius: 5px; padding: .05rem .4rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
 
   .annual { margin: 0 .9rem 1rem; background: #16161a; color: #f4f1e8; border-radius: 8px; padding: .8rem; }
   .annual .lbl { font-size: .62rem; letter-spacing: 2px; color: #FFDE00; font-weight: 800; margin-bottom: .5rem; }
@@ -153,8 +155,8 @@
 
     <div class="h2h-box">
       <div class="tag">PADRES E HIJOS — SE ACTUALIZÓ</div>
-      <div class="h2h-row"><img src="../assets/faces/carucha.png" alt="">Anoche Carucha le ganó a los <b>8</b> que compartieron mesa con él — barrida completa, Nachi y PT incluidos.</div>
-      <div class="h2h-row"><img src="../assets/faces/pt.png" alt="">Con esa derrota, PT-Carucha en el historial del año quedó <b>6-5</b> a favor de PT — la diferencia más chica que tuvieron nunca.</div>
+      <div class="h2h-row"><img src="../assets/faces/carucha.png" alt=""><div class="txt">Anoche Carucha les ganó a los <span class="score">8</span> que compartieron mesa con él: barrida completa, Nachi y PT incluidos.</div></div>
+      <div class="h2h-row"><img src="../assets/faces/pt.png" alt=""><div class="txt">Con esa derrota, el historial del año PT–Carucha quedó <span class="score">PT 6–5</span>: la diferencia más chica que tuvieron nunca.</div></div>
     </div>
 
     <div class="annual">
