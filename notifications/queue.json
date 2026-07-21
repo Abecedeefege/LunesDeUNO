@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-21T15:52:57.462Z",
+  "_updated_at": "2026-07-21T17:20:22.377Z",
   "notifications": [
     {
       "id": "2026-07-21-cronica-v4-andres",
@@ -606,8 +606,8 @@
       "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
       "send_at": "2026-07-21T14:00:00-03:00",
       "expires_at": "2026-07-21T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T17:20:22.376Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (crónica del martes: T5 fecha 3 jugada anoche en casa de Negro, Carucha gana por margen mínimo, Cobra y Mata ausentes, Tano último. Sala de prensa de Carucha linkeada, no despachada a todos)"
     },
