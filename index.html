@@ -1334,18 +1334,6 @@
       0%,100% { transform: translateY(0) rotate(-1deg) scale(1); }
       50% { transform: translateY(-2%) rotate(1deg) scale(1.015); }
     }
-    .spl-hat.spl-charge { animation: splCharge .5s cubic-bezier(.3,1.4,.4,1) both; }
-    @keyframes splCharge {
-      0%   { transform: scale(1); }
-      45%  { transform: scale(1.22); filter: brightness(1.9) drop-shadow(0 0 70px rgba(255,222,0,.95)) drop-shadow(0 0 24px rgba(255,255,255,.8)); }
-      100% { transform: scale(1.04); filter: brightness(1.15) drop-shadow(0 0 34px rgba(255,222,0,.5)); }
-    }
-    .spl-hat.spl-zoomout { animation: splZoomThrough .8s cubic-bezier(.72,0,.9,.4) both; }
-    @keyframes splZoomThrough {
-      0%   { transform: scale(1.04); opacity: 1; filter: brightness(1.15) blur(0); }
-      75%  { opacity: 1; }
-      100% { transform: scale(30); opacity: 0; filter: brightness(1.4) blur(12px); }
-    }
     .spl-shockwave {
       position: absolute; border-radius: 50%; pointer-events: none; z-index: 40;
       border: 4px solid rgba(255,255,255,.9);
@@ -7118,18 +7106,8 @@ window.addEventListener('pagehide', _flushOnHide);
   var finished = false;
   function finishSequence() {
     if (finished) return; finished = true;
-    var c = hatCenter();
-    hat.classList.remove('spl-alive');
-    hat.classList.add('spl-charge');
-    flash(); shake(14);
-    wave(c.x, c.y, Math.min(innerWidth, innerHeight) * 1.2, 'spl-c2');
-    burst(hatMouth().x, hatMouth().y, 60, 7);
-    T(520, function() {
-      hat.classList.remove('spl-charge');
-      hat.classList.add('spl-zoomout');
-    });
-    T(1050, function() { splash.classList.add('spl-gone'); });
-    T(1500, cleanup);
+    splash.classList.add('spl-gone');
+    T(450, cleanup);
   }
 
   // tap / click en cualquier lado = saltear el splash
@@ -7209,6 +7187,8 @@ window.addEventListener('pagehide', _flushOnHide);
       document.getElementById('splSlowmo').classList.remove('spl-on');
       document.getElementById('splTitleZone').classList.add('spl-out');
       allAbsorbedCb = finishSequence;
+      // si no quedó ninguna carta en vuelo, no hay nada que aspirar: cerrar ya
+      if (!cards.length) { allAbsorbedCb(); allAbsorbedCb = null; }
       T(1400, function() { if (allAbsorbedCb) { allAbsorbedCb(); allAbsorbedCb = null; } });
     });
   }
