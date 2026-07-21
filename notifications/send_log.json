@@ -1357,6 +1357,34 @@
       "device": "carucha",
       "ts": "2026-07-21T13:14:24.203Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-nachi-song",
+      "device": "andres",
+      "ts": "2026-07-21T14:20:09.388Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-nachi-song",
+      "device": "andres",
+      "ts": "2026-07-21T14:20:09.429Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-cronica-v2-andres",
+      "device": "andres",
+      "ts": "2026-07-21T14:20:09.487Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-cronica-v2-andres",
+      "device": "andres",
+      "ts": "2026-07-21T14:20:09.539Z",
+      "status_code": 201
     }
   ]
 }

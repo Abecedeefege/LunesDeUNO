@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-21T13:14:24.204Z",
+  "_updated_at": "2026-07-21T14:20:09.539Z",
   "notifications": [
     {
       "id": "2026-07-21-nachi-song",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-21T11:15:00-03:00",
       "expires_at": "2026-07-21T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T14:20:09.429Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (pedido de Andres por chat: mandarle con URL lo que haya pedido Carucha para revisar; Carucha encargo la dedicatoria en carucha-prensa-q3 a las 10:58; Nachi sin push activa, Andres decide la distribucion en la pagina)"
     },
@@ -26,8 +26,8 @@
       ],
       "send_at": "2026-07-21T11:15:00-03:00",
       "expires_at": "2026-07-21T13:30:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T14:20:09.539Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (pedido de Andres por chat 11:0x: reenvio de la cronica — actualizada primero con las declaraciones reales de Carucha q1/q2 de la sala de prensa, respondidas 10:57)"
     },
