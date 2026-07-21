@@ -2,6 +2,36 @@
   "_updated_at": "2026-07-21T13:14:24.204Z",
   "notifications": [
     {
+      "id": "2026-07-21-nachi-song",
+      "title": "🌠 El encargo de Carucha está listo",
+      "body": "Pidió una dedicatoria musical para Nachi: «Lloviendo Estrellas» versión 366 puntos. Revisala y decidí adentro cómo se distribuye.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/exp-nachi-lloviendo-c4d81f2b.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T11:15:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (pedido de Andres por chat: mandarle con URL lo que haya pedido Carucha para revisar; Carucha encargo la dedicatoria en carucha-prensa-q3 a las 10:58; Nachi sin push activa, Andres decide la distribucion en la pagina)"
+    },
+    {
+      "id": "2026-07-21-cronica-v2-andres",
+      "title": "📰 La crónica, ahora con las declaraciones",
+      "body": "Actualizada con lo que declaró Carucha en la sala de prensa («no podía dejar a un llorón ganar»). El general sale igual 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T11:15:00-03:00",
+      "expires_at": "2026-07-21T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (pedido de Andres por chat 11:0x: reenvio de la cronica — actualizada primero con las declaraciones reales de Carucha q1/q2 de la sala de prensa, respondidas 10:57)"
+    },
+    {
       "id": "2026-07-21-desk-v2",
       "title": "🗂️ El escritorio, ahora sí completo",
       "body": "Corregido: ahora lista TODO lo nuevo de hoy con link y copy — crónica, sala de prensa de Carucha y tu certificado de aliento. Entrá.",

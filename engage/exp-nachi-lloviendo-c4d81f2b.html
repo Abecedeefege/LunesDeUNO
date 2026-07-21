@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>🌠 Lloviendo Estrellas (versión Nachi)</title>
+<style>
+  :root{--bg:#0d0d12;--card:#17171f;--border:#2a2a35;--red:#ED1C24;--yellow:#FFDE00;
+    --green:#00A651;--blue:#0072BC;--text:#eaeaf0;--dim:#9a9aa8;--noche:#8ab6ff;--oro:#f5d76e}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 60px}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--text)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+  .disco{position:relative;margin-top:14px;border:1px solid rgba(138,182,255,.5);border-radius:14px;overflow:hidden;
+    background:radial-gradient(ellipse at 20% 0%, rgba(138,182,255,.16), transparent 55%),
+               radial-gradient(ellipse at 85% 30%, rgba(245,215,110,.09), transparent 45%),
+               linear-gradient(180deg,#0b1024,#0d0d12)}
+  .estrellas{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .estrellas span{position:absolute;font-size:.85rem;opacity:.75;animation:caer linear infinite}
+  @keyframes caer{from{transform:translateY(-30px)}to{transform:translateY(560px);opacity:0}}
+  .d-top{position:relative;display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px dashed rgba(138,182,255,.4);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase}
+  .d-top .l{color:var(--noche);font-weight:800}
+  .d-top .r{color:var(--dim)}
+  .d-body{position:relative;padding:22px 16px;text-align:center}
+  .mic{font-size:2.8rem;filter:drop-shadow(0 0 14px rgba(245,215,110,.55))}
+  .genero{font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-top:10px}
+  h1{font-size:1.7rem;line-height:1.15;margin-top:6px;color:var(--noche);text-shadow:0 0 20px rgba(138,182,255,.4)}
+  h1 b{color:var(--oro)}
+  .dedic{font-size:.8rem;color:var(--dim);font-style:italic;margin-top:8px}
+  .dedic b{color:var(--text)}
+  .caras{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:16px}
+  .caras img{width:64px;height:64px;border-radius:50%;object-fit:cover;background:#222}
+  .caras .de img{border:3px solid var(--oro)}
+  .caras .para img{border:3px solid var(--noche);filter:grayscale(.4)}
+  .caras .fl{font-size:1.3rem;color:var(--dim)}
+  .caras .cap{font-size:.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin-top:5px}
+  .verso{position:relative;margin:18px auto 0;max-width:400px;background:rgba(13,13,18,.65);border:1px solid var(--border);border-left:4px solid var(--oro);border-radius:12px;padding:14px 16px;text-align:left}
+  .verso .vn{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--oro);font-weight:800;margin-bottom:6px}
+  .verso p{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:.95rem;line-height:1.65;color:var(--text)}
+  .verso.coro{border-left-color:var(--noche)}
+  .verso.coro .vn{color:var(--noche)}
+  .verso.coro p{font-size:1.02rem}
+  .ficha{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:left}
+  .ficha .ft{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--noche);font-weight:800;margin-bottom:8px}
+  .ficha ul{list-style:none}
+  .ficha li{font-size:.82rem;color:var(--dim);line-height:1.6;padding-left:1.2em;position:relative}
+  .ficha li::before{content:"🌠";position:absolute;left:0;font-size:.7rem;top:.2em}
+  .ficha li b{color:var(--text)}
+  .react{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .react button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
+  .react button:hover{border-color:var(--noche)}
+  .react-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+  .decision{margin-top:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;font-size:.85rem;color:var(--dim)}
+  .decision button{background:#0d0d12;border:1px solid var(--border);border-radius:10px;color:var(--text);padding:9px 14px;margin:6px 6px 0 0;font-size:.86rem;font-weight:600;cursor:pointer;font-family:inherit}
+  .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <div class="disco">
+      <div class="estrellas">
+        <span style="left:6%;animation-duration:7s;animation-delay:0s">⭐</span>
+        <span style="left:18%;animation-duration:9s;animation-delay:2s">✨</span>
+        <span style="left:33%;animation-duration:6s;animation-delay:1s">🌟</span>
+        <span style="left:48%;animation-duration:10s;animation-delay:3s">⭐</span>
+        <span style="left:62%;animation-duration:8s;animation-delay:.5s">✨</span>
+        <span style="left:76%;animation-duration:7.5s;animation-delay:2.5s">🌟</span>
+        <span style="left:90%;animation-duration:9.5s;animation-delay:1.5s">⭐</span>
+      </div>
+      <div class="d-top"><span class="l">🎙️ Sello Discográfico del UNO</span><span class="r">Sencillo 001/2026</span></div>
+      <div class="d-body">
+        <div class="mic">🎤</div>
+        <div class="genero">Balada romántica · Cover no autorizado</div>
+        <h1>Lloviendo <b>Estrellas</b></h1>
+        <div class="dedic">Versión Nachi — dedicada por <b>Carucha</b>, campeona de la Fecha 3,
+        al 8º puesto de la noche.</div>
+
+        <div class="caras">
+          <div class="de"><img src="../assets/faces/carucha.png" alt="Carucha"><div class="cap">Dedica</div></div>
+          <div class="fl">🎵→</div>
+          <div class="para"><img src="../assets/faces/nachi.png" alt="Nachi"><div class="cap">Recibe</div></div>
+        </div>
+
+        <div class="verso">
+          <div class="vn">Verso 1</div>
+          <p>Están lloviendo estrellas,<br>
+          pero ninguna es para vos:<br>
+          trescientos sesenta y seis motivos<br>
+          te dejaron sin canción.</p>
+        </div>
+
+        <div class="verso">
+          <div class="vn">Verso 2</div>
+          <p>Doce rondas se jugaron<br>
+          y en ninguna fuiste el mejor;<br>
+          el abuelo de la dinastía<br>
+          anoche fue espectador.</p>
+        </div>
+
+        <div class="verso coro">
+          <div class="vn">Coro</div>
+          <p>Ven, Nachito, ven,<br>
+          que están lloviendo estrellas:<br>
+          las agarra cualquiera menos vos —<br>
+          octavo entre nueve valientes,<br>
+          y eso que faltaron dos.</p>
+        </div>
+
+        <div class="verso">
+          <div class="vn">Verso 3</div>
+          <p>La nieta que dominabas<br>
+          —seis a tres decía el papel—<br>
+          te sacó ciento setenta y seis<br>
+          y te dedica este vals cruel.</p>
+        </div>
+
+        <div class="verso">
+          <div class="vn">Verso final</div>
+          <p>Cincuenta y cinco días<br>
+          sin corona que besar;<br>
+          desde el doblete de mayo<br>
+          solo te queda... cantar.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha">
+      <div class="ft">📀 Ficha técnica (todo verificado en la tabla oficial)</div>
+      <ul>
+        <li><b>366 puntos</b> anoche — 8º de los 9 presentes, solo mejor que Tano (423).</li>
+        <li><b>0 de 12 rondas</b> liderando la general de la noche.</li>
+        <li>Carucha le ganó por <b>176 puntos</b> (190 contra 366) pese a que Nachi domina el historial <b>6-3</b>.</li>
+        <li><b>55 días sin corona</b> (contados a la noche del lunes 20/07) — la última fue el doblete de mayo (18/05 y 25/05).</li>
+        <li>La dinastía sigue intacta: domina a 7 rivales del año. Anoche, ninguno de esos números vino a rescatarlo.</li>
+      </ul>
+    </div>
+
+    <div class="react">¿Qué tal el sencillo?
+      <button onclick="engageReact('exp-nachi-lloviendo','love',this)">😍</button>
+      <button onclick="engageReact('exp-nachi-lloviendo','like',this)">🙂</button>
+      <button onclick="engageReact('exp-nachi-lloviendo','meh',this)">😐</button>
+      <button onclick="engageReact('exp-nachi-lloviendo','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="decision">Nachi no tiene notificaciones activas. ¿Cómo se distribuye el sencillo?
+      <div>
+        <button onclick="engageAnswer('exp-nachi-lloviendo-difusion','whatsapp',this)">Se lo mando yo por WhatsApp</button>
+        <button onclick="engageAnswer('exp-nachi-lloviendo-difusion','grupo',this)">Que salga en el próximo push grupal</button>
+        <button onclick="engageAnswer('exp-nachi-lloviendo-difusion','archivo',this)">Queda en el archivo nomás</button>
+      </div>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div class="decision">¿Esta pieza merece existir?
+      <div>
+        <button onclick="engageApprove('exp-nachi-lloviendo',this)">✅ Que quede</button>
+        <button onclick="engageRejected('exp-nachi-lloviendo',this)">✕ No me interesa</button>
+      </div>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div style="margin-top:1rem;padding:1rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem;">💬 ¿Qué querés?</div>
+      <div style="font-size:.74rem;color:var(--dim);margin-bottom:.6rem;line-height:1.4;">Pedime… lo que sea.</div>
+      <textarea id="fbtxt-exp-nachi-lloviendo" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-exp-nachi-lloviendo');engageFeedback('exp-nachi-lloviendo',t.value,this);t.value='';" style="background:var(--red);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:var(--dim);"></span>
+      </div>
+    </div>
+
+    <div class="foot">🎴 LUNES DE UNO · SELLO DISCOGRÁFICO · 21/07/2026</div>
+  </div>
+
+<script src="engage.js"></script>
+</body></html>

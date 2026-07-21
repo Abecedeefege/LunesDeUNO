@@ -328,25 +328,25 @@
       "title": "📰 La Crónica (tabloide del martes: Carucha se la roba en la última mano)",
       "page": "engage/2026-07-20-cronica.html",
       "created": "2026-07-21",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Crónica de la T5 Fecha 3 (jugada 20/07 en casa de Negro): Carucha ganó tras ir 1 punto abajo de Negro entrando a la última mano — el margen más ajustado del año. Tano último (423), nueva deuda. Cobra y Mata ausentes; Cobra falta su 2da fecha de la T5 y cae al último lugar de la temporada pese a haber ganado la F1. Carucha pasa a Cobra en la tabla anual por primera vez en el año. Gordo logra un corte exacto (-50) verificado. Métrica: reacción + answer suscripción + approve.",
       "notified_by": [
         "2026-07-21-a-preview",
         "2026-07-21-a"
       ],
-      "result_notes": null
+      "result_notes": "PROMOVIDA el mismo día: approve de andres por botón (21/07 10:03 local, tras el preview) + reacción like + answer suscripción=si. Actualizada 11:00 con las declaraciones reales de Carucha (q1 y q2 de la sala de prensa) antes del envío general de las 14:00."
     },
     {
       "id": "2026-07-20-sala-carucha",
       "title": "🎙️ Sala de prensa del martes — Carucha, campeona de la Fecha 3",
       "page": "engage/2026-07-20-sala-carucha.html",
       "created": "2026-07-21",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Regla permanente 'Sala de prensa del martes': mini interview de 3 preguntas (2 libres + 1 opción múltiple) a la ganadora de anoche, enviada solo a su device (~10:00), linkeada desde la crónica. Apunta a que sus respuestas se puedan citar en la crónica ya publicada o en la próxima semana. Métrica: >=1 answer de carucha-prensa-qN desde device carucha.",
       "notified_by": [
         "2026-07-21-sala-carucha"
       ],
-      "result_notes": null
+      "result_notes": "PROMOVIDA el mismo día: approve de andres por botón (21/07 10:03 local) + reacción love. Carucha respondió las 3 preguntas a los 43 min de recibir el push (10:57-10:58 local): q1 contra Negro («lloró toda la noche, no podía dejar a un llorón ganar»), q2=multa-moral para los ausentes, q3=encargo de una dedicatoria musical a Nachi (versión de 'Lloviendo estrellas'). Además love + approve de carucha (señal secundaria) y dwell. Declaraciones ya citadas en la crónica; el encargo se fabricó como exp-nachi-lloviendo (proposal aparte)."
     },
     {
       "id": "2026-07-20-animo-mac-negro",
@@ -381,6 +381,18 @@
       "status": "vault",
       "hypothesis": "Pedida por Andres por chat (19/07): pagina SOLO para el (URL con hex secreto + gate por device name andres/mata en localStorage; jamas linkeada desde contenido publico) que lista las experiencias solicitadas por otros jugadores con sus links, mas la seccion 'para revisar' con todo lo que sale ese dia (URLs y copys). Se REGENERA cada mañana y se le pushea a las ~09:00 a su device como 'Las solicitadas por otros' — regla vinculante nueva registrada en learnings. status=vault: infraestructura personal del dueño, no expira.",
       "notified_by": [],
+      "result_notes": null
+    },
+    {
+      "id": "exp-nachi-lloviendo",
+      "title": "🌠 Lloviendo Estrellas (versión Nachi) — dedicatoria encargada por Carucha",
+      "page": "engage/exp-nachi-lloviendo-c4d81f2b.html",
+      "created": "2026-07-21",
+      "status": "pending",
+      "hypothesis": "Encargo de Carucha desde la sala de prensa del 21/07 (carucha-prensa-q3): parodia de 'Lloviendo estrellas' dedicada a Nachi por su noche del 20/07 — 8º de 9 con 366, 0 de 12 rondas liderando, 176 puntos detrás de Carucha (a quien domina 6-3), 55 días sin corona desde el doblete de mayo. Todo verificado contra games. Nachi no tiene push activa: la página le pregunta a Andrés cómo distribuirla (WhatsApp / próximo push grupal / archivo). Métrica: reacción + answer de difusión + approve de andres.",
+      "notified_by": [
+        "2026-07-21-nachi-song"
+      ],
       "result_notes": null
     }
   ]
