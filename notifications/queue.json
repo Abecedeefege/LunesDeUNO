@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-20T20:50:08.975Z",
+  "_updated_at": "2026-07-21T11:54:51.057Z",
   "notifications": [
     {
       "id": "2026-07-20-tombola-carucha",
@@ -474,8 +474,8 @@
       ],
       "send_at": "2026-07-21T08:45:00-03:00",
       "expires_at": "2026-07-21T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T11:54:51.056Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45)"
     },

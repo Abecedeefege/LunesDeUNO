@@ -1294,6 +1294,20 @@
       "device": "carucha",
       "ts": "2026-07-20T20:50:08.973Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-desk",
+      "device": "andres",
+      "ts": "2026-07-21T11:54:50.957Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-desk",
+      "device": "andres",
+      "ts": "2026-07-21T11:54:51.056Z",
+      "status_code": 201
     }
   ]
 }
