@@ -38,10 +38,17 @@
   preguntas (`carucha-prensa-q1..q3`) en vez del expediente completo tipo
   Gordo/entrevista-gordo — más liviano, pensado para citarse en la próxima
   crónica.
-- **🗂️ Escritorio diario "Las solicitadas por otros"**: TODAS las mañanas,
-  push a device andres con `engage/solicitadas-27b2d470.html`, 08:45.
-  Formato: solo lo que necesita su OK + tabla del último envío grupal
-  (entregado/abrió/señal por jugador, recomputada de send_log + engagement).
+- **🗂️ Escritorio diario "Las solicitadas por otros" (formato corregido
+  21/07 por reclamo de Andrés, vinculante)**: TODAS las mañanas, push a
+  device andres con `engage/solicitadas-27b2d470.html`, 08:45. Formato:
+  **TODO lo nuevo del día listado con link + copy del push** — cada página
+  nueva, cada push agendado (grupal o personal) y cada feedback libre
+  recibido, aunque ya esté agendado y no necesite aprobación. El error del
+  21/07 fue listar solo drafts/holds y decir "nada esperando tu OK"
+  habiendo 3 piezas nuevas: Andrés lo marcó por chat ("me tenés que mandar
+  todo lo que sea nuevo"). Los drafts que esperan OK van primero y
+  marcados; después lo agendado; después el feedback; al final la tabla
+  del último envío grupal (entregado/abrió/señal por jugador).
 - **⭐ Experiencias VIP + 🥊 Piña Directa**: sin puertas para VER; la puerta
   solo aplica a FORJAR en el Gimnasio (`engage/pina-directa.html`). Entrega
   automática vía workflow `pina-express` (cron 5 min) — el agente diario

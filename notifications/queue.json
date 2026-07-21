@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-21T11:54:51.057Z",
   "notifications": [
     {
+      "id": "2026-07-21-desk-v2",
+      "title": "🗂️ El escritorio, ahora sí completo",
+      "body": "Corregido: ahora lista TODO lo nuevo de hoy con link y copy — crónica, sala de prensa de Carucha y tu certificado de aliento. Entrá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T09:05:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (reclamo de Andres por chat 09:02: el escritorio de las 08:54 decia 'nada esperando tu OK' sin listar lo nuevo del dia; pagina regenerada listando TODO lo nuevo con links + copys + feedback de PT, y reenviada de inmediato; regla nueva vinculante anotada en learnings)"
+    },
+    {
       "id": "2026-07-20-tombola-carucha",
       "title": "🎰 Ustè lo pidió, ustè lo tiene",
       "body": "La lotería de asientos que pediste recién: un número al azar por jugador para ir ocupando los lugares. Con esto quedás lejos del perro de Mac 🎲",
@@ -517,12 +532,12 @@
       "devices": [
         "andres"
       ],
-      "send_at": "2026-07-21T10:15:00-03:00",
+      "send_at": "2026-07-21T09:05:00-03:00",
       "expires_at": "2026-07-21T23:00:00-03:00",
       "status": "pending",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-21 (fulfillment de feedback libre de Andres, 20/07 17:55, casilla del laboratorio: 'darle animo con tomada de pelo a los ultimos 2 de la anual' — entregado solo a el, la pagina le pregunta si redifundirlo a Mac/Negro)"
+      "created_by": "engagement-agent 2026-07-21 (fulfillment de feedback libre de Andres, 20/07 17:55, casilla del laboratorio: 'darle animo con tomada de pelo a los ultimos 2 de la anual' — entregado solo a el, la pagina le pregunta si redifundirlo a Mac/Negro) | adelantado a las 09:05 por pedido de Andres por chat 21/07: \"mandame lo que preparaste\""
     },
     {
       "id": "2026-07-21-a",
