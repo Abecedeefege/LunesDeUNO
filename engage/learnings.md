@@ -23,6 +23,13 @@
   siempre): 📜 Poesía (3 frases) · 🔬 Análisis (2 frases) · ✨ Extra (2
   frases). No repetir literalmente la frase del día anterior para el mismo
   jugador — rotar el ángulo/stat. Ver §3.6 de `.claude/commands/engagement.md`.
+- **📝 No repetir las instrucciones del pedido en la entrega (Andrés,
+  21/07, vinculante)**: cuando alguien pide algo, la experiencia entregada
+  NO transcribe la letra del pedido ni sus indicaciones de tono ("con
+  tomada de pelo", "bien de cargada", "por la casilla del laboratorio").
+  Se puede decir que lo pidió ("Lo pediste del laboratorio: algo de ánimo
+  para...") pero el tono se EJECUTA, no se anuncia. Detectado en el
+  certificado de aliento del 21/07, corregido ese mismo día.
 - **Andrés ES Mata**: devices `andres` y `mata` son la misma persona. En
   contenido publicado se lo nombra Mata.
 - **Cadencia**: 4 pushes grupales/semana 14:00 (sáb récords · dom chusmerío
