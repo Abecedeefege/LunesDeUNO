@@ -1350,6 +1350,13 @@
       "device": "andres",
       "ts": "2026-07-21T12:21:03.415Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-sala-carucha",
+      "device": "carucha",
+      "ts": "2026-07-21T13:14:24.203Z",
+      "status_code": 201
     }
   ]
 }
