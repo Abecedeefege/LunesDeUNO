@@ -904,7 +904,7 @@ svg.star{
 @media (min-width:900px){.flanco{display:block;}}
 
 /* ============ FOOTER ============ */
-/* ============ BUZÓN DE PETICIONES (WhatsApp) ============ */
+/* ============ BUZÓN DE PETICIONES ============ */
 .peticiones{position:relative;z-index:2;padding:36px 20px 4px;}
 .peticiones-card{
   max-width:440px;margin:0 auto;text-align:center;
@@ -921,16 +921,24 @@ svg.star{
   font-family:var(--serif);font-style:italic;font-size:.92rem;color:var(--cream);
   margin-bottom:14px;line-height:1.45;
 }
-.exp-wa{
-  display:flex;align-items:center;justify-content:center;gap:.55rem;
-  text-align:left;text-decoration:none;font-size:.82rem;font-weight:800;line-height:1.3;
-  color:#fff;border-radius:10px;padding:.75rem .9rem;
-  background:linear-gradient(135deg,#25d366,#1ebe5d);
-  box-shadow:0 2px 8px rgba(18,140,70,.4);
-  transition:transform .15s ease, box-shadow .15s ease;
+.peticiones textarea{
+  width:100%;min-height:76px;resize:vertical;box-sizing:border-box;
+  border:1px solid rgba(201,165,74,.4);border-radius:10px;
+  background:rgba(0,0,0,.35);color:var(--cream);
+  font:inherit;font-size:.9rem;padding:.7rem .8rem;margin-bottom:10px;
 }
-.exp-wa:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(18,140,70,.55);}
-.exp-wa svg{width:22px;height:22px;flex:none;fill:#fff;}
+.peticiones textarea:focus{outline:2px solid var(--brass);}
+.peticiones .fb-row{display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;}
+.peticiones .fb-send{
+  cursor:pointer;border:none;border-radius:10px;padding:.7rem 1.3rem;
+  font-weight:800;font-size:.85rem;color:#1b1206;
+  background:linear-gradient(135deg,var(--brass),#e6c877);
+  box-shadow:0 2px 8px rgba(0,0,0,.45);
+  transition:transform .15s ease;
+}
+.peticiones .fb-send:hover:not(:disabled){transform:translateY(-2px);}
+.peticiones .fb-hint{font-size:.74rem;color:var(--muted);font-style:italic;}
+.peticiones .fb-firma{margin-top:9px;font-size:.72rem;color:var(--muted);font-style:italic;}
 
 footer{padding:54px 20px 64px;text-align:center;color:var(--muted);position:relative;z-index:2;}
 footer .f-main{font-weight:700;color:var(--cream);margin-bottom:6px;}
@@ -1301,17 +1309,30 @@ footer .f-mini{font-size:.75rem;opacity:.75;font-style:italic;}
   </div>
 </section>
 
-<!-- ============ BUZÓN DE PETICIONES (WhatsApp) ============ -->
+<!-- ============ BUZÓN DE PETICIONES ============ -->
 <section class="peticiones">
   <div class="peticiones-card">
     <div class="peticiones-tag">✒️ Buzón de peticiones del club</div>
-    <p class="peticiones-txt">¿Se le ocurre una experiencia digna de este salón? El Comité recibe solicitudes.</p>
-    <a class="exp-wa" href="https://wa.me/59891448775?text=Aloja%20Claudio%2C%20quiero%20pedir%20una%20experiencia%20para%20el%20Lunes%20de%20UNO" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-      <span>Para solicitar tu experiencia, manda tu descripción de la misma por WhatsApp</span>
-    </a>
+    <p class="peticiones-txt">¿Se le ocurre una experiencia digna de este salón? Déjela por escrito — el Comité lee todo.</p>
+    <textarea id="fbtxt-medallero" maxlength="480" placeholder="Escriba aquí su petición…"></textarea>
+    <div class="fb-row">
+      <button type="button" class="fb-send" onclick="var t=document.getElementById('fbtxt-medallero');engageFeedback('medallero-biblioteca',t.value,this);t.value='';">✒️ Enviar al Comité</button>
+      <span class="fb-hint"></span>
+    </div>
+    <div class="fb-firma" id="fbFirma"></div>
   </div>
 </section>
+<script>
+// Firma del buzón: si el dispositivo está registrado en el club mostramos el
+// apodo; si no, se recibe igual y el Comité evalúa qué hacer con el pedido.
+(function(){
+  var n=null; try{n=localStorage.getItem('lunesdeuno_device_name');}catch(e){}
+  var el=document.getElementById('fbFirma');
+  if(el) el.textContent = n
+    ? 'Firma registrada: '+n.charAt(0).toUpperCase()+n.slice(1)+'.'
+    : 'Visitante sin registrar — su petición se recibe igual y el Comité la evaluará.';
+})();
+</script>
 
 <!-- ============ FOOTER ============ -->
 <footer>
@@ -2237,5 +2258,6 @@ if('requestIdleCallback' in window){
 
 })();
 </script>
+<script src="engage/engage.js"></script>
 </body>
 </html>
