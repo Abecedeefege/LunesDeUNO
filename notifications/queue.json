@@ -423,165 +423,6 @@
       "created_by": "engagement-agent 2026-07-16 (1ª entrevista personal del jueves: Carucha, que no ganó el último lunes, stat destacada H2H 8-4 sobre Cobra; Andrés puede vetar hasta las 15:00 tras el preview de las 10:00)"
     },
     {
-      "id": "2026-07-14-a3",
-      "title": "🎴 Gordo se la robó en la última mano",
-      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "devices": [
-        "carucha"
-      ],
-      "send_at": "2026-07-14T15:00:00-03:00",
-      "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T18:08:01.489Z",
-      "fail_reason": null,
-      "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés: a Carucha le falló el envío de las 14:00 con 410 — suscripción muerta; reactivó su push a las 15:04 UY como device 'carucha', este es su envío de la crónica con Experiences by: Gordo)"
-    },
-    {
-      "id": "2026-07-14-a2",
-      "title": "🎴 Gordo se la robó en la última mano (reenvío)",
-      "body": "Tu cel dropeó el de las 14:08. La crónica ya trae Experiences by: Gordo → El Medallero, y el botón de WhatsApp para pedir experiencias.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-14T14:12:00-03:00",
-      "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T18:08:01.583Z",
-      "fail_reason": null,
-      "created_by": "claude-session medallero 2026-07-14 (pedido de Andrés por chat: el push de las 14:00 salió 201 a su device pero no se mostró — reenvío dirigido solo a él; sirve de test del drop silencioso)"
-    },
-    {
-      "id": "2026-07-14-d2",
-      "title": "📰 La crónica, versión nueva (reenvío)",
-      "body": "Tu cel dropeó el anterior. El expediente de la entrevista ya está linkeado en la sala de prensa. Revisala antes de las 14:00.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-14T10:46:00-03:00",
-      "expires_at": "2026-07-14T13:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T14:22:40.017Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (reenvio del 2026-07-14-d: 201 pero no se mostró en el device de andres — 3er drop matutino silencioso en 2 días; este va solo en su dispatch)"
-    },
-    {
-      "id": "2026-07-14-c",
-      "title": "🎤 Gordo, la división de robos te cita",
-      "body": "Ganaste con 127 robándola en la última mano. 5 preguntas para que declares — tus palabras salen en la crónica 🎙️",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-entrevista-gordo.html",
-      "devices": [
-        "gordo"
-      ],
-      "send_at": "2026-07-14T10:33:00-03:00",
-      "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T13:35:42.434Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (Gordo activó su push esta mañana via link del club; entrevista directa SOLO a él, envío inmediato pedido por Andres por chat; página redeployada sin el aviso de correo humano, verificada 10:34)"
-    },
-    {
-      "id": "2026-07-14-d",
-      "title": "📰 La crónica, versión nueva",
-      "body": "Ahora con el expediente de la entrevista linkeado en la sala de prensa. Revisala antes de las 14:00; si algo no va, avisame.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-14T10:33:00-03:00",
-      "expires_at": "2026-07-14T13:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T13:35:42.763Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (pedido de Andres por chat: la crónica actualizada con el link a la entrevista, SOLO a él para revisar antes del envío general de las 14:00; expira 13:30 para no pisarlo)"
-    },
-    {
-      "id": "2026-07-14-b",
-      "title": "🎤 La entrevista de Gordo, lista",
-      "body": "5 preguntas para el del robo de la última mano. Abrila y mandásela por WhatsApp — el link del club te lo dejé en el chat.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-entrevista-gordo.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-14T10:25:00-03:00",
-      "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T13:27:26.797Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (pedido de Andres por chat: sala de prensa de Gordo — que gano anoche pero no tiene push activa — enviada a Andres para reenviar por WhatsApp; envio inmediato dictado por el, sin preview; pagina verificada 200 en Pages a las 10:26 antes de encolar)"
-    },
-    {
-      "id": "2026-07-14-a-preview",
-      "title": "🎴 Gordo se la robó en la última mano",
-      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-14T09:00:00-03:00",
-      "expires_at": "2026-07-14T13:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T12:07:15.202Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (PREVIEW solo para andres del push 2026-07-14-a, regla fija de preview a las 09:00)"
-    },
-    {
-      "id": "2026-07-14-a",
-      "title": "🎴 Gordo se la robó en la última mano",
-      "body": "-10 en la ronda 10 y pasó a todos: ganó con 127. Naso, último de punta a punta (414). Cobra cumplió: no vino.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-cronica.html",
-      "send_at": "2026-07-14T14:00:00-03:00",
-      "expires_at": "2026-07-14T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-14T17:08:35.567Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-14 (crónica del martes: fecha 2 de la T5 jugada anoche en Carucha, Gordo gana, Cobra ausente confirmando su propia entrevista. Sin sala de prensa: Gordo no tiene push activo)"
-    },
-    {
-      "id": "2026-07-13-test-andres",
-      "title": "🔧 Test de entrega — Andrés",
-      "body": "Si ves esto, tu canal de push funciona y lo de esta mañana fue un drop aislado. Tocá para confirmar.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-13T12:45:00-03:00",
-      "expires_at": "2026-07-13T14:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-13T15:48:12.583Z",
-      "fail_reason": null,
-      "created_by": "debug 2026-07-13 (Andres reporta que el preview de hoy no se mostró en su device pese al 201; test dirigido SOLO a andres aprobado por él por chat; expira 14:30 para no pisar el envío general de las 14:00)"
-    },
-    {
-      "id": "2026-07-13-a-preview",
-      "title": "🔥 Tano pagó, Negro no",
-      "body": "Tano se salvó tras 19 días. Negro debe hace 7. Cobra manda la T5 y Tano-Negro ya es 7-2. Entrá:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-13T09:00:00-03:00",
-      "expires_at": "2026-07-13T13:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-13T13:18:27.958Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-13 (PREVIEW solo para andres del push 2026-07-13-a, regla fija de preview a las 09:00)"
-    },
-    {
-      "id": "2026-07-13-a",
-      "title": "🔥 Tano pagó, Negro no",
-      "body": "Tano se salvó tras 19 días. Negro debe hace 7. Cobra manda la T5 y Tano-Negro ya es 7-2. Entrá:",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-13-la-previa.html",
-      "send_at": "2026-07-13T14:00:00-03:00",
-      "expires_at": "2026-07-13T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-13T18:16:16.535Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-13 (la previa del lunes, T5 fecha 2, edicion semana 2 del formato ya promovido el 06/07)"
-    },
-    {
       "id": "2026-07-20-desk",
       "title": "🗂️ Las solicitadas por otros",
       "body": "Sin pedidos nuevos hoy. Adentro: estado de lo de ayer (falta tu OK en 3 cosas) y la previa que sale a las 14.",
@@ -622,6 +463,78 @@
       "sent_at": "2026-07-20T18:34:08.187Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-20 (la previa del lunes, T5 fecha 3, edición semana 3 — headline nuevo: el mano a mano Cobra-Gordo quedó empatado 7-7)"
+    },
+    {
+      "id": "2026-07-21-desk",
+      "title": "🗂️ Las solicitadas por otros",
+      "body": "Nada esperando tu OK hoy. Adentro: la crónica de anoche, la sala de prensa de Carucha y tu certificado de aliento para Mac/Negro.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T08:45:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45)"
+    },
+    {
+      "id": "2026-07-21-a-preview",
+      "title": "📰 Preview: la crónica (sale 14:00)",
+      "body": "Carucha se la roba en la última mano, Tano paga postre, Cobra falta 2 de 3 fechas de la T5. El envío general sale 14:00.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T09:00:00-03:00",
+      "expires_at": "2026-07-21T13:30:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (PREVIEW regla fija de las 09:00 para el push general de las 14:00)"
+    },
+    {
+      "id": "2026-07-21-sala-carucha",
+      "title": "🎙️ Te está esperando la prensa",
+      "body": "Ganaste anoche por 1 punto en la última mano. 3 preguntas, y tus respuestas van a la crónica de hoy mismo.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-sala-carucha.html",
+      "devices": [
+        "carucha"
+      ],
+      "send_at": "2026-07-21T10:00:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (regla permanente 'sala de prensa del martes': push personal a la ganadora de anoche, ~10:00, entrega directa sin preview igual que las demás entregas personales)"
+    },
+    {
+      "id": "2026-07-21-animo",
+      "title": "🎉 Tu certificado de aliento está listo",
+      "body": "Lo pediste vos: ánimo (con cargada) para Mac y Negro, los últimos 2 de la anual. Datos verificados, con mucho cariño.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/exp-mac-negro-animo-b7f2a9e1.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T10:15:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (fulfillment de feedback libre de Andres, 20/07 17:55, casilla del laboratorio: 'darle animo con tomada de pelo a los ultimos 2 de la anual' — entregado solo a el, la pagina le pregunta si redifundirlo a Mac/Negro)"
+    },
+    {
+      "id": "2026-07-21-a",
+      "title": "📰 Carucha se la roba en la última mano",
+      "body": "T5 Fecha 3: ganó por 1 punto en la ronda 11. Tano paga postre, Cobra falta 2 de 3 y cae al último de la temporada.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
+      "send_at": "2026-07-21T14:00:00-03:00",
+      "expires_at": "2026-07-21T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (crónica del martes: T5 fecha 3 jugada anoche en casa de Negro, Carucha gana por margen mínimo, Cobra y Mata ausentes, Tano último. Sala de prensa de Carucha linkeada, no despachada a todos)"
     },
     {
       "id": "2026-07-20-feedback-update",

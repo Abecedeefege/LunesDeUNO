@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🎙️ Sala de prensa — Carucha</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+  .room { background: #17171f; border: 1px solid #2a2a35; border-radius: 12px; overflow: hidden; }
+  .top { background: linear-gradient(135deg,#1a1a24,#0d0d12); padding: 1.1rem 1rem; text-align: center; border-bottom: 2px solid #ED1C24; }
+  .top .who { display: flex; align-items: center; justify-content: center; gap: .6rem; margin-bottom: .5rem; }
+  .top img { width: 52px; height: 52px; border-radius: 50%; border: 3px solid #FFDE00; object-fit: cover; background: #222; }
+  .top h1 { font-size: 1.25rem; }
+  .top .sub { font-size: .78rem; color: #9a9aa8; margin-top: .3rem; }
+  .banner { background: rgba(237,28,36,.12); border: 1px solid rgba(237,28,36,.4); border-radius: 10px;
+    margin: .9rem; padding: .7rem .8rem; font-size: .82rem; line-height: 1.5; color: #f2f2f2; }
+  .banner b { color: #FFDE00; }
+  .q { margin: 0 .9rem 1rem; background: #0d0d12; border: 1px solid #2a2a35; border-radius: 10px; padding: .9rem; }
+  .q .n { font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: #ff9a9e; font-weight: 800; margin-bottom: .35rem; }
+  .q .txt { font-size: .92rem; line-height: 1.45; margin-bottom: .6rem; }
+  .q button { margin: .25rem .3rem 0 0; padding: .45rem .75rem; border-radius: 9px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .82rem; font-weight: 600; cursor: pointer; }
+  .q textarea { width: 100%; background: #0d0d12; border: 1px solid #2a2a35; border-radius: 8px; color: #eaeaf0;
+    font: inherit; font-size: .84rem; padding: .6rem .7rem; resize: vertical; box-sizing: border-box; margin-bottom: .5rem; }
+  .q .send { background: #ED1C24; color: #fff; border: none; }
+  .q-hint { display: block; font-size: .74rem; color: #8f8f9c; margin-top: .35rem; }
+  .cierre { margin: 0 .9rem 1.1rem; font-size: .78rem; color: #9a9aa8; line-height: 1.5; }
+  .interact { margin-top: 1rem; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; margin-bottom: .9rem; }
+  .card h2 { color: #FFDE00; font-size: .95rem; margin-bottom: .55rem; }
+  .card button { margin: .3rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .88rem; font-weight: 600; cursor: pointer; }
+  .react button { font-size: 1.2rem; padding: .38rem .68rem; }
+  .react-hint, .engage-hint { display: block; font-size: .74rem; color: #8f8f9c; margin-top: .35rem; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="room">
+    <div class="top">
+      <div class="who"><img src="../assets/faces/carucha.png" alt="Carucha"></div>
+      <h1>🎙️ Sala de prensa</h1>
+      <div class="sub">Carucha — campeona de la T5 Fecha 3 (20/07, en casa de Negro)</div>
+    </div>
+
+    <div class="banner">Ganaste por <b>un punto de diferencia</b> entrando a la última mano, y la cerraste con <b>-10</b>
+    para quedarte con la fecha. Este espacio es tuyo: 3 preguntas, las respuestas se citan en la próxima crónica.</div>
+
+    <div class="q">
+      <div class="n">Pregunta 1 · libre</div>
+      <div class="txt">Ibas 1 punto abajo de Negro entrando a la ronda 12. ¿Qué pasó por tu cabeza antes de esa última mano?</div>
+      <textarea id="q1" maxlength="300" rows="2" placeholder="Escribí acá…"></textarea>
+      <button class="send" onclick="var t=document.getElementById('q1');engageAnswer('carucha-prensa-q1',t.value,this);t.value='';">Enviar</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="q">
+      <div class="n">Pregunta 2 · opción múltiple</div>
+      <div class="txt">Cobra y Mata faltaron a tu fecha. ¿Qué corresponde?</div>
+      <button onclick="engageAnswer('carucha-prensa-q2','multa-moral',this)">Multa moral, que se enteren</button>
+      <button onclick="engageAnswer('carucha-prensa-q2','no-cuenta',this)">Ganar sin ellos no cuenta igual</button>
+      <button onclick="engageAnswer('carucha-prensa-q2','mejor-asi',this)">Mejor así, menos competencia</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="q">
+      <div class="n">Pregunta 3 · libre</div>
+      <div class="txt">Le ganaste a los 8 que se sentaron con vos anoche, PT y Nachi incluidos. ¿A quién de la mesa le mandás un mensaje hoy?</div>
+      <textarea id="q3" maxlength="300" rows="2" placeholder="Escribí acá…"></textarea>
+      <button class="send" onclick="var t=document.getElementById('q3');engageAnswer('carucha-prensa-q3',t.value,this);t.value='';">Enviar</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="cierre">📎 Tus respuestas se agregan a la crónica ya publicada apenas las mandes — no hace falta esperar a la próxima semana.</div>
+  </div>
+
+  <div class="interact">
+    <div class="card react">
+      <h2>¿Qué tal la sala de prensa?</h2>
+      <button onclick="engageReact('2026-07-20-sala-carucha','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-20-sala-carucha','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-20-sala-carucha','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-20-sala-carucha','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Esta sección merece existir?</h2>
+      <button onclick="engageApprove('2026-07-20-sala-carucha',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-20-sala-carucha',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div style="margin:1.1rem 0 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
+      <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
+      <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
+      <textarea id="fbtxt-2026-07-20-sala-carucha" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-20-sala-carucha');engageFeedback('2026-07-20-sala-carucha',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:#a8a8a8;"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="engage.js"></script>
+</body>
+</html>

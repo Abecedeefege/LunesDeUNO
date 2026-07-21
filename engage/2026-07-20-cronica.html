@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>📰 La Crónica — Carucha se la roba en la última mano</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+
+  .paper { background: #f4f1e8; color: #16161a; border-radius: 8px; overflow: hidden; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .masthead { background: #16161a; color: #f4f1e8; padding: .7rem .9rem .55rem; display: flex;
+    align-items: baseline; justify-content: space-between; border-bottom: 3px solid #ED1C24; }
+  .masthead .name { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: 1.05rem; letter-spacing: .5px; }
+  .masthead .ed { font-size: .58rem; letter-spacing: 1.5px; color: #c9c9ce; text-align: right; line-height: 1.5; }
+
+  .ticker { background: #ED1C24; color: #fff; font-size: .68rem; font-weight: 800; letter-spacing: .5px;
+    padding: .4rem .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .headline { padding: 1.05rem .9rem .3rem; }
+  .kick { font-family: Georgia, serif; font-size: .7rem; font-weight: 800; letter-spacing: 2px; color: #ED1C24; text-transform: uppercase; }
+  .headline h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: 1.75rem;
+    line-height: 1.08; margin: .3rem 0 .5rem; }
+  .dek { font-size: .9rem; line-height: 1.5; color: #34343c; padding-bottom: .8rem; border-bottom: 2px solid #16161a; margin-bottom: .9rem; }
+  .dek b { color: #ED1C24; }
+
+  .byline { font-size: .68rem; color: #6b6b73; letter-spacing: .5px; padding: 0 .9rem .8rem; text-transform: uppercase; }
+
+  .score-panel { margin: 0 .9rem 1rem; background: #16161a; color: #f4f1e8; border-radius: 8px; padding: .9rem .8rem; }
+  .score-panel .lbl { font-size: .62rem; letter-spacing: 2.5px; color: #FFDE00; font-weight: 800; margin-bottom: .5rem; }
+  .board { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  .board td { padding: .28rem .1rem; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .board td.n { text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .board tr:last-child td { border-bottom: none; }
+  .board img { width: 20px; height: 20px; border-radius: 50%; vertical-align: -5px; margin-right: .4rem; border: 1px solid rgba(255,255,255,.3); }
+  .board tr.win td { color: #FFDE00; }
+  .board tr.win .n::before { content: "👑 "; }
+  .board tr.lose td { color: #ff9a9e; }
+  .board .rk { color: #8f8f9c; font-size: .68rem; width: 1.4rem; }
+  .board .badge { font-size: .62rem; color: #7dd3fc; }
+
+  .body-copy { padding: 0 .9rem; font-size: .93rem; line-height: 1.62; color: #22222a; }
+  .body-copy p { margin-bottom: .85rem; }
+  .body-copy b { color: #a3141c; }
+  .dropcap:first-letter { font-family: Georgia, serif; font-size: 2.6rem; font-weight: 900; float: left;
+    line-height: .82; padding: .1rem .35rem 0 0; color: #ED1C24; }
+
+  .pull { font-family: Georgia, serif; font-style: italic; font-size: 1.05rem; line-height: 1.4;
+    border-top: 2px solid #16161a; border-bottom: 2px solid #16161a; padding: .7rem 0; margin: 0 .9rem 1rem; color: #16161a; }
+
+  .sidebar { margin: 0 .9rem 1rem; display: grid; gap: .55rem; }
+  .brief { background: #e9e4d4; border-left: 4px solid #ED1C24; border-radius: 4px; padding: .55rem .7rem; font-size: .82rem; line-height: 1.45; }
+  .brief b { color: #a3141c; }
+  .brief .tag { display: block; font-size: .58rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .15rem; }
+  .brief img.face { width: 20px; height: 20px; border-radius: 50%; vertical-align: -5px; margin-right: .3rem; }
+
+  .h2h-box { margin: 0 .9rem 1rem; background: #e9e4d4; border-radius: 8px; padding: .8rem .8rem; }
+  .h2h-box .tag { font-size: .6rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .5rem; }
+  .h2h-row { display: flex; align-items: center; gap: .5rem; font-size: .84rem; line-height: 1.4; margin-bottom: .4rem; }
+  .h2h-row img { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #FFDE00; }
+  .h2h-row b { color: #a3141c; }
+
+  .annual { margin: 0 .9rem 1rem; background: #16161a; color: #f4f1e8; border-radius: 8px; padding: .8rem; }
+  .annual .lbl { font-size: .62rem; letter-spacing: 2px; color: #FFDE00; font-weight: 800; margin-bottom: .5rem; }
+  .annual .row { display: flex; justify-content: space-between; font-size: .82rem; padding: .22rem 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .annual .row:last-child { border: none; }
+  .annual .row b { color: #FFDE00; }
+  .annual .gap { font-size: .72rem; color: #c9c9ce; margin-top: .4rem; line-height: 1.4; }
+
+  .t5box { margin: 0 .9rem 1rem; background: #e9e4d4; border-radius: 8px; padding: .8rem; }
+  .t5box .lbl { font-size: .62rem; letter-spacing: 2px; color: #a3141c; font-weight: 800; margin-bottom: .5rem; }
+  .t5box .row { display: flex; justify-content: space-between; font-size: .8rem; padding: .2rem 0; border-bottom: 1px solid rgba(0,0,0,.08); }
+  .t5box .row:last-child { border: none; }
+  .t5box .row.hi b { color: #a3141c; }
+  .t5box .note { font-size: .72rem; color: #4a4a52; margin-top: .5rem; line-height: 1.4; }
+
+  .stamp-fin { text-align: center; font-family: Georgia, serif; font-style: italic; font-size: .8rem; color: #6b6b73; padding: .3rem 0 1.1rem; }
+
+  .press { margin: 0 .9rem 1rem; background: #e9e4d4; border-radius: 8px; padding: .8rem .8rem; }
+  .press .tag { font-size: .6rem; font-weight: 800; letter-spacing: 1.5px; color: #6b6b73; margin-bottom: .55rem; }
+  .press .qtxt { font-size: .84rem; line-height: 1.5; color: #16161a; }
+  .press a.expediente { display: block; margin-top: .6rem; text-align: center; text-decoration: none;
+    background: #16161a; color: #FFDE00; font-size: .8rem; font-weight: 800; letter-spacing: .5px;
+    border-radius: 8px; padding: .55rem .7rem; }
+
+  .interact { background: #0d0d12; padding: 1rem .9rem 1.3rem; margin-top: .2rem; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; margin-bottom: .9rem; }
+  .card h2 { color: #FFDE00; font-size: .95rem; margin-bottom: .55rem; }
+  button {
+    margin: .3rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35;
+    background: #22222c; color: #f2f2f2; font-size: .88rem; font-weight: 600; cursor: pointer;
+  }
+  .react button { font-size: 1.2rem; padding: .38rem .68rem; }
+  .react-hint, .q-hint, .engage-hint { display: block; font-size: .74rem; color: #8f8f9c; margin-top: .35rem; }
+  .fine-print { color: #565660; font-size: .66rem; line-height: 1.5; padding: 0 .1rem; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="paper">
+    <div class="masthead">
+      <div class="name">📰 EL MAZO DIARIO</div>
+      <div class="ed">EDICIÓN MARTES 21.07<br>NEGRO · T5 · FECHA 3</div>
+    </div>
+    <div class="ticker">🔴 EN VIVO DE ANOCHE — CARUCHA GANA CON -10 EN LA ÚLTIMA MANO · TANO ÚLTIMO CON 423 · COBRA Y MATA, AUSENTES</div>
+
+    <div class="headline">
+      <div class="kick">Crónica del lunes</div>
+      <h1>Carucha se la roba en la última mano — de nuevo el último naipe decide todo</h1>
+      <div class="dek">Iba <b>1 punto abajo</b> de Negro entrando a la ronda 12 y cerró con <b>-10</b> para quedarse con la fecha. Tano se hundió en la última mano y termina último con <b>423</b>: debe postre o picada. Cobra faltó por segunda vez en la T5 y Mata también se ausentó.</div>
+    </div>
+    <div class="byline">Redacción · datos recalculados de la tabla oficial</div>
+
+    <div class="score-panel">
+      <div class="lbl">TABLA FINAL DE LA NOCHE (EN CASA DE NEGRO)</div>
+      <table class="board">
+        <tr class="win"><td class="rk">1</td><td><img src="../assets/faces/carucha.png" alt="">Carucha</td><td class="n">190</td></tr>
+        <tr><td class="rk">2</td><td><img src="../assets/faces/negro.png" alt="">Negro</td><td class="n">242 <span class="badge">+10 multa</span></td></tr>
+        <tr><td class="rk">3</td><td><img src="../assets/faces/naso.png" alt="">Naso</td><td class="n">282</td></tr>
+        <tr><td class="rk">4</td><td><img src="../assets/faces/mac.png" alt="">Mac</td><td class="n">311</td></tr>
+        <tr><td class="rk">5</td><td><img src="../assets/faces/pt.png" alt="">PT</td><td class="n">317</td></tr>
+        <tr><td class="rk">6</td><td><img src="../assets/faces/gael.png" alt="">Gael</td><td class="n">319</td></tr>
+        <tr><td class="rk">7</td><td><img src="../assets/faces/gordo.png" alt="">Gordo</td><td class="n">320 <span class="badge">corte -50</span></td></tr>
+        <tr><td class="rk">8</td><td><img src="../assets/faces/nachi.png" alt="">Nachi</td><td class="n">366</td></tr>
+        <tr class="lose"><td class="rk">9</td><td><img src="../assets/faces/tano.png" alt="">Tano</td><td class="n">423</td></tr>
+      </table>
+    </div>
+
+    <div class="body-copy">
+      <p class="dropcap">Gael arrancó al frente tras la primera ronda (-10), pero el liderazgo duró poco: en la segunda mano Carucha tomó la punta (24) y ya no la soltó en ocho de las diez rondas que quedaban.</p>
+      <p>El único que la inquietó fue <b>Mac</b>, que asomó arriba en la quinta ronda (88 contra 96), un espejismo de una sola mano. Carucha retomó el mando en la sexta y lo sostuvo hasta la décima.</p>
+      <p>La ronda 11 fue la más tensa del año: <b>Negro</b>, anfitrión de la noche, se puso arriba por primerísima vez con <b>199</b>, apenas <b>1 punto</b> por debajo de Carucha (200). Todo se definía en la última mano. Carucha cerró con <b>-10</b> y bajó a 190; Negro sumó 43 y subió a 242. El margen final fue de 52 puntos, pero nació de una diferencia de uno solo.</p>
+    </div>
+
+    <div class="pull">"Un punto la separaba de perder su propia fecha — y la última mano se la dio ella, no el azar." — la ronda 11 que casi le arruina la noche a Carucha.</div>
+
+    <div class="sidebar">
+      <div class="brief"><span class="tag">LA DEUDA NUEVA</span><img class="face" src="../assets/faces/tano.png" alt="">
+        <b>Tano</b> terminó último con <b>423</b> y arranca a deber postre o picada desde hoy, 20 de julio.</div>
+      <div class="brief"><span class="tag">LA DEUDA VIEJA, SALDADA</span><img class="face" src="../assets/faces/naso.png" alt="">
+        <b>Naso</b> pagó. Cerró su cuenta del 13/07 en <b>~8 días</b> — la mesa lo confirmó por texto anoche.</div>
+      <div class="brief"><span class="tag">LA DOBLE AUSENCIA</span><img class="face" src="../assets/faces/cobra.png" alt="">
+        <b>Cobra</b> faltó a la <b>F2 y ahora a la F3</b> de la T5 — dos de tres fechas. Se lleva el peor puntaje de la noche (423) a la tabla anual y <b>cae del 3º al 4º lugar</b>, superado por la propia Carucha.</div>
+      <div class="brief"><span class="tag">RAREZA DE LA NOCHE</span><img class="face" src="../assets/faces/gordo.png" alt="">
+        <b>Gordo</b> clavó un <b>corte exacto (-50)</b> en la ronda 2 — de los 9 que jugaron, fue el único que lo logró. No le alcanzó para el podio, pero quedó en el libro.</div>
+    </div>
+
+    <div class="h2h-box">
+      <div class="tag">PADRES E HIJOS — SE ACTUALIZÓ</div>
+      <div class="h2h-row"><img src="../assets/faces/carucha.png" alt="">Anoche Carucha le ganó a los <b>8</b> que compartieron mesa con ella — barrida completa, Nachi y PT incluidos.</div>
+      <div class="h2h-row"><img src="../assets/faces/pt.png" alt="">Con esa derrota, PT-Carucha en el historial del año quedó <b>6-5</b> a favor de PT — la diferencia más chica que tuvieron nunca.</div>
+    </div>
+
+    <div class="annual">
+      <div class="lbl">CÓMO QUEDA LA TABLA ANUAL</div>
+      <div class="row"><span>1. PT</span><span>5430</span></div>
+      <div class="row"><span>2. Gordo</span><span>5544</span></div>
+      <div class="row"><span>3. <b>Carucha</b></span><span><b>5901</b></span></div>
+      <div class="row"><span>4. Cobra</span><span>6069</span></div>
+      <div class="row"><span>5. Gael</span><span>6339</span></div>
+      <div class="row"><span>6. Nachi</span><span>6341</span></div>
+      <div class="row"><span>...</span><span>...</span></div>
+      <div class="row"><span>11. Negro</span><span>6928</span></div>
+      <div class="gap">Carucha le pasa a Cobra por primera vez en el año (5901 contra 6069) — el precio de faltar dos fechas seguidas de la T5. Ganar barato (190) y faltar caro (423) son las dos caras de la misma tabla.</div>
+    </div>
+
+    <div class="t5box">
+      <div class="lbl">TEMPORADA 5 — TRAS LA FECHA 3 (falta la F4, 27/07)</div>
+      <div class="row hi"><span>1. Gordo</span><span><b>705</b></span></div>
+      <div class="row"><span>2. PT</span><span>753</span></div>
+      <div class="row"><span>3. Nachi</span><span>819</span></div>
+      <div class="row"><span>...</span><span>...</span></div>
+      <div class="row"><span>6. Carucha (ganó anoche)</span><span>858</span></div>
+      <div class="row hi"><span>11. Cobra</span><span><b>1060</b></span></div>
+      <div class="note">Gordo lidera la Temporada 5 sin haber ganado más que una fecha — la consistencia le gana a la explosión. Cobra, que ganó la F1, es HOY el último de la temporada por sus dos faltas. Todo se resuelve el 27/07.</div>
+    </div>
+
+    <div class="press">
+      <div class="tag">🎙️ SALA DE PRENSA — HABLÓ LA CAMPEONA</div>
+      <div class="qtxt">Carucha atiende a la prensa a las 10:00 de hoy. El interrogatorio: cómo se vive ganar por un punto en la última mano, y qué le dice a Cobra y Mata por faltar dos veces en tres fechas.</div>
+      <a class="expediente" href="2026-07-20-sala-carucha.html">🗂️ Abrir la sala de prensa →</a>
+    </div>
+
+    <div class="stamp-fin">— 🎴 —</div>
+  </div>
+
+  <div class="interact">
+    <div class="card react">
+      <h2>¿Qué tal la crónica?</h2>
+      <button onclick="engageReact('2026-07-20-cronica','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-20-cronica','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-20-cronica','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-20-cronica','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Querés la crónica todos los martes?</h2>
+      <button onclick="engageAnswer('2026-07-20-cronica-suscripcion','si',this)">Sí, obvio</button>
+      <button onclick="engageAnswer('2026-07-20-cronica-suscripcion','no',this)">No hace falta</button>
+      <span class="q-hint"></span>
+    </div>
+
+    <div class="card">
+      <h2>¿Esta sección merece existir?</h2>
+      <button onclick="engageApprove('2026-07-20-cronica',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-20-cronica',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div style="margin:1.1rem 0 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
+      <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
+      <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
+      <textarea id="fbtxt-2026-07-20-cronica" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-20-cronica');engageFeedback('2026-07-20-cronica',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:#a8a8a8;"></span>
+      </div>
+    </div>
+
+    <div class="fine-print">Datos recalculados de <code>games/game_1784597432274</code> (Negro, 20/07 — 9 jugadores, absentees: Mata, Cobra). Tabla anual: 18 fechas válidas al cierre de esta edición. Puntajes de la tabla en puntaje BASE (solo rondas); multa y corte anotados aparte, sin afectar el orden.</div>
+  </div>
+
+  <script src="engage.js"></script>
+</body>
+</html>

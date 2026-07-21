@@ -289,13 +289,13 @@
       "title": "🧾 Día de liquidación (chusmerío del domingo: deuda de Naso + libro de multas)",
       "page": "engage/2026-07-19-liquidacion.html",
       "created": "2026-07-19",
-      "status": "pending",
+      "status": "promoted",
       "hypothesis": "Chusmerío del domingo, sub-formato 'día de liquidación' para no repetir el clásico (05/07) ni confesiones (12/07): deuda de Naso con contador (6 días al 19/07), libro de multas 2026 (Tano 150 el más caro), ranking de pagadores, H2H PT-Naso. Cierra con 'mañana se juega'. Métrica: reacción + answer suscripción + approve. NOTA: esta proposal se registra recién en la corrida del 20/07 — quedó sin registrar el 19/07 pese a haber salido (preview 09:00 + general 14:00); no afecta el push ya despachado, solo la trazabilidad de la decisión de permanencia.",
       "notified_by": [
         "2026-07-19-a-preview",
         "2026-07-19-a"
       ],
-      "result_notes": "PROMOVIDA: approve de andres por botón (20/07 09:16 local, desde el escritorio solicitadas) + reacción like, dwell 110s. Antes tenía approve secundario de pt (19/07 17:55) + love + answer suscripción=si + answer deuda-naso=sigue. La página queda."
+      "result_notes": "PROMOVIDA: approve de andres por botón (20/07 09:16 local, desde el escritorio solicitadas) + reacción like, dwell 110s. Antes tenía approve secundario de pt (19/07 17:55) + love + answer suscripción=si + answer deuda-naso=sigue. La página queda. NOTA: el campo status había quedado en 'pending' por un error de escritura de la corrida del 20/07 pese a que result_notes ya decía PROMOVIDA — corregido hoy (21/07) a 'promoted', sin cambios de contenido."
     },
     {
       "id": "2026-07-20-la-previa",
@@ -322,6 +322,43 @@
         "2026-07-20-tombola-carucha"
       ],
       "result_notes": "Carucha volvio a pedir lo mismo por texto (20/07 17:40, casilla del laboratorio) — señal fuerte, 2 pedidos independientes. Andres pidio mandarsela directo a Carucha con tono 'uste lo pidio, uste lo tiene' (push 2026-07-20-tombola-carucha). Ademas Andres pidio que la pagina tenga boton 'Agregar a la seccion Experiencias' hardcodeado como «Experience by Carucha» (escribe doc 'tombola-asientos' en la coleccion experiencias, slug=carucha) para que quede fija en Estadisticas → Experiencias y se use todos los lunes."
+    },
+    {
+      "id": "2026-07-20-cronica",
+      "title": "📰 La Crónica (tabloide del martes: Carucha se la roba en la última mano)",
+      "page": "engage/2026-07-20-cronica.html",
+      "created": "2026-07-21",
+      "status": "pending",
+      "hypothesis": "Crónica de la T5 Fecha 3 (jugada 20/07 en casa de Negro): Carucha ganó tras ir 1 punto abajo de Negro entrando a la última mano — el margen más ajustado del año. Tano último (423), nueva deuda. Cobra y Mata ausentes; Cobra falta su 2da fecha de la T5 y cae al último lugar de la temporada pese a haber ganado la F1. Carucha pasa a Cobra en la tabla anual por primera vez en el año. Gordo logra un corte exacto (-50) verificado. Métrica: reacción + answer suscripción + approve.",
+      "notified_by": [
+        "2026-07-21-a-preview",
+        "2026-07-21-a"
+      ],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-20-sala-carucha",
+      "title": "🎙️ Sala de prensa del martes — Carucha, campeona de la Fecha 3",
+      "page": "engage/2026-07-20-sala-carucha.html",
+      "created": "2026-07-21",
+      "status": "pending",
+      "hypothesis": "Regla permanente 'Sala de prensa del martes': mini interview de 3 preguntas (2 libres + 1 opción múltiple) a la ganadora de anoche, enviada solo a su device (~10:00), linkeada desde la crónica. Apunta a que sus respuestas se puedan citar en la crónica ya publicada o en la próxima semana. Métrica: >=1 answer de carucha-prensa-qN desde device carucha.",
+      "notified_by": [
+        "2026-07-21-sala-carucha"
+      ],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-20-animo-mac-negro",
+      "title": "🎉 Certificado de Aliento (con tomada de pelo) para Mac y Negro",
+      "page": "engage/exp-mac-negro-animo-b7f2a9e1.html",
+      "created": "2026-07-21",
+      "status": "pending",
+      "hypothesis": "Fulfillment de feedback libre de Andrés (device andres, 20/07 17:55, casilla del laboratorio): 'darle ánimo, con mucho tono de tomada de pelo, a los últimos 2 de la anual'. Construida on-demand: Mac (10º, 0 coronas en 15 fechas jugadas, 0 ventajas de H2H contra nadie) y Negro (11º, 1 corona hace 126 días, 2º en multas). Entregada SOLO a Andrés (no a Mac/Negro directamente, dado que los nombra y se burla de ellos sin que lo hayan pedido); la página le pregunta a él si quiere redifundirla. Métrica: reacción + answer de difusión + approve.",
+      "notified_by": [
+        "2026-07-21-animo"
+      ],
+      "result_notes": null
     },
     {
       "id": "2026-07-20-el-soplon",
