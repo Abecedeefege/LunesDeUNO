@@ -1308,6 +1308,20 @@
       "device": "andres",
       "ts": "2026-07-21T11:54:51.056Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-a-preview",
+      "device": "andres",
+      "ts": "2026-07-21T12:04:11.142Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-a-preview",
+      "device": "andres",
+      "ts": "2026-07-21T12:04:11.244Z",
+      "status_code": 201
     }
   ]
 }
