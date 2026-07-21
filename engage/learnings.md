@@ -184,9 +184,23 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
 - 🧾 Dom 19/07: chusmerío "día de liquidación" → promovida.
 - 🔥 Lun 20/07: la previa, T5 F3. Promovida. El Soplón (2do push 17:00),
   promovida. Tómbola de asientos entregada 2 veces (Andrés + Carucha).
-- 📰 **Mar 21/07 (hoy)**: crónica de la T5 F3 (Carucha campeona por margen
-  mínimo). Preview 09:00 + general 14:00. Sala de prensa de Carucha 10:00.
-  Certificado de aliento a Andrés 10:15 (fulfillment). Escritorio 08:45.
+- 📰 **Mar 21/07 (hoy)**: crónica de la T5 F3 (Carucha campeón por margen
+  mínimo, 1 punto en la ronda 11). Preview 09:00 + general 14:00.
+  Salió MUCHO trabajo de iteración por chat con Andrés durante la mañana:
+  (1) escritorio reenviado corregido — regla nueva: lista TODO lo nuevo,
+  no solo lo que espera OK; (2) el cron de dispatch se colgó 2 veces, se
+  destrabó tocando queue.json (sin permiso de workflow_dispatch por API,
+  403); (3) certificado de aliento Mac/Negro sin transcribir la letra del
+  pedido (regla nueva); (4) **Carucha es HOMBRE** — corregidas todas las
+  concordancias (regla vinculante); (5) la crónica linkea a una
+  **entrevista PÚBLICA de solo lectura** (`2026-07-20-entrevista-carucha`),
+  no a la sala de prensa con inputs (regla vinculante); (6) Carucha
+  encargó en la sala de prensa una parodia de "Lloviendo Estrellas" para
+  Nachi → fabricada fiel a la melodía de Cristian Castro, embebida en la
+  entrevista pública y como standalone (`exp-nachi-lloviendo`). Andrés
+  aprobó crónica + sala + entrevista por botón y dio el OK final por chat
+  ("lo veo bien"). Pendiente: distribución del sencillo de Nachi (no tiene
+  push activa; por ahora vive embebido en la entrevista pública).
 - 🧬 **Jue 23/07**: entrevista personal, a un no-ganador del último lunes
   (Carucha ganó, así que no aplica a ella). Candidatos sin usar
   recientemente: Negro, Naso, Mac, Tano, Gael. Definir el jueves con datos
