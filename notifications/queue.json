@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-21T14:30:14.543Z",
+  "_updated_at": "2026-07-21T15:52:57.462Z",
   "notifications": [
     {
       "id": "2026-07-21-cronica-v4-andres",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-21T11:45:00-03:00",
       "expires_at": "2026-07-21T13:50:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T15:52:57.344Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (correcciones de Andres por chat: (1) bloque padres-e-hijos se veia roto -> reestructurado con score en badge; (2) confirmar que linkea a la entrevista -> ok; (3) la cancion adaptada mas fiel al tema original de Cristian Castro. Reenvio para revisar antes del general 14:00)"
     },
