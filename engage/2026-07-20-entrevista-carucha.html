@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es-UY">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🎙️ La entrevista — Carucha, campeón de la Fecha 3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #0d0d12; color: #f2f2f2; max-width: 520px; margin: 0 auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 1rem 1rem 2rem;
+  }
+  a.back { display: inline-block; color: #FFDE00; text-decoration: none; font-weight: 700; font-size: .9rem; margin-bottom: 1rem; }
+
+  .room { background: #17171f; border: 1px solid #2a2a35; border-radius: 12px; overflow: hidden; }
+  .top { background: linear-gradient(135deg,#1a1a24,#0d0d12); padding: 1.2rem 1rem; text-align: center; border-bottom: 2px solid #ED1C24; }
+  .top img { width: 62px; height: 62px; border-radius: 50%; border: 3px solid #FFDE00; object-fit: cover; background: #222; }
+  .top h1 { font-size: 1.3rem; margin-top: .5rem; }
+  .top .sub { font-size: .78rem; color: #9a9aa8; margin-top: .35rem; line-height: 1.4; }
+  .top .tag { display: inline-block; margin-top: .6rem; font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: #FFDE00; border: 1px solid rgba(255,222,0,.4); border-radius: 99px; padding: .2rem .7rem; }
+
+  .intro { margin: .9rem; font-size: .84rem; line-height: 1.55; color: #c9c9d2; }
+
+  .qa { margin: 0 .9rem 1rem; background: #0d0d12; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; }
+  .qa .qn { font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: #ff9a9e; font-weight: 800; margin-bottom: .35rem; }
+  .qa .pregunta { font-size: .88rem; line-height: 1.45; color: #f2f2f2; margin-bottom: .7rem; }
+  .qa .respuesta { display: flex; gap: .6rem; align-items: flex-start; }
+  .qa .respuesta img { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #FFDE00; object-fit: cover; background: #222; flex: none; }
+  .qa .respuesta .txt { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: .95rem; line-height: 1.5; color: #FFDE00; }
+  .qa .respuesta .txt::before { content: "\201C"; } .qa .respuesta .txt::after { content: "\201D"; }
+  .qa .opcion { display: inline-block; margin-top: .2rem; font-size: .84rem; font-weight: 700; color: #7dd3fc; background: rgba(0,114,188,.12); border: 1px solid rgba(0,114,188,.4); border-radius: 8px; padding: .35rem .7rem; }
+
+  .ficha { margin: 0 .9rem 1rem; background: #17171f; border: 1px solid #2a2a35; border-left: 4px solid #ED1C24; border-radius: 10px; padding: .8rem .9rem; }
+  .ficha .ft { font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: #9a9aa8; font-weight: 800; margin-bottom: .5rem; }
+  .ficha ul { list-style: none; }
+  .ficha li { font-size: .82rem; color: #c9c9d2; line-height: 1.6; padding-left: 1.1em; position: relative; }
+  .ficha li::before { content: "•"; position: absolute; left: 0; color: #ED1C24; }
+  .ficha li b { color: #f2f2f2; }
+
+  .encargo { margin: 0 .9rem 1rem; border: 1px solid rgba(138,182,255,.5); border-radius: 12px; overflow: hidden;
+    background: radial-gradient(ellipse at 20% 0%, rgba(138,182,255,.16), transparent 55%), linear-gradient(180deg,#0b1024,#0d0d12); }
+  .encargo .e-top { padding: .7rem .9rem; border-bottom: 1px dashed rgba(138,182,255,.4); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: #8ab6ff; font-weight: 800; }
+  .encargo .e-body { padding: 1rem .9rem; }
+  .encargo .lead { font-size: .82rem; color: #c9c9d2; line-height: 1.5; margin-bottom: .9rem; }
+  .encargo .lead b { color: #f2f2f2; }
+  .encargo .caras { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 1rem; }
+  .encargo .caras img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #222; }
+  .encargo .caras .de img { border: 3px solid #f5d76e; }
+  .encargo .caras .para img { border: 3px solid #8ab6ff; filter: grayscale(.4); }
+  .encargo .caras .fl { font-size: 1.2rem; color: #9a9aa8; }
+  .verso { background: rgba(13,13,18,.6); border: 1px solid #2a2a35; border-left: 4px solid #f5d76e; border-radius: 10px; padding: .8rem .9rem; margin-bottom: .7rem; }
+  .verso:last-child { margin-bottom: 0; }
+  .verso .vn { font-size: .56rem; letter-spacing: .18em; text-transform: uppercase; color: #f5d76e; font-weight: 800; margin-bottom: .4rem; }
+  .verso.coro { border-left-color: #8ab6ff; }
+  .verso.coro .vn { color: #8ab6ff; }
+  .verso p { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: .92rem; line-height: 1.6; color: #f2f2f2; }
+
+  .interact { background: #0d0d12; padding: 1rem 0 1.3rem; margin-top: .2rem; }
+  .card { background: #17171f; border: 1px solid #2a2a35; border-radius: 10px; padding: 1rem; margin-bottom: .9rem; }
+  .card h2 { color: #FFDE00; font-size: .95rem; margin-bottom: .55rem; }
+  button { margin: .3rem .3rem 0 0; padding: .5rem .8rem; border-radius: 10px; border: 1px solid #2a2a35; background: #22222c; color: #f2f2f2; font-size: .88rem; font-weight: 600; cursor: pointer; }
+  .react button { font-size: 1.2rem; padding: .38rem .68rem; }
+  .react-hint, .engage-hint { display: block; font-size: .74rem; color: #8f8f9c; margin-top: .35rem; }
+  .fine-print { color: #565660; font-size: .66rem; line-height: 1.5; padding: 0 .1rem; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="room">
+    <div class="top">
+      <img src="../assets/faces/carucha.png" alt="Carucha">
+      <h1>🎙️ La entrevista</h1>
+      <div class="sub">Carucha — campeón de la T5 Fecha 3<br>(20/07, en casa de Negro)</div>
+      <div class="tag">Declaraciones textuales · sala de prensa del martes</div>
+    </div>
+
+    <div class="intro">Ganó por <b>un punto</b> entrando a la última mano y la cerró con -10. Le
+    ganó a los 8 que se sentaron con él. Pasó por la sala de prensa y dejó estas declaraciones —
+    más un encargo para la redacción.</div>
+
+    <div class="qa">
+      <div class="qn">Pregunta 1 · sobre la última mano, con Negro 1 punto arriba</div>
+      <div class="pregunta">Ibas 1 punto abajo de Negro entrando a la ronda 12. ¿Qué pasó por tu cabeza antes de esa última mano?</div>
+      <div class="respuesta"><img src="../assets/faces/carucha.png" alt="Carucha">
+        <div class="txt">El Negro, como de costumbre, lloró toda la noche. No podía dejar a un llorón ganar. Esa fue la motivación principal.</div></div>
+    </div>
+
+    <div class="qa">
+      <div class="qn">Pregunta 2 · sobre las ausencias de Cobra y Mata</div>
+      <div class="pregunta">Cobra y Mata faltaron a tu fecha. ¿Qué corresponde?</div>
+      <div class="opcion">✅ «Multa moral, que se enteren»</div>
+    </div>
+
+    <div class="qa">
+      <div class="qn">Pregunta 3 · un mensaje para la mesa</div>
+      <div class="pregunta">Le ganaste a los 8 que se sentaron con vos anoche. ¿A quién le mandás un mensaje hoy?</div>
+      <div class="respuesta"><img src="../assets/faces/carucha.png" alt="Carucha">
+        <div class="txt">Mandale un mensaje a Nachi. Hacele una versión de «Están lloviendo estrellas» de Cristian Castro, pero adaptada a su triste participación en el UNO.</div></div>
+    </div>
+
+    <div class="ficha">
+      <div class="ft">📋 Ficha de la noche (verificado de la tabla oficial)</div>
+      <ul>
+        <li>Ganó con <b>190</b>, 1 punto por debajo de Negro (199) tras la ronda 11 — el margen más fino del año.</li>
+        <li>Le ganó a <b>los 8</b> rivales que compartieron mesa con él, Nachi y PT incluidos.</li>
+        <li>Es su <b>3ª corona de 2026</b> (06/04, 13/04 y ahora 20/07).</li>
+        <li>Con esta victoria pasó a <b>Cobra en la tabla anual</b> (3º contra 4º), por primera vez en el año.</li>
+      </ul>
+    </div>
+
+    <div class="encargo">
+      <div class="e-top">🌠 El encargo cumplido — «Lloviendo Estrellas», versión Nachi</div>
+      <div class="e-body">
+        <div class="lead">Lo pidió Carucha en la pregunta 3. La redacción lo fabricó con los números
+        reales de la noche de <b>Nachi</b>: 8º de 9 con 366, cero rondas lideradas, 55 días sin corona.</div>
+        <div class="caras">
+          <div class="de"><img src="../assets/faces/carucha.png" alt="Carucha"></div>
+          <div class="fl">🎵→</div>
+          <div class="para"><img src="../assets/faces/nachi.png" alt="Nachi"></div>
+        </div>
+        <div class="verso">
+          <div class="vn">Verso 1</div>
+          <p>Están lloviendo estrellas,<br>pero ninguna es para vos:<br>trescientos sesenta y seis motivos<br>te dejaron sin canción.</p>
+        </div>
+        <div class="verso coro">
+          <div class="vn">Coro</div>
+          <p>Ven, Nachito, ven,<br>que están lloviendo estrellas:<br>las agarra cualquiera menos vos —<br>octavo entre nueve valientes,<br>y eso que faltaron dos.</p>
+        </div>
+        <div class="verso">
+          <div class="vn">Verso final</div>
+          <p>Cincuenta y cinco días<br>sin corona que besar;<br>desde el doblete de mayo<br>solo te queda... cantar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="interact">
+    <div class="card react">
+      <h2>¿Qué tal la entrevista?</h2>
+      <button onclick="engageReact('2026-07-20-entrevista-carucha','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-20-entrevista-carucha','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-20-entrevista-carucha','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-20-entrevista-carucha','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div style="margin:0 0 1.3rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px;">
+      <div style="font-size:.86rem;font-weight:700;color:#FFDE00;margin-bottom:.3rem;">💬 ¿Qué Queré?</div>
+      <div style="font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4;">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los dias.</div>
+      <textarea id="fbtxt-2026-07-20-entrevista-carucha" maxlength="480" rows="2" placeholder="Escribí acá…" style="width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.84rem;padding:.6rem .7rem;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-top:.55rem;">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-20-entrevista-carucha');engageFeedback('2026-07-20-entrevista-carucha',t.value,this);t.value='';" style="background:#ED1C24;color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer;">Enviar</button>
+        <span class="fb-hint" style="font-size:.72rem;color:#a8a8a8;"></span>
+      </div>
+    </div>
+
+    <div class="fine-print">Declaraciones textuales de Carucha en la sala de prensa del 21/07 (10:57-10:58 local). Stats recalculadas de <code>games/game_1784597432274</code>. Esta es la versión pública de solo lectura: las preguntas se responden en la sala de prensa privada, que solo ve el entrevistado.</div>
+  </div>
+
+  <script src="engage.js"></script>
+</body>
+</html>

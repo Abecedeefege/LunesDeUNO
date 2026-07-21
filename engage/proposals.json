@@ -338,15 +338,15 @@
     },
     {
       "id": "2026-07-20-sala-carucha",
-      "title": "🎙️ Sala de prensa del martes — Carucha, campeona de la Fecha 3",
+      "title": "🎙️ Sala de prensa del martes — Carucha, campeón de la Fecha 3",
       "page": "engage/2026-07-20-sala-carucha.html",
       "created": "2026-07-21",
       "status": "promoted",
-      "hypothesis": "Regla permanente 'Sala de prensa del martes': mini interview de 3 preguntas (2 libres + 1 opción múltiple) a la ganadora de anoche, enviada solo a su device (~10:00), linkeada desde la crónica. Apunta a que sus respuestas se puedan citar en la crónica ya publicada o en la próxima semana. Métrica: >=1 answer de carucha-prensa-qN desde device carucha.",
+      "hypothesis": "Regla permanente 'Sala de prensa del martes': mini interview de 3 preguntas (2 libres + 1 opción múltiple) a el ganador de anoche, enviada solo a su device (~10:00), linkeada desde la crónica. Apunta a que sus respuestas se puedan citar en la crónica ya publicada o en la próxima semana. Métrica: >=1 answer de carucha-prensa-qN desde device carucha.",
       "notified_by": [
         "2026-07-21-sala-carucha"
       ],
-      "result_notes": "PROMOVIDA el mismo día: approve de andres por botón (21/07 10:03 local) + reacción love. Carucha respondió las 3 preguntas a los 43 min de recibir el push (10:57-10:58 local): q1 contra Negro («lloró toda la noche, no podía dejar a un llorón ganar»), q2=multa-moral para los ausentes, q3=encargo de una dedicatoria musical a Nachi (versión de 'Lloviendo estrellas'). Además love + approve de carucha (señal secundaria) y dwell. Declaraciones ya citadas en la crónica; el encargo se fabricó como exp-nachi-lloviendo (proposal aparte)."
+      "result_notes": "PROMOVIDA el mismo día: approve de andres por botón (21/07 10:03 local) + reacción love. Carucha respondió las 3 preguntas a los 43 min de recibir el push (10:57-10:58 local): q1 contra Negro («lloró toda la noche, no podía dejar a un llorón ganar»), q2=multa-moral para los ausentes, q3=encargo de una dedicatoria musical a Nachi (versión de 'Lloviendo estrellas'). Además love + approve de carucha (señal secundaria) y dwell. Declaraciones ya citadas en la crónica; el encargo se fabricó como exp-nachi-lloviendo (proposal aparte). Correcciones de Andrés (21/07): Carucha es hombre (concordancias arregladas en todas las piezas del día); la crónica se re-linkeó a una entrevista pública de SOLO LECTURA (2026-07-20-entrevista-carucha.html) que muestra Q&A sin inputs + el encargo musical embebido, en vez de a esta sala con campos editables."
     },
     {
       "id": "2026-07-20-animo-mac-negro",
@@ -392,6 +392,18 @@
       "hypothesis": "Encargo de Carucha desde la sala de prensa del 21/07 (carucha-prensa-q3): parodia de 'Lloviendo estrellas' dedicada a Nachi por su noche del 20/07 — 8º de 9 con 366, 0 de 12 rondas liderando, 176 puntos detrás de Carucha (a quien domina 6-3), 55 días sin corona desde el doblete de mayo. Todo verificado contra games. Nachi no tiene push activa: la página le pregunta a Andrés cómo distribuirla (WhatsApp / próximo push grupal / archivo). Métrica: reacción + answer de difusión + approve de andres.",
       "notified_by": [
         "2026-07-21-nachi-song"
+      ],
+      "result_notes": null
+    },
+    {
+      "id": "2026-07-20-entrevista-carucha",
+      "title": "🎙️ La entrevista pública — Carucha (solo lectura, con el encargo embebido)",
+      "page": "engage/2026-07-20-entrevista-carucha.html",
+      "created": "2026-07-21",
+      "status": "pending",
+      "hypothesis": "Regla nueva de Andrés (21/07): la crónica del martes linkea a una entrevista PÚBLICA de solo lectura (no a la sala de prensa con campos editables). Muestra las 3 preguntas con las respuestas textuales de Carucha + su ficha de la noche + la experiencia que encargó (dedicatoria musical a Nachi, embebida). Métrica: reacción + dwell + clicks del link desde la crónica.",
+      "notified_by": [
+        "2026-07-21-cronica-v3-andres"
       ],
       "result_notes": null
     }

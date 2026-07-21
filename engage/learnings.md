@@ -30,6 +30,20 @@
   Se puede decir que lo pidió ("Lo pediste del laboratorio: algo de ánimo
   para...") pero el tono se EJECUTA, no se anuncia. Detectado en el
   certificado de aliento del 21/07, corregido ese mismo día.
+- **👥 Géneros (Andrés, 21/07, vinculante)**: **Carucha es HOMBRE** — nada
+  de "campeona/ganadora/la propia Carucha". Todos los jugadores del club se
+  tratan en masculino salvo aviso en contra. Revisar concordancias en cada
+  pieza antes de publicar.
+- **🎙️ Sala de prensa del martes = 2 páginas (Andrés, 21/07, vinculante)**:
+  la crónica NUNCA linkea a la página con campos editables (la sala de
+  prensa privada que solo ve el entrevistado, `*-sala-*`). La crónica
+  linkea a una **entrevista pública de SOLO LECTURA** (`*-entrevista-*`)
+  que muestra las preguntas y respuestas ya dadas, sin inputs, e **incluye
+  la experiencia que el entrevistado haya solicitado** en la entrevista
+  (ej. el encargo musical de Carucha para Nachi va embebido en la
+  entrevista pública). Flujo: sala privada al ganador (recoge respuestas)
+  → entrevista pública (muestra lo respondido + el encargo cumplido) →
+  crónica linkea a la pública.
 - **Andrés ES Mata**: devices `andres` y `mata` son la misma persona. En
   contenido publicado se lo nombra Mata.
 - **Cadencia**: 4 pushes grupales/semana 14:00 (sáb récords · dom chusmerío

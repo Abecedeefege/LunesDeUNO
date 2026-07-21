@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-21T14:20:09.539Z",
   "notifications": [
     {
+      "id": "2026-07-21-cronica-v3-andres",
+      "title": "📰 Crónica y entrevista corregidas",
+      "body": "Arreglado: Carucha en masculino, y la crónica ahora linkea a la entrevista de solo lectura con el tema para Nachi adentro. Revisá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-20-cronica.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-21T11:30:00-03:00",
+      "expires_at": "2026-07-21T13:45:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-21 (correcciones de Andres por chat: (1) Carucha es hombre -> concordancias arregladas; (2) la cronica linkea a una entrevista publica de solo lectura con el encargo musical embebido, no a la sala con campos editables. Reenvio para que lo revise antes del general de las 14:00)"
+    },
+    {
       "id": "2026-07-21-nachi-song",
       "title": "🌠 El encargo de Carucha está listo",
       "body": "Pidió una dedicatoria musical para Nachi: «Lloviendo Estrellas» versión 366 puntos. Revisala y decidí adentro cómo se distribuye.",
