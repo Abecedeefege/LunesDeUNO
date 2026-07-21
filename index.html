@@ -1691,32 +1691,19 @@
     <h2 style="font-size:1.6rem; margin-bottom:.25rem;" data-i18n="stats_title"></h2>
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.6rem;" id="statsMeta"></p>
 
-    <!-- Dashboard: tablas arriba, navegación por íconos, AI al final -->
+    <!-- Dashboard: módulos de íconos (Tablas, Jugador/Versus, AI) -->
     <div id="statsDashboard">
-      <div class="stats-section-head" data-i18n="stats_tab_leaderboard"></div>
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
-        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
-        <select id="leaderboardSort" onchange="renderLeaderboard(this.value, 'annual')"></select>
+      <div class="stats-section-head" data-i18n="stats_head_tablas"></div>
+      <div class="exp-icon-row">
+        <button type="button" class="exp-item" onclick="switchStatsTab('leaderboard')">
+          <span class="exp-icon" aria-hidden="true">📅</span>
+          <span class="exp-name" data-i18n="stats_tab_leaderboard"></span>
+        </button>
+        <button type="button" class="exp-item" onclick="switchStatsTab('leaderboardSeason')">
+          <span class="exp-icon" aria-hidden="true">⏳</span>
+          <span class="exp-name" data-i18n="stats_tab_leaderboard_season"></span>
+        </button>
       </div>
-      <div class="naso-disclaimer" data-i18n="naso_disclaimer_stats"></div>
-      <div class="stats-table-scroll">
-        <table class="stats-table" id="leaderboardTable"></table>
-      </div>
-      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTable', 'stats_tab_leaderboard', this)" data-i18n="stats_share_wa"></button>
-
-      <div class="stats-section-head" data-i18n="stats_season_current_head"></div>
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
-        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_season_selector_label"></label>
-        <select id="leaderboardSeasonSelector" onchange="onLeaderboardSeasonChange(this.value)"></select>
-      </div>
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
-        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
-        <select id="leaderboardSortSeason" onchange="renderLeaderboard(this.value, 'season')"></select>
-      </div>
-      <div class="stats-table-scroll">
-        <table class="stats-table" id="leaderboardTableSeason"></table>
-      </div>
-      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTableSeason', 'stats_tab_leaderboard_season', this)" data-i18n="stats_share_wa"></button>
 
       <div class="exp-icon-row" style="margin-top:1.1rem;">
         <button type="button" class="exp-item" onclick="switchStatsTab('player')">
@@ -1726,10 +1713,6 @@
         <button type="button" class="exp-item" onclick="switchStatsTab('h2h')">
           <span class="exp-icon" aria-hidden="true">🆚</span>
           <span class="exp-name" data-i18n="stats_tab_h2h"></span>
-        </button>
-        <button type="button" class="exp-item" onclick="switchStatsTab('seasons')">
-          <span class="exp-icon" aria-hidden="true">🏆</span>
-          <span class="exp-name" data-i18n="stats_tab_seasons"></span>
         </button>
       </div>
 
@@ -1743,6 +1726,35 @@
     </div>
 
     <!-- Sub-vistas: se abren desde los íconos del dashboard -->
+    <div id="statsTab_leaderboard" class="stats-tab-panel">
+      <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
+        <select id="leaderboardSort" onchange="renderLeaderboard(this.value, 'annual')"></select>
+      </div>
+      <div class="naso-disclaimer" data-i18n="naso_disclaimer_stats"></div>
+      <div class="stats-table-scroll">
+        <table class="stats-table" id="leaderboardTable"></table>
+      </div>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTable', 'stats_tab_leaderboard', this)" data-i18n="stats_share_wa"></button>
+    </div>
+
+    <div id="statsTab_leaderboardSeason" class="stats-tab-panel">
+      <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_season_selector_label"></label>
+        <select id="leaderboardSeasonSelector" onchange="onLeaderboardSeasonChange(this.value)"></select>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
+        <select id="leaderboardSortSeason" onchange="renderLeaderboard(this.value, 'season')"></select>
+      </div>
+      <div class="stats-table-scroll">
+        <table class="stats-table" id="leaderboardTableSeason"></table>
+      </div>
+      <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTableSeason', 'stats_tab_leaderboard_season', this)" data-i18n="stats_share_wa"></button>
+    </div>
+
     <div id="statsTab_player" class="stats-tab-panel">
       <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
@@ -2043,8 +2055,8 @@ const STRINGS = {
     stats_title: '📊 Estadísticas',
     stats_tab_player: 'Jugador',
     stats_tab_leaderboard: 'Ranking anual',
-    stats_tab_leaderboard_season: 'Ranking temporadas',
-    stats_season_current_head: 'Temporada en curso',
+    stats_tab_leaderboard_season: 'Ranking temporada',
+    stats_head_tablas: 'Tablas',
     stats_season_selector_label: 'Temporada:',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
@@ -2232,8 +2244,8 @@ const STRINGS = {
     stats_title: '📊 Stats',
     stats_tab_player: 'Player',
     stats_tab_leaderboard: 'Annual ranking',
-    stats_tab_leaderboard_season: 'Seasons ranking',
-    stats_season_current_head: 'Current season',
+    stats_tab_leaderboard_season: 'Season ranking',
+    stats_head_tablas: 'Tables',
     stats_season_selector_label: 'Season:',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
