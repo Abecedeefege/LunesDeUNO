@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-21T14:20:09.539Z",
+  "_updated_at": "2026-07-21T14:30:14.543Z",
   "notifications": [
     {
       "id": "2026-07-21-cronica-v3-andres",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-21T11:30:00-03:00",
       "expires_at": "2026-07-21T13:45:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-21T14:30:14.542Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-21 (correcciones de Andres por chat: (1) Carucha es hombre -> concordancias arregladas; (2) la cronica linkea a una entrevista publica de solo lectura con el encargo musical embebido, no a la sala con campos editables. Reenvio para que lo revise antes del general de las 14:00)"
     },

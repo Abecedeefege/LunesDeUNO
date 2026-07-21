@@ -1385,6 +1385,20 @@
       "device": "andres",
       "ts": "2026-07-21T14:20:09.539Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-cronica-v3-andres",
+      "device": "andres",
+      "ts": "2026-07-21T14:30:14.404Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-21-cronica-v3-andres",
+      "device": "andres",
+      "ts": "2026-07-21T14:30:14.542Z",
+      "status_code": 201
     }
   ]
 }
