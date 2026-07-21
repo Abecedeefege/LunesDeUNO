@@ -1070,21 +1070,6 @@
     .guest-remove:hover { color: var(--danger); }
 
     /* ---- Stats screen ---- */
-    .stats-tabs {
-      display: flex; gap: .35rem; margin-bottom: 1rem;
-      border-bottom: 1px solid var(--border); padding-bottom: .25rem; flex-wrap: wrap;
-    }
-    .stats-tab-btn {
-      background: transparent; color: var(--text-muted); border: 1px solid transparent;
-      padding: .45rem .8rem; border-radius: 8px 8px 0 0; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600;
-      transition: all .2s;
-    }
-    .stats-tab-btn:hover { color: var(--text); background: var(--surface-2); }
-    .stats-tab-btn.active {
-      color: var(--uno-yellow); background: var(--surface-2);
-      border-color: var(--border); border-bottom-color: var(--surface-2);
-    }
     .stats-tab-panel { display: none; }
     .stats-tab-panel.active { display: block; }
 
@@ -1106,6 +1091,13 @@
       font-size: .68rem; font-weight: 600; line-height: 1.2;
       text-align: center; color: var(--text-muted);
     }
+    button.exp-item { background: none; border: none; padding: 0; cursor: pointer; font: inherit; }
+    .stats-section-head {
+      margin: 1.2rem 0 .5rem; font-size: .72rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--text-muted); font-weight: 700;
+    }
+    .stats-section-head:first-child { margin-top: .2rem; }
+    .stats-back-btn { margin-bottom: .75rem; }
     .stats-hero {
       display: flex; align-items: center; gap: .8rem;
       padding: 1rem; background: var(--surface-2); border-radius: 12px;
@@ -1699,24 +1691,9 @@
     <h2 style="font-size:1.6rem; margin-bottom:.25rem;" data-i18n="stats_title"></h2>
     <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.6rem;" id="statsMeta"></p>
 
-    <div class="stats-tabs">
-      <button class="stats-tab-btn active" data-tab="player" onclick="switchStatsTab('player')" data-i18n="stats_tab_player"></button>
-      <button class="stats-tab-btn" data-tab="leaderboard" onclick="switchStatsTab('leaderboard')" data-i18n="stats_tab_leaderboard"></button>
-      <button class="stats-tab-btn" data-tab="leaderboardSeason" onclick="switchStatsTab('leaderboardSeason')" data-i18n="stats_tab_leaderboard_season"></button>
-      <button class="stats-tab-btn" data-tab="seasons" onclick="switchStatsTab('seasons')" data-i18n="stats_tab_seasons"></button>
-      <button class="stats-tab-btn" data-tab="h2h" onclick="switchStatsTab('h2h')" data-i18n="stats_tab_h2h"></button>
-      <button class="stats-tab-btn" data-tab="experiencias" onclick="switchStatsTab('experiencias')" data-i18n="stats_tab_experiencias"></button>
-    </div>
-
-    <div id="statsTab_player" class="stats-tab-panel active">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
-        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_player_label"></label>
-        <select id="statsPlayerSelect" onchange="renderPlayerStats(this.value)"></select>
-      </div>
-      <div id="statsPlayerCard"></div>
-    </div>
-
-    <div id="statsTab_leaderboard" class="stats-tab-panel">
+    <!-- Dashboard: tablas arriba, navegación por íconos, AI al final -->
+    <div id="statsDashboard">
+      <div class="stats-section-head" data-i18n="stats_tab_leaderboard"></div>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_sort_label"></label>
         <select id="leaderboardSort" onchange="renderLeaderboard(this.value, 'annual')"></select>
@@ -1726,9 +1703,8 @@
         <table class="stats-table" id="leaderboardTable"></table>
       </div>
       <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTable', 'stats_tab_leaderboard', this)" data-i18n="stats_share_wa"></button>
-    </div>
 
-    <div id="statsTab_leaderboardSeason" class="stats-tab-panel">
+      <div class="stats-section-head" data-i18n="stats_season_current_head"></div>
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;">
         <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_season_selector_label"></label>
         <select id="leaderboardSeasonSelector" onchange="onLeaderboardSeasonChange(this.value)"></select>
@@ -1741,9 +1717,43 @@
         <table class="stats-table" id="leaderboardTableSeason"></table>
       </div>
       <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('leaderboardTableSeason', 'stats_tab_leaderboard_season', this)" data-i18n="stats_share_wa"></button>
+
+      <div class="exp-icon-row" style="margin-top:1.1rem;">
+        <button type="button" class="exp-item" onclick="switchStatsTab('player')">
+          <span class="exp-icon" aria-hidden="true">👤</span>
+          <span class="exp-name" data-i18n="stats_tab_player"></span>
+        </button>
+        <button type="button" class="exp-item" onclick="switchStatsTab('h2h')">
+          <span class="exp-icon" aria-hidden="true">🆚</span>
+          <span class="exp-name" data-i18n="stats_tab_h2h"></span>
+        </button>
+        <button type="button" class="exp-item" onclick="switchStatsTab('seasons')">
+          <span class="exp-icon" aria-hidden="true">🏆</span>
+          <span class="exp-name" data-i18n="stats_tab_seasons"></span>
+        </button>
+      </div>
+
+      <div class="stats-section-head" data-i18n="stats_tab_experiencias"></div>
+      <div class="exp-icon-row" id="expIconRow">
+        <a class="exp-item" href="medallero-biblioteca-383a3a69.html" data-exp-kind="medallero" aria-label="Medallero histórico">
+          <span class="exp-icon" aria-hidden="true">🏅</span>
+          <span class="exp-name">Medallero histórico</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sub-vistas: se abren desde los íconos del dashboard -->
+    <div id="statsTab_player" class="stats-tab-panel">
+      <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <label style="font-size:.85rem;color:var(--text-muted);" data-i18n="stats_player_label"></label>
+        <select id="statsPlayerSelect" onchange="renderPlayerStats(this.value)"></select>
+      </div>
+      <div id="statsPlayerCard"></div>
     </div>
 
     <div id="statsTab_seasons" class="stats-tab-panel">
+      <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
       <div class="stats-table-scroll">
         <table class="stats-table" id="seasonsTable"></table>
       </div>
@@ -1751,20 +1761,12 @@
     </div>
 
     <div id="statsTab_h2h" class="stats-tab-panel">
+      <button type="button" class="btn btn-secondary btn-small stats-back-btn" onclick="switchStatsTab('dashboard')">← <span data-i18n="back_btn"></span></button>
       <div class="stats-table-scroll">
         <table class="stats-table h2h-matrix" id="h2hMatrix"></table>
       </div>
       <p style="color:var(--text-muted);font-size:.75rem;margin-top:.5rem;" data-i18n="stats_h2h_help"></p>
       <button type="button" class="btn-whatsapp" onclick="shareStatsTableImage('h2hMatrix', 'stats_tab_h2h', this)" data-i18n="stats_share_wa"></button>
-    </div>
-
-    <div id="statsTab_experiencias" class="stats-tab-panel">
-      <div class="exp-icon-row" id="expIconRow">
-        <a class="exp-item" href="medallero-biblioteca-383a3a69.html" data-exp-kind="medallero" aria-label="Medallero histórico">
-          <span class="exp-icon" aria-hidden="true">🏅</span>
-          <span class="exp-name">Medallero histórico</span>
-        </a>
-      </div>
     </div>
 
     <div style="margin-top:1rem; text-align:center;">
@@ -2042,6 +2044,7 @@ const STRINGS = {
     stats_tab_player: 'Jugador',
     stats_tab_leaderboard: 'Ranking anual',
     stats_tab_leaderboard_season: 'Ranking temporadas',
+    stats_season_current_head: 'Temporada en curso',
     stats_season_selector_label: 'Temporada:',
     stats_tab_seasons: 'Temporadas',
     stats_tab_h2h: 'Mano a mano',
@@ -2230,6 +2233,7 @@ const STRINGS = {
     stats_tab_player: 'Player',
     stats_tab_leaderboard: 'Annual ranking',
     stats_tab_leaderboard_season: 'Seasons ranking',
+    stats_season_current_head: 'Current season',
     stats_season_selector_label: 'Season:',
     stats_tab_seasons: 'Seasons',
     stats_tab_h2h: 'Head-to-head',
@@ -5726,7 +5730,7 @@ function initStats() {
     populatePlayerDropdown();
     populateLeaderboardSort();
     populateSeasonSelector();
-    switchStatsTab('player');
+    switchStatsTab('dashboard');
     var presetSlugs = PRESET_NAMES.map(function(n) { return n.toLowerCase(); });
     var defaultSlug = presetSlugs.find(function(s) { return _statsData.computed.byPlayer[s] && _statsData.computed.byPlayer[s].gamesPlayed > 0; }) || presetSlugs[0];
     var sel = document.getElementById('statsPlayerSelect');
@@ -5942,12 +5946,17 @@ function scheduleStatsBackgroundRefresh(delayMs) {
 }
 
 function switchStatsTab(tab) {
-  document.querySelectorAll('.stats-tab-btn').forEach(function(b) {
-    b.classList.toggle('active', b.dataset.tab === tab);
-  });
+  // 'dashboard' (o un tab sin panel propio) muestra el resumen con las
+  // tablas; 'player' / 'h2h' / 'seasons' abren su sub-vista.
+  var hasPanel = !!document.getElementById('statsTab_' + tab);
+  var dash = document.getElementById('statsDashboard');
+  if (dash) dash.style.display = hasPanel ? 'none' : '';
   document.querySelectorAll('.stats-tab-panel').forEach(function(p) {
-    p.classList.toggle('active', p.id === 'statsTab_' + tab);
+    p.classList.toggle('active', hasPanel && p.id === 'statsTab_' + tab);
   });
+  var screen = document.getElementById('stats');
+  if (screen) screen.scrollTop = 0;
+  window.scrollTo(0, 0);
 }
 
 function populatePlayerDropdown() {
