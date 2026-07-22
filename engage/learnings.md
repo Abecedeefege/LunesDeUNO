@@ -196,6 +196,13 @@
   | Gael | 1 (pendiente 23/07) | 23/07 | 2ª |
   | PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra | 0 | — | — |
 
+  Nota: PT y Negro se armaron como candidatos el 22/07 pero Andrés eligió
+  solo a Gael para esta semana — sus páginas se descartaron (`git rm`) y
+  siguen en 0. El miércoles 29/07 se regeneran candidatos frescos (empate
+  en 0 entre 9 jugadores; excluir al ganador del lunes 27/07). PENDIENTE:
+  reportar a Andrés cómo responde Gael (sus answers `gael-entrevista-q1..q4`
+  van a Firestore tras el push del 23/07 15:00) — lo pidió explícitamente.
+
 ## 💸 DEUDAS (ledger vigente al 21/07)
 
 | Deudor | Debe | Desde | Estado |

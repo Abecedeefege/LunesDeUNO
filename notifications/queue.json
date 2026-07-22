@@ -11,10 +11,11 @@
       ],
       "send_at": "2026-07-22T15:30:00-03:00",
       "expires_at": "2026-07-22T23:00:00-03:00",
-      "status": "pending",
+      "status": "cancelled",
       "sent_at": null,
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat: mandarle las entrevistas de Negro y PT como si fueran a salir, para que elija; regla nueva vinculante — los miércoles, cuando hay empate entre los candidatos con menos entrevistas, se le mandan las URLs y él elige. Candidatos armados: cabina-pt.html (1º de la anual, domina Mac/Naso 10-3) y cabina-negro.html (ganó con 62, 2º de local, gana a Gael/Naso 5-4); ambos linkeados en el escritorio con caja de feedback por candidato)"
+      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat: mandarle las entrevistas de Negro y PT como si fueran a salir, para que elija; regla nueva vinculante — los miércoles, cuando hay empate entre los candidatos con menos entrevistas, se le mandan las URLs y él elige. Candidatos armados: cabina-pt.html (1º de la anual, domina Mac/Naso 10-3) y cabina-negro.html (ganó con 62, 2º de local, gana a Gael/Naso 5-4); ambos linkeados en el escritorio con caja de feedback por candidato)",
+      "cancel_reason": "Andrés decidió por chat (22/07) que esta semana sale solo la de Gael; PT y Negro se descartan y se regeneran el miércoles que viene. Push cancelado antes de despachar y las 2 páginas candidatas borradas (git rm)."
     },
     {
       "id": "2026-07-23-gael",

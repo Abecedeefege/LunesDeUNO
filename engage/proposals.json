@@ -423,18 +423,14 @@
     {
       "id": "2026-07-22-candidatos-entrevista",
       "title": "🎙️ Candidatos de entrevista (Cabina) — PT y Negro, para que Andrés elija",
-      "pages": [
-        "engage/cabina-pt.html",
-        "engage/cabina-negro.html"
-      ],
-      "page": "engage/cabina-pt.html + engage/cabina-negro.html",
+      "page": "engage/cabina-pt.html + engage/cabina-negro.html (borradas)",
       "created": "2026-07-22",
-      "status": "pending",
-      "hypothesis": "Pedido por Andrés por chat (22/07): mandarle las entrevistas de Negro y PT armadas como si fueran a salir, para que él elija cuál va — y regla nueva vinculante: los miércoles, cuando hay empate entre los candidatos con menos entrevistas, la rutina arma 1 candidato por opción y le manda las URLs para que elija (ver REGLAS VINCULANTES). PT: ángulo 1º de la tabla anual, domina Mac 10-3 y Naso 10-3. Negro: ángulo campeón con 62 pts, 2º de 9 de local el 21/07, gana a Gael y Naso 5-4. Ambos 100% desde stats buenas, sin bloque de permanencia. Ninguno agendado a su device aún — solo preview a Andrés. Métrica: cuál elige Andrés (feedback desk-cabina-pt / desk-cabina-negro).",
+      "status": "dropped",
+      "hypothesis": "Pedido por Andrés por chat (22/07): mandarle las entrevistas de Negro y PT armadas como si fueran a salir, para que él elija cuál va — y regla nueva vinculante: los miércoles, cuando hay empate entre los candidatos con menos entrevistas, la rutina arma 1 candidato por opción y le manda las URLs para que elija (ver REGLAS VINCULANTES). PT: ángulo 1º de la tabla anual, domina Mac 10-3 y Naso 10-3. Negro: ángulo campeón con 62 pts, 2º de 9 de local el 21/07, gana a Gael y Naso 5-4.",
       "notified_by": [
         "2026-07-22-candidatos-entrevista"
       ],
-      "result_notes": null
+      "result_notes": "DESCARTADOS por decisión de Andrés (22/07): esta semana sale solo la de Gael; PT y Negro se regeneran el miércoles que viene con datos frescos. `git rm` de cabina-pt.html y cabina-negro.html, push 2026-07-22-candidatos-entrevista cancelado antes de despachar, sección de candidatos sacada del escritorio. Efímera por default: el material se rehace, no se guarda. NOTA: los ángulos quedan documentados arriba por si sirven de base la semana que viene."
     },
     {
       "id": "2026-07-20-entrevista-carucha",
