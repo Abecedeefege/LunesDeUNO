@@ -1497,6 +1497,20 @@
       "device": "andres",
       "ts": "2026-07-22T11:54:53.615Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-22-desk-v2",
+      "device": "andres",
+      "ts": "2026-07-22T14:09:03.302Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-22-desk-v2",
+      "device": "andres",
+      "ts": "2026-07-22T14:09:03.465Z",
+      "status_code": 201
     }
   ]
 }

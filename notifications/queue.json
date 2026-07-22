@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-22T11:54:53.616Z",
+  "_updated_at": "2026-07-22T14:09:03.466Z",
   "notifications": [
     {
       "id": "2026-07-22-desk-v2",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-22T10:45:00-03:00",
       "expires_at": "2026-07-22T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-22T14:09:03.465Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat 10:42: agregar una caja de texto debajo de CADA item que espera su OK en el escritorio, para poder dar feedback puntual por item en vez de por chat; reenvío inmediato tras el fix, reemplaza al 2026-07-22-desk que seguía pending por el cron colgado)"
     },
