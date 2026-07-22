@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="es-UY"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>🎙️ Cabina en Vivo — Gael al aire</title>
+<style>
+  :root{
+    --bg:#0d0d12; --card:#17171f; --border:#2a2a35;
+    --red:#ED1C24; --yellow:#FFDE00; --green:#00A651; --blue:#0072BC;
+    --text:#eaeaf0; --dim:#9a9aa8; --mic:#ff9f4a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:0 0 60px}
+  .back{display:inline-block;margin:14px 16px 0;color:var(--dim);text-decoration:none;font-size:.85rem}
+  .back:hover{color:var(--text)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px}
+
+  .studio{margin-top:14px;border:1px solid var(--mic);border-radius:14px;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%, rgba(255,159,74,.14), transparent 60%), linear-gradient(180deg,#1a130a,#0d0d12)}
+  .s-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px dashed rgba(255,159,74,.4)}
+  .s-top .logo{font-size:1.6rem}
+  .s-top .name{font-size:.72rem;letter-spacing:.18em;color:var(--mic);text-transform:uppercase;font-weight:700}
+  .s-top .sub{font-size:.62rem;color:var(--dim);letter-spacing:.08em}
+  .s-body{padding:16px 14px}
+  .onair{display:inline-block;border:2px solid var(--red);color:var(--red);padding:4px 10px;border-radius:6px;
+    font-weight:800;font-size:.8rem;letter-spacing:.12em;margin-bottom:12px}
+  h1{font-size:1.45rem;line-height:1.25;margin-bottom:8px}
+  h1 b{color:var(--mic)}
+  .lead{color:var(--dim);font-size:.92rem;line-height:1.5}
+  .lead b{color:var(--text)}
+  .faces{display:flex;align-items:center;gap:8px;margin:14px 0 4px}
+  .faces img{width:64px;height:64px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#222}
+  .faces .score{font-size:1.6rem;font-weight:900;color:var(--mic)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .chip{background:rgba(255,159,74,.08);border:1px solid rgba(255,159,74,.3);border-radius:999px;padding:4px 10px;font-size:.72rem;color:var(--text)}
+  .chip b{color:var(--mic)}
+  .transp{margin:16px 0;background:rgba(255,222,0,.07);border:1px solid rgba(255,222,0,.3);
+    border-left:4px solid var(--yellow);border-radius:8px;padding:10px 12px;font-size:.78rem;color:var(--dim);line-height:1.45}
+  .transp b{color:var(--yellow)}
+
+  .q{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px}
+  .qhead{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .qhead .av{width:38px;height:38px;border-radius:50%;background:#1a130a;border:1px solid var(--mic);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex:none}
+  .qhead .who{font-weight:700;font-size:.85rem}
+  .qhead .medio{font-size:.68rem;color:var(--dim)}
+  .qhead .num{margin-left:auto;font-size:1.3rem;font-weight:900;color:var(--border)}
+  .q .txt{font-size:.9rem;line-height:1.5;color:var(--text)}
+  .q .txt b{color:var(--mic)}
+  .tag{display:inline-block;margin-top:8px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mic);border:1px solid rgba(255,159,74,.4);border-radius:4px;padding:2px 7px}
+  .tag.red{color:#ff8c90;border-color:rgba(237,28,36,.45)}
+  .tag.yel{color:var(--yellow);border-color:rgba(255,222,0,.4)}
+  textarea{width:100%;margin-top:10px;background:#0d0d12;border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px;font-size:.9rem;font-family:inherit;min-height:84px;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--mic)}
+  textarea::placeholder{color:#5c5c68}
+  .opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .opts button{text-align:left;background:#0d0d12;border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:10px 12px;font-size:.85rem;font-family:inherit;cursor:pointer;line-height:1.4}
+  .opts button:hover{border-color:var(--mic)}
+  .opts button.sel{border-color:var(--green);background:rgba(0,166,81,.12)}
+  .opts button.sel::after{content:" ✓";color:var(--green);font-weight:800}
+  .opt-hint{font-size:.72rem;color:var(--green);margin-top:6px;display:block}
+
+  .send{display:block;width:100%;margin-top:18px;background:var(--mic);color:#2a1200;border:none;
+    border-radius:10px;padding:14px;font-size:1rem;font-weight:800;cursor:pointer;font-family:inherit}
+  .send:disabled{opacity:.65;cursor:default}
+  .sent-note{margin-top:8px;font-size:.82rem;text-align:center}
+  .hint{margin-top:8px;font-size:.72rem;color:var(--dim);text-align:center}
+
+  .react,.engage-actions{margin-top:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;
+    padding:14px;font-size:.85rem;color:var(--dim)}
+  .react button,.engage-actions button{background:#0d0d12;border:1px solid var(--border);border-radius:8px;
+    color:var(--text);padding:8px 12px;margin:6px 6px 0 0;font-size:.95rem;cursor:pointer;font-family:inherit}
+  .react button:hover,.engage-actions button:hover{border-color:var(--mic)}
+  .react-hint,.engage-hint{display:block;margin-top:6px;font-size:.75rem;color:var(--green)}
+
+  .fb{margin-top:1.1rem;padding:1rem 1.1rem;background:#14141c;border:1px solid #262626;border-radius:14px}
+  .fb-label{font-size:.86rem;font-weight:700;color:var(--yellow);margin-bottom:.3rem}
+  .fb-sub{font-size:.74rem;color:#a8a8a8;margin-bottom:.6rem;line-height:1.4}
+  .fb textarea{margin-top:0}
+  .fb-row{display:flex;align-items:center;gap:.6rem;margin-top:.55rem}
+  .fb-row button{background:var(--red);color:#fff;border:none;border-radius:99px;padding:.5rem 1.1rem;font-size:.82rem;font-weight:700;cursor:pointer}
+  .fb-hint{font-size:.72rem;color:#a8a8a8}
+
+  .foot{margin-top:26px;text-align:center;font-size:.68rem;color:var(--dim);letter-spacing:.14em}
+</style>
+</head><body>
+
+  <a class="back" href="../index.html">← Lunes de UNO</a>
+
+  <div class="wrap">
+
+    <div class="studio">
+      <div class="s-top">
+        <div class="logo">🎙️</div>
+        <div>
+          <div class="name">Cabina en Vivo</div>
+          <div class="sub">Entrevista personal del jueves · Edición 23/07 · Al aire</div>
+        </div>
+      </div>
+      <div class="s-body">
+        <div class="onair">🔴 AL AIRE</div>
+        <h1>Gael, tenés la palabra: <b>8-4 a Naso, pero Negro te gana a vos</b></h1>
+        <div class="faces">
+          <img src="../assets/faces/gael.png" alt="Gael">
+          <span class="score">8–4</span>
+          <img src="../assets/faces/naso.png" alt="Naso">
+        </div>
+        <p class="lead">De las <b>12 fechas</b> que compartiste con Naso este año, le ganaste
+        <b>8</b> — tu víctima favorita, con papeles. Pero acá está la parte incómoda: <b>Negro</b>,
+        el <b>último de toda la tabla anual</b>, te gana a VOS <b>5 de 9</b> veces en el historial
+        directo. Y anoche terminaste <b>6º de 9</b> (319 puntos) mientras tu única corona del año
+        sigue esperando desde el <b>28 de abril</b> — 85 días. La cabina te abre el micrófono:
+        <b>4 preguntas</b>, y lo mejor sale en el próximo push del grupo.</p>
+        <div class="chips">
+          <span class="chip">🎯 <b>8–4</b> sobre Naso (tu némesis)</span>
+          <span class="chip">😬 <b>2–7</b> contra Nachi (tu verdugo)</span>
+          <span class="chip">🏆 <b>1 victoria</b> en el año (85 días)</span>
+          <span class="chip">📊 <b>5º</b> en la tabla anual</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="transp"><b>Transparencia de la cabina:</b> estamos buscando maneras de juntar más
+    información del grupo para que las notificaciones sean más divertidas y enganchen más al grupo.
+    Tus respuestas se citan en el próximo push grupal — escribí sabiendo que esto SALE.</div>
+
+    <!-- Q1 · TEXTO -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🎯</div>
+        <div><div class="who">Cronista de historiales</div><div class="medio">Redacción central</div></div>
+        <div class="num">01</div>
+      </div>
+      <div class="txt">Le ganás a Naso <b>8 de 12</b> veces — tu presa favorita de la mesa. Pero el
+      <b>último</b> de toda la tabla anual, <b>Negro</b> (126+ días sin ganar), te gana a VOS
+      <b>5 de 9</b> en el mano a mano. ¿Cómo se explica que el peor de todos tenga tu número?</div>
+      <span class="tag">Declaración oficial</span>
+      <textarea data-q="gael-entrevista-q1" placeholder="Defendé el honor, Gael…"></textarea>
+    </div>
+
+    <!-- Q2 · OPCIÓN MÚLTIPLE -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🏆</div>
+        <div><div class="who">Perito de sequías</div><div class="medio">Instituto de Estadística Unística</div></div>
+        <div class="num">02</div>
+      </div>
+      <div class="txt">Tu única victoria del año fue el <b>28 de abril</b> — con <b>155 puntos</b>,
+      tu mejor noche de 2026 — y de ahí no ganaste ni una fecha más: <b>85 días</b> y contando.
+      Si tuvieras que elegir UNA razón oficial para la sequía, ¿cuál sería?</div>
+      <span class="tag yel">Hipótesis oficial</span>
+      <div class="opts" data-q="gael-entrevista-q2">
+        <button onclick="elegir(this,'guardando-energia')">🔋 Estoy guardando energía para la definición de la T5</button>
+        <button onclick="elegir(this,'mazo-celoso')">🃏 El mazo está celoso de esa noche perfecta y no me la deja repetir</button>
+        <button onclick="elegir(this,'nadie-mas-gana')">🎯 155 puntos una vez alcanza para toda una vida — algunos ni eso</button>
+        <button onclick="elegir(this,'culpa-nachi')">😬 Mientras Nachi me siga dominando 7-2, no hay cabeza para ganar nada</button>
+        <span class="opt-hint"></span>
+      </div>
+    </div>
+
+    <!-- Q3 · TEXTO -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">🎤</div>
+        <div><div class="who">Micrófono abierto</div><div class="medio">Segmento libre</div></div>
+        <div class="num">03</div>
+      </div>
+      <div class="txt">Anoche terminaste <b>6º de 9</b> (319) — ni gloria ni desastre. Mientras
+      tanto, <b>Mac</b> (10º, cero coronas en 15 fechas, cero ventajas de historial contra
+      cualquiera de sus 10 rivales) y <b>Negro</b> (11º, último, el que te gana a vos igual)
+      se pelean por no terminar la anual en el fondo del todo. Con el micrófono abierto: unas
+      palabras para los dos.</div>
+      <span class="tag red">Sin editar</span>
+      <textarea data-q="gael-entrevista-q3" placeholder="Esto va directo al aire, sin cortes…"></textarea>
+    </div>
+
+    <!-- Q4 · OPCIÓN MÚLTIPLE -->
+    <div class="q">
+      <div class="qhead">
+        <div class="av">😬</div>
+        <div><div class="who">Fiscalía del historial</div><div class="medio">Tribunal de Némesis</div></div>
+        <div class="num">04</div>
+      </div>
+      <div class="txt"><b>Nachi</b> te domina <b>7-2</b> en 9 fechas compartidas — tu peor mano a
+      mano de toda la mesa, tu verdugo personal. Si pudieras elegir cómo se rompe esa maldición,
+      ¿qué necesitás que pase?</div>
+      <span class="tag">Plan de venganza</span>
+      <div class="opts" data-q="gael-entrevista-q4">
+        <button onclick="elegir(this,'nachi-multa')">💸 Que Nachi tenga una noche cargada de multas, a ver si se distrae</button>
+        <button onclick="elegir(this,'corte-propio')">✂️ Un corte exacto mío en la mano 1, para variar el guión</button>
+        <button onclick="elegir(this,'ausencia-nachi')">🚪 Que falte, como hizo Cobra dos veces en la T5</button>
+        <button onclick="elegir(this,'resignado')">🏳️ Nada — ya me resigné, algunos nacen para ser némesis de uno</button>
+        <span class="opt-hint"></span>
+      </div>
+    </div>
+
+    <button class="send" id="sendBtn" onclick="publicar(this)">🎙️ Cerrar la transmisión</button>
+    <div class="sent-note" id="sentNote"></div>
+    <p class="hint">Las opciones se envían al tocarlas; los textos, al cerrar. Podés editar y volver a cerrar.</p>
+
+    <div class="react">¿Qué tal estuvo la cabina?
+      <button onclick="engageReact('2026-07-23-entrevista-gael','love',this)">😍</button>
+      <button onclick="engageReact('2026-07-23-entrevista-gael','like',this)">🙂</button>
+      <button onclick="engageReact('2026-07-23-entrevista-gael','meh',this)">😐</button>
+      <button onclick="engageReact('2026-07-23-entrevista-gael','no',this)">🙅</button>
+      <span class="react-hint"></span>
+    </div>
+
+    <div class="engage-actions">¿Este formato de entrevista queda?
+      <button onclick="engageApprove('2026-07-23-entrevista-gael',this)">✅ Que quede</button>
+      <button onclick="engageRejected('2026-07-23-entrevista-gael',this)">✕ No me interesa</button>
+      <span class="engage-hint"></span>
+    </div>
+
+    <div class="fb">
+      <div class="fb-label">💬 ¿Qué Queré?</div>
+      <div class="fb-sub">Corregí un dato, pedí una experiencia, contame lo que sea — esto lo leo todos los días.</div>
+      <textarea id="fbtxt-2026-07-23-entrevista-gael" maxlength="480" rows="2" placeholder="Escribí acá…"></textarea>
+      <div class="fb-row">
+        <button onclick="var t=document.getElementById('fbtxt-2026-07-23-entrevista-gael');engageFeedback('2026-07-23-entrevista-gael',t.value,this);t.value='';">Enviar</button>
+        <span class="fb-hint"></span>
+      </div>
+    </div>
+
+    <div class="foot">🎴 LUNES DE UNO · CABINA EN VIVO · 23/07/2026</div>
+  </div>
+
+<script>
+  function elegir(btn, val){
+    var box = btn.parentElement;
+    box.querySelectorAll('button').forEach(function(b){ b.classList.remove('sel'); });
+    btn.classList.add('sel');
+    if (window.engageAnswer) window.engageAnswer(box.getAttribute('data-q'), val, null);
+    var h = box.querySelector('.opt-hint');
+    if (h) h.textContent = '✓ Registrado al aire';
+  }
+  function publicar(btn){
+    var areas = document.querySelectorAll('textarea[data-q]');
+    var n = 0;
+    areas.forEach(function(a){
+      var val = (a.value || '').trim();
+      if (val && window.engageAnswer){ window.engageAnswer(a.getAttribute('data-q'), val, null); n++; }
+    });
+    var note = document.getElementById('sentNote');
+    if (!n){ note.style.color = '#FFDE00'; note.textContent = 'Escribí al menos una respuesta antes de cerrar 🎙️'; return; }
+    note.style.color = '#00A651';
+    note.textContent = '✓ ' + n + ' declaracion' + (n===1?'':'es') + ' al aire. Gracias por venir a la cabina.';
+    btn.textContent = '✓ Transmisión cerrada';
+    btn.disabled = true;
+  }
+</script>
+<script src="engage.js"></script>
+</body></html>

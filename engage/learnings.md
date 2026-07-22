@@ -118,6 +118,47 @@
   `desk-<item>`) debajo, para que conteste puntual sobre esa cosa sin
   tener que escribir por chat. Aplicar a todo item pendiente en cada
   regeneración diaria del escritorio.
+- **🗑️ El escritorio NO re-lista items ya enviados (Andrés, 22/07 13:56,
+  feedback libre, vinculante)**: "una vez enviados no deberían aparecer
+  más acá". Un item (permanencia pendiente o lo que sea) se muestra en
+  `solicitadas-27b2d470.html` SOLO mientras es nuevo/no revisado. En
+  cuanto Andrés lo vio una vez (dwell registrado, o ya fue linkeado desde
+  un push que salió), NO se lo vuelve a listar al día siguiente esperando
+  una decisión — si no contesta nada, el proposal sigue su curso normal
+  (7 días → `dropped` si no hay aprobación) pero SIN aparecer cada mañana
+  en el escritorio. El escritorio es para lo nuevo de HOY, no un backlog
+  acumulativo de pendientes viejos.
+- **🔕 Sin pregunta de suscripción en los formatos recurrentes ya fijos
+  (Andrés, 22/07 13:56, feedback libre, vinculante)**: en previa/crónica/
+  récords/chusmerío (los 4 formatos ya aprobados), tampoco va la pregunta
+  "¿Querés X todos los [día]? Sí, obvio / No hace falta" — el usuario ya
+  está suscripto por default al recibir push (sáb-mar). Sacada de
+  `2026-07-20-cronica.html` el 22/07. Se suma a la regla del 21/07 que ya
+  sacó el bloque "¿esta sección merece existir?" de estos mismos 4
+  formatos: en las ediciones nuevas de previa/crónica/récords/chusmerío
+  solo van reacción (love/like/meh/no) + feedback libre, nada de
+  preguntas de permanencia ni de suscripción.
+- **🎤 Entrevista personal del jueves — ROTACIÓN OBLIGATORIA (Andrés,
+  22/07, chat, vinculante — refuerza y precisa la regla del 16/07)**:
+  cada semana, la entrevista personal del jueves va a alguien que NO sea
+  (a) el ganador del último lunes, NI (b) alguien que ya haya tenido una
+  entrevista personal de jueves. Cuando TODOS los 11 jugadores ya tuvieron
+  la suya, se reinicia el ciclo empezando por los que tengan MENOS
+  entrevistas acumuladas (si hay empate, priorizar a quien hace más
+  tiempo no la tiene). Llevar el conteo en el LEDGER de abajo y
+  actualizarlo cada jueves — nunca se salta una semana sin registrarlo.
+  Las entrevistas SIEMPRE dan lugar a la broma/humor/tomada de pelo hacia
+  el resto, especialmente hacia quienes vienen últimos o tienen las peores
+  stats en algún departamento — nunca una entrevista "seria" sin ángulo
+  de cargada.
+
+  **LEDGER DE ENTREVISTAS DEL JUEVES** (conteo de entrevistas personales
+  recibidas — actualizar cada jueves, nunca borrar):
+  | Jugador | Entrevistas | Última |
+  |---|---|---|
+  | Carucha | 1 | 16/07 |
+  | Gael | 1 (pendiente 23/07) | 23/07 |
+  | PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra | 0 | — |
 
 ## 💸 DEUDAS (ledger vigente al 21/07)
 
@@ -171,12 +212,13 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
 - **Reconciliación de la cola**: sin pushes `pending` de corridas
   anteriores (todo lo de ayer ya salió, `sent`). Encolado hoy:
   `2026-07-22-desk` (escritorio 08:45).
-- **Proposals**: sin decisiones nuevas de Andrés (no hay `proposal_approved`
-  ni `proposal_rejected` de su device desde ayer 17:31). Siguen `pending`,
-  dentro de la ventana de 7 días (creadas 21/07): `2026-07-20-entrevista-carucha`,
-  `exp-nachi-lloviendo`, `2026-07-20-animo-mac-negro`. Nueva hoy:
-  `2026-07-22-poesia-mata-negro` (pending, SIN construir — primer caso de
-  la regla de aprobación previa, ver REGLAS VINCULANTES).
+- **Proposals**: resueltas hoy por chat/feedback directo de Andrés (13:54-
+  13:59) → `promoted`, cerradas sin más seguimiento: `2026-07-20-entrevista-
+  carucha` ("ya se envió"), `exp-nachi-lloviendo` ("ya no requiere atención"),
+  `2026-07-20-animo-mac-negro` ("descartá esto, ya lo vi"). El poema
+  `2026-07-22-poesia-mata-negro` se amplió a una experiencia nueva:
+  `2026-07-22-nemesis-oda` (pending, generador de odas al némesis para
+  los 11 jugadores, ver Estado del sistema abajo).
 - **pushSubs activos (8 personas)**: pt, negro, gael, cobra (2 devices),
   andres (2 devices), gordo, mac, carucha. `mata` invalid (dead), `mc`
   disabled. Sin eventos `push_unsubscribe`.
@@ -185,10 +227,28 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
   de la crónica → sacado, y establecida como regla permanente para los 4
   formatos recurrentes; (2) exigir su aprobación antes de construir
   cualquier solicitud → regla nueva vinculante, aplicada desde hoy.
-- **Cambios en pages hoy**: `2026-07-20-cronica.html` (sacado el bloque de
-  permanencia) y `engage/solicitadas-27b2d470.html` (regenerado con el
-  estado de hoy: 1 pedido esperando aprobación previa, 3 pendientes de
-  permanencia, métricas de la crónica de ayer).
+- **💬 FEEDBACK LIBRE ronda 2 (22/07 13:54-13:59, andres, en el escritorio)**:
+  4 items — (1) ampliar el poema pendiente a una experiencia generadora
+  de odas al némesis para todos → construida (`nemesis-oda.html`); (2)
+  no re-listar en el escritorio items ya enviados → regla vinculante nueva;
+  (3) sacar la pregunta de suscripción de los formatos recurrentes fijos →
+  regla vinculante nueva, aplicada a la crónica; (4) descartar el
+  certificado de ánimo Mac/Negro → cerrado, `promoted`.
+- **🎙️ Entrevista del jueves**: Andrés pidió por chat (22/07) usar a Gael
+  esta semana — no ganó el 20/07 (ganó Carucha) y nunca tuvo una entrevista
+  personal. Construida un día antes de lo habitual (`2026-07-23-entrevista-
+  gael.html`) a pedido directo, con H2H recalculado: némesis de Gael =
+  Naso (8-4, 12 fechas); verdugo = Nachi (2-7, 9 fechas); paradoja: Negro
+  (último de la anual) le gana a Gael 5-4 pese a todo; sequía de 85 días
+  desde su única victoria (28/04, 155 pts, su mejor noche del año).
+  Enviada a Andrés para preview hoy mismo; push a Gael programado para
+  mañana 23/07 15:00 salvo veto. Ledger de entrevistas actualizado (ver
+  REGLAS VINCULANTES).
+- **Cambios en pages hoy**: `2026-07-20-cronica.html` (sacados los bloques
+  de permanencia Y de suscripción), `engage/solicitadas-27b2d470.html`
+  (cajas de feedback por item + ya no re-lista lo resuelto),
+  `engage/nemesis-oda.html` (nueva, generador de odas), `engage/2026-07-23-
+  entrevista-gael.html` (nueva, entrevista del jueves adelantada).
 - Sub-formatos usados: récords → clásico, horóscopo, Kryptonita. Chusmerío
   → clásico, confesiones, liquidación. Previa → clásico ×3. Crónica →
   clásico ×3 (última: 20-21/07, margen mínimo + doble ausencia de Cobra).
@@ -207,28 +267,33 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
   "Lloviendo Estrellas" para Nachi (`exp-nachi-lloviendo`, aún sin
   distribuir — Nachi no tiene push activa). Apertura 5/8, la mejor hasta
   ahora.
-- 🔇 **Mié 22/07 (hoy)**: silencio grupal, solo gestión. Aplicadas las 2
-  reglas nuevas del feedback de ayer (sacar el módulo de permanencia de
-  los formatos recurrentes + aprobación previa de solicitudes).
-  Compactación de 28 eventos viejos. Escritorio reenviado con el primer
-  caso de la regla nueva (poema de Mata pendiente de aprobación). Sin
-  partida nueva — la próxima es el lunes 27/07 (T5 F4, define temporada).
-- 🧬 **Jue 23/07**: entrevista personal, a un no-ganador del último lunes
-  (Carucha ganó, así que no aplica a ella). Candidatos sin usar
-  recientemente: Negro, Naso, Mac, Tano, Gael. Definir el jueves con datos
-  frescos de quién no ha sido entrevistado en semanas recientes.
+- 🔇 **Mié 22/07 (hoy)**: silencio grupal, solo gestión. Sesión de la
+  mañana: aplicadas las 2 reglas del feedback del 21/07 (sacar el módulo
+  de permanencia de los formatos recurrentes + aprobación previa de
+  solicitudes), compactación de 28 eventos viejos, escritorio con cajas de
+  feedback por item (pedido de Andrés 10:42). Sesión de la tarde: Andrés
+  contestó las cajas — cerró 3 proposals viejas (`promoted`, ya no
+  aparecen más en el escritorio, regla nueva), amplió el poema pendiente a
+  `nemesis-oda.html` (generador para los 11 jugadores), sacó la pregunta
+  de suscripción de la crónica, y pidió adelantar la entrevista del jueves
+  a Gael. Sin partida nueva — la próxima es el lunes 27/07 (T5 F4, define
+  temporada).
+- 🧬 **Jue 23/07**: entrevista personal a **Gael** (pedido directo de
+  Andrés el 22/07) — construida y enviada un día antes. Push al
+  entrevistado 15:00 salvo veto de Andrés en el preview.
 
 ## TODO / ángulos sin usar
 
-Definir a quién entrevistar el jueves 23/07 (no repetir a Carucha/Gordo/
-Cobra, ya entrevistados recientemente) · decidir sobre el poema pendiente
-de Mata (esperando su OK, regla nueva) · decidir distribución del sencillo
-de Nachi · decidir permanencia de `2026-07-20-entrevista-carucha`,
-`exp-nachi-lloviendo` y `2026-07-20-animo-mac-negro` (vencen ~28/07 si no
-hay decisión) · especial sedes (esta vez fue en casa de Negro) ·
-aniversarios (multa récord de 150 de Tano, 648 de Naso) · replicar el
-flujo del club con nachi/naso/tano (3 lugares libres, piñas esperando en
-el vault) · la T5 se define el 27/07 — Gordo lidera sin ganar, Cobra puede
-necesitar ganar Y que Gordo/PT/Nachi tropiecen para no terminar último de
-la temporada · si el cron de dispatch se cuelga una 3ra vez, escalarlo
-como bug de infraestructura en vez de destrabarlo a mano cada vez.
+Seguir la entrevista de Gael el 23/07 (reacciones + respuestas + resultado
+para citar el próximo push) · decidir distribución del sencillo de Nachi
+· especial sedes (esta vez fue en casa de Negro) · aniversarios (multa
+récord de 150 de Tano, 648 de Naso) · replicar el flujo del club con
+nachi/naso/tano (3 lugares libres, piñas esperando en el vault) · la T5 se
+define el 27/07 — Gordo lidera sin ganar, Cobra puede necesitar ganar Y
+que Gordo/PT/Nachi tropiecen para no terminar último de la temporada · si
+el cron de dispatch se cuelga una 3ra vez, escalarlo como bug de
+infraestructura en vez de destrabarlo a mano cada vez · decidir permanencia
+de `2026-07-22-nemesis-oda` (generador nuevo, pendiente de approve) ·
+próxima semana: candidatos para la entrevista del jueves siguiente (ya sin
+Carucha ni Gael): PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra —
+todos en 0, elegir según quién gane/pierda el 27/07.

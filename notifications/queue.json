@@ -2,6 +2,36 @@
   "_updated_at": "2026-07-22T14:09:03.466Z",
   "notifications": [
     {
+      "id": "2026-07-23-gael",
+      "title": "🎙️ Te toca a vos — cabina abierta",
+      "body": "Le ganás a Naso 8 de 12, pero el último de la tabla te gana a vos. 4 preguntas te esperan.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-23-entrevista-gael.html",
+      "devices": [
+        "gael"
+      ],
+      "send_at": "2026-07-23T15:00:00-03:00",
+      "expires_at": "2026-07-23T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-22 (entrevista personal del jueves, pedida por Andres por chat 22/07: usar a Gael esta semana — no ganó el 20/07 y nunca tuvo una entrevista de este slot; construida y enviada a Andrés en preview un día antes de lo habitual a pedido directo; sale a Gael 23/07 15:00 salvo veto en el preview)"
+    },
+    {
+      "id": "2026-07-22-desk-v3",
+      "title": "🎙️📜 2 cosas nuevas: el generador de odas y la entrevista de Gael",
+      "body": "Armé lo que pediste: tu oda al némesis (Mata vs Negro 6-0) como generador para todos, y la entrevista de Gael lista para revisar.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-22T14:15:00-03:00",
+      "expires_at": "2026-07-22T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-22 (2da pasada del día: Andrés contestó las cajas de feedback del escritorio a las 13:54-13:59 — pidió el generador de odas al némesis y adelantar la entrevista de Gael; ambos construidos y enviados para su revisión; reemplaza al 2026-07-22-desk-v2 que seguía pending por el cron colgado y ya no reflejaba el contenido actual)"
+    },
+    {
       "id": "2026-07-22-desk-v2",
       "title": "🗂️ Ahora cada item tiene su caja de feedback",
       "body": "Pediste poder dejar el feedback ahí mismo: cada cosa que espera tu OK ya tiene su textarea debajo. Revisá.",
@@ -14,7 +44,7 @@
       "status": "sent",
       "sent_at": "2026-07-22T14:09:03.465Z",
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat 10:42: agregar una caja de texto debajo de CADA item que espera su OK en el escritorio, para poder dar feedback puntual por item en vez de por chat; reenvío inmediato tras el fix, reemplaza al 2026-07-22-desk que seguía pending por el cron colgado)"
+      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat 10:42: agregar una caja de texto debajo de CADA item que espera su OK en el escritorio, para poder dar feedback puntual por item en vez de por chat; reenvío inmediato tras el fix, reemplaza al 2026-07-22-desk que seguía pending por el cron colgado) | el dispatcher lo despachó 14:09, cuando ya estaba desactualizado (Andrés había contestado el contenido a las 13:54-13:59 y pedido cosas nuevas) — el push siguiente (desk-v3) apunta a la misma URL, ya con el generador de odas y la entrevista de Gael."
     },
     {
       "id": "2026-07-22-desk",
