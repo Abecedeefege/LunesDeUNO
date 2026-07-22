@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-22T14:09:03.466Z",
+  "_updated_at": "2026-07-22T17:18:37.101Z",
   "notifications": [
     {
       "id": "2026-07-22-candidatos-entrevista",
@@ -42,8 +42,8 @@
       ],
       "send_at": "2026-07-22T14:15:00-03:00",
       "expires_at": "2026-07-22T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-22T17:18:37.101Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-22 (2da pasada del día: Andrés contestó las cajas de feedback del escritorio a las 13:54-13:59 — pidió el generador de odas al némesis y adelantar la entrevista de Gael; ambos construidos y enviados para su revisión; reemplaza al 2026-07-22-desk-v2 que seguía pending por el cron colgado y ya no reflejaba el contenido actual)"
     },
