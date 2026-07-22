@@ -1483,6 +1483,20 @@
       "device": "cobra",
       "ts": "2026-07-21T17:20:22.376Z",
       "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-22-desk",
+      "device": "andres",
+      "ts": "2026-07-22T11:54:53.422Z",
+      "status_code": 201
+    },
+    {
+      "type": "sent",
+      "nid": "2026-07-22-desk",
+      "device": "andres",
+      "ts": "2026-07-22T11:54:53.615Z",
+      "status_code": 201
     }
   ]
 }

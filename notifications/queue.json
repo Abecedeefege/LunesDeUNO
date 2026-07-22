@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-22T06:06:00.000Z",
+  "_updated_at": "2026-07-22T11:54:53.616Z",
   "notifications": [
     {
       "id": "2026-07-22-desk",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-22T08:45:00-03:00",
       "expires_at": "2026-07-22T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-22T11:54:53.615Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-22 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; miércoles de silencio grupal, pero el escritorio es push personal diario, no rompe el silencio)"
     },
