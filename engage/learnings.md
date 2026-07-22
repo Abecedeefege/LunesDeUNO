@@ -92,6 +92,13 @@
   puntaje BASE** de esa fecha (solo rondas).
 - **📐 H2H "padres e hijos"**: cuenta SOLO fechas donde ambos jugadores
   fueron participantes reales (no cuenta si uno estaba `absentees`).
+- **📐 EL CORTE ES BUENO (Andrés, 22/07, vinculante — error detectado en
+  la 1ª entrevista a Gael)**: un corte resta **50 puntos** al que lo hace
+  (menos puntos = mejor) — es una jugada BUENA, no una falta ni algo
+  vergonzoso. Nunca enmarcar "tiene cortes" como algo malo ni "0 cortes"
+  como un prontuario limpio para elogiar — es al revés: más cortes es
+  mejor para quien los hace. No confundir con las MULTAS (esas sí suman
+  puntos, esas sí son malas).
 - **🚫 Sin decisión de permanencia en NINGUNA experiencia recurrente
   (Andrés, 21/07 17:33 + ampliada 22/07, vinculante)**: el bloque "¿Esta
   sección/formato merece existir?" (`engageApprove`/`engageRejected`) NO
@@ -248,15 +255,18 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
 - **🎙️ Entrevista del jueves**: Andrés pidió por chat (22/07) usar a Gael
   esta semana — no ganó el 20/07 (ganó Carucha) y nunca tuvo una entrevista
   personal. Construida un día antes de lo habitual (`2026-07-23-entrevista-
-  gael.html`) a pedido directo. 1ª versión mal enfocada (ángulo en sus
-  debilidades: sequía, verdugo, quien lo domina) — Andrés la corrigió el
-  mismo día (ver regla "Dirección del ángulo" arriba): reescrita 100%
-  desde sus stats BUENAS (némesis Naso 8-4, 5º en la tabla arriba de 6,
-  0 cortes en el año, su mejor noche 155 pts) para que alardee y se burle
-  de otros sin quedar mal parado él. Preguntas acortadas. Sacado también
-  el bloque de permanencia (regla ampliada hoy). Enviada a Andrés para
-  preview; push a Gael programado para mañana 23/07 15:00 salvo veto.
-  Ledger de entrevistas actualizado (ver REGLAS VINCULANTES).
+  gael.html`) a pedido directo, y corregida 2 veces el mismo día: (1) 1ª
+  versión mal enfocada (ángulo en sus debilidades: sequía, verdugo, quien
+  lo domina) → reescrita 100% desde sus stats BUENAS, preguntas acortadas,
+  bloque de permanencia sacado; (2) esa reescritura usó "0 cortes" como
+  prontuario limpio — error: el corte resta 50 puntos y es BUENO, no una
+  falta (regla nueva "el corte es bueno") → reemplazado por su única
+  victoria del año (más que las 0 de Mac), el stat que Andrés pidió usar
+  para burlarse de quien nunca ganó. Final: némesis Naso (8-4), 5º en la
+  tabla arriba de 6, 1 victoria vs Mac (0), su mejor noche (155 pts).
+  Enviada a Andrés para preview; push a Gael programado para mañana 23/07
+  15:00 salvo veto. Ledger de entrevistas actualizado (ver REGLAS
+  VINCULANTES).
 - **Cambios en pages hoy**: `2026-07-20-cronica.html` (sacados los bloques
   de permanencia Y de suscripción), `engage/solicitadas-27b2d470.html`
   (cajas de feedback por item + ya no re-lista lo resuelto),
