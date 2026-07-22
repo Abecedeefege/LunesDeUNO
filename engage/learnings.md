@@ -170,13 +170,20 @@
   tabla, prontuario limpio, una noche récord, un H2H que domine) en vez
   de forzar una debilidad. Preguntas CORTAS.
 
+  **🎙️ Marca del formato (Andrés, 22/07, vinculante)**: la entrevista
+  personal del jueves se llama **"Cabina en Vivo: Entrevistas Semanales"**
+  — nombre fijo a reutilizar en cada edición (mismo lugar que "La Previa"
+  o "La Crónica" tienen su nombre fijo), numerada por edición ("2ª
+  edición", "3ª edición"...). El estilo visual puede variar por
+  entrevistado, pero el nombre del programa NO cambia.
+
   **LEDGER DE ENTREVISTAS DEL JUEVES** (conteo de entrevistas personales
   recibidas — actualizar cada jueves, nunca borrar):
-  | Jugador | Entrevistas | Última |
-  |---|---|---|
-  | Carucha | 1 | 16/07 |
-  | Gael | 1 (pendiente 23/07) | 23/07 |
-  | PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra | 0 | — |
+  | Jugador | Entrevistas | Última | Edición de "Cabina en Vivo" |
+  |---|---|---|---|
+  | Carucha | 1 | 16/07 | 1ª (previa a la marca, "Laboratorio de Paternidad Unística") |
+  | Gael | 1 (pendiente 23/07) | 23/07 | 2ª |
+  | PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra | 0 | — | — |
 
 ## 💸 DEUDAS (ledger vigente al 21/07)
 
