@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-22T14:09:03.466Z",
   "notifications": [
     {
+      "id": "2026-07-22-candidatos-entrevista",
+      "title": "🎙️ 2 candidatos de entrevista para que elijas",
+      "body": "Armé la Cabina de PT (1º de la tabla) y la de Negro (campeón con 62). Abrí las dos y decime cuál sale.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-22T15:30:00-03:00",
+      "expires_at": "2026-07-22T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat: mandarle las entrevistas de Negro y PT como si fueran a salir, para que elija; regla nueva vinculante — los miércoles, cuando hay empate entre los candidatos con menos entrevistas, se le mandan las URLs y él elige. Candidatos armados: cabina-pt.html (1º de la anual, domina Mac/Naso 10-3) y cabina-negro.html (ganó con 62, 2º de local, gana a Gael/Naso 5-4); ambos linkeados en el escritorio con caja de feedback por candidato)"
+    },
+    {
       "id": "2026-07-23-gael",
       "title": "🎙️ Te toca a vos — cabina abierta",
       "body": "8-4 a Naso, 5º de la tabla arriba de 6, 1 victoria (más que Mac). 4 preguntas cortas te esperan.",

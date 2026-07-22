@@ -169,6 +169,17 @@
   pocas stats positivas, buscar el ángulo que sí tenga (posición en la
   tabla, prontuario limpio, una noche récord, un H2H que domine) en vez
   de forzar una debilidad. Preguntas CORTAS.
+  **🗳️ Selección del entrevistado = Andrés elige los miércoles (Andrés,
+  22/07, chat, vinculante)**: cuando hay EMPATE entre los candidatos con
+  menos entrevistas (el caso normal al principio, todos en 0-1), la rutina
+  del miércoles NO decide sola — arma 1 página candidata por opción (con
+  el ángulo de stats buenas ya resuelto) y le manda a Andrés las URLs en
+  el escritorio, con caja de feedback por candidato, para que ÉL elija
+  cuál sale el jueves. Recién con su elección se agenda el push al
+  entrevistado (jueves 15:00) y se actualiza el ledger. Si Andrés no
+  elige, no sale entrevista esa semana (mejor silencio). Primer uso: 22/07
+  se le mandaron PT y Negro como candidatos (además de Gael que ya estaba
+  pedido explícitamente para el 23/07).
 
   **🎙️ Marca del formato (Andrés, 22/07, vinculante)**: la entrevista
   personal del jueves se llama **"Cabina en Vivo: Entrevistas Semanales"**
