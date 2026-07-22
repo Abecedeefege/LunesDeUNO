@@ -1,6 +1,21 @@
 {
-  "_updated_at": "2026-07-21T17:20:22.377Z",
+  "_updated_at": "2026-07-22T06:06:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-22-desk",
+      "title": "🗂️ Las solicitadas por otros",
+      "body": "Aplicados tus 2 pedidos de ayer (sacado el módulo, regla de aprobación previa). 1 cosa nueva espera tu OK: un poema pendiente.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-22T08:45:00-03:00",
+      "expires_at": "2026-07-22T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-22 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; miércoles de silencio grupal, pero el escritorio es push personal diario, no rompe el silencio)"
+    },
     {
       "id": "2026-07-21-cronica-v4-andres",
       "title": "📰 Crónica corregida (padres e hijos + tema)",

@@ -396,6 +396,18 @@
       "result_notes": null
     },
     {
+      "id": "2026-07-22-poesia-mata-negro",
+      "title": "📜 Poema pendiente de aprobación: Mata sobre su 6-0 a Negro",
+      "page": "(sin construir — pendiente de aprobación de Andrés antes de fabricarla, regla nueva del 21/07)",
+      "created": "2026-07-22",
+      "status": "pending",
+      "hypothesis": "experience_request idea=poesia-mata-1 (device andres, 20/07 17:53, desde el catálogo diario del laboratorio): 'Una oda a tu 6-0 sobre Negro — la única serie perfecta de la mesa'. Regla nueva vinculante de Andrés (feedback libre 21/07 17:33 en 2026-07-20-cronica): toda solicitud se le manda a él para aprobación ANTES de construir/actuar, ya no se fabrica on-demand de inmediato. Listada en el escritorio del 22/07 para su OK; si aprueba se construye y entrega, si no responde en 7 días se descarta sin fabricar.",
+      "notified_by": [
+        "2026-07-22-desk"
+      ],
+      "result_notes": null
+    },
+    {
       "id": "2026-07-20-entrevista-carucha",
       "title": "🎙️ La entrevista pública — Carucha (solo lectura, con el encargo embebido)",
       "page": "engage/2026-07-20-entrevista-carucha.html",
