@@ -92,14 +92,16 @@
   puntaje BASE** de esa fecha (solo rondas).
 - **📐 H2H "padres e hijos"**: cuenta SOLO fechas donde ambos jugadores
   fueron participantes reales (no cuenta si uno estaba `absentees`).
-- **🚫 Sin decisión de permanencia en los 4 formatos recurrentes ya
-  promovidos (Andrés, 21/07 17:33, feedback libre, vinculante)**: el bloque
-  "¿Esta sección merece existir?" (`engageApprove`/`engageRejected`) NO va
-  en las páginas fechadas de previa/crónica/récords/chusmerío — siempre las
-  aprueba, el módulo no aportaba nada. Sacado de `2026-07-20-cronica.html`
-  el 22/07. Sigue existiendo en: formatos nuevos/experimentales, entrevistas
-  personales, y fulfillment on-demand (certificados/juicios/piñas/poemas)
-  — ahí sí es una decisión real de permanencia.
+- **🚫 Sin decisión de permanencia en NINGUNA experiencia recurrente
+  (Andrés, 21/07 17:33 + ampliada 22/07, vinculante)**: el bloque "¿Esta
+  sección/formato merece existir?" (`engageApprove`/`engageRejected`) NO
+  va en previa/crónica/récords/chusmerío (regla del 21/07) NI en las
+  entrevistas personales del jueves (ampliación del 22/07: "quita eso de
+  las entrevistas") — siempre las aprueba, el módulo no aporta nada.
+  Sacado de `2026-07-20-cronica.html` (22/07) y de `2026-07-23-entrevista-
+  gael.html` (22/07). Sigue existiendo solo en fulfillment on-demand
+  genuinamente nuevo/experimental (certificados, juicios, generadores
+  como `nemesis-oda.html`) donde la permanencia SÍ es una decisión real.
 - **📨 Solicitudes → aprobación de Andrés ANTES de construir (Andrés,
   21/07 17:33, feedback libre, vinculante)**: cuando llega un
   `experience_request` (botón "Solicitar" o pedido por la casilla de
@@ -151,6 +153,15 @@
   el resto, especialmente hacia quienes vienen últimos o tienen las peores
   stats en algún departamento — nunca una entrevista "seria" sin ángulo
   de cargada.
+  **📐 Dirección del ángulo (Andrés, 22/07, vinculante — corrige el error
+  de la 1ª entrevista a Gael)**: las preguntas se arman 100% desde las
+  stats BUENAS del entrevistado — con qué puede alardear — nunca desde
+  sus propias debilidades o sequías. El entrevistado se burla de OTROS
+  usando sus propios números fuertes como plataforma; no se lo expone a
+  quedar mal parado con su propio historial. Si el entrevistado tiene
+  pocas stats positivas, buscar el ángulo que sí tenga (posición en la
+  tabla, prontuario limpio, una noche récord, un H2H que domine) en vez
+  de forzar una debilidad. Preguntas CORTAS.
 
   **LEDGER DE ENTREVISTAS DEL JUEVES** (conteo de entrevistas personales
   recibidas — actualizar cada jueves, nunca borrar):
@@ -237,13 +248,15 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
 - **🎙️ Entrevista del jueves**: Andrés pidió por chat (22/07) usar a Gael
   esta semana — no ganó el 20/07 (ganó Carucha) y nunca tuvo una entrevista
   personal. Construida un día antes de lo habitual (`2026-07-23-entrevista-
-  gael.html`) a pedido directo, con H2H recalculado: némesis de Gael =
-  Naso (8-4, 12 fechas); verdugo = Nachi (2-7, 9 fechas); paradoja: Negro
-  (último de la anual) le gana a Gael 5-4 pese a todo; sequía de 85 días
-  desde su única victoria (28/04, 155 pts, su mejor noche del año).
-  Enviada a Andrés para preview hoy mismo; push a Gael programado para
-  mañana 23/07 15:00 salvo veto. Ledger de entrevistas actualizado (ver
-  REGLAS VINCULANTES).
+  gael.html`) a pedido directo. 1ª versión mal enfocada (ángulo en sus
+  debilidades: sequía, verdugo, quien lo domina) — Andrés la corrigió el
+  mismo día (ver regla "Dirección del ángulo" arriba): reescrita 100%
+  desde sus stats BUENAS (némesis Naso 8-4, 5º en la tabla arriba de 6,
+  0 cortes en el año, su mejor noche 155 pts) para que alardee y se burle
+  de otros sin quedar mal parado él. Preguntas acortadas. Sacado también
+  el bloque de permanencia (regla ampliada hoy). Enviada a Andrés para
+  preview; push a Gael programado para mañana 23/07 15:00 salvo veto.
+  Ledger de entrevistas actualizado (ver REGLAS VINCULANTES).
 - **Cambios en pages hoy**: `2026-07-20-cronica.html` (sacados los bloques
   de permanencia Y de suscripción), `engage/solicitadas-27b2d470.html`
   (cajas de feedback por item + ya no re-lista lo resuelto),
