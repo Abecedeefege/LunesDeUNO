@@ -54,6 +54,12 @@
   .ok{color:var(--green);font-weight:700} .no{color:#6f6f7a}
   .mnote{font-size:.72rem;color:var(--dim);margin-top:10px;line-height:1.55}
   #locked{display:none;text-align:center;padding:60px 20px;color:var(--dim);font-size:.9rem}
+  .itemfb{margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+  .itemfb label{display:block;font-size:.68rem;color:var(--dim);margin-bottom:5px;letter-spacing:.02em}
+  .itemfb textarea{width:100%;background:#0d0d12;border:1px solid #262626;border-radius:8px;color:#fafafa;font:inherit;font-size:.8rem;padding:.55rem .65rem;resize:vertical;box-sizing:border-box}
+  .itemfb-row{display:flex;align-items:center;gap:.6rem;margin-top:.5rem}
+  .itemfb-row button{background:var(--red);color:#fff;border:none;border-radius:99px;padding:.42rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer}
+  .itemfb-row .fb-hint{font-size:.68rem;color:var(--dim)}
 </style>
 </head><body>
 
@@ -67,9 +73,11 @@
       <div class="h-top"><span class="l">🗂️ Escritorio de la dirección</span><span class="r">Solo tu device</span></div>
       <div class="h-body">
         <h1>Las solicitadas por otros</h1>
-        <p class="sub">Edición del <b>miércoles 22/07</b>. Acá va <b>solo lo que necesita tu OK</b> antes
-        de que yo lo mande o lo construya. Si algo ya está aprobado o no requiere tu atención, no
-        aparece. Abajo, cómo fue el último envío grupal. Se regenera cada mañana.</p>
+        <p class="sub">Edición del <b>miércoles 22/07</b> (reenviada). Acá va <b>solo lo que necesita tu
+        OK</b> antes de que yo lo mande o lo construya — cada uno con su propia caja de texto para que
+        me dejes el feedback ahí mismo, sin tener que escribirlo por chat. Si algo ya está aprobado o
+        no requiere tu atención, no aparece. Abajo, cómo fue el último envío grupal. Se regenera cada
+        mañana.</p>
       </div>
     </div>
 
@@ -81,6 +89,14 @@
       Negro (la única serie perfecta de la mesa). <b>Regla nueva de ayer (17:33, feedback en la
       crónica): a partir de ahora toda solicitud se te manda para aprobación ANTES de fabricarla</b>
       — así que esta todavía NO está construida. Decime si la armo y cómo, o si la dejo caer.</p>
+      <div class="itemfb">
+        <label>Tu feedback sobre esto:</label>
+        <textarea id="fbtxt-desk-poesia-mata-negro" maxlength="480" rows="2" placeholder="Armala / no hace falta / cambiale el ángulo…"></textarea>
+        <div class="itemfb-row">
+          <button onclick="var t=document.getElementById('fbtxt-desk-poesia-mata-negro');engageFeedback('desk-poesia-mata-negro',t.value,this);t.value='';">Enviar</button>
+          <span class="fb-hint"></span>
+        </div>
+      </div>
     </div>
 
     <h2>✅ Cambios de ayer, ya aplicados</h2>
@@ -102,16 +118,40 @@
       <div class="who"><img src="../assets/faces/carucha.png" alt=""><b>🎙️ La entrevista pública de Carucha</b><span class="when">creada 21/07</span></div>
       <p>La versión de solo lectura (Q&A + encargo musical embebido) que linkea la crónica.</p>
       <a href="2026-07-20-entrevista-carucha.html">🎙️ Abrir →</a>
+      <div class="itemfb">
+        <label>Tu feedback sobre esto:</label>
+        <textarea id="fbtxt-desk-entrevista-carucha" maxlength="480" rows="2" placeholder="Que quede / sacala / cambiale algo…"></textarea>
+        <div class="itemfb-row">
+          <button onclick="var t=document.getElementById('fbtxt-desk-entrevista-carucha');engageFeedback('desk-entrevista-carucha',t.value,this);t.value='';">Enviar</button>
+          <span class="fb-hint"></span>
+        </div>
+      </div>
     </div>
     <div class="item">
       <div class="who"><img src="../assets/faces/nachi.png" alt=""><b>🌠 «Lloviendo Estrellas» (versión Nachi)</b><span class="when">creada 21/07</span></div>
       <p>El encargo de Carucha para Nachi. Todavía sin decisión de cómo distribuirla.</p>
       <a href="exp-nachi-lloviendo-c4d81f2b.html">🌠 Abrir →</a>
+      <div class="itemfb">
+        <label>Tu feedback sobre esto (por ej. cómo distribuirla):</label>
+        <textarea id="fbtxt-desk-nachi-lloviendo" maxlength="480" rows="2" placeholder="Mandala por WhatsApp / en el próximo push grupal / archivarla…"></textarea>
+        <div class="itemfb-row">
+          <button onclick="var t=document.getElementById('fbtxt-desk-nachi-lloviendo');engageFeedback('desk-nachi-lloviendo',t.value,this);t.value='';">Enviar</button>
+          <span class="fb-hint"></span>
+        </div>
+      </div>
     </div>
     <div class="item">
       <div class="who"><img src="../assets/faces/mac.png" alt=""><b>🎉 Certificado de Aliento (Mac + Negro)</b><span class="when">creada 21/07</span></div>
       <p>Sigue solo para vos; falta que digas si se redifunde a Mac y Negro.</p>
       <a href="exp-mac-negro-animo-b7f2a9e1.html">🎉 Abrir →</a>
+      <div class="itemfb">
+        <label>Tu feedback sobre esto (por ej. si lo redifundimos):</label>
+        <textarea id="fbtxt-desk-animo-mac-negro" maxlength="480" rows="2" placeholder="Mandaselo a Mac y Negro / que quede solo para mí…"></textarea>
+        <div class="itemfb-row">
+          <button onclick="var t=document.getElementById('fbtxt-desk-animo-mac-negro');engageFeedback('desk-animo-mac-negro',t.value,this);t.value='';">Enviar</button>
+          <span class="fb-hint"></span>
+        </div>
+      </div>
     </div>
 
     <h2>📊 Cómo fue el último envío grupal</h2>

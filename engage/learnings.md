@@ -111,6 +111,13 @@
   tómbola, etc. se fabricaban primero y se avisaba después). Primer caso
   bajo la regla nueva: `2026-07-22-poesia-mata-negro` (oda de Mata sobre
   su 6-0 a Negro, pedida el 20/07, sin construir, esperando OK).
+- **📝 Caja de feedback por item en el escritorio (Andrés, 22/07 10:42,
+  chat, vinculante)**: en `engage/solicitadas-27b2d470.html`, cada item
+  que espera su OK (aprobación previa de una solicitud O decisión de
+  permanencia) lleva su PROPIA caja de texto (`engageFeedback` con slug
+  `desk-<item>`) debajo, para que conteste puntual sobre esa cosa sin
+  tener que escribir por chat. Aplicar a todo item pendiente en cada
+  regeneración diaria del escritorio.
 
 ## 💸 DEUDAS (ledger vigente al 21/07)
 

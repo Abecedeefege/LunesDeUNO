@@ -2,6 +2,21 @@
   "_updated_at": "2026-07-22T11:54:53.616Z",
   "notifications": [
     {
+      "id": "2026-07-22-desk-v2",
+      "title": "🗂️ Ahora cada item tiene su caja de feedback",
+      "body": "Pediste poder dejar el feedback ahí mismo: cada cosa que espera tu OK ya tiene su textarea debajo. Revisá.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-22T10:45:00-03:00",
+      "expires_at": "2026-07-22T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-22 (pedido de Andres por chat 10:42: agregar una caja de texto debajo de CADA item que espera su OK en el escritorio, para poder dar feedback puntual por item en vez de por chat; reenvío inmediato tras el fix, reemplaza al 2026-07-22-desk que seguía pending por el cron colgado)"
+    },
+    {
       "id": "2026-07-22-desk",
       "title": "🗂️ Las solicitadas por otros",
       "body": "Aplicados tus 2 pedidos de ayer (sacado el módulo, regla de aprobación previa). 1 cosa nueva espera tu OK: un poema pendiente.",
@@ -14,7 +29,7 @@
       "status": "sent",
       "sent_at": "2026-07-22T11:54:53.615Z",
       "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-22 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; miércoles de silencio grupal, pero el escritorio es push personal diario, no rompe el silencio)"
+      "created_by": "engagement-agent 2026-07-22 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; miércoles de silencio grupal, pero el escritorio es push personal diario, no rompe el silencio) | el dispatcher lo despachó 11:54, antes de que terminara de aplicar el pedido de Andrés de las 10:42 (cajas de feedback por item) — la página en esa URL ya está corregida al momento del push siguiente (desk-v2), que redirige la atención a la misma página ya con el fix."
     },
     {
       "id": "2026-07-21-cronica-v4-andres",
