@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-23T12:21:02.268Z",
+  "_updated_at": "2026-07-23T18:21:54.429Z",
   "notifications": [
     {
       "id": "2026-07-23-desk",
@@ -42,8 +42,8 @@
       ],
       "send_at": "2026-07-23T15:00:00-03:00",
       "expires_at": "2026-07-23T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-23T18:21:54.393Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-22 (entrevista personal del jueves, pedida por Andres por chat 22/07: usar a Gael esta semana — no ganó el 20/07 y nunca tuvo una entrevista de este slot; construida y enviada a Andrés en preview un día antes de lo habitual a pedido directo; reescrita 2 veces el mismo día por pedido de Andrés: (1) ángulo 100% desde stats buenas + preguntas cortas + sin bloque de permanencia; (2) el corte resta puntos y es BUENO no una falta -> sacado ese ángulo, reemplazado por su única victoria del año (más que las 0 de Mac); sale a Gael 23/07 15:00 salvo veto en el preview)"
     },
