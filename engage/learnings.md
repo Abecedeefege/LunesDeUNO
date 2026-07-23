@@ -202,6 +202,16 @@
   en 0 entre 9 jugadores; excluir al ganador del lunes 27/07). PENDIENTE:
   reportar a Andrés cómo responde Gael (sus answers `gael-entrevista-q1..q4`
   van a Firestore tras el push del 23/07 15:00) — lo pidió explícitamente.
+- **📜 Némesis-oda: rechazada, no reintentar sin replantear (Andrés, 22/07
+  14:47 local, feedback libre, vinculante)**: la experiencia permanente
+  "Generador de Odas al Némesis" (ampliación del pedido original de un
+  poema puntual sobre Mata vs Negro) se construyó, se le mandó, la abrió
+  (dwell 49s, scroll 100%) y contestó "Descartada, no quedó bueno" — sin
+  precisar el motivo. `git rm` de `nemesis-oda.html` (23/07), ambas
+  proposals relacionadas (`2026-07-22-nemesis-oda` y
+  `2026-07-22-poesia-mata-negro`) cerradas como `dropped`. No repetir el
+  formato "generador de odas/H2H por selector" sin un ángulo nuevo — el
+  pedido original del poema puntual sigue sin cumplirse, queda en TODO.
 
 ## 💸 DEUDAS (ledger vigente al 21/07)
 
@@ -238,7 +248,7 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
   approve de Andrés del 20/07 — bug de escritura, corregido el 21/07 sin
   tocar contenido.
 
-## 📊 Estado del sistema (corrida 22/07, miércoles 06:06 local)
+## 📊 Estado del sistema (corrida 23/07, jueves 06:06 local)
 
 - **games**: 18 fechas válidas, sin cambios desde ayer (no hay partida
   nueva — el próximo lunes de juego es 27/07, T5 Fecha 4, día de
@@ -247,56 +257,38 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
   6º Nachi (6341) · 7º Mata (6502) · 8º Tano (6613) · 9º Naso (6890) · 10º
   Mac (6896) · 11º Negro (6928). T5 tras F3: 1º Gordo (705) · 2º PT (753) ·
   3º Nachi (819) · 6º Carucha (858) · 11º Cobra (1060, último).
-- **Compactación hoy**: 28 eventos anteriores al 08/07 (>14 días —
-  `2026-07-06-cronica` y `2026-07-06-entrevista-cobra`, ambos ya
-  reflejados en `result_notes` de esas proposals, más sus dwell/visitas)
-  borrados de Firestore `engagement`. `queue.json`: nada que purgar, todo
-  lo `sent` es de los últimos 7 días.
-- **Reconciliación de la cola**: sin pushes `pending` de corridas
-  anteriores (todo lo de ayer ya salió, `sent`). Encolado hoy:
-  `2026-07-22-desk` (escritorio 08:45).
-- **Proposals**: resueltas hoy por chat/feedback directo de Andrés (13:54-
-  13:59) → `promoted`, cerradas sin más seguimiento: `2026-07-20-entrevista-
-  carucha` ("ya se envió"), `exp-nachi-lloviendo` ("ya no requiere atención"),
-  `2026-07-20-animo-mac-negro` ("descartá esto, ya lo vi"). El poema
-  `2026-07-22-poesia-mata-negro` se amplió a una experiencia nueva:
-  `2026-07-22-nemesis-oda` (pending, generador de odas al némesis para
-  los 11 jugadores, ver Estado del sistema abajo).
+- **Compactación hoy**: 1 evento anterior al 09/07 (`dwell` de cobra en
+  `2026-07-06-entrevista-cobra`, ya reflejado en el `result_notes` de esa
+  proposal) borrado de Firestore `engagement`. `queue.json`: nada que
+  purgar, todo lo `sent`/`cancelled` es de los últimos 7 días (desde
+  16/07 en adelante).
+- **Reconciliación de la cola**: `2026-07-23-gael` (15:00, pending) sigue
+  vigente — sin partida nueva que cambie sus stats, y Andrés lo confirmó
+  ayer por feedback ("Perfecto, envía", ver abajo). Encolado hoy:
+  `2026-07-23-desk` (escritorio 08:45, ver Corrida de HOY).
+- **Proposals**: `2026-07-22-nemesis-oda` y `2026-07-22-poesia-mata-negro`
+  cerradas hoy como `dropped` — ver REGLAS VINCULANTES arriba (Andrés las
+  rechazó ayer a la tarde por feedback libre, detectado recién en esta
+  corrida porque llegó después del push de la 17:18 de ayer). Sin otras
+  proposals `pending` abiertas.
 - **pushSubs activos (8 personas)**: pt, negro, gael, cobra (2 devices),
   andres (2 devices), gordo, mac, carucha. `mata` invalid (dead), `mc`
   disabled. Sin eventos `push_unsubscribe`.
-- **💬 FEEDBACK LIBRE (21/07 17:33, andres, en la crónica)**: 2 pedidos,
-  ambos aplicados hoy — (1) sacar el módulo "¿Esta sección merece existir?"
-  de la crónica → sacado, y establecida como regla permanente para los 4
-  formatos recurrentes; (2) exigir su aprobación antes de construir
-  cualquier solicitud → regla nueva vinculante, aplicada desde hoy.
-- **💬 FEEDBACK LIBRE ronda 2 (22/07 13:54-13:59, andres, en el escritorio)**:
-  4 items — (1) ampliar el poema pendiente a una experiencia generadora
-  de odas al némesis para todos → construida (`nemesis-oda.html`); (2)
-  no re-listar en el escritorio items ya enviados → regla vinculante nueva;
-  (3) sacar la pregunta de suscripción de los formatos recurrentes fijos →
-  regla vinculante nueva, aplicada a la crónica; (4) descartar el
-  certificado de ánimo Mac/Negro → cerrado, `promoted`.
-- **🎙️ Entrevista del jueves**: Andrés pidió por chat (22/07) usar a Gael
-  esta semana — no ganó el 20/07 (ganó Carucha) y nunca tuvo una entrevista
-  personal. Construida un día antes de lo habitual (`2026-07-23-entrevista-
-  gael.html`) a pedido directo, y corregida 2 veces el mismo día: (1) 1ª
-  versión mal enfocada (ángulo en sus debilidades: sequía, verdugo, quien
-  lo domina) → reescrita 100% desde sus stats BUENAS, preguntas acortadas,
-  bloque de permanencia sacado; (2) esa reescritura usó "0 cortes" como
-  prontuario limpio — error: el corte resta 50 puntos y es BUENO, no una
-  falta (regla nueva "el corte es bueno") → reemplazado por su única
-  victoria del año (más que las 0 de Mac), el stat que Andrés pidió usar
-  para burlarse de quien nunca ganó. Final: némesis Naso (8-4), 5º en la
+- **💬 FEEDBACK LIBRE (22/07 14:47-14:48 local, andres, en el escritorio,
+  llegado justo después del cierre de la corrida de ayer)**: 2 items —
+  (1) némesis-oda "Descartada, no quedó bueno" → dropped, página borrada
+  (ver REGLAS VINCULANTES); (2) entrevista de Gael "Perfecto, envía" →
+  confirmada, sale hoy 15:00 sin cambios.
+- **🎙️ Entrevista del jueves**: confirmada por Andrés ayer a la tarde
+  (ver feedback arriba). Sale hoy 23/07 15:00 a Gael sin modificaciones
+  respecto del preview que aprobó. Final: némesis Naso (8-4), 5º en la
   tabla arriba de 6, 1 victoria vs Mac (0), su mejor noche (155 pts).
-  Enviada a Andrés para preview; push a Gael programado para mañana 23/07
-  15:00 salvo veto. Ledger de entrevistas actualizado (ver REGLAS
-  VINCULANTES).
-- **Cambios en pages hoy**: `2026-07-20-cronica.html` (sacados los bloques
-  de permanencia Y de suscripción), `engage/solicitadas-27b2d470.html`
-  (cajas de feedback por item + ya no re-lista lo resuelto),
-  `engage/nemesis-oda.html` (nueva, generador de odas), `engage/2026-07-23-
-  entrevista-gael.html` (nueva, entrevista del jueves adelantada).
+  Ledger de entrevistas sin cambios hasta que se confirme el envío
+  (próxima corrida lo marca `sent`).
+- **Cambios en pages hoy**: `engage/solicitadas-27b2d470.html`
+  (regenerada para el jueves — nada esperando OK, solo lo agendado 15:00
+  + tabla del último envío grupal), `engage/nemesis-oda.html` (borrada,
+  `git rm`, rechazada por Andrés).
 - Sub-formatos usados: récords → clásico, horóscopo, Kryptonita. Chusmerío
   → clásico, confesiones, liquidación. Previa → clásico ×3. Crónica →
   clásico ×3 (última: 20-21/07, margen mínimo + doble ausencia de Cobra).
@@ -315,33 +307,38 @@ Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
   "Lloviendo Estrellas" para Nachi (`exp-nachi-lloviendo`, aún sin
   distribuir — Nachi no tiene push activa). Apertura 5/8, la mejor hasta
   ahora.
-- 🔇 **Mié 22/07 (hoy)**: silencio grupal, solo gestión. Sesión de la
-  mañana: aplicadas las 2 reglas del feedback del 21/07 (sacar el módulo
-  de permanencia de los formatos recurrentes + aprobación previa de
+- 🔇 **Mié 22/07**: silencio grupal, solo gestión. Sesión de la mañana:
+  aplicadas las 2 reglas del feedback del 21/07 (sacar el módulo de
+  permanencia de los formatos recurrentes + aprobación previa de
   solicitudes), compactación de 28 eventos viejos, escritorio con cajas de
   feedback por item (pedido de Andrés 10:42). Sesión de la tarde: Andrés
-  contestó las cajas — cerró 3 proposals viejas (`promoted`, ya no
-  aparecen más en el escritorio, regla nueva), amplió el poema pendiente a
-  `nemesis-oda.html` (generador para los 11 jugadores), sacó la pregunta
-  de suscripción de la crónica, y pidió adelantar la entrevista del jueves
-  a Gael. Sin partida nueva — la próxima es el lunes 27/07 (T5 F4, define
-  temporada).
-- 🧬 **Jue 23/07**: entrevista personal a **Gael** (pedido directo de
-  Andrés el 22/07) — construida y enviada un día antes. Push al
-  entrevistado 15:00 salvo veto de Andrés en el preview.
+  contestó las cajas — cerró 3 proposals viejas (`promoted`), amplió el
+  poema pendiente a `nemesis-oda.html` (generador para los 11 jugadores),
+  sacó la pregunta de suscripción de la crónica, y pidió adelantar la
+  entrevista del jueves a Gael. Más tarde ese mismo día (14:47-14:48
+  local, detectado recién hoy) Andrés volvió a entrar y rechazó el
+  némesis-oda ("no quedó bueno") y confirmó la entrevista de Gael
+  ("Perfecto, envía"). Sin partida nueva — la próxima es el lunes 27/07
+  (T5 F4, define temporada).
+- 🧬 **Jue 23/07 (hoy)**: entrevista personal a **Gael**, confirmada ayer
+  por Andrés, sale 15:00 sin cambios. Escritorio del día encolado 08:45
+  (nada esperando OK). Némesis-oda dado de baja (`git rm`) por rechazo de
+  Andrés.
 
 ## TODO / ángulos sin usar
 
-Seguir la entrevista de Gael el 23/07 (reacciones + respuestas + resultado
-para citar el próximo push) · decidir distribución del sencillo de Nachi
-· especial sedes (esta vez fue en casa de Negro) · aniversarios (multa
-récord de 150 de Tano, 648 de Naso) · replicar el flujo del club con
-nachi/naso/tano (3 lugares libres, piñas esperando en el vault) · la T5 se
-define el 27/07 — Gordo lidera sin ganar, Cobra puede necesitar ganar Y
-que Gordo/PT/Nachi tropiecen para no terminar último de la temporada · si
-el cron de dispatch se cuelga una 3ra vez, escalarlo como bug de
-infraestructura en vez de destrabarlo a mano cada vez · decidir permanencia
-de `2026-07-22-nemesis-oda` (generador nuevo, pendiente de approve) ·
-próxima semana: candidatos para la entrevista del jueves siguiente (ya sin
-Carucha ni Gael): PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra —
-todos en 0, elegir según quién gane/pierda el 27/07.
+Seguir la entrevista de Gael tras el push de hoy 15:00 (reacciones +
+respuestas + resultado para citar el próximo push) · retomar el pedido
+original de Andrés de una oda puntual a su 6-0 sobre Negro con un formato
+más simple que el generador rechazado (no repetir el mismo ángulo sin
+replantearlo) · decidir distribución del sencillo de Nachi · especial
+sedes (esta vez fue en casa de Negro) · aniversarios (multa récord de 150
+de Tano, 648 de Naso) · replicar el flujo del club con nachi/naso/tano (3
+lugares libres, piñas esperando en el vault) · la T5 se define el 27/07 —
+Gordo lidera sin ganar, Cobra puede necesitar ganar Y que Gordo/PT/Nachi
+tropiecen para no terminar último de la temporada · si el cron de
+dispatch se cuelga una 3ra vez, escalarlo como bug de infraestructura en
+vez de destrabarlo a mano cada vez · próxima semana: candidatos para la
+entrevista del jueves siguiente (ya sin Carucha ni Gael): PT, Mac, Mata,
+Nachi, Negro, Naso, Tano, Gordo, Cobra — todos en 0, elegir según quién
+gane/pierda el 27/07.

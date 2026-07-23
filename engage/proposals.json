@@ -400,25 +400,25 @@
       "title": "📜 Poema pendiente de aprobación: Mata sobre su 6-0 a Negro",
       "page": "engage/nemesis-oda.html",
       "created": "2026-07-22",
-      "status": "promoted",
+      "status": "dropped",
       "hypothesis": "experience_request idea=poesia-mata-1 (device andres, 20/07 17:53, desde el catálogo diario del laboratorio): 'Una oda a tu 6-0 sobre Negro — la única serie perfecta de la mesa'. Listada en el escritorio del 22/07 esperando aprobación previa (regla nueva del 21/07).",
       "notified_by": [
         "2026-07-22-desk",
         "2026-07-22-nemesis-oda"
       ],
-      "result_notes": "APROBADA y AMPLIADA por Andrés vía feedback libre del escritorio (22/07 13:54): en vez de un poema puntual, pidió convertirlo en una EXPERIENCIA nueva y permanente donde cualquier jugador puede generar la oda sobre su propio némesis (el rival que más domina con datos reales). Construida como `nemesis-oda.html`: H2H recalculado de las 18 fechas válidas para los 11 jugadores (mínimo 4 fechas compartidas), selector por jugador, oda propia para cada uno, caso especial para Mac (no domina a nadie — 0 ventajas de H2H, ya documentado en el certificado de aliento). Su propio caso (Mata vs Negro 6-0 en 6 fechas) es el que se muestra por default a su device. Enviada para su revisión."
+      "result_notes": "AMPLIADA por Andrés vía feedback libre del escritorio (22/07 13:54) a una experiencia permanente (`nemesis-oda.html`, ver proposal 2026-07-22-nemesis-oda), pero esa entrega fue RECHAZADA por el mismo Andrés horas después (22/07 14:47 local, feedback libre: 'Descartada, no quedó bueno'). Se corrige acá el estado 'promoted' que se había anotado antes de que Andrés la viera completa — la página se borró (git rm, 23/07). El pedido original del poema queda sin cumplir; vuelve al backlog (ver TODO en learnings) si se quiere retomar con otro formato más simple."
     },
     {
       "id": "2026-07-22-nemesis-oda",
       "title": "📜 El Generador de Odas al Némesis (experiencia nueva y permanente)",
       "page": "engage/nemesis-oda.html",
       "created": "2026-07-22",
-      "status": "pending",
+      "status": "dropped",
       "hypothesis": "Pedida por Andrés por chat (22/07 13:54, vía feedback del escritorio): landing tipo laboratorio/tómbola donde cada jugador puede ver la oda sobre su némesis (el rival que más domina con datos reales, recalculado de games con la misma metodología que 'padres e hijos'). Selector de 11 jugadores + auto-detección por device; Mac queda como caso especial (sin némesis, 0-para-11). Métrica: reacción por jugador + feedback libre + approve de andres.",
       "notified_by": [
         "2026-07-22-nemesis-oda-andres"
       ],
-      "result_notes": null
+      "result_notes": "RECHAZADA por Andrés vía feedback libre del escritorio (22/07 14:47 local, tras dwell 49s scroll 100% en la página): 'Descartada, no quedó bueno.' git rm de engage/nemesis-oda.html (23/07). Sin hipótesis de motivo específica dada; se anota en learnings como TODO para no repetir el mismo ángulo/formato sin replantearlo. Afecta también a la proposal 2026-07-22-poesia-mata-negro, que apuntaba a la misma página."
     },
     {
       "id": "2026-07-22-candidatos-entrevista",

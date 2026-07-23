@@ -1,6 +1,21 @@
 {
-  "_updated_at": "2026-07-22T17:18:37.101Z",
+  "_updated_at": "2026-07-23T06:06:00.000Z",
   "notifications": [
+    {
+      "id": "2026-07-23-desk",
+      "title": "🗂️ Nada esperando tu OK — Gael sale 15:00",
+      "body": "Lo de anoche ya quedó resuelto (némesis fuera, Gael confirmado). Hoy solo la cabina de Gael a las 15.",
+      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/solicitadas-27b2d470.html",
+      "devices": [
+        "andres"
+      ],
+      "send_at": "2026-07-23T08:45:00-03:00",
+      "expires_at": "2026-07-23T23:00:00-03:00",
+      "status": "pending",
+      "sent_at": null,
+      "fail_reason": null,
+      "created_by": "engagement-agent 2026-07-23 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; hoy sin nada nuevo esperando OK porque Andres resolvió las 2 cosas de ayer por feedback libre anoche mismo)"
+    },
     {
       "id": "2026-07-22-candidatos-entrevista",
       "title": "🎙️ 2 candidatos de entrevista para que elijas",
