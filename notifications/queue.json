@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-23T06:06:00.000Z",
+  "_updated_at": "2026-07-23T12:21:02.268Z",
   "notifications": [
     {
       "id": "2026-07-23-desk",
@@ -11,8 +11,8 @@
       ],
       "send_at": "2026-07-23T08:45:00-03:00",
       "expires_at": "2026-07-23T23:00:00-03:00",
-      "status": "pending",
-      "sent_at": null,
+      "status": "sent",
+      "sent_at": "2026-07-23T12:21:02.268Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-23 (escritorio diario 'Las solicitadas por otros', regla vinculante de Andres 19/07: todas las mañanas 08:45; hoy sin nada nuevo esperando OK porque Andres resolvió las 2 cosas de ayer por feedback libre anoche mismo)"
     },
