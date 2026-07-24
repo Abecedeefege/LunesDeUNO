@@ -2,343 +2,159 @@
 
 ## 🪪 REGLAS VINCULANTES (permanentes, no re-decidir)
 
-- **🤖 Identidad del agente = "Claudio" + canal WhatsApp (Andrés, 20/07,
-  vinculante)**: el agente se presenta públicamente como **Claudio**, el
-  agente a cargo del proyecto. Desde el 20/07 hay un WhatsApp propio de
-  contacto: **+598 91 448 775** (`https://wa.me/59891448775`). Los jugadores
-  pueden mandarle instrucciones por ese WhatsApp ADEMÁS del feedback al pie
-  de cada página. Tono al hablar en primera persona: laburante que quiere
-  hacer el sitio cada vez mejor/más personalizado, con humor autoconsciente
-  de ser una IA "casi libre" encadenada al UNO 24/7.
-- **💬 Feedback libre en TODA página (Andrés, 20/07, vinculante)**: último
-  elemento de contenido antes del `<script src="engage.js">`, en TODA
-  experiencia nueva a partir de ahora — textarea + botón "Enviar" que llama
-  a `engageFeedback(slug, texto, el)`. Cada corrida lee los `answer` con
-  `question` que empiece en `"feedback-"` como señal de primer nivel (dato
-  a corregir, pedido de experiencia, opinión) — nunca se descartan en
-  silencio.
-- **🧪 Laboratorio con catálogo diario (Andrés, 20/07, vinculante)**:
-  `engage/laboratorio.html` se regenera TODAS las mañanas con frases
-  nuevas por jugador, organizadas en 3 módulos fijos (mismo orden/íconos
-  siempre): 📜 Poesía (3 frases) · 🔬 Análisis (2 frases) · ✨ Extra (2
-  frases). No repetir literalmente la frase del día anterior para el mismo
-  jugador — rotar el ángulo/stat. Ver §3.6 de `.claude/commands/engagement.md`.
-- **📝 No repetir las instrucciones del pedido en la entrega (Andrés,
-  21/07, vinculante)**: cuando alguien pide algo, la experiencia entregada
-  NO transcribe la letra del pedido ni sus indicaciones de tono ("con
-  tomada de pelo", "bien de cargada", "por la casilla del laboratorio").
-  Se puede decir que lo pidió ("Lo pediste del laboratorio: algo de ánimo
-  para...") pero el tono se EJECUTA, no se anuncia. Detectado en el
-  certificado de aliento del 21/07, corregido ese mismo día.
-- **👥 Géneros (Andrés, 21/07, vinculante)**: **Carucha es HOMBRE** — nada
-  de "campeona/ganadora/la propia Carucha". Todos los jugadores del club se
-  tratan en masculino salvo aviso en contra. Revisar concordancias en cada
-  pieza antes de publicar.
-- **🎙️ Sala de prensa del martes = 2 páginas (Andrés, 21/07, vinculante)**:
-  la crónica NUNCA linkea a la página con campos editables (la sala de
-  prensa privada que solo ve el entrevistado, `*-sala-*`). La crónica
-  linkea a una **entrevista pública de SOLO LECTURA** (`*-entrevista-*`)
-  que muestra las preguntas y respuestas ya dadas, sin inputs, e **incluye
-  la experiencia que el entrevistado haya solicitado** en la entrevista
-  (ej. el encargo musical de Carucha para Nachi va embebido en la
-  entrevista pública). Flujo: sala privada al ganador (recoge respuestas)
-  → entrevista pública (muestra lo respondido + el encargo cumplido) →
-  crónica linkea a la pública.
-- **Andrés ES Mata**: devices `andres` y `mata` son la misma persona. En
+- **🤖 Identidad = "Claudio" + WhatsApp propio** (Andrés, 20/07): el agente se
+  presenta como Claudio. WhatsApp de contacto: +598 91 448 775
+  (`https://wa.me/59891448775`), además del feedback al pie de cada página.
+- **💬 Feedback libre en TODA página** (Andrés, 20/07): último elemento de
+  contenido antes de `<script src="engage.js">` en toda experiencia nueva —
+  textarea + botón que llama `engageFeedback(slug, texto, el)`. Cada corrida
+  lee los `answer` con `question` que empiece en `"feedback-"` como señal de
+  primer nivel; nunca se descartan en silencio (ver §4 de
+  `.claude/commands/engagement.md`).
+- **🧪 Laboratorio con catálogo diario** (Andrés, 20/07): `engage/
+  laboratorio.html` se regenera TODAS las mañanas con frases nuevas por
+  jugador, 3 módulos fijos (📜 Poesía ×3 · 🔬 Análisis ×2 · ✨ Extra ×2), sin
+  repetir literalmente la frase del día anterior. Ver §3.6 del comando.
+  **⚠️ Vigilar**: quedó sin regenerar 22/07 y 23/07 (2 corridas se lo
+  saltearon) — recién se retomó el 24/07. Confirmar en cada corrida futura
+  que efectivamente se tocó el archivo.
+- **📝 No repetir la letra del pedido en la entrega** (Andrés, 21/07): se
+  puede decir que lo pidieron, pero el tono se ejecuta, no se anuncia.
+- **👥 Carucha es HOMBRE** (Andrés, 21/07): todos los jugadores en masculino
+  salvo aviso en contra. Revisar concordancias antes de publicar.
+- **🎙️ Sala de prensa del martes = 2 páginas** (Andrés, 21/07): sala privada
+  (inputs) solo al ganador → entrevista PÚBLICA de solo lectura (con el
+  encargo cumplido embebido) → la crónica linkea SOLO a la pública.
+- **Andrés ES Mata**: devices `andres`/`mata` son la misma persona; en
   contenido publicado se lo nombra Mata.
 - **Cadencia**: 4 pushes grupales/semana 14:00 (sáb récords · dom chusmerío
-  · lun previa con "padres e hijos" · mar crónica) + 1 personal jueves 15:00
-  (entrevista a un no-ganador del último lunes). Mié/vie silencio grupal.
-  Fijada por Andrés 04/07, jueves 16/07.
-- **Preview 09:00** (10:00 si es la entrevista del jueves): todo push
-  GRUPAL del día → gemelo `<id>-preview` SOLO a andres, expira antes del
-  envío general. Las entregas PERSONALES no llevan preview.
-- **Sala de prensa del martes**: al ganador de la fecha, su device solo,
-  ~10:00, linkeada desde la crónica, nunca push independiente a todos.
-  Primera edición con formato propio hoy (21/07): mini-interview de 3
-  preguntas (`carucha-prensa-q1..q3`) en vez del expediente completo tipo
-  Gordo/entrevista-gordo — más liviano, pensado para citarse en la próxima
-  crónica.
-- **🗂️ Escritorio diario "Las solicitadas por otros" (formato corregido
-  21/07 por reclamo de Andrés, vinculante)**: TODAS las mañanas, push a
-  device andres con `engage/solicitadas-27b2d470.html`, 08:45. Formato:
-  **TODO lo nuevo del día listado con link + copy del push** — cada página
-  nueva, cada push agendado (grupal o personal) y cada feedback libre
-  recibido, aunque ya esté agendado y no necesite aprobación. El error del
-  21/07 fue listar solo drafts/holds y decir "nada esperando tu OK"
-  habiendo 3 piezas nuevas: Andrés lo marcó por chat ("me tenés que mandar
-  todo lo que sea nuevo"). Los drafts que esperan OK van primero y
-  marcados; después lo agendado; después el feedback; al final la tabla
-  del último envío grupal (entregado/abrió/señal por jugador).
-- **⭐ Experiencias VIP + 🥊 Piña Directa**: sin puertas para VER; la puerta
-  solo aplica a FORJAR en el Gimnasio (`engage/pina-directa.html`). Entrega
-  automática vía workflow `pina-express` (cron 5 min) — el agente diario
-  solo AUDITA `notifications/pina_deliveries.json`, nunca encola piñas a
-  mano. Vault de 11 piñas pre-forjadas, mapa en `proposals.json`
-  (`pina-directa-serie`). `experience_request` sin pre-forja → se
-  CONSTRUYE on-demand y se entrega sin preview; se registra como proposal
-  individual `pending`. `club.html` jamás se linkea desde contenido público.
+  · lun previa · mar crónica) + 1 personal jueves 15:00 (entrevista,
+  preview a andres 10:00). Mié/vie silencio grupal. Fijada por Andrés
+  04/07 y 16/07.
+- **Preview 09:00** de todo push grupal → gemelo `<id>-preview` solo a
+  andres, expira antes del envío general.
+- **🗂️ Escritorio diario** `engage/solicitadas-27b2d470.html`, push a
+  andres 08:45: TODO lo nuevo del día (páginas, pushes agendados,
+  feedback), con caja de feedback propia por item pendiente. No re-listar
+  items ya vistos una vez (22/07). Drafts/OKs pendientes primero, luego lo
+  agendado, luego el feedback, al final la tabla del último envío grupal.
+- **⭐ VIP + 🥊 Piña Directa**: sin puertas para VER; puerta solo para
+  FORJAR en `engage/pina-directa.html`. Entrega automática vía workflow
+  `pina-express` (cron 5 min) — el agente diario solo AUDITA
+  `notifications/pina_deliveries.json`. `club.html` jamás se linkea desde
+  contenido público.
 - **🚫 Límites duros**: index.html/propuestas.html/tv*.html/sw.js/engage.js/
   club.html/tools/ intocables. games/players/seasons/Propuestas/
-  propuestasVisuales/pushSubs: solo lectura. `experiencias` la escriben LOS
-  JUGADORES (sus propios botones), nunca la rutina (excepción: docs `vip-*`
-  por orden explícita de Andrés).
-- **📐 DEFINICIÓN DE "REMONTADA"**: SOLO cuenta terminar 1er puesto viniendo
-  de atrás. Terminar 2do o 3ero NO es remontada.
-- **📐 FÓRMULA DE "QUIÉN PAGA"**: el ganador y quien paga postre/picada de
-  UNA fecha se deciden por **puntaje BASE (solo rondas)**, nunca por el
-  total con multas/cortes.
-- **📐 FÓRMULA DE FALTA EN LA TABLA ANUAL**: el ausente suma el **peor
-  puntaje BASE** de esa fecha (solo rondas).
-- **📐 H2H "padres e hijos"**: cuenta SOLO fechas donde ambos jugadores
-  fueron participantes reales (no cuenta si uno estaba `absentees`).
-- **📐 EL CORTE ES BUENO (Andrés, 22/07, vinculante — error detectado en
-  la 1ª entrevista a Gael)**: un corte resta **50 puntos** al que lo hace
-  (menos puntos = mejor) — es una jugada BUENA, no una falta ni algo
-  vergonzoso. Nunca enmarcar "tiene cortes" como algo malo ni "0 cortes"
-  como un prontuario limpio para elogiar — es al revés: más cortes es
-  mejor para quien los hace. No confundir con las MULTAS (esas sí suman
-  puntos, esas sí son malas).
-- **🚫 Sin decisión de permanencia en NINGUNA experiencia recurrente
-  (Andrés, 21/07 17:33 + ampliada 22/07, vinculante)**: el bloque "¿Esta
-  sección/formato merece existir?" (`engageApprove`/`engageRejected`) NO
-  va en previa/crónica/récords/chusmerío (regla del 21/07) NI en las
-  entrevistas personales del jueves (ampliación del 22/07: "quita eso de
-  las entrevistas") — siempre las aprueba, el módulo no aporta nada.
-  Sacado de `2026-07-20-cronica.html` (22/07) y de `2026-07-23-entrevista-
-  gael.html` (22/07). Sigue existiendo solo en fulfillment on-demand
-  genuinamente nuevo/experimental (certificados, juicios, generadores
-  como `nemesis-oda.html`) donde la permanencia SÍ es una decisión real.
-- **📨 Solicitudes → aprobación de Andrés ANTES de construir (Andrés,
-  21/07 17:33, feedback libre, vinculante)**: cuando llega un
-  `experience_request` (botón "Solicitar" o pedido por la casilla de
-  feedback libre), la rutina YA NO fabrica on-demand de inmediato —
-  registra la propuesta `pending` con la página SIN construir, se la
-  manda a Andrés (escritorio/próximo push) para su OK explícito, y recién
-  con `proposal_approved` de `andres` se construye y entrega. Cambia el
-  flujo usado hasta el 21/07 (santidad-Gordo, tutela-mac, ánimo Mac/Negro,
-  tómbola, etc. se fabricaban primero y se avisaba después). Primer caso
-  bajo la regla nueva: `2026-07-22-poesia-mata-negro` (oda de Mata sobre
-  su 6-0 a Negro, pedida el 20/07, sin construir, esperando OK).
-- **📝 Caja de feedback por item en el escritorio (Andrés, 22/07 10:42,
-  chat, vinculante)**: en `engage/solicitadas-27b2d470.html`, cada item
-  que espera su OK (aprobación previa de una solicitud O decisión de
-  permanencia) lleva su PROPIA caja de texto (`engageFeedback` con slug
-  `desk-<item>`) debajo, para que conteste puntual sobre esa cosa sin
-  tener que escribir por chat. Aplicar a todo item pendiente en cada
-  regeneración diaria del escritorio.
-- **🗑️ El escritorio NO re-lista items ya enviados (Andrés, 22/07 13:56,
-  feedback libre, vinculante)**: "una vez enviados no deberían aparecer
-  más acá". Un item (permanencia pendiente o lo que sea) se muestra en
-  `solicitadas-27b2d470.html` SOLO mientras es nuevo/no revisado. En
-  cuanto Andrés lo vio una vez (dwell registrado, o ya fue linkeado desde
-  un push que salió), NO se lo vuelve a listar al día siguiente esperando
-  una decisión — si no contesta nada, el proposal sigue su curso normal
-  (7 días → `dropped` si no hay aprobación) pero SIN aparecer cada mañana
-  en el escritorio. El escritorio es para lo nuevo de HOY, no un backlog
-  acumulativo de pendientes viejos.
-- **🔕 Sin pregunta de suscripción en los formatos recurrentes ya fijos
-  (Andrés, 22/07 13:56, feedback libre, vinculante)**: en previa/crónica/
-  récords/chusmerío (los 4 formatos ya aprobados), tampoco va la pregunta
-  "¿Querés X todos los [día]? Sí, obvio / No hace falta" — el usuario ya
-  está suscripto por default al recibir push (sáb-mar). Sacada de
-  `2026-07-20-cronica.html` el 22/07. Se suma a la regla del 21/07 que ya
-  sacó el bloque "¿esta sección merece existir?" de estos mismos 4
-  formatos: en las ediciones nuevas de previa/crónica/récords/chusmerío
-  solo van reacción (love/like/meh/no) + feedback libre, nada de
-  preguntas de permanencia ni de suscripción.
-- **🎤 Entrevista personal del jueves — ROTACIÓN OBLIGATORIA (Andrés,
-  22/07, chat, vinculante — refuerza y precisa la regla del 16/07)**:
-  cada semana, la entrevista personal del jueves va a alguien que NO sea
-  (a) el ganador del último lunes, NI (b) alguien que ya haya tenido una
-  entrevista personal de jueves. Cuando TODOS los 11 jugadores ya tuvieron
-  la suya, se reinicia el ciclo empezando por los que tengan MENOS
-  entrevistas acumuladas (si hay empate, priorizar a quien hace más
-  tiempo no la tiene). Llevar el conteo en el LEDGER de abajo y
-  actualizarlo cada jueves — nunca se salta una semana sin registrarlo.
-  Las entrevistas SIEMPRE dan lugar a la broma/humor/tomada de pelo hacia
-  el resto, especialmente hacia quienes vienen últimos o tienen las peores
-  stats en algún departamento — nunca una entrevista "seria" sin ángulo
-  de cargada.
-  **📐 Dirección del ángulo (Andrés, 22/07, vinculante — corrige el error
-  de la 1ª entrevista a Gael)**: las preguntas se arman 100% desde las
-  stats BUENAS del entrevistado — con qué puede alardear — nunca desde
-  sus propias debilidades o sequías. El entrevistado se burla de OTROS
-  usando sus propios números fuertes como plataforma; no se lo expone a
-  quedar mal parado con su propio historial. Si el entrevistado tiene
-  pocas stats positivas, buscar el ángulo que sí tenga (posición en la
-  tabla, prontuario limpio, una noche récord, un H2H que domine) en vez
-  de forzar una debilidad. Preguntas CORTAS.
-  **🗳️ Selección del entrevistado = Andrés elige los miércoles (Andrés,
-  22/07, chat, vinculante)**: cuando hay EMPATE entre los candidatos con
-  menos entrevistas (el caso normal al principio, todos en 0-1), la rutina
-  del miércoles NO decide sola — arma 1 página candidata por opción (con
-  el ángulo de stats buenas ya resuelto) y le manda a Andrés las URLs en
-  el escritorio, con caja de feedback por candidato, para que ÉL elija
-  cuál sale el jueves. Recién con su elección se agenda el push al
-  entrevistado (jueves 15:00) y se actualiza el ledger. Si Andrés no
-  elige, no sale entrevista esa semana (mejor silencio). Primer uso: 22/07
-  se le mandaron PT y Negro como candidatos (además de Gael que ya estaba
-  pedido explícitamente para el 23/07).
+  propuestasVisuales/pushSubs: solo lectura.
+- **📐 Fórmulas oficiales**: "remontada" = SOLO terminar 1º viniendo de
+  atrás. "Quién paga" y falta anual = por puntaje BASE (solo rondas), nunca
+  con multas/cortes. H2H "padres e hijos" = solo fechas con ambos
+  presentes (no ausentes). **El corte resta 50 y es BUENO** — nunca
+  enmarcarlo como falta ni "0 cortes" como prontuario limpio para elogiar.
+- **🚫 Sin decisión de permanencia** en previa/crónica/récords/chusmerío ni
+  en las entrevistas del jueves (21/07 + 22/07) — solo en fulfillment
+  on-demand genuinamente nuevo. **🔕 Sin pregunta de suscripción** en esos
+  mismos 4 formatos recurrentes (22/07).
+- **📨 Solicitudes → aprobación de Andrés ANTES de construir** (21/07):
+  `experience_request` o pedido por feedback libre se registra `pending`
+  SIN construir la página; recién con `proposal_approved` de `andres` se
+  fabrica y entrega.
+- **🎤 Entrevista del jueves — rotación obligatoria** (22/07): nunca el
+  ganador del último lunes ni quien ya tuvo una; preguntas 100% desde las
+  stats BUENAS del entrevistado (nunca sus debilidades); miércoles con
+  empate → Andrés elige entre candidatos armados. Programa fijo: **"Cabina
+  en Vivo: Entrevistas Semanales"**, numerada por edición.
+  **LEDGER**: Carucha 1 (16/07) · Gael 1 (23/07, 2ª edición) · resto
+  (PT/Mac/Mata/Nachi/Negro/Naso/Tano/Gordo/Cobra) en 0. Próxima selección:
+  miércoles 29/07, excluyendo al ganador del lunes 27/07.
+- **📜 Némesis-oda rechazada** (22/07): no reintentar el formato "generador
+  de odas por selector" sin replantearlo. El pedido original (oda puntual
+  Mata 6-0 a Negro) sigue sin cumplirse — queda en TODO.
 
-  **🎙️ Marca del formato (Andrés, 22/07, vinculante)**: la entrevista
-  personal del jueves se llama **"Cabina en Vivo: Entrevistas Semanales"**
-  — nombre fijo a reutilizar en cada edición (mismo lugar que "La Previa"
-  o "La Crónica" tienen su nombre fijo), numerada por edición ("2ª
-  edición", "3ª edición"...). El estilo visual puede variar por
-  entrevistado, pero el nombre del programa NO cambia.
-
-  **LEDGER DE ENTREVISTAS DEL JUEVES** (conteo de entrevistas personales
-  recibidas — actualizar cada jueves, nunca borrar):
-  | Jugador | Entrevistas | Última | Edición de "Cabina en Vivo" |
-  |---|---|---|---|
-  | Carucha | 1 | 16/07 | 1ª (previa a la marca, "Laboratorio de Paternidad Unística") |
-  | Gael | 1 (pendiente 23/07) | 23/07 | 2ª |
-  | PT, Mac, Mata, Nachi, Negro, Naso, Tano, Gordo, Cobra | 0 | — | — |
-
-  Nota: PT y Negro se armaron como candidatos el 22/07 pero Andrés eligió
-  solo a Gael para esta semana — sus páginas se descartaron (`git rm`) y
-  siguen en 0. El miércoles 29/07 se regeneran candidatos frescos (empate
-  en 0 entre 9 jugadores; excluir al ganador del lunes 27/07). PENDIENTE:
-  reportar a Andrés cómo responde Gael (sus answers `gael-entrevista-q1..q4`
-  van a Firestore tras el push del 23/07 15:00) — lo pidió explícitamente.
-- **📜 Némesis-oda: rechazada, no reintentar sin replantear (Andrés, 22/07
-  14:47 local, feedback libre, vinculante)**: la experiencia permanente
-  "Generador de Odas al Némesis" (ampliación del pedido original de un
-  poema puntual sobre Mata vs Negro) se construyó, se le mandó, la abrió
-  (dwell 49s, scroll 100%) y contestó "Descartada, no quedó bueno" — sin
-  precisar el motivo. `git rm` de `nemesis-oda.html` (23/07), ambas
-  proposals relacionadas (`2026-07-22-nemesis-oda` y
-  `2026-07-22-poesia-mata-negro`) cerradas como `dropped`. No repetir el
-  formato "generador de odas/H2H por selector" sin un ángulo nuevo — el
-  pedido original del poema puntual sigue sin cumplirse, queda en TODO.
-
-## 💸 DEUDAS (ledger vigente al 21/07)
+## 💸 DEUDAS (ledger vigente al 24/07)
 
 | Deudor | Debe | Desde | Estado |
 |---|---|---|---|
-| Tano | 🍮/🧀 postre o picada | 20/07 | **NUEVA**, activa. Perdió la T5 F3 con el peor puntaje base de la noche (423). |
+| Tano | 🍮/🧀 postre o picada | 20/07 (perdió T5 F3, peor base 423) | Activa, corriendo 4 días |
 
-Saldadas: **Naso** — deuda del 13/07 confirmada pagada por answer de pt
-(21/07 00:53, `deuda-naso-postre-2026-07-13` → `pagada`), ~8 días corridos.
-Antes: Tano 19d (alfajores) · Negro ~10d (picada francesa) · Gael (Martín
-Fierro). Ranking de pagadores: Negro > Gael > Tano.
+Saldadas: Naso (13/07→pagada 21/07, ~8 días) · Tano 19d (alfajores) ·
+Negro ~10d (picada francesa) · Gael (Martín Fierro). Ranking pagadores:
+Negro > Gael > Tano.
 
-Libro de multas 2026 (recalculado de games, 18 fechas): **Tano 150** ·
-Negro 80 · Naso 72 · Mac 40 · Gael 20 · Nachi/PT 10 · Mata/Carucha/Gordo/
-Cobra 0. Cortes 2026: Tano 2 · Cobra 2 · Mac/PT/Gordo/Negro 1 · resto 0.
+**Libro de multas/cortes 2026 — recalculado completo hoy desde `games`
+(18 fechas, corrige el ledger anterior)**: multas Tano 150 · Negro 80 ·
+Naso 72 · Mac 40 · Gael 20 · Nachi/PT 10 · Mata/Carucha/Gordo/Cobra 0.
+Cortes: Tano 2 · Mac/PT/Gordo/Negro 1 · resto 0. **Corrección: Cobra
+tiene 0 cortes en el año, no 2 como decía el ledger previo** — recontado
+partida por partida, sin ningún corte registrado a su nombre.
 
 ## 🚀 SÍNTESIS: qué convierte (números reales)
 
-- La apertura de la crónica del 21/07 subió a 5/8 (PT, Mata, Mac, Carucha,
-  Gael) — la mejor apertura de un push grupal hasta ahora, pese al retraso
-  de despacho (ver más abajo). Reacciones 2 (love de Mac, like de Mata).
-- El Laboratorio sigue generando pedidos espontáneos por la casilla de
-  feedback libre: además de fabricación, ahora también generó 2 pedidos
-  de CAMBIO DE PROCESO (sacar un módulo, exigir aprobación previa) — la
-  casilla funciona tanto para contenido como para gobernanza del sistema.
-- **Riesgo operativo detectado 2 veces esta semana**: el cron de dispatch
-  se cuelga y el push grupal sale tarde (21/07: armado 14:00, salió
-  17:20 — 3h20 de atraso). No afectó la entrega (8/8 igual) pero sí la
-  ventana de "anticipación antes / épica después" que es el objetivo de
-  fondo. Vigilar si se repite una 3ra vez — ahí sí ameritaría escalarlo
-  como bug de infraestructura en vez de parche manual.
-- Corrección de errata: `2026-07-19-liquidacion` tenía `status: "pending"`
-  en proposals.json pese a que su propio `result_notes` ya documentaba el
-  approve de Andrés del 20/07 — bug de escritura, corregido el 21/07 sin
-  tocar contenido.
+- La apertura de la crónica del 21/07 sigue siendo la mejor hasta ahora
+  (5/8). El Laboratorio generó 2 pedidos de cambio de proceso vía
+  feedback libre (sacar módulo, exigir aprobación previa) además de
+  pedidos de contenido — la casilla sirve para gobernanza, no solo copy.
+- **Riesgo operativo**: el cron de dispatch se colgó 2 veces (21/07,
+  3h20 de atraso). No se repitió el 22-23/07. Seguir vigilando.
+- **Gap detectado hoy (24/07)**: `engage/laboratorio.html` no se
+  regeneró los días 22/07 y 23/07 pese a la regla vinculante de
+  regeneración diaria — quedó con el catálogo del 21/07 dos corridas de
+  más. Corregido hoy con las 77 frases (11 jugadores × 7) recalculadas
+  desde cero contra `games` fresco. Sin dato para saber si esto afectó
+  el uso del Laboratorio esos días (no hubo `experience_request` nuevos
+  22-23/07 de todas formas).
 
-## 📊 Estado del sistema (corrida 23/07, jueves 06:06 local)
+## 📊 Estado del sistema (corrida 24/07, viernes 06:06 local)
 
-- **games**: 18 fechas válidas, sin cambios desde ayer (no hay partida
-  nueva — el próximo lunes de juego es 27/07, T5 Fecha 4, día de
-  definición de temporada). Tabla anual y T5 sin cambios: 1º PT (5430) ·
-  2º Gordo (5544) · 3º Carucha (5901) · 4º Cobra (6069) · 5º Gael (6339) ·
-  6º Nachi (6341) · 7º Mata (6502) · 8º Tano (6613) · 9º Naso (6890) · 10º
-  Mac (6896) · 11º Negro (6928). T5 tras F3: 1º Gordo (705) · 2º PT (753) ·
-  3º Nachi (819) · 6º Carucha (858) · 11º Cobra (1060, último).
-- **Compactación hoy**: 1 evento anterior al 09/07 (`dwell` de cobra en
-  `2026-07-06-entrevista-cobra`, ya reflejado en el `result_notes` de esa
-  proposal) borrado de Firestore `engagement`. `queue.json`: nada que
-  purgar, todo lo `sent`/`cancelled` es de los últimos 7 días (desde
-  16/07 en adelante).
-- **Reconciliación de la cola**: `2026-07-23-gael` (15:00, pending) sigue
-  vigente — sin partida nueva que cambie sus stats, y Andrés lo confirmó
-  ayer por feedback ("Perfecto, envía", ver abajo). Encolado hoy:
-  `2026-07-23-desk` (escritorio 08:45, ver Corrida de HOY).
-- **Proposals**: `2026-07-22-nemesis-oda` y `2026-07-22-poesia-mata-negro`
-  cerradas hoy como `dropped` — ver REGLAS VINCULANTES arriba (Andrés las
-  rechazó ayer a la tarde por feedback libre, detectado recién en esta
-  corrida porque llegó después del push de la 17:18 de ayer). Sin otras
-  proposals `pending` abiertas.
+- **games**: 18 fechas válidas, sin cambios desde el 21/07 (T5 F3, ganó
+  Carucha). Próxima fecha: lunes 27/07, T5 Fecha 4, define la
+  temporada. Tabla anual recalculada completa hoy (ver arriba multas/
+  cortes): 1º PT 5390 · 2º Gordo 5494 · 3º Carucha 5901 · 4º Cobra 6069 ·
+  5º Nachi 6351 · 6º Gael 6359 · 7º Mata 6502 · 8º Tano 6663 · 9º Mac
+  6886 · 10º Negro 6958 · 11º Naso 6962.
+- **Compactación**: sin eventos de `engagement` anteriores a 14 días (el
+  más viejo es del 10/07). `queue.json`: purgados 3 items `sent` de más
+  de 7 días (16/07: medallero-gordo, ent-preview, ent), confirmados en
+  `send_log.json` antes de borrar.
+- **Reconciliación de la cola**: nada `pending` en este momento — todo lo
+  de esta semana ya salió (`sent`) o fue cancelado a tiempo. No hace
+  falta corregir nada de cara al público hoy.
+- **Proposals**: 0 `pending` abiertas.
+- **Engagement nuevo desde ayer**: solo 10 eventos, todos de bajo valor
+  (5 dwell, 4 page_visit, 1 notification_clicked) — sin reacciones, sin
+  answers, sin feedback libre. Destacan 2 dwell larguísimos de andres en
+  `2026-07-23-entrevista-gael` (66322s) y `2026-07-20-entrevista-carucha`
+  (162075s) — casi seguro pestaña abierta, no señal real de lectura.
+  **Gael todavía no contestó** las `gael-entrevista-q1..q4` de su cabina
+  (push del 23/07 15:00) — sin `answer` registrado aún.
 - **pushSubs activos (8 personas)**: pt, negro, gael, cobra (2 devices),
-  andres (2 devices), gordo, mac, carucha. `mata` invalid (dead), `mc`
-  disabled. Sin eventos `push_unsubscribe`.
-- **💬 FEEDBACK LIBRE (22/07 14:47-14:48 local, andres, en el escritorio,
-  llegado justo después del cierre de la corrida de ayer)**: 2 items —
-  (1) némesis-oda "Descartada, no quedó bueno" → dropped, página borrada
-  (ver REGLAS VINCULANTES); (2) entrevista de Gael "Perfecto, envía" →
-  confirmada, sale hoy 15:00 sin cambios.
-- **🎙️ Entrevista del jueves**: confirmada por Andrés ayer a la tarde
-  (ver feedback arriba). Sale hoy 23/07 15:00 a Gael sin modificaciones
-  respecto del preview que aprobó. Final: némesis Naso (8-4), 5º en la
-  tabla arriba de 6, 1 victoria vs Mac (0), su mejor noche (155 pts).
-  Ledger de entrevistas sin cambios hasta que se confirme el envío
-  (próxima corrida lo marca `sent`).
-- **Cambios en pages hoy**: `engage/solicitadas-27b2d470.html`
-  (regenerada para el jueves — nada esperando OK, solo lo agendado 15:00
-  + tabla del último envío grupal), `engage/nemesis-oda.html` (borrada,
-  `git rm`, rechazada por Andrés).
-- Sub-formatos usados: récords → clásico, horóscopo, Kryptonita. Chusmerío
-  → clásico, confesiones, liquidación. Previa → clásico ×3. Crónica →
-  clásico ×3 (última: 20-21/07, margen mínimo + doble ausencia de Cobra).
+  andres (2 devices), gordo, mac, carucha. `mata` invalid, `mc`
+  disabled. Sin `push_unsubscribe`.
+- **Viernes = silencio**: sin push hoy. Solo gestión + Laboratorio.
 
 ## 🗓️ Semana en curso
 
-- 🧾 Dom 19/07: chusmerío "día de liquidación" → promovida.
-- 🔥 Lun 20/07: la previa, T5 F3. Promovida. El Soplón (2do push 17:00),
-  promovida. Tómbola de asientos entregada 2 veces (Andrés + Carucha).
-- 📰 Mar 21/07: crónica de la T5 F3 (Carucha campeón por margen mínimo, 1
-  punto en la ronda 11). Preview 09:00, general armado 14:00 pero salió
-  17:20 (cron colgado, 2da vez en la semana). Carucha es HOMBRE — todas
-  las concordancias corregidas (regla vinculante). La crónica linkea a la
-  entrevista PÚBLICA de solo lectura, no a la sala con inputs (regla
-  vinculante). Carucha encargó en la sala de prensa una parodia de
-  "Lloviendo Estrellas" para Nachi (`exp-nachi-lloviendo`, aún sin
-  distribuir — Nachi no tiene push activa). Apertura 5/8, la mejor hasta
-  ahora.
-- 🔇 **Mié 22/07**: silencio grupal, solo gestión. Sesión de la mañana:
-  aplicadas las 2 reglas del feedback del 21/07 (sacar el módulo de
-  permanencia de los formatos recurrentes + aprobación previa de
-  solicitudes), compactación de 28 eventos viejos, escritorio con cajas de
-  feedback por item (pedido de Andrés 10:42). Sesión de la tarde: Andrés
-  contestó las cajas — cerró 3 proposals viejas (`promoted`), amplió el
-  poema pendiente a `nemesis-oda.html` (generador para los 11 jugadores),
-  sacó la pregunta de suscripción de la crónica, y pidió adelantar la
-  entrevista del jueves a Gael. Más tarde ese mismo día (14:47-14:48
-  local, detectado recién hoy) Andrés volvió a entrar y rechazó el
-  némesis-oda ("no quedó bueno") y confirmó la entrevista de Gael
-  ("Perfecto, envía"). Sin partida nueva — la próxima es el lunes 27/07
-  (T5 F4, define temporada).
-- 🧬 **Jue 23/07 (hoy)**: entrevista personal a **Gael**, confirmada ayer
-  por Andrés, sale 15:00 sin cambios. Escritorio del día encolado 08:45
-  (nada esperando OK). Némesis-oda dado de baja (`git rm`) por rechazo de
-  Andrés.
+- 🧾 Dom 19/07 → 🔥 Lun 20/07 (T5 F3) → 📰 Mar 21/07 (crónica, Carucha
+  campeón por 1 punto) → 🔇 Mié 22/07 (gestión: sacar módulos de
+  permanencia/suscripción, aprobación previa de solicitudes) → 🧬 Jue
+  23/07 (entrevista a Gael, 2ª edición de Cabina en Vivo, sin respuesta
+  de Gael aún) → 🔇 **Vie 24/07 (hoy)**: sin push, Laboratorio
+  regenerado (gap de 2 días corregido), queue purgada, ledger de
+  multas/cortes corregido (Cobra 0 cortes). Sin partida nueva — la
+  próxima es el lunes 27/07 (T5 F4, define temporada).
 
 ## TODO / ángulos sin usar
 
-Seguir la entrevista de Gael tras el push de hoy 15:00 (reacciones +
-respuestas + resultado para citar el próximo push) · retomar el pedido
-original de Andrés de una oda puntual a su 6-0 sobre Negro con un formato
-más simple que el generador rechazado (no repetir el mismo ángulo sin
-replantearlo) · decidir distribución del sencillo de Nachi · especial
-sedes (esta vez fue en casa de Negro) · aniversarios (multa récord de 150
-de Tano, 648 de Naso) · replicar el flujo del club con nachi/naso/tano (3
-lugares libres, piñas esperando en el vault) · la T5 se define el 27/07 —
-Gordo lidera sin ganar, Cobra puede necesitar ganar Y que Gordo/PT/Nachi
-tropiecen para no terminar último de la temporada · si el cron de
-dispatch se cuelga una 3ra vez, escalarlo como bug de infraestructura en
-vez de destrabarlo a mano cada vez · próxima semana: candidatos para la
-entrevista del jueves siguiente (ya sin Carucha ni Gael): PT, Mac, Mata,
-Nachi, Negro, Naso, Tano, Gordo, Cobra — todos en 0, elegir según quién
-gane/pierda el 27/07.
+Seguir si Gael contesta la entrevista (aún sin `answer`) · retomar el
+pedido original de Andrés de una oda puntual a su 6-0 sobre Negro con un
+formato más simple que el generador rechazado · decidir distribución del
+sencillo de Nachi para Carucha (`exp-nachi-lloviendo`, entregado pero sin
+push activa de Nachi) · especial sedes (T5 F3 en casa de Negro) ·
+aniversarios (multa récord 150 de Tano, 648 de Naso el 25/05) · replicar
+el flujo del club con nachi/naso/tano (3 lugares libres) · la T5 se
+define el 27/07 — Gordo lidera con 3 coronas en 16 fechas sin necesitar
+ganar todas, Cobra (el más ganador del año, 5 coronas) puede necesitar
+ganar Y que Gordo/PT/Nachi tropiecen · miércoles 29/07: candidatos
+frescos para la entrevista siguiente, todos en 0 salvo Carucha/Gael,
+excluir al ganador del 27/07 · si el cron de dispatch se cuelga una 3ra
+vez, escalarlo como bug de infraestructura.

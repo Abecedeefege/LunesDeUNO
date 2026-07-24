@@ -1,5 +1,5 @@
 {
-  "_updated_at": "2026-07-23T18:21:54.429Z",
+  "_updated_at": "2026-07-24T09:06:00.000Z",
   "notifications": [
     {
       "id": "2026-07-23-desk",
@@ -542,51 +542,6 @@
       "sent_at": "2026-07-17T14:11:32.849Z",
       "fail_reason": null,
       "created_by": "engagement-agent 2026-07-16 (cronica de la entrevista de Carucha; VIERNES 11:00 por orden explicita de Andres por chat del 16/07 — excepcion unica al silencio del viernes y al horario 14:00) | APROBADO por Andres por chat el 16/07 ~19:15 local, manteniendo el horario de las 11:00"
-    },
-    {
-      "id": "2026-07-16-medallero-gordo",
-      "title": "🎩 Gordo, tu Medallero estrena salón",
-      "body": "La Biblioteca del UNO ya está live: las estrellas de los tres años en estantes de roble, con el hogar prendido. Firmada «By Gordo» en Estadísticas → Experiencias. Compartila con el grupo 🎴",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/medallero-biblioteca-383a3a69.html",
-      "devices": [
-        "gordo"
-      ],
-      "send_at": "2026-07-16T12:20:00-03:00",
-      "expires_at": "2026-07-16T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-16T15:24:42.462Z",
-      "fail_reason": null,
-      "created_by": "claude-session medallero 2026-07-16 (pedido de Andrés: avisarle a Gordo del medallero nuevo — La Biblioteca del UNO — para que lo comparta con el resto del grupo)"
-    },
-    {
-      "id": "2026-07-16-ent-preview",
-      "title": "🧬 Preview: entrevista a Carucha (sale 15:00)",
-      "body": "Test de paternidad: Carucha padre de Cobra 8-4. 4 preguntas (2 texto + 2 opción). Si algo no va, avisame antes de las 15:00.",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-16-entrevista-carucha.html",
-      "devices": [
-        "andres"
-      ],
-      "send_at": "2026-07-16T10:00:00-03:00",
-      "expires_at": "2026-07-16T14:30:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-16T14:31:44.555Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-16 (PREVIEW para aprobación del primer slot personal del jueves — regla nueva de Andrés 16/07: preview 10:00, envío al entrevistado 15:00)"
-    },
-    {
-      "id": "2026-07-16-ent",
-      "title": "🧬 Carucha, el test dio positivo",
-      "body": "Sos padre de Cobra: 8-4 este año. El laboratorio te hace 4 preguntas — lo mejor sale en el próximo push del grupo 🎙️",
-      "url": "https://abecedeefege.github.io/LunesDeUNO/engage/2026-07-16-entrevista-carucha.html",
-      "devices": [
-        "carucha"
-      ],
-      "send_at": "2026-07-16T15:00:00-03:00",
-      "expires_at": "2026-07-16T23:00:00-03:00",
-      "status": "sent",
-      "sent_at": "2026-07-16T19:02:00.758Z",
-      "fail_reason": null,
-      "created_by": "engagement-agent 2026-07-16 (1ª entrevista personal del jueves: Carucha, que no ganó el último lunes, stat destacada H2H 8-4 sobre Cobra; Andrés puede vetar hasta las 15:00 tras el preview de las 10:00)"
     },
     {
       "id": "2026-07-20-desk",
